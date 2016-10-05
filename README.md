@@ -14,6 +14,23 @@ There's not "installation" per se, this isn't a module but really just an exampl
 git clone https://github.com/eslachance/guidebot.git
 ```
 
+Create a file called `config.json` with the following content (adjusted to your needs of course):
+
+```json
+{
+  "botToken": "Your-Bot-Token-Here",
+  "prefix": "?"
+}
+```
+
+Then, run the following in your folder: 
+
+```
+npm install
+node app.js
+```
+
+> Requires Node 6 or higher (because discord.js requires that), also requires Discord.js v10 (currently #indev), installed automatically with `npm install`. 
 
 ## Command Handler Explainer
 
