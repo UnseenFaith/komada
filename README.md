@@ -4,7 +4,7 @@
 
 Guidebot is a very simple bot that I'm using on the 
 [Discord.js Official](https://discord.gg/bRCvFy9) server to provide links to my 
-[Discord.js Bot Guide](gitbook.com/book/eslachance/discord-js-bot-guide/).
+[Discord.js Bot Guide](https://www.gitbook.com/book/eslachance/discord-js-bot-guide/details).
 
 ## Installing this
 
