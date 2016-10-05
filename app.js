@@ -1,7 +1,7 @@
 const Discord = require("discord.js");
 const bot = new Discord.Client({ fetchAllMembers: true });
-const config = require('./config.json');
-const fs = require('fs');
+const config = require("./config.json");
+const fs = require("fs");
 const moment = require("moment");
 
 const log = (msg) => {
@@ -10,7 +10,7 @@ const log = (msg) => {
 
 bot.commands = new Discord.Collection();
 bot.aliases = new Discord.Collection();
-fs.readdir(`./cmd/`, (err, files) => {
+fs.readdir("./cmd/", (err, files) => {
   if (err) console.error(err);
   log(`Loading a total of ${files.length} commands.`);
   files.forEach(f => {
@@ -23,13 +23,13 @@ fs.readdir(`./cmd/`, (err, files) => {
   });
 });
 
-bot.on('message', msg => {
+bot.on("message", msg => {
   if (!msg.content.startsWith(config.prefix)) return;
   var command = msg.content.split(" ")[0].slice(config.prefix.length);
   var params = msg.content.split(" ").slice(1);
   let cmd;
   if (bot.commands.has(command)) {
-    cmd = bot.commands.get(command)
+    cmd = bot.commands.get(command);
   } else if (bot.aliases.has(command)) {
     cmd = bot.commands.get(bot.aliases.get(command));
   }
@@ -39,18 +39,21 @@ bot.on('message', msg => {
   }
 });
 
-bot.on('ready', () => {
+bot.on("ready", () => {
   log(`GuideBot: Ready to serve ${bot.users.size} users, in ${bot.channels.size} channels of ${bot.guilds.size} servers.`);
   log("=> Ready");
 });
 
-bot.on('error', console.error);
-bot.on('warn', console.warn);
+bot.on("error", console.error);
+bot.on("warn", console.warn);
 
 bot.login(config.botToken);
 
 bot.reload = function(command) {
   bot.commands.delete(command);
+  bot.aliases.forEach(alais => {
+    if (bot.aliases.get(alais) === command) bot.aliases.delete(alais);
+  });
   delete require.cache[require.resolve(`./cmd/${command}`)];
   bot.commands.set(command, require(`./cmd/${command}`));
 };
