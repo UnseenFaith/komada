@@ -12,7 +12,7 @@ bot.commands = new Discord.Collection();
 fs.readdir(`./cmd/`, (err, files) => {
   if(err) console.error(err);
   log(`Loading a total of ${files.length} commands.`);
-  files.map(f=> {
+  files.forEach(f=> {
     let props = require(`./cmd/${f}`);
     log(`Loading Command: ${props.help.name}. :ok_hand:`);
     bot.commands.set(props.help.name, props);
