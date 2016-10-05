@@ -17,7 +17,7 @@ fs.readdir(`./cmd/`, (err, files) => {
     let props = require(`./cmd/${f}`);
     log(`Loading Command: ${props.help.name}. :ok_hand:`);
     bot.commands.set(props.help.name, props);
-    props.aliases.forEach(alias => {
+    props.help.aliases.forEach(alias => {
       bot.aliases.set(alias, props.help.name);
     });
   });
