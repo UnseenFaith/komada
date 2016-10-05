@@ -11,10 +11,10 @@ const log = (msg) => {
 bot.commands = new Discord.Collection();
 fs.readdir(`./cmd/`, (err, files) => {
   if(err) console.error(err);
-  console.log(`Loading a total of ${files.length} commands.`);
+  log(`Loading a total of ${files.length} commands.`);
   files.map(f=> {
     let props = require(`./cmd/${f}`);
-    console.log(`Loading Command: ${props.help.name}. :ok_hand:`);
+    log(`Loading Command: ${props.help.name}. :ok_hand:`);
     bot.commands.set(props.help.name, props);
   });
 });
@@ -32,7 +32,7 @@ bot.on('message', msg => {
 
 bot.on('ready', () => {
   log(`GuideBot: Ready to serve ${bot.users.size} users, in ${bot.channels.size} channels of ${bot.guilds.size} servers.`);
-  console.log("=> Ready");
+  log("=> Ready");
 });
 
 bot.on('error', console.error);
