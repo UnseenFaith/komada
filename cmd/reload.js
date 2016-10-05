@@ -4,8 +4,9 @@ exports.run = (bot, msg, params) => {
 };
 
 exports.help = {
-  name : "reload",
+  name: "reload",
   description: "Reloads the command file, if it's been updated or modified.",
   usage: "reload <commandname>",
-  restrict: (id) => {return id==="139412744439988224"}
+  aliases: [],
+  restrict: (id) => { return id === "139412744439988224" }
 };

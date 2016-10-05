@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-const bot = new Discord.Client({fetchAllMembers: true});
+const bot = new Discord.Client({ fetchAllMembers: true });
 const config = require('./config.json');
 const fs = require('fs');
 const moment = require("moment");
@@ -9,23 +9,32 @@ const log = (msg) => {
 };
 
 bot.commands = new Discord.Collection();
+bot.aliases = new Discord.Collection();
 fs.readdir(`./cmd/`, (err, files) => {
-  if(err) console.error(err);
+  if (err) console.error(err);
   log(`Loading a total of ${files.length} commands.`);
-  files.forEach(f=> {
+  files.forEach(f => {
     let props = require(`./cmd/${f}`);
     log(`Loading Command: ${props.help.name}. :ok_hand:`);
     bot.commands.set(props.help.name, props);
+    props.aliases.forEach(alias => {
+      bot.aliases.set(alias, props.help.name);
+    });
   });
 });
 
 bot.on('message', msg => {
-  if(!msg.content.startsWith(config.prefix)) return;
+  if (!msg.content.startsWith(config.prefix)) return;
   var command = msg.content.split(" ")[0].slice(config.prefix.length);
   var params = msg.content.split(" ").slice(1);
-  if(bot.commands.has(command)) {
-    var cmd = bot.commands.get(command);
-    if(cmd.help.restrict && !cmd.help.restrict(msg.author.id)) return;
+  let cmd;
+  if (bot.commands.has(command)) {
+    cmd = bot.commands.get(command)
+  } else if (bot.aliases.has(command)) {
+    cmd = bot.commands.get(bot.aliases.get(command));
+  }
+  if (cmd) {
+    if (cmd.help.restrict && !cmd.help.restrict(msg.author.id)) return;
     cmd.run(bot, msg, params);
   }
 });
