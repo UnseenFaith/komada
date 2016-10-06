@@ -51,9 +51,13 @@ bot.login(config.botToken);
 
 bot.reload = function(command) {
   bot.commands.delete(command);
-  bot.aliases.forEach(alais => {
-    if (bot.aliases.get(alais) === command) bot.aliases.delete(alais);
+  bot.aliases.forEach((cmd, alias) => {
+    if (cmd === command) bot.aliases.delete(alias);
   });
   delete require.cache[require.resolve(`./cmd/${command}`)];
-  bot.commands.set(command, require(`./cmd/${command}`));
+  let cmd = require(`./cmd/${command}`);
+  bot.commands.set(command, cmd);
+  cmd.help.aliases.forEach(alias => {
+    bot.aliases.set(alias, cmd.help.name);
+  });
 };
