@@ -18,8 +18,6 @@ exports.run = (bot, msg, params) => {
         m.edit(`Command reload failed: ${command}\n\`\`\`${e.stack}\`\`\``);
       });
     });
-    //.then(() => {m.edit(`Successfully reloaded: ${command}`);})
-    //.catch(e => {m.edit(`Command reload failed: ${command}\n\`\`\`${e.stack}\`\`\``);});
   }
 };
 
