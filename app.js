@@ -1,7 +1,7 @@
 const Discord = require("discord.js");
 const bot = new Discord.Client({ fetchAllMembers: true });
-const config = require('./config.json');
-const fs = require('fs');
+const config = require("./config.json");
+const fs = require("fs");
 const moment = require("moment");
 
 const log = (msg) => {
@@ -10,7 +10,7 @@ const log = (msg) => {
 
 bot.commands = new Discord.Collection();
 bot.aliases = new Discord.Collection();
-fs.readdir(`./cmd/`, (err, files) => {
+fs.readdir("./cmd/", (err, files) => {
   if (err) console.error(err);
   log(`Loading a total of ${files.length} commands.`);
   files.forEach(f => {
@@ -23,7 +23,7 @@ fs.readdir(`./cmd/`, (err, files) => {
   });
 });
 
-bot.on('message', msg => {
+bot.on("message", msg => {
   if (!msg.content.startsWith(config.prefix)) return;
   let command = msg.content.split(" ")[0].slice(config.prefix.length);
   let params = msg.content.split(" ").slice(1);
@@ -40,23 +40,30 @@ bot.on('message', msg => {
   }
 });
 
-bot.on('ready', () => {
+bot.on("ready", () => {
   log(`GuideBot: Ready to serve ${bot.users.size} users, in ${bot.channels.size} channels of ${bot.guilds.size} servers.`);
 });
 
-bot.on('error', console.error);
-bot.on('warn', console.warn);
+bot.on("error", console.error);
+bot.on("warn", console.warn);
 
 bot.login(config.botToken);
 
 bot.reload = function(command) {
   bot.commands.delete(command);
+  bot.aliases.forEach((cmd, alias) => {
+    if (cmd === command) bot.aliases.delete(alias);
+  });
   delete require.cache[require.resolve(`./cmd/${command}`)];
-  bot.commands.set(command, require(`./cmd/${command}`));
+  let cmd = require(`./cmd/${command}`);
+  bot.commands.set(command, cmd);
+  cmd.conf.aliases.forEach(alias => {
+    bot.aliases.set(alias, cmd.help.name);
+  });
 };
 
 bot.elevation = function(msg) {
-  /* This function should resolve to an ELEVATION level which 
+  /* This function should resolve to an ELEVATION level which
      is then sent to the command handler for verification*/
   let permlvl = 0;
   let mod_role = msg.guild.roles.find("name", "Mods");

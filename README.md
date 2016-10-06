@@ -81,7 +81,7 @@ fs.readdir(`./cmd/`, (err, files) => {
     // add the command to the Commands Collection
     bot.commands.set(props.help.name, props);
     // Loops through each Alias in that command
-    props.aliases.forEach(alias => {
+    props.conf.aliases.forEach(alias => {
       // add the alias to the Aliases Collection
       bot.aliases.set(alias, props.help.name);
     });
