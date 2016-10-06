@@ -9,7 +9,17 @@ exports.run = (bot, msg, params) => {
     return msg.channel.sendMessage(`I cannot find the command: ${params[0]}`);
   } else {
     msg.channel.sendMessage(`Reloading: ${command}`)
-    .then(() => {bot.reload(command);});
+    .then(m => {
+      bot.reload(command)
+      .then(() => {
+        m.edit(`Successfully reloaded: ${command}`);
+      })
+      .catch(e => {
+        m.edit(`Command reload failed: ${command}\n\`\`\`${e.stack}\`\`\``);
+      });
+    });
+    //.then(() => {m.edit(`Successfully reloaded: ${command}`);})
+    //.catch(e => {m.edit(`Command reload failed: ${command}\n\`\`\`${e.stack}\`\`\``);});
   }
 };
 
