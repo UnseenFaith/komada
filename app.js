@@ -17,7 +17,7 @@ fs.readdir(`./cmd/`, (err, files) => {
     let props = require(`./cmd/${f}`);
     log(`Loading Command: ${props.help.name}. :ok_hand:`);
     bot.commands.set(props.help.name, props);
-    props.help.aliases.forEach(alias => {
+    props.conf.aliases.forEach(alias => {
       bot.aliases.set(alias, props.help.name);
     });
   });
@@ -25,23 +25,23 @@ fs.readdir(`./cmd/`, (err, files) => {
 
 bot.on('message', msg => {
   if (!msg.content.startsWith(config.prefix)) return;
-  var command = msg.content.split(" ")[0].slice(config.prefix.length);
-  var params = msg.content.split(" ").slice(1);
+  let command = msg.content.split(" ")[0].slice(config.prefix.length);
+  let params = msg.content.split(" ").slice(1);
+  let perms = bot.elevation(msg);
   let cmd;
   if (bot.commands.has(command)) {
-    cmd = bot.commands.get(command)
+    cmd = bot.commands.get(command);
   } else if (bot.aliases.has(command)) {
     cmd = bot.commands.get(bot.aliases.get(command));
   }
   if (cmd) {
-    if (cmd.help.restrict && !cmd.help.restrict(msg.author.id)) return;
-    cmd.run(bot, msg, params);
+    if (perms < cmd.conf.permLevel) return;
+    cmd.run(bot, msg, params, perms);
   }
 });
 
 bot.on('ready', () => {
   log(`GuideBot: Ready to serve ${bot.users.size} users, in ${bot.channels.size} channels of ${bot.guilds.size} servers.`);
-  log("=> Ready");
 });
 
 bot.on('error', console.error);
@@ -53,4 +53,17 @@ bot.reload = function(command) {
   bot.commands.delete(command);
   delete require.cache[require.resolve(`./cmd/${command}`)];
   bot.commands.set(command, require(`./cmd/${command}`));
+};
+
+bot.elevation = function(msg) {
+  /* This function should resolve to an ELEVATION level which 
+     is then sent to the command handler for verification*/
+  let permlvl = 0;
+  let mod_role = msg.guild.roles.find("name", "Mods");
+  if(mod_role && msg.member.roles.has(mod_role.id)) permlvl = 2;
+  let admin_role = msg.guild.roles.find("name", "Devs");
+  if(admin_role && msg.member.roles.has(admin_role.id)) permlvl = 3;
+  if(msg.author.id === config.ownerid) permlvl = 4;
+  console.log(`Permission level for ${msg.author.username}: ${permlvl}`);
+  return permlvl;
 };

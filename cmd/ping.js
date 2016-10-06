@@ -2,13 +2,18 @@ exports.run = (bot, msg, params = []) => {
   msg.channel.sendMessage('Ping?')
     .then(message => {
       message.edit(`Pong! (took: ${message.createdTimestamp - msg.createdTimestamp}ms)`);
-      msg.delete();
     });
+};
+
+exports.conf = {
+  enabled: true,
+  guildOnly: false,
+  aliases: [],
+  permLevel: 0
 };
 
 exports.help = {
   name: "ping",
   description: "Ping/Pong command. I wonder what this does? /sarcasm",
-  usage: "ping",
-  aliases: []
+  usage: "ping"
 };

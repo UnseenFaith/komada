@@ -10,9 +10,15 @@ exports.run = (bot, msg, params) => {
   }
 };
 
+exports.conf = {
+  enabled: true,
+  guildOnly: false,
+  aliases: [],
+  permLevel: 0
+};
+
 exports.help = {
   name : "help",
   description: "Returns page details from root's awesome bot guide.",
-  usage: "help [command]",
-  aliases: []
+  usage: "help [command]"
 };

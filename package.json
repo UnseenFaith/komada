@@ -11,5 +11,8 @@
   "dependencies": {
     "discord.js": "github:hydrabolt/discord.js#indev",
     "moment": "^2.15.1"
+  },
+  "engines": {
+    "node": "6.4.0"
   }
 }

@@ -23,9 +23,15 @@ exports.run = (bot, msg, params = []) => {
   }
 };
 
+exports.conf = {
+  enabled: true,
+  guildOnly: false,
+  aliases: [],
+  permLevel: 0
+};
+
 exports.help = {
   name: "guide",
   description: "Returns page details from root's awesome bot guide.",
-  usage: "guide <keyword/list>",
-  aliases: []
+  usage: "guide <keyword/list>"
 };

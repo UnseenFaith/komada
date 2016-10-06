@@ -12,12 +12,17 @@ exports.run = (bot, msg, params = []) => {
   }
 };
 
+exports.conf = {
+  enabled: true,
+  guildOnly: false,
+  aliases: ['ev'],
+  permLevel: 4
+};
+
 exports.help = {
   name: "eval",
   description: "Evaluates arbitrary Javascript. Not for the faint of heart.\nExpression may contain multiple lines.",
-  usage: "eval <expression>",
-  aliases: ['ev'],
-  restrict: (id) => { return id === "139412744439988224" }
+  usage: "eval <expression>"
 };
 
 function clean(text) {
