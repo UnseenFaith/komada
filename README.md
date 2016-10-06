@@ -19,9 +19,12 @@ Create a file called `config.json` with the following content (adjusted to your 
 ```json
 {
   "botToken": "Your-Bot-Token-Here",
+  "ownerid" : "your-user-id"
   "prefix": "?"
 }
 ```
+
+> you can copy `config.json.example` to `config.json` and modify that instead, too!
 
 Then, run the following in your folder:
 
@@ -45,11 +48,17 @@ exports.run = (bot, msg, params = []) => {
   // do stuff
 };
 
+exports.conf = {
+  enabled: true, // not used yet
+  guildOnly: false, // not used yet
+  aliases: ["command_alias1", "command_alias2"],
+  permLevel: 0 // Permissions Required, higher is more power
+};
+
 exports.help = {
   name : "command",
   description: "Command Description",
-  usage: "command <argument>",
-  aliases: ["command_alias1", "command_alias2"]
+  usage: "command <argument>"
 };
 ```
 
@@ -108,6 +117,8 @@ bot.on('message', msg => {
   var command = msg.content.split(" ")[0].slice(config.prefix.length);
   // Get the params in an array of arguments to be used in the bot
   var params = msg.content.split(" ").slice(1);
+  // run the `elevation` function to get the user's permission level
+  let perms = bot.elevation(msg);
   let cmd;
   // Check if the command exists in Commands
   if (bot.commands.has(command)) {
@@ -120,8 +131,8 @@ bot.on('message', msg => {
   }
 
   if(cmd) {
-    // restricted commands (with ID for now). If ID is wrong, exit and return
-    if(cmd.help.restrict && !cmd.help.restrict(msg.author.id)) return;
+    // Check user's perm level against the required level in the command
+    if (perms < cmd.conf.permLevel) return;
     // Run the `exports.run()` function defined in each command.
     cmd.run(bot, msg, params);
   }

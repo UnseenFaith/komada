@@ -79,6 +79,5 @@ bot.elevation = function(msg) {
   let admin_role = msg.guild.roles.find("name", "Devs");
   if(admin_role && msg.member.roles.has(admin_role.id)) permlvl = 3;
   if(msg.author.id === config.ownerid) permlvl = 4;
-  console.log(`Permission level for ${msg.author.username}: ${permlvl}`);
   return permlvl;
 };
