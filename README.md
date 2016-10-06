@@ -19,7 +19,7 @@ Create a file called `config.json` with the following content (adjusted to your 
 ```json
 {
   "botToken": "Your-Bot-Token-Here",
-  "ownerid" : "your-user-id"
+  "ownerid" : "your-user-id",
   "prefix": "?"
 }
 ```
