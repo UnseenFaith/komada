@@ -1,8 +1,23 @@
 const Discord = require("discord.js");
 const bot = new Discord.Client({ fetchAllMembers: true });
-const config = require("./config.json");
 const fs = require("fs");
 const moment = require("moment");
+
+// config can be local or process env (on heroku)
+var config = "";
+try{
+  config = require("./config.json");
+} catch (e) {
+  if(process.env.botToken) {
+    config = {
+      botToken: process.env.botToken,
+      prefix: process.env.prefix,
+      ownerid: process.env.ownerid
+    };
+  } else {
+    throw "NO CONFIG FILE FOUND, NO ENV CONF FOUND, EXITING";
+  }
+}
 
 const log = (msg) => {
   console.log(`[${moment().format("YYYY-MM-DD HH:mm:ss")}] ${msg}`);
