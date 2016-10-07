@@ -4,6 +4,7 @@ node_modules
 .DS_Store
 Thumbs.db
 config.json
+temp
 
 # C/C++
 *.slo
