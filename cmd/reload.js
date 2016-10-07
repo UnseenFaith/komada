@@ -1,3 +1,5 @@
+const fs = require("fs");
+
 exports.run = (bot, msg, params) => {
   let command;
   if (bot.commands.has(params[0])) {
@@ -6,7 +8,22 @@ exports.run = (bot, msg, params) => {
     command = bot.aliases.get(params[0]);
   }
   if (!command) {
-    return msg.channel.sendMessage(`I cannot find the command: ${params[0]}`);
+    fs.exists(`./cmd/${params[0]}.js`, exists => {
+      if (exists) {
+        msg.channel.sendMessage(`Loading New Command: ${params[0]}`)
+    .then(m => {
+      bot.reload(params[0])
+      .then(() => {
+        m.edit(`Successfully Loaded: ${params[0]}`);
+      })
+      .catch(e => {
+        m.edit(`Command load failed: ${params[0]}\n\`\`\`${e.stack}\`\`\``);
+      });
+    });
+      } else {
+        msg.channel.sendMessage(`I cannot find the command: ${params[0]}`);
+      }
+    });
   } else {
     msg.channel.sendMessage(`Reloading: ${command}`)
     .then(m => {
