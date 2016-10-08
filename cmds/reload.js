@@ -8,20 +8,20 @@ exports.run = (bot, msg, params) => {
     command = bot.aliases.get(params[0]);
   }
   if (!command) {
-    fs.exists(`../cmds/${params[0]}.js`, exists => {
-      if (exists) {
+    if (params[0].includes(".js")) params[0] = params[0].replace(".js","");
+    fs.stat(`./cmds/${params[0]}.js`, (err, stats) => {
+      if (err) return msg.channel.sendMessage(`I cannot find the command: ${params[0]}`);
+      if (stats.isFile()) {
         msg.channel.sendMessage(`Loading New Command: ${params[0]}`)
-    .then(m => {
-      bot.functions.core.reload(bot, params[0])
-      .then(() => {
-        m.edit(`Successfully Loaded: ${params[0]}`);
-      })
-      .catch(e => {
-        m.edit(`Command load failed: ${params[0]}\n\`\`\`${e.stack}\`\`\``);
-      });
-    });
-      } else {
-        msg.channel.sendMessage(`I cannot find the command: ${params[0]}`);
+        .then(m => {
+          bot.functions.core.reload(bot, params[0])
+          .then(() => {
+            m.edit(`Successfully Loaded: ${params[0]}`);
+          })
+          .catch(e => {
+            m.edit(`Command load failed: ${params[0]}\n\`\`\`${e.stack}\`\`\``);
+          });
+        });
       }
     });
   } else {

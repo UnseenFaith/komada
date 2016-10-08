@@ -72,6 +72,7 @@ bot.on("message", msg => {
     cmd = bot.commands.get(bot.aliases.get(command));
   }
   if (cmd) {
+    if (!cmd.conf.enabled) return msg.channel.sendMessage("This command is currently disabled");
     if (perms < cmd.conf.permLevel) return;
     cmd.run(bot, msg, params, perms);
   }
