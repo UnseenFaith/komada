@@ -8,7 +8,7 @@ exports.run = (bot, msg, params) => {
     command = bot.aliases.get(params[0]);
   }
   if (!command) {
-    fs.exists(`./cmd/${params[0]}.js`, exists => {
+    fs.exists(`./cmds/${params[0]}.js`, exists => {
       if (exists) {
         msg.channel.sendMessage(`Loading New Command: ${params[0]}`)
     .then(m => {

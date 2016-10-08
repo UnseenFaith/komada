@@ -19,6 +19,6 @@ exports.conf = {
 
 exports.help = {
   name : "help",
-  description: "Returns page details from root's awesome bot guide.",
+  description: "Display help for a command.",
   usage: "help [command]"
 };
