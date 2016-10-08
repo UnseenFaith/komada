@@ -8,11 +8,11 @@ exports.run = (bot, msg, params) => {
     command = bot.aliases.get(params[0]);
   }
   if (!command) {
-    fs.exists(`./cmds/${params[0]}.js`, exists => {
+    fs.exists(`../cmds/${params[0]}.js`, exists => {
       if (exists) {
         msg.channel.sendMessage(`Loading New Command: ${params[0]}`)
     .then(m => {
-      bot.reload(params[0])
+      bot.functions.core.reload(bot, params[0])
       .then(() => {
         m.edit(`Successfully Loaded: ${params[0]}`);
       })
@@ -27,7 +27,7 @@ exports.run = (bot, msg, params) => {
   } else {
     msg.channel.sendMessage(`Reloading: ${command}`)
     .then(m => {
-      bot.reload(command)
+      bot.functions.core.reload(bot, command)
       .then(() => {
         m.edit(`Successfully reloaded: ${command}`);
       })
