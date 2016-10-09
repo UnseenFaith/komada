@@ -1,5 +1,5 @@
 exports.run = (bot, msg, params = []) => {
-  msg.channel.sendMessage('Ping?')
+  msg.channel.sendMessage("Ping?")
     .then(message => {
       message.edit(`Pong! (took: ${message.createdTimestamp - msg.createdTimestamp}ms)`);
     });
@@ -9,7 +9,8 @@ exports.conf = {
   enabled: true,
   guildOnly: false,
   aliases: [],
-  permLevel: 0
+  permLevel: 0,
+  botPerms: []
 };
 
 exports.help = {
