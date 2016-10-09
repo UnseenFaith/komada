@@ -1,6 +1,11 @@
 const fs = require("fs");
 
 exports.run = (bot, msg, params) => {
+  if (params[0] === "all") {
+    bot.log("Reloading all commands");
+    bot.functions.core.loadCommands(bot);
+    return;
+  }
   let command;
   if (bot.commands.has(params[0])) {
     command = params[0];
@@ -41,8 +46,9 @@ exports.run = (bot, msg, params) => {
 exports.conf = {
   enabled: true,
   guildOnly: false,
-  aliases: ["r"],
-  permLevel: 4
+  aliases: ["r", "enable"],
+  permLevel: 4,
+  botPerms: []
 };
 
 exports.help = {

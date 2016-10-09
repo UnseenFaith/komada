@@ -2,8 +2,8 @@ exports.run = (bot, msg, params = []) => {
   var code = params.join(" ");
   try {
     var evaled = eval(code);
-    if (typeof evaled !== 'string')
-      evaled = require('util').inspect(evaled);
+    if (typeof evaled !== "string")
+      evaled = require("util").inspect(evaled);
     msg.channel.sendMessage("```xl\n" + clean(evaled) + "\n```");
   } catch (err) {
     msg.channel.sendMessage("`ERROR` ```xl\n" +
@@ -15,8 +15,9 @@ exports.run = (bot, msg, params = []) => {
 exports.conf = {
   enabled: true,
   guildOnly: false,
-  aliases: ['ev'],
-  permLevel: 4
+  aliases: ["ev"],
+  permLevel: 4,
+  botPerms: []
 };
 
 exports.help = {
