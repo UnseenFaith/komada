@@ -1,8 +1,6 @@
-const config = require('../config.json');
-
 exports.run = (bot, msg, params) => {
     if (!params[0]) {
-      msg.channel.sendCode("asciidoc", `= Command List =\n\n[Use ${config.prefix}help <commandname> for details]\n\n${bot.commands.map(c=>`${c.help.name}:: ${c.help.description}`).join("\n")}`);
+      msg.channel.sendCode("asciidoc", `= Command List =\n\n[Use ${bot.config.prefix}help <commandname> for details]\n\n${bot.commands.map(c=>`${c.help.name}:: ${c.help.description}`).join("\n")}`);
   } else {
     let command = params[0];
     if(bot.commands.has(command)) {
