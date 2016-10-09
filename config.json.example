@@ -1,5 +1,7 @@
 {
   "botToken": "your-bot-token",
   "ownerid" : "your-user-id",
-  "prefix": "?"
+  "prefix": "?",
+  "optnFunctions": ["points"],
+  "optnFunctions": ["disable", "permissions"]
 }
