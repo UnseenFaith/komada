@@ -4,7 +4,7 @@ exports.run = (bot, msg, params = []) => {
 };
 
 exports.conf = {
-  enabled: false,
+  enabled: true,
   guildOnly: false,
   aliases: [],
   permLevel: 0,

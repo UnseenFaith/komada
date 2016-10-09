@@ -16,7 +16,7 @@ exports.run = (bot, msg, params = []) => {
       errors: ["time"]
     })
     .then(collected => {
-      bot.functions.optn.points(bot, msg, "add");
+      bot.functions.optn.points(bot, collected.first(), "add");
       msg.channel.sendMessage(`We have a winner! *${collected.first().author.username}* had a right answer with \`${collected.first().content}\`!`);
     })
     .catch(collected => msg.channel.sendMessage("Seems no one got it! Oh well."));
