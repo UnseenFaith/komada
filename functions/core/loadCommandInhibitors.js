@@ -1,18 +1,18 @@
 const fs = require("fs");
 
 module.exports = bot => {
-  fs.readdir("./functions/msgProcs", (err, files) => {
+  fs.readdir("./functions/inhibitors", (err, files) => {
     bot.functions.optn = {};
     if (err) console.error(err);
     let p = 0;
     files.forEach(f=> {
       let name = f.split(".")[0];
-      let props = require(`../msgProcs/${f}`);
+      let props = require(`../inhibitors/${f}`);
       if (props.conf.enabled) {
-        bot.messageProcessors.set(name, props);
+        bot.commandInhibitors.set(name, props);
         p++;
       }
     });
-    bot.log(`Loaded ${p} message processors`);
+    bot.log(`Loaded ${p} command inhibitors`);
   });
 };

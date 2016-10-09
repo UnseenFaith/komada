@@ -25,7 +25,7 @@ bot.log = msg => {console.log(`${clk.bgBlue(`[${moment().format("YYYY-MM-DD HH:m
 bot.functions = {};
 bot.commands = new Discord.Collection();
 bot.aliases = new Discord.Collection();
-bot.messageProcessors = new Discord.Collection();
+bot.commandInhibitors = new Discord.Collection();
 
 // Load core functions, then everything else
 fs.readdir("./functions/core", (err, files) => {
@@ -38,7 +38,7 @@ fs.readdir("./functions/core", (err, files) => {
   bot.log(`Loaded ${files.length} core functions`);
   bot.functions.core.loadOptionalFunctions(bot);
   bot.functions.core.loadCommands(bot);
-  bot.functions.core.loadMessageProcessors(bot);
+  bot.functions.core.loadCommandInhibitors(bot);
 });
 
 bot.on("message", msg => {
@@ -52,7 +52,7 @@ bot.on("message", msg => {
     cmd = bot.commands.get(bot.aliases.get(command));
   }
   if (cmd) {
-    bot.functions.core.runMessageProcessors(bot, msg, cmd)
+    bot.functions.core.runCommandInhibitors(bot, msg, cmd)
     .then(() => {
       cmd.run(bot, msg, params);
     });

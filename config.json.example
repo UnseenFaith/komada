@@ -3,5 +3,5 @@
   "ownerid" : "your-user-id",
   "prefix": "?",
   "optnFunctions": ["points"],
-  "optnFunctions": ["disable", "permissions"]
+  "commandInhibitors": ["disable", "permissions"]
 }

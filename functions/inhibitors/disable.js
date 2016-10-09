@@ -1,4 +1,4 @@
-let config = require("../../config.json").messageProcessors;
+let config = require("../../config.json").commandInhibitors;
 
 if (config === undefined) config = [];
 
