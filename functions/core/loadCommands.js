@@ -11,6 +11,7 @@ module.exports = bot => {
       let props = require(`../../cmds/${f}`);
       bot.commands.set(props.help.name, props);
       c++;
+      if (props.conf.aliases === undefined) props.conf.aliases = [];
       props.conf.aliases.forEach(alias => {
         bot.aliases.set(alias, props.help.name);
         a++;
