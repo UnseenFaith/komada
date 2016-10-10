@@ -39,6 +39,7 @@ fs.readdir("./functions/core", (err, files) => {
   bot.functions.core.loadOptionalFunctions(bot);
   bot.functions.core.loadCommands(bot);
   bot.functions.core.loadCommandInhibitors(bot);
+  bot.functions.core.loadEvents(bot);
 });
 
 bot.on("message", msg => {
@@ -58,12 +59,5 @@ bot.on("message", msg => {
     });
   }
 });
-
-bot.on("ready", () => {
-  bot.log(`GuideBot: Ready to serve ${bot.users.size} users, in ${bot.channels.size} channels of ${bot.guilds.size} servers.`);
-});
-
-bot.on("error", console.error);
-bot.on("warn", console.warn);
 
 bot.login(bot.config.botToken);
