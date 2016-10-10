@@ -2,7 +2,6 @@ const fs = require("fs");
 
 module.exports = bot => {
   fs.readdir("./functions/inhibitors", (err, files) => {
-    bot.functions.optn = {};
     if (err) console.error(err);
     let p = 0;
     files.forEach(f=> {

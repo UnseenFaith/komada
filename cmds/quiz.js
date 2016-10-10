@@ -19,7 +19,7 @@ exports.run = (bot, msg, params = []) => {
       bot.functions.optn.points(bot, collected.first(), "add");
       msg.channel.sendMessage(`We have a winner! *${collected.first().author.username}* had a right answer with \`${collected.first().content}\`!`);
     })
-    .catch( () => msg.channel.sendMessage("Seems no one got it! Oh well."));
+    .catch((collected) => msg.channel.sendMessage("Seems no one got it! Oh well."));
   });
 };
 

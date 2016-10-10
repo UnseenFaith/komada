@@ -4,7 +4,7 @@ if (config === undefined) config = [];
 
 const slowmode = new Map();
 const timers = [];
-const ratelimit = 5000;
+const ratelimit = 1000;
 
 exports.conf = {
   enabled: config.includes("commandSlowMode")
