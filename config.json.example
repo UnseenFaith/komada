@@ -1,6 +1,7 @@
 {
   "botToken": "your-bot-token",
   "ownerid" : "your-user-id",
+  "clientID": "your-bot-client-id",
   "prefix": "?",
   "optnFunctions": ["points"],
   "commandInhibitors": ["disable", "permissions", "missingBotPermissions"]
