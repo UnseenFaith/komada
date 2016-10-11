@@ -4,8 +4,9 @@ module.exports = bot => {
   fs.readdir("./functions/optn", (err, files) => {
     bot.functions.optn = {};
     if (err) console.error(err);
+    files = files.filter(f => { return f.slice(-3) === ".js"; });
     let o = 0;
-    files.forEach(f=> {
+    files.forEach(f => {
       let name = f.split(".")[0];
       bot.log(`Loading optional command: ${name}`);
       let props = require(`../optn/${f}`);
