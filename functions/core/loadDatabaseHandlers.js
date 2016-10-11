@@ -11,6 +11,7 @@ module.exports = bot => {
       bot.log(props.conf.enabled);
       if (props.conf.enabled) {
         bot.databaseModules.set(name, props);
+        props.init(bot);
         o++;
       }
     });

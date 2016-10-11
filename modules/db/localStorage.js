@@ -1,4 +1,5 @@
 const LocalStorage = require("node-localstorage").LocalStorage;
+const fs = require("fs");
 const tables = [];
 
 const config = {
@@ -8,17 +9,25 @@ const config = {
 };
 exports.conf = config;
 
-exports.init = () => {
+exports.init = (bot) => {
   return new Promise( (resolve, reject) => {
-    let test;
     try {
-      test = new LocalStorage(`${config.baseLocation}/system-test`);
-      resolve(test);
+      let test = new LocalStorage(`${config.baseLocation}/system-test`);
     }
     catch (e) {
       console.log(e);
       reject(e);
     }
+    fs.readdir(config.baseLocation, (err, files) => {
+      if (err) console.error(err);
+      let c = 0;
+      files.forEach(f=> {
+        let name = f.split(".")[0];
+        tables[name] = new LocalStorage(`${config.baseLocation}/${name}`);
+        c++;
+      });
+      bot.log(`Loaded ${c} tables in ${config.moduleName} database.`);
+    });
   });
 };
 
@@ -60,6 +69,17 @@ exports.createTable = (tableName) => {
   return new Promise( (resolve, reject) => {
     try {
       resolve(tables[tableName] = new LocalStorage(`${config.baseLocation}/${tableName}`));
+    } catch (e) {
+      console.log(e);
+      reject(e);
+    }
+  });
+};
+
+exports.deleteTable = (tableName) => {
+  return new Promise( (resolve, reject) => {
+    try {
+      resolve(tables[tableName].clear());
     } catch (e) {
       console.log(e);
       reject(e);
