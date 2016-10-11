@@ -26,6 +26,7 @@ bot.functions = {};
 bot.commands = new Discord.Collection();
 bot.aliases = new Discord.Collection();
 bot.commandInhibitors = new Discord.Collection();
+bot.databaseModules = new Discord.Collection();
 
 // Load core functions, then everything else
 fs.readdir("./functions/core", (err, files) => {
@@ -40,6 +41,7 @@ fs.readdir("./functions/core", (err, files) => {
   bot.functions.core.loadCommands(bot);
   bot.functions.core.loadCommandInhibitors(bot);
   bot.functions.core.loadEvents(bot);
+  bot.functions.core.loadDatabaseHandlers(bot);
 });
 
 bot.on("message", msg => {
