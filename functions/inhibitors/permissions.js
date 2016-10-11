@@ -6,7 +6,7 @@ exports.conf = {
   enabled: config.includes("permissions")
 };
 
-exports.run = (bot, msg, cmd) => {
+exports.run = (bot, msg, cmd, dry = false) => {
   return new Promise ((resolve, reject) => {
     let permlvl = 0;
     if(msg.guild) {
@@ -19,10 +19,14 @@ exports.run = (bot, msg, cmd) => {
     if (permlvl >= cmd.conf.permLevel) {
       resolve();
     } else {
-      msg.channel.sendMessage("You do not have permission to use this command.")
-      .then(() => {
+      if(dry){
         reject();
-      });
+      }
+      else{
+        msg.channel.sendMessage("You do not have permission to use this command.").then(() => {
+          reject();
+        });
+      }
     }
   });
 };
