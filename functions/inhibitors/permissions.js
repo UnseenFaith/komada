@@ -3,7 +3,8 @@ let config = require("../../config.json").commandInhibitors;
 if (config === undefined) config = [];
 
 exports.conf = {
-  enabled: config.includes("permissions")
+  enabled: config.includes("permissions"),
+  spamProtection: false
 };
 
 exports.run = (bot, msg, cmd) => {

@@ -7,7 +7,8 @@ const timers = [];
 const ratelimit = 1000;
 
 exports.conf = {
-  enabled: config.includes("commandSlowMode")
+  enabled: config.includes("commandSlowMode"),
+  spamProtection: true
 };
 
 exports.run = (bot, msg, cmd) => {
