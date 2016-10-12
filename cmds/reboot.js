@@ -16,7 +16,7 @@ exports.run = (client, msg, params) => {
           process.exit();
         })
         .catch(e => {
-          client.lib.errorlog(client, e);
+          console.error(e);
         });
     }
   });
