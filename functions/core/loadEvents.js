@@ -2,7 +2,7 @@ const fs = require("fs");
 let events = require("discord.js/src/util/Constants.js").Events;
 events = Object.keys(events).map(k => events[k]);
 
-module.exports = bot => {
+module.exports = client => {
   fs.readdir("./functions/events", (err, files) => {
     if(err) console.error(err);
     let e = 0;
@@ -12,9 +12,9 @@ module.exports = bot => {
     });
     files.forEach(f=> {
       let name = f.split(".")[0];
-      bot.on(name, (...args) => require(`../events/${f}`).run(bot, ...args));
+      client.on(name, (...args) => require(`../events/${f}`).run(client, ...args));
       e++;
     });
-    bot.log(`Loaded ${e} events`);
+    client.log(`Loaded ${e} events`);
   });
 };

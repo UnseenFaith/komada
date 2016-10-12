@@ -6,18 +6,18 @@ exports.conf = {
   enabled: config.includes("points")
 };
 
-exports.init = (bot) => {
+exports.init = (client) => {
   return new Promise( (resolve, reject) => {
-    if(!bot.databaseModules.first()) reject(`No Database Found`);
-    if(!bot.databaseModules.first().hasTable("quiz")) {
-      bot.databaseModules.first().createTable("quiz");
+    if(!client.databaseModules.first()) reject(`No Database Found`);
+    if(!client.databaseModules.first().hasTable("quiz")) {
+      client.databaseModules.first().createTable("quiz");
     }
   });
 };
 
-exports.run = function(bot, msg, action) {
+exports.run = function(client, msg, action) {
   return new Promise( (resolve, reject) => {
-    let db = bot.databaseModules.first();
+    let db = client.databaseModules.first();
 
     db.get("quiz", msg.author.id).then(points =>{
       switch(action) {

@@ -11,7 +11,7 @@ const guides = {
   "firstbot": { url: "/coding-walkthroughs/your_basic_bot.html", snippet: "In this chapter I'll guide you through the development of a simple bot with some useful commands. We'll start with the example we created in the first chapter and expand upon it." }
 };
 
-exports.run = (bot, msg, params = []) => {
+exports.run = (client, msg, params = []) => {
   if (guides[params[0]]) {
     let details = guides[params[0]];
     msg.channel.sendMessage(`${details.snippet}\n**Read More**: <${base_url}${details.url}>`);

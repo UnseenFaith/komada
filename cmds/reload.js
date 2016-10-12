@@ -1,16 +1,16 @@
 const fs = require("fs");
 
-exports.run = (bot, msg, params) => {
+exports.run = (client, msg, params) => {
   if (params[0] === "all") {
-    bot.log("Reloading all commands");
-    bot.functions.core.loadCommands(bot);
+    client.log("Reloading all commands");
+    client.functions.core.loadCommands(client);
     return;
   }
   let command;
-  if (bot.commands.has(params[0])) {
+  if (client.commands.has(params[0])) {
     command = params[0];
-  } else if (bot.aliases.has(params[0])) {
-    command = bot.aliases.get(params[0]);
+  } else if (client.aliases.has(params[0])) {
+    command = client.aliases.get(params[0]);
   }
   if (!command) {
     if (params[0].includes(".js")) params[0] = params[0].replace(".js","");
@@ -19,7 +19,7 @@ exports.run = (bot, msg, params) => {
       if (stats.isFile()) {
         msg.channel.sendMessage(`Loading New Command: ${params[0]}`)
         .then(m => {
-          bot.functions.core.reload(bot, params[0])
+          client.functions.core.reload(client, params[0])
           .then(() => {
             m.edit(`Successfully Loaded: ${params[0]}`);
           })
@@ -32,7 +32,7 @@ exports.run = (bot, msg, params) => {
   } else {
     msg.channel.sendMessage(`Reloading: ${command}`)
     .then(m => {
-      bot.functions.core.reload(bot, command)
+      client.functions.core.reload(client, command)
       .then(() => {
         m.edit(`Successfully reloaded: ${command}`);
       })

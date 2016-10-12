@@ -1,4 +1,4 @@
-exports.run = (bot, msg, params = []) => {
+exports.run = (client, msg, params = []) => {
   var code = params.join(" ");
   try {
     var evaled = eval(code);
