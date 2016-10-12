@@ -1,3 +1,3 @@
-exports.run = (bot, warning) => {
+exports.run = (client, warning) => {
   console.warn(warning);
 };
