@@ -1,9 +1,9 @@
 exports.run = (client, msg, params = []) => {
-  if (client.functions.optn.hasOwnProperty("points")) {
-    client.functions.optn.points(client, msg, "view").then(points => {
+  if (client.funcs.hasOwnProperty("points")) {
+    client.funcs.points(client, msg, "view").then(points => {
       msg.reply(`Seems you have ${points} point${points !== 1 ? "" : "s"} at the moment.`);
     })
-    .catch(console.error);
+      .catch(console.error);
   }
 };
 
@@ -12,7 +12,8 @@ exports.conf = {
   guildOnly: true,
   aliases: [],
   permLevel: 0,
-  botPerms: []
+  botPerms: [],
+  requiredFuncs: ["points"]
 };
 
 exports.help = {

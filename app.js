@@ -22,28 +22,38 @@ try {
 
 // Extend client
 client.log = msg => { console.log(`${clk.bgBlue(`[${moment().format("YYYY-MM-DD HH:mm:ss")}]`)} ${msg}`);};
-client.functions = {};
+client.config["init"] = [];
+client.funcs = {};
 client.commands = new Discord.Collection();
 client.aliases = new Discord.Collection();
 client.commandInhibitors = new Discord.Collection();
 client.databaseModules = new Discord.Collection();
 
 // Load core functions, then everything else
-fs.readdir("./functions/core", (err, files) => {
-  client.functions.core = {};
-  if (err) console.error(err);
-  files = files.filter(f => { return f.slice(-3) === ".js"; });
-  files.forEach(f=> {
-    let name = f.split(".")[0];
-    client.functions.core[name] = require(`./functions/core/${f}`);
+client.funcs["loadFunctions"] = () => {
+  fs.readdir("./functions/core", (err, files) => {
+    if (err) console.error(err);
+    files = files.filter(f => { return f.slice(-3) === ".js"; });
+    let [d,o] = [0,0];
+    files.forEach(f=> {
+      let file = f.split(".");
+      if (file[1] !== "opt") {
+        client.funcs[file[0]] = require(`./functions/core/${f}`);
+        d++;
+      } else if (client.config.functions.includes(file[0])) {
+        client.funcs[file[0]] = require(`./functions/core/${f}`);
+        o++;
+      }
+    });
+    client.log(`Loaded ${d} functions, with ${o} optional.`);
+    client.funcs.loadDatabaseHandlers(client);
+    client.funcs.loadCommands(client);
+    client.funcs.loadCommandInhibitors(client);
+    client.funcs.loadEvents(client);
   });
-  client.log(`Loaded ${files.length} core functions`);
-  client.functions.core.loadDatabaseHandlers(client);
-  client.functions.core.loadOptionalFunctions(client);
-  client.functions.core.loadCommands(client);
-  client.functions.core.loadCommandInhibitors(client);
-  client.functions.core.loadEvents(client);
-});
+};
+client.funcs.loadFunctions();
+
 
 client.on("message", msg => {
   if (!msg.content.startsWith(client.config.prefix)) return;
@@ -56,7 +66,7 @@ client.on("message", msg => {
     cmd = client.commands.get(client.aliases.get(command));
   }
   if (cmd) {
-    client.functions.core.runCommandInhibitors(client, msg, cmd)
+    client.funcs.runCommandInhibitors(client, msg, cmd)
     .then(() => {
       cmd.run(client, msg, params);
     })
