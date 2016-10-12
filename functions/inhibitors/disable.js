@@ -11,10 +11,7 @@ exports.run = (bot, msg, cmd) => {
     if (cmd.conf.enabled) {
       resolve();
     } else {
-      msg.channel.sendMessage("This command is currently disabled")
-      .then(() => {
-        reject();
-      });
+      reject("This command is currently disabled");
     }
   });
 };

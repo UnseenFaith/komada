@@ -58,6 +58,9 @@ bot.on("message", msg => {
     bot.functions.core.runCommandInhibitors(bot, msg, cmd)
     .then(() => {
       cmd.run(bot, msg, params);
+    })
+    .catch(reason => {
+      msg.channel.sendMessage(reason);
     });
   }
 });

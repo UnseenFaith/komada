@@ -4,5 +4,5 @@
   "clientID": "your-bot-client-id",
   "prefix": "?",
   "optnFunctions": ["points"],
-  "commandInhibitors": ["disable", "permissions", "missingBotPermissions"]
+  "commandInhibitors": ["disable", "permissions", "missingBotPermissions", "commandSlowMode"]
 }

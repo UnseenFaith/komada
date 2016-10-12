@@ -19,8 +19,7 @@ exports.run = (bot, msg, cmd) => {
       });
     }
     if (missing.length > 0) {
-      msg.channel.sendMessage(`Insufficient permissions, missing: **${bot.functions.core.toTitleCase(missing.join(", ").split("_").join(" "))}**`);
-      reject();
+      reject(`Insufficient permissions, missing: **${bot.functions.core.toTitleCase(missing.join(", ").split("_").join(" "))}**`);
     } else {
       resolve();
     }

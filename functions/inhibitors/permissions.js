@@ -19,10 +19,7 @@ exports.run = (bot, msg, cmd) => {
     if (permlvl >= cmd.conf.permLevel) {
       resolve();
     } else {
-      msg.channel.sendMessage("You do not have permission to use this command.")
-      .then(() => {
-        reject();
-      });
+      reject("You do not have permission to use this command.");
     }
   });
 };

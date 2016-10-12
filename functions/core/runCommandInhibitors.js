@@ -5,11 +5,10 @@ module.exports = (bot, msg, cmd) => {
       mps.push(mProc.run(bot, msg, cmd));
     });
     Promise.all(mps)
-    .then(() => {
-      resolve();
-    })
-    .catch(() => {
-      reject();
+    .then(value => {
+      resolve(value);
+    }, reason => {
+      reject(reason);
     });
   });
 };
