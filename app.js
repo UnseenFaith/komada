@@ -6,10 +6,10 @@ const chalk = require("chalk");
 const clk = new chalk.constructor({ enabled: true });
 
 // Try local JSON config, if not, expect Process Env (Heroku)
-try{
+try {
   client.config = require("./config.json");
 } catch (e) {
-  if(process.env.botToken) {
+  if (process.env.botToken) {
     client.config = {
       botToken: process.env.botToken,
       prefix: process.env.prefix,
@@ -21,7 +21,7 @@ try{
 }
 
 // Extend client
-client.log = msg => {console.log(`${clk.bgBlue(`[${moment().format("YYYY-MM-DD HH:mm:ss")}]`)} ${msg}`);};
+client.log = msg => { console.log(`${clk.bgBlue(`[${moment().format("YYYY-MM-DD HH:mm:ss")}]`)} ${msg}`);};
 client.functions = {};
 client.commands = new Discord.Collection();
 client.aliases = new Discord.Collection();
@@ -32,6 +32,7 @@ client.databaseModules = new Discord.Collection();
 fs.readdir("./functions/core", (err, files) => {
   client.functions.core = {};
   if (err) console.error(err);
+  files = files.filter(f => { return f.slice(-3) === ".js"; });
   files.forEach(f=> {
     let name = f.split(".")[0];
     client.functions.core[name] = require(`./functions/core/${f}`);
