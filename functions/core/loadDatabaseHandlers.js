@@ -9,7 +9,6 @@ module.exports = bot => {
       let name = f.split(".")[0];
       bot.log(`Loading Database: ${name}`);
       let props = require(`../../modules/db/${f}`);
-      bot.log(props.conf.enabled);
       if (props.conf.enabled) {
         bot.databaseModules.set(name, props);
         props.init(bot);

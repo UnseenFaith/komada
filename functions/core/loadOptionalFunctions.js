@@ -10,7 +10,6 @@ module.exports = bot => {
       let name = f.split(".")[0];
       bot.log(`Loading optional command: ${name}`);
       let props = require(`../optn/${f}`);
-      bot.log(props.conf.enabled);
       if (props.conf.enabled) {
         bot.functions.optn[name] = props.run;
         o++;

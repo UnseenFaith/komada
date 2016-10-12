@@ -9,10 +9,15 @@ const config = {
 };
 exports.conf = config;
 
-exports.init = (bot) => {
+exports.debug = bot => {
+  bot.log(tables);
+};
+
+exports.init = bot => {
   return new Promise( (resolve, reject) => {
     try {
       let test = new LocalStorage(`${config.baseLocation}/system-test`);
+      test.clear();
     }
     catch (e) {
       console.log(e);
@@ -37,13 +42,25 @@ exports.get = (table, key) => {
       let value = tables[table].getItem(key);
       resolve(value);
     } catch(e) {
-      console.log(e);
+      reject("Key not found");
+    }
+  });
+};
+
+exports.has = (table, key) => {
+  console.log(tables[table]);
+  return new Promise( (resolve, reject) => {
+    try {
+      let value = tables[table].getItem(key);
+      resolve(!!value);
+    } catch(e) {
       reject(e);
     }
   });
 };
 
 exports.set = (table, key, value) => {
+  console.log(tables[table]);
   return new Promise( (resolve, reject) => {
     try {
       resolve(tables[table].setItem(key, value));
@@ -65,6 +82,17 @@ exports.delete = (table, key) => {
   });
 };
 
+exports.hasTable = (tableName) => {
+  return new Promise( (resolve, reject) => {
+    try {
+      resolve(!!tables[tableName]);
+    } catch (e) {
+      console.log(e);
+      reject(e);
+    }
+  });
+};
+
 exports.createTable = (tableName) => {
   return new Promise( (resolve, reject) => {
     try {
@@ -79,7 +107,14 @@ exports.createTable = (tableName) => {
 exports.deleteTable = (tableName) => {
   return new Promise( (resolve, reject) => {
     try {
-      resolve(tables[tableName].clear());
+      let index = tables.indexOf(tableName);
+      if(index > -1) {
+        tables[tableName].clear();
+        tables.splice(index, 1);
+        resolve();
+      } else {
+        reject(`Table name not found in list of available tables.`);
+      }
     } catch (e) {
       console.log(e);
       reject(e);
