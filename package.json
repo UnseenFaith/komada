@@ -1,7 +1,7 @@
 {
-  "name": "guidebot",
-  "version": "1.0.0",
-  "description": "Discord.js Guide and Rule Bot",
+  "name": "komada",
+  "version": "0.3.0",
+  "description": "Komada: Croatian for 'pieces', is a modular bot system including reloading modules and easy to use custom commands.",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
