@@ -1,8 +1,6 @@
 module.exports = function(client, msg, action) {
   return new Promise((resolve, reject) => {
-    console.log("test");
     if (!client.config.init.includes("points")) {
-      console.log("test2");
       init(client)
         .then(() => {
           run(client, msg, action)
@@ -14,7 +12,6 @@ module.exports = function(client, msg, action) {
           reject(e);
         });
     } else {
-      console.log("test3");
       run(client, msg, action)
         .then(p => {
           resolve(p);
