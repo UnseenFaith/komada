@@ -6,7 +6,7 @@ const quiz = [
   { q: "Who's a good boy? **Who's a good boy???**", a: ["you are", "i am"]}
 ];
 
-exports.run = (bot, msg, params = []) => {
+exports.run = (client, msg, params = []) => {
   let item =  quiz[Math.floor(Math.random() * quiz.length)];
   msg.channel.sendMessage(item.q)
   .then( () => {
@@ -16,7 +16,7 @@ exports.run = (bot, msg, params = []) => {
       errors: ["time"]
     })
     .then(collected => {
-      bot.functions.optn.points(bot, collected.first(), "add");
+      client.functions.optn.points(client, collected.first(), "add");
       msg.channel.sendMessage(`We have a winner! *${collected.first().author.username}* had a right answer with \`${collected.first().content}\`!`);
     })
     .catch((collected) => msg.channel.sendMessage("Seems no one got it! Oh well."));

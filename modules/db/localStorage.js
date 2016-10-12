@@ -9,7 +9,7 @@ const config = {
 };
 exports.conf = config;
 
-exports.init = (bot) => {
+exports.init = (client) => {
   return new Promise( (resolve, reject) => {
     try {
       let test = new LocalStorage(`${config.baseLocation}/system-test`);
@@ -26,7 +26,7 @@ exports.init = (bot) => {
         tables[name] = new LocalStorage(`${config.baseLocation}/${name}`);
         c++;
       });
-      bot.log(`Loaded ${c} tables in ${config.moduleName} database.`);
+      client.log(`Loaded ${c} tables in ${config.moduleName} database.`);
     });
   });
 };

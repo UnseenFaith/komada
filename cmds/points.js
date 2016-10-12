@@ -1,5 +1,5 @@
-exports.run = (bot, msg, params = []) => {
-  if (bot.functions.optn.hasOwnProperty("points")) msg.reply(`Seems you got ${bot.functions.optn.points(bot, msg, "view")} points at the moment.`);
+exports.run = (client, msg, params = []) => {
+  if (client.functions.optn.hasOwnProperty("points")) msg.reply(`Seems you got ${client.functions.optn.points(client, msg, "view")} points at the moment.`);
 };
 
 exports.conf = {

@@ -7,7 +7,7 @@ exports.conf = {
   spamProtection: false
 };
 
-exports.run = (bot, msg, cmd) => {
+exports.run = (client, msg, cmd) => {
   return new Promise ((resolve, reject) => {
     if (cmd.conf.enabled) {
       resolve();

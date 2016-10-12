@@ -7,7 +7,7 @@ exports.conf = {
   spamProtection: false
 };
 
-exports.run = (bot, msg, cmd) => {
+exports.run = (client, msg, cmd) => {
   return new Promise ((resolve, reject) => {
     let permlvl = 0;
     if(msg.guild) {
@@ -16,7 +16,7 @@ exports.run = (bot, msg, cmd) => {
       let admin_role = msg.guild.roles.find("name", "Devs");
       if(admin_role && msg.member.roles.has(admin_role.id)) permlvl = 3;
     }
-    if(msg.author.id === bot.config.ownerid) permlvl = 4;
+    if(msg.author.id === client.config.ownerid) permlvl = 4;
     if (permlvl >= cmd.conf.permLevel) {
       resolve();
     } else {

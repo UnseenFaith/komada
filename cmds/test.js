@@ -1,4 +1,4 @@
-exports.run = (bot, msg, params = []) => {
+exports.run = (client, msg, params = []) => {
   console.log("Test Executed");
   msg.reply("Test Executed");
 };

@@ -1,3 +1,3 @@
-exports.run = (bot, error) => {
+exports.run = (client, error) => {
   console.error(error);
 };

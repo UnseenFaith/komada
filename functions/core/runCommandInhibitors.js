@@ -1,9 +1,9 @@
-module.exports = (bot, msg, cmd, notSpam = false) => {
+module.exports = (client, msg, cmd, notSpam = false) => {
   return new Promise ((resolve, reject) => {
     let mps = [true];
-    bot.commandInhibitors.forEach(mProc => {
+    client.commandInhibitors.forEach(mProc => {
       if (!mProc.conf.spamProtection || !notSpam) {
-        mps.push(mProc.run(bot, msg, cmd));
+        mps.push(mProc.run(client, msg, cmd));
       }
     });
     Promise.all(mps)

@@ -11,7 +11,7 @@ exports.conf = {
   spamProtection: true
 };
 
-exports.run = (bot, msg, cmd) => {
+exports.run = (client, msg, cmd) => {
   return new Promise ((resolve, reject) => {
     // also available: msg.server.id , msg.channel.id
     let slowmode_level = msg.author.id;

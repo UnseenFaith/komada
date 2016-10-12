@@ -1,3 +1,3 @@
-exports.run = (bot) => {
-  bot.log(`Komada: Ready to serve ${bot.users.size} users, in ${bot.channels.size} channels of ${bot.guilds.size} servers.`);
+exports.run = (client) => {
+  client.log(`Komada: Ready to serve ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} servers.`);
 };
