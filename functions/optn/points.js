@@ -8,10 +8,15 @@ exports.conf = {
 
 exports.init = (client) => {
   return new Promise( (resolve, reject) => {
-    if(!client.databaseModules.first()) reject(`No Database Found`);
-    if(!client.databaseModules.first().hasTable("quiz")) {
-      client.databaseModules.first().createTable("quiz");
+    if(!client.databaseModules.first()) {
+      reject("No Database Found");
     }
+    client.databaseModules.first().hasTable("quiz")
+    .then(res => {
+      if(!res) {
+        client.databaseModules.first().createTable("quiz");
+      }
+    });
   });
 };
 

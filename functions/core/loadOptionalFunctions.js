@@ -14,6 +14,7 @@ module.exports = client => {
         client.functions.optn[name] = props.run;
         o++;
       }
+      if(typeof props.init === "function") props.init(client);
     });
     client.log(`Loaded ${o} optional functions`);
   });

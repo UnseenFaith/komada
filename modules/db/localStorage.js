@@ -112,7 +112,7 @@ exports.deleteTable = (tableName) => {
         tables.splice(index, 1);
         resolve();
       } else {
-        reject(`Table name not found in list of available tables.`);
+        reject("Table name not found in list of available tables.");
       }
     } catch (e) {
       console.log(e);

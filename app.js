@@ -37,11 +37,11 @@ fs.readdir("./functions/core", (err, files) => {
     client.functions.core[name] = require(`./functions/core/${f}`);
   });
   client.log(`Loaded ${files.length} core functions`);
+  client.functions.core.loadDatabaseHandlers(client);
   client.functions.core.loadOptionalFunctions(client);
   client.functions.core.loadCommands(client);
   client.functions.core.loadCommandInhibitors(client);
   client.functions.core.loadEvents(client);
-  client.functions.core.loadDatabaseHandlers(client);
 });
 
 client.on("message", msg => {

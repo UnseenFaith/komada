@@ -16,7 +16,6 @@ module.exports = client => {
         client.aliases.set(alias, props.help.name);
         a++;
       });
-      if(typeof props.init === "function") props.init(bot);
     });
     files.forEach(f => {
       delete require.cache[require.resolve(`../../cmds/${f}`)];
