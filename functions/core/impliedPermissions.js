@@ -1,4 +1,4 @@
-const permFlags = require("discord.js/src/util/constants.js").PermissionFlags;
+const permFlags = require("discord.js/src/util/Constants.js").PermissionFlags;
 
 module.exports = () => {
   let genObject = {};
