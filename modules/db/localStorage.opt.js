@@ -47,7 +47,6 @@ exports.get = (table, key) => {
 };
 
 exports.has = (table, key) => {
-  console.log(tables[table]);
   return new Promise( (resolve, reject) => {
     try {
       let value = tables[table].getItem(key);
@@ -59,7 +58,6 @@ exports.has = (table, key) => {
 };
 
 exports.set = (table, key, value) => {
-  console.log(tables[table]);
   return new Promise( (resolve, reject) => {
     try {
       resolve(tables[table].setItem(key, value));
