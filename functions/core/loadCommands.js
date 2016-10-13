@@ -25,6 +25,10 @@ module.exports = client => {
         client.funcs.installNPM(module[0].slice(1,-1))
         .then(() => {
           client.funcs.loadCommands(client);
+        })
+        .catch(e => {
+          console.error(e);
+          process.exit();
         });
       } else {
         console.error(e);
