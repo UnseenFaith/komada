@@ -1,6 +1,6 @@
-exports.run = (client, msg, [user]) => {
-  user = require("util").inspect(user, { depth: 0 });
-  msg.channel.sendCode("xl",client.funcs.clean(user));
+exports.run = (client, msg, [ugc]) => {
+  ugc = require("util").inspect(ugc, { depth: 0 });
+  msg.channel.sendCode("xl",client.funcs.clean(ugc));
 };
 
 exports.conf = {
@@ -14,7 +14,7 @@ exports.conf = {
 
 exports.help = {
   name: "spy",
-  description: "Spies on a user",
-  usage: "<user:mention>",
+  description: "Spies on a user, guild, or channel",
+  usage: "<user:user|guild:guild|channel:channel>",
   usageDelim: ""
 };

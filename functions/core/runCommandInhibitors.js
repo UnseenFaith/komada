@@ -12,7 +12,6 @@ module.exports = (client, msg, cmd, selective = false) => {
     });
     Promise.all(mps)
     .then(value => {
-      console.log(value[usage]);
       resolve(value[usage]);
     }, reason => {
       reject(reason);

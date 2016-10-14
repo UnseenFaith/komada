@@ -7,7 +7,6 @@ exports.run = (client, msg, cmd) => {
   return new Promise((resolve, reject) => {
 
     let usage = client.funcs.parseUsage(cmd.help.usage);
-    console.log(usage[1]);
     let args = msg.content.slice(client.config.prefix.length).split(" ").slice(1).join(" ").split(cmd.help.usageDelim !== "" ? cmd.help.usageDelim : null);
     if (args[0] === "") args = [];
     let currentUsage;
@@ -36,31 +35,94 @@ exports.run = (client, msg, cmd) => {
               reject(`Your option did not litterally match the only possibility: (${currentUsage.possibles.map(p => {return p.name;}).join(", ")})\nThis is likely caused by a mistake in the usage string.`);
             }
             break;
+          case "user":
           case "mention":
-            if (!/^<@!?\d+>$/.test(args[i])) {
-              reject(`${currentUsage.possibles[i].name} must be a mention.`);
+            if (!/^<@!?\d+>$/.test(args[i]) && !client.users.has(args[i])) {
+              reject(`${currentUsage.possibles[0].name} must be a mention or valid user id.`);
             } else {
-              args[i] = msg.mentions.users.get(/\d+/.exec(args[i])[0]);
+              args[i] = client.users.get(/\d+/.exec(args[i])[0]);
+            }
+            break;
+          case "channel":
+            if (!/^<#\d+>$/.test(args[i]) && !client.channels.has(args[i])) {
+              reject(`${currentUsage.possibles[0].name} must be a channel tag or valid channel id.`);
+            } else {
+              args[i] = client.channels.get(/\d+/.exec(args[i])[0]);
+            }
+            break;
+          case "guild":
+            if (!client.guilds.has(args[i])) {
+              reject(`${currentUsage.possibles[0].name} must be a valid guild id.`);
+            } else {
+              args[i] = client.guilds.get(/\d+/.exec(args[i])[0]);
             }
             break;
           case "str":
           case "string":
             //is already a string :okhand:
+            if (currentUsage.possibles[0].min && currentUsage.possibles[0].max) {
+              if (args[i].length < currentUsage.possibles[0].min || args[i].length > currentUsage.possibles[0].max) {
+                if (currentUsage.possibles[0].min === currentUsage.possibles[0].max) {
+                  reject(`${currentUsage.possibles[0].name} must be exactly ${currentUsage.possibles[0].min} characters.`);
+                } else {
+                  reject(`${currentUsage.possibles[0].name} must be between ${currentUsage.possibles[0].min} and ${currentUsage.possibles[0].max} characters.`);
+                }
+              }
+            } else if (currentUsage.possibles[0].min) {
+              if (args[i].length < currentUsage.possibles[0].min) reject(`${currentUsage.possibles[0].name} must be longer than ${currentUsage.possibles[0].min} characters.`);
+            } else if (currentUsage.possibles[0].max) {
+              if (args[i].length > currentUsage.possibles[0].max) reject(`${currentUsage.possibles[0].name} must be shorter than ${currentUsage.possibles[0].max} characters.`);
+            }
             break;
           case "int":
           case "integer":
             if (!client.funcs.isInteger(args[i])) {
-              reject(`${currentUsage.possibles[i].name} must be an integer.`);
+              reject(`${currentUsage.possibles[0].name} must be an integer.`);
+            } else if (currentUsage.possibles[0].min && currentUsage.possibles[0].max) {
+              args[i] = parseInt(args[i]);
+              if (args[i] < currentUsage.possibles[0].min || args[i] > currentUsage.possibles[0].max) {
+                if (currentUsage.possibles[0].min === currentUsage.possibles[0].max) {
+                  reject(`${currentUsage.possibles[0].name} must be exactly ${currentUsage.possibles[0].min}\nSo why didn't the dev use a literal?`);
+                } else {
+                  reject(`${currentUsage.possibles[0].name} must be between ${currentUsage.possibles[0].min} and ${currentUsage.possibles[0].max}.`);
+                }
+              }
+            } else if (currentUsage.possibles[0].min) {
+              args[i] = parseInt(args[i]);
+              if (args[i] < currentUsage.possibles[0].min) reject(`${currentUsage.possibles[0].name} must be greater than ${currentUsage.possibles[0].min}.`);
+            } else if (currentUsage.possibles[0].max) {
+              args[i] = parseInt(args[i]);
+              if (args[i] > currentUsage.possibles[0].max) reject(`${currentUsage.possibles[0].name} must be less than ${currentUsage.possibles[0].max}.`);
             } else {
               args[i] = parseInt(args[i]);
             }
             break;
+          case "num":
+          case "number":
           case "float":
             if (parseFloat(args[i]) === "NaN") {
-              reject(`${currentUsage.possibles[i].name} must be an integer.`);
+              reject(`${currentUsage.possibles[0].name} must be a valid number.`);
+            } else if (currentUsage.possibles[0].min && currentUsage.possibles[0].max) {
+              args[i] = parseFloat(args[i]);
+              if (args[i] < currentUsage.possibles[0].min || args[i] > currentUsage.possibles[0].max) {
+                if (currentUsage.possibles[0].min === currentUsage.possibles[0].max) {
+                  reject(`${currentUsage.possibles[0].name} must be exactly ${currentUsage.possibles[0].min}\nSo why didn't the dev use a literal?`);
+                } else {
+                  reject(`${currentUsage.possibles[0].name} must be between ${currentUsage.possibles[0].min} and ${currentUsage.possibles[0].max}.`);
+                }
+              }
+            } else if (currentUsage.possibles[0].min) {
+              args[i] = parseFloat(args[i]);
+              if (args[i] < currentUsage.possibles[0].min) reject(`${currentUsage.possibles[0].name} must be greater than ${currentUsage.possibles[0].min}.`);
+            } else if (currentUsage.possibles[0].max) {
+              args[i] = parseFloat(args[i]);
+              if (args[i] > currentUsage.possibles[0].max) reject(`${currentUsage.possibles[0].name} must be less than ${currentUsage.possibles[0].max}.`);
             } else {
               args[i] = parseFloat(args[i]);
             }
+            break;
+          default:
+            console.warn("Unknown Argument Type encountered");
             break;
         }
       } else {
@@ -73,28 +135,70 @@ exports.run = (client, msg, cmd) => {
                 validated = true;
               }
               break;
+            case "user":
             case "mention":
-              if (/^<@!?\d+>$/.test(args[i])) {
-                args[i] = msg.mentions.users.get(/\d+/.exec(args[i])[0]);
+              if (/^<@!?\d+>$/.test(args[i]) || client.users.has(args[i])) {
+                args[i] = client.users.get(/\d+/.exec(args[i])[0]);
+                validated = true;
+              }
+              break;
+            case "channel":
+              if (/^<#\d+>$/.test(args[i]) || client.channels.has(args[i])) {
+                args[i] = client.channels.get(/\d+/.exec(args[i])[0]);
+                validated = true;
+              }
+              break;
+            case "guild":
+              if (client.guilds.has(args[i])) {
+                args[i] = client.guilds.get(/\d+/.exec(args[i])[0]);
                 validated = true;
               }
               break;
             case "str":
             case "string":
-              validated = true;
+              if (p.min && p.max) {
+                if (args[i].length <= p.max && args[i].length >= p.min) validated = true;
+              } else if (p.min) {
+                if (args[i].length >= p.min) validated = true;
+              } else if (p.max) {
+                if (args[i].length <= p.max) validated = true;
+              } else {
+                validated = true;
+              }
               break;
             case "int":
             case "integer":
               if (client.funcs.isInteger(args[i])) {
                 args[i] = parseInt(args[i]);
-                validated = true;
+                if (p.min && p.max) {
+                  if (args[i] <= p.max && args[i] >= p.min) validated = true;
+                } else if (p.min) {
+                  if (args[i] >= p.min) validated = true;
+                } else if (p.max) {
+                  if (args[i] <= p.max) validated = true;
+                } else {
+                  validated = true;
+                }
               }
               break;
+            case "num":
+            case "number":
             case "float":
               if (parseFloat(args[i]) !== "NaN") {
                 args[i] = parseFloat(args[i]);
-                validated = true;
+                if (p.min && p.max) {
+                  if (args[i] <= p.max && args[i] >= p.min) validated = true;
+                } else if (p.min) {
+                  if (args[i] >= p.min) validated = true;
+                } else if (p.max) {
+                  if (args[i] <= p.max) validated = true;
+                } else {
+                  validated = true;
+                }
               }
+              break;
+            default:
+              console.warn("Unknown Argument Type encountered");
               break;
           }
         });
