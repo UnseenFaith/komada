@@ -1,4 +1,4 @@
-exports.run = (client, msg, params = []) => {
+exports.run = (client, msg) => {
   console.log("Test Executed");
   msg.reply("Test Executed");
 };
@@ -15,5 +15,6 @@ exports.conf = {
 exports.help = {
   name: "test",
   description: "This is a test command. What does it do? ",
-  usage: "test"
+  usage: "",
+  usageDelim: ""
 };

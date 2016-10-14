@@ -6,7 +6,7 @@ const quiz = [
   { q: "Who's a good boy? **Who's a good boy???**", a: ["you are", "i am"] }
 ];
 
-exports.run = (client, msg, params = []) => {
+exports.run = (client, msg) => {
   let item = quiz[Math.floor(Math.random() * quiz.length)];
   msg.channel.sendMessage(item.q)
     .then(() => {
@@ -19,7 +19,7 @@ exports.run = (client, msg, params = []) => {
           client.funcs.points(client, collected.first(), "add").catch(console.error);
           msg.channel.sendMessage(`We have a winner! *${collected.first().author.username}* had a right answer with \`${collected.first().content}\`!`);
         })
-        .catch((collected) => msg.channel.sendMessage("Seems no one got it! Oh well."));
+        .catch(() => msg.channel.sendMessage("Seems no one got it! Oh well."));
     });
 };
 
@@ -35,5 +35,6 @@ exports.conf = {
 exports.help = {
   name: "quiz",
   description: "Sends a quiz and expects a correct answer.",
-  usage: "quiz"
+  usage: "",
+  usageDelim: ""
 };

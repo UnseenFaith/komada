@@ -1,15 +1,15 @@
-exports.run = (client, msg, params) => {
+exports.run = (client, msg, [commandname]) => {
   let command;
-  if (client.commands.has(params[0])) {
-    command = params[0];
-  } else if (client.aliases.has(params[0])) {
-    command = client.aliases.get(params[0]);
+  if (client.commands.has(commandname)) {
+    command = commandname;
+  } else if (client.aliases.has(commandname)) {
+    command = client.aliases.get(commandname);
   }
   if (!command) {
-    return msg.channel.sendMessage(`I cannot find the command: ${params[0]}`);
+    return msg.channel.sendMessage(`I cannot find the command: ${commandname}`);
   } else {
     client.commands.get(command).conf.enabled = false;
-    return msg.channel.sendMessage(`Successfully disabled: ${params[0]}`);
+    return msg.channel.sendMessage(`Successfully disabled: ${commandname}`);
   }
 };
 
@@ -25,5 +25,6 @@ exports.conf = {
 exports.help = {
   name: "disable",
   description: "Temperarily disables the command.",
-  usage: "disable <commandname>"
+  usage: "<commandname:str>",
+  usageDelim: ""
 };

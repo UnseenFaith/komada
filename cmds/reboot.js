@@ -1,4 +1,4 @@
-exports.run = (client, msg, params) => {
+exports.run = (client, msg) => {
   const collector = msg.channel.createCollector(m => m.author === msg.author, {
     time: 10000
   });
@@ -34,5 +34,6 @@ exports.conf = {
 exports.help = {
   name: "reboot",
   description: "reboots the bot.",
-  usage: "reboot"
+  usage: "",
+  usageDelim: ""
 };

@@ -57,7 +57,6 @@ client.funcs.loadFunctions();
 client.on("message", msg => {
   if (!msg.content.startsWith(client.config.prefix)) return;
   let command = msg.content.split(" ")[0].slice(client.config.prefix.length);
-  let params = msg.content.split(" ").slice(1);
   let cmd;
   if (client.commands.has(command)) {
     cmd = client.commands.get(command);
@@ -66,7 +65,7 @@ client.on("message", msg => {
   }
   if (cmd) {
     client.funcs.runCommandInhibitors(client, msg, cmd)
-    .then(() => {
+    .then(params => {
       cmd.run(client, msg, params);
     })
     .catch(reason => {

@@ -1,30 +1,30 @@
 const fs = require("fs");
 
-exports.run = (client, msg, params) => {
-  if (params[0] === "all") {
+exports.run = (client, msg, [commandname]) => {
+  if (commandname === "all") {
     client.log("Reloading all commands");
     client.funcs.loadCommands(client);
     return;
   }
   let command;
-  if (client.commands.has(params[0])) {
-    command = params[0];
-  } else if (client.aliases.has(params[0])) {
-    command = client.aliases.get(params[0]);
+  if (client.commands.has(commandname)) {
+    command = commandname;
+  } else if (client.aliases.has(commandname)) {
+    command = client.aliases.get(commandname);
   }
   if (!command) {
-    if (params[0].includes(".js")) params[0] = params[0].replace(".js", "");
-    fs.stat(`./cmds/${params[0]}.js`, (err, stats) => {
-      if (err) return msg.channel.sendMessage(`I cannot find the command: ${params[0]}`);
+    if (commandname.includes(".js")) commandname = commandname.replace(".js", "");
+    fs.stat(`./cmds/${commandname}.js`, (err, stats) => {
+      if (err) return msg.channel.sendMessage(`I cannot find the command: ${commandname}`);
       if (stats.isFile()) {
-        msg.channel.sendMessage(`Loading New Command: ${params[0]}`)
+        msg.channel.sendMessage(`Loading New Command: ${commandname}`)
           .then(m => {
-            client.funcs.reload(client, params[0])
+            client.funcs.reload(client, commandname)
               .then(() => {
-                m.edit(`Successfully Loaded: ${params[0]}`);
+                m.edit(`Successfully Loaded: ${commandname}`);
               })
               .catch(e => {
-                m.edit(`Command load failed: ${params[0]}\n\`\`\`${e.stack}\`\`\``);
+                m.edit(`Command load failed: ${commandname}\n\`\`\`${e.stack}\`\`\``);
               });
           });
       }
@@ -55,5 +55,5 @@ exports.conf = {
 exports.help = {
   name: "reload",
   description: "Reloads the command file, if it's been updated or modified.",
-  usage: "reload <commandname>"
+  usage: "<all:literal|commandname:str>"
 };

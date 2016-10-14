@@ -11,11 +11,11 @@ const guides = {
   "firstbot": { url: "/coding-walkthroughs/your_basic_bot.html", snippet: "In this chapter I'll guide you through the development of a simple bot with some useful commands. We'll start with the example we created in the first chapter and expand upon it." }
 };
 
-exports.run = (client, msg, params = []) => {
-  if (guides[params[0]]) {
-    let details = guides[params[0]];
+exports.run = (client, msg, [keyword]) => {
+  if (guides[keyword]) {
+    let details = guides[keyword];
     msg.channel.sendMessage(`${details.snippet}\n**Read More**: <${base_url}${details.url}>`);
-  } else if (params[0] === "list") {
+  } else if (keyword === "list") {
     msg.channel.sendMessage(`Available keywords for this command:\n${Object.keys(guides).join(", ")}`);
   } else {
     let details = guides["home"];
@@ -35,5 +35,6 @@ exports.conf = {
 exports.help = {
   name: "guide",
   description: "Returns page details from root's awesome bot guide.",
-  usage: "guide <keyword/list>"
+  usage: "[list:literal|keyword:str]",
+  usageDelim: ""
 };

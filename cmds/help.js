@@ -1,5 +1,5 @@
-exports.run = (client, msg, params) => {
-  if (!params[0]) {
+exports.run = (client, msg, [command]) => {
+  if (!command) {
 
     let mapIter = client.commands.keys();
     let toSend = [];
@@ -20,10 +20,9 @@ exports.run = (client, msg, params) => {
     })(mapIter.next().value);
 
   } else {
-    let command = params[0];
     if (client.commands.has(command)) {
       command = client.commands.get(command);
-      msg.channel.sendCode("asciidoc", `= ${command.help.name} = \n${command.help.description}\nusage :: ${client.config.prefix}${command.help.usage}`);
+      msg.channel.sendCode("asciidoc", `= ${command.help.name} = \n${command.help.description}\nusage :: ${client.funcs.fullUsage(client, command)}`);
     }
   }
 };
@@ -40,5 +39,6 @@ exports.conf = {
 exports.help = {
   name: "help",
   description: "Display help for a command.",
-  usage: "help [command]"
+  usage: "[command:str]",
+  usageDelim: ""
 };

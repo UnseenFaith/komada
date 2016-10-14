@@ -1,14 +1,19 @@
-module.exports = (client, msg, cmd, notSpam = false) => {
+module.exports = (client, msg, cmd, selective = false) => {
   return new Promise ((resolve, reject) => {
     let mps = [true];
-    client.commandInhibitors.forEach(mProc => {
-      if (!mProc.conf.spamProtection || !notSpam) {
+    let i = 1;
+    let usage;
+    client.commandInhibitors.forEach((mProc, key) => {
+      if (key === "usage") usage = i;
+      if (!mProc.conf.spamProtection || !selective) {
         mps.push(mProc.run(client, msg, cmd));
       }
+      i++;
     });
     Promise.all(mps)
     .then(value => {
-      resolve(value);
+      console.log(value[usage]);
+      resolve(value[usage]);
     }, reason => {
       reject(reason);
     });
