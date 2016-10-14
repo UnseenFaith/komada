@@ -27,7 +27,7 @@ const parseTag = (tag, count) => {
 
       const temp = parseFloat(result[3]);
 
-      if (fill.type === "string" && temp % 1 !== 0)
+      if ((fill.type === "string" || fill.type === "str") && temp % 1 !== 0)
         throw new Error(`at tag #${count} at bound #${i+1} at the type length definition (min): the string type must have an integer length`);
 
       fill.min = temp;
@@ -38,7 +38,7 @@ const parseTag = (tag, count) => {
         throw new Error(`at tag #${count} at bound #${i+1} at the type length definition (max): you canno't set a length for a literal type`);
 
       const temp = parseFloat(result[4]);
-      if (fill.type === "string" && temp % 1 !== 0)
+      if ((fill.type === "string" || fill.type === "str") && temp % 1 !== 0)
         throw new Error(`at tag #${count} at bound #${i+1} at the type length definition (max): the string type must have an integer length`);
       fill.max = temp;
     }
@@ -52,7 +52,7 @@ const parseTag = (tag, count) => {
       if (fill.type === "string" && members.length - 1 !== i)
         throw new Error(`at tag #${count} at bound #${i+1}: the String type is vague, you must specify it at the last bound`);
       if (types.includes(fill.type))
-        throw new Error(`at tag #${count} at bound #${i+1} There can't be two properties of the same type (${fill.type})`);
+        throw new Error(`at tag #${count} at bound #${i+1}: there can't be two bounds with the same type (${fill.type})`);
       types.push(fill.type);
     }
 
