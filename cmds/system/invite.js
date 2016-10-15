@@ -1,4 +1,4 @@
-const clientID = require("../config.json").clientID;
+const clientID = require("../../config.json").clientID;
 
 exports.run = (client, msg) => {
   client.log("Join Server Link");

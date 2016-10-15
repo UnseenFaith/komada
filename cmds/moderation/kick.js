@@ -16,6 +16,6 @@ exports.conf = {
 exports.help = {
   name: "kick",
   description: "Kicks a mentionned user. Currently does not require reason (no mod-log)",
-  usage: "kick @mention",
-  usageDelim: "<user:user>"
+  usage: "<user:user>",
+  usageDelim: ""
 };
