@@ -11,8 +11,9 @@ exports.run = (client, msg, cmd) => {
       if (mod_role && msg.member.roles.has(mod_role.id)) permlvl = 2;
       let admin_role = msg.guild.roles.find("name", "Devs");
       if (admin_role && msg.member.roles.has(admin_role.id)) permlvl = 3;
+      if(msg.member === msg.guild.owner) permlvl = 4;
     }
-    if (msg.author.id === client.config.ownerid) permlvl = 4;
+    if (msg.author.id === client.config.ownerid) permlvl = 10;
     if (permlvl >= cmd.conf.permLevel) {
       resolve();
     } else {
