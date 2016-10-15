@@ -47,7 +47,7 @@ client.funcs["loadFunctions"] = () => {
     });
     client.log(`Loaded ${d} functions, with ${o} optional.`);
     client.funcs.loadDatabaseHandlers(client);
-    client.funcs.loadCommands2(client);
+    client.funcs.loadCommands(client);
     client.funcs.loadCommandInhibitors(client);
     client.funcs.loadEvents(client);
   });

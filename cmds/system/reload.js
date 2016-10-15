@@ -13,13 +13,13 @@ exports.run = (client, msg, [commandname]) => {
     command = client.aliases.get(commandname);
   }
   if (!command) {
-    if (commandname.includes(".js")) commandname = commandname.replace(".js", "");
-    fs.stat(`./cmds/${commandname}.js`, (err, stats) => {
+    commandname = commandname.slice(-3) === ".js" ? commandname : commandname + ".js";
+    fs.stat(`./cmds/${commandname}`, (err, stats) => {
       if (err) return msg.channel.sendMessage(`I cannot find the command: ${commandname}`);
       if (stats.isFile()) {
         msg.channel.sendMessage(`Loading New Command: ${commandname}`)
           .then(m => {
-            client.funcs.reload(client, commandname)
+            client.funcs.loadNewCommand(client, commandname)
               .then(() => {
                 m.edit(`Successfully Loaded: ${commandname}`);
               })
@@ -46,7 +46,7 @@ exports.run = (client, msg, [commandname]) => {
 exports.conf = {
   enabled: true,
   guildOnly: false,
-  aliases: ["r", "enable"],
+  aliases: ["r", "enable", "load"],
   permLevel: 4,
   botPerms: [],
   requiredFuncs: []
