@@ -35,6 +35,18 @@ exports.run = (client, msg, cmd) => {
               reject(`Your option did not litterally match the only possibility: (${currentUsage.possibles.map(p => {return p.name;}).join(", ")})\nThis is likely caused by a mistake in the usage string.`);
             }
             break;
+          case "msg":
+          case "message":
+            if (!/^\d+$/.test(args[i])) {
+              reject(`${currentUsage.possibles[0].name} must be a valid message id.`);
+            } else {
+              msg.channel.fetchMessage(/\d+/.exec(args[i])[0])
+              .then(m => {
+                args[i] = m;
+              })
+              .catch(() => {reject(`${currentUsage.possibles[0].name} must be a valid message id.`);});
+            }
+            break;
           case "user":
           case "mention":
             if (!/^<@!?\d+>$/.test(args[i]) && !client.users.has(args[i])) {
@@ -137,6 +149,13 @@ exports.run = (client, msg, cmd) => {
             case "literal":
               if (args[i].toLowerCase() === p.name.toLowerCase()) {
                 args[i] = args[i].toLowerCase();
+                validated = true;
+              }
+              break;
+            case "msg":
+            case "message":
+              if (/^\d+$/.test(args[i]) && msg.channel.messages.has(args[i])) {
+                args[i] = msg.channel.messages.get(args[i]);
                 validated = true;
               }
               break;
