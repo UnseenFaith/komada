@@ -24,7 +24,7 @@ exports.conf = {
 
 exports.help = {
   name: "disable",
-  description: "Temperarily disables the command.",
+  description: "Temporarily disables the command. Resets upon reboot.",
   usage: "<commandname:str>",
   usageDelim: ""
 };
