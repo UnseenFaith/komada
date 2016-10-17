@@ -55,8 +55,10 @@ client.funcs["loadFunctions"] = () => {
 client.funcs.loadFunctions();
 
 client.on("message", msg => {
-  if (!msg.content.startsWith(client.config.prefix)) return;
-  let command = msg.content.split(" ")[0].slice(client.config.prefix.length);
+  if (!msg.content.startsWith(client.config.prefix) && !client.config.prefixMention.test(msg.content)) return;
+  let prefixLength = client.config.prefix.length;
+  if(client.config.prefixMention.test(msg.content)) prefixLength = client.config.prefixMention.exec(msg.content)[0].length +1;
+  let command = msg.content.slice(prefixLength).split(" ")[0];
   let cmd;
   if (client.commands.has(command)) {
     cmd = client.commands.get(command);
