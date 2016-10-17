@@ -5,6 +5,7 @@ node_modules
 Thumbs.db
 config.json
 temp
+bwd
 
 # C/C++
 *.slo

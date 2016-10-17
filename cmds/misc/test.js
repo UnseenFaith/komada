@@ -1,4 +1,4 @@
-exports.run = (bot, msg, params = []) => {
+exports.run = (client, msg) => {
   console.log("Test Executed");
   msg.reply("Test Executed");
 };
@@ -8,11 +8,13 @@ exports.conf = {
   guildOnly: false,
   aliases: [],
   permLevel: 0,
-  botPerms: []
+  botPerms: [],
+  requiredFuncs: []
 };
 
 exports.help = {
   name: "test",
   description: "This is a test command. What does it do? ",
-  usage: "test"
+  usage: "",
+  usageDelim: ""
 };
