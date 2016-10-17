@@ -8,7 +8,6 @@ exports.run = (client, msg) => {
 \`\`\`
 STATISTICS
 • Mem Usage    : ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB
-• Swap Size    : ${(process.memoryUsage().rss / 1024 / 1024).toFixed(2)} MB
 • Uptime       : ${duration}
 • Users        : ${client.users.size}
 • Servers      : ${client.guilds.size}
