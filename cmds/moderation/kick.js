@@ -9,7 +9,7 @@ exports.conf = {
   guildOnly: true,
   aliases: ["k"],
   permLevel: 2,
-  botPerms: [],
+  botPerms: ["KICK_MEMBERS"],
   requiredFuncs: []
 };
 

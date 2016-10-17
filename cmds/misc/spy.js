@@ -15,6 +15,6 @@ exports.conf = {
 exports.help = {
   name: "spy",
   description: "Spies on a user, guild, or channel",
-  usage: "<user:user|guild:guild|channel:channel>",
+  usage: "<msg:msg|user:user|guild:guild|channel:channel>",
   usageDelim: ""
 };

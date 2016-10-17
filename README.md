@@ -1,8 +1,8 @@
-# GuideBot
+# Komada
 
 > "Stay a while, and listen!"
 
-Guidebot is a very simple bot that I'm using on the
+Komada is a very simple bot that I'm using on the
 [Discord.js Official](https://discord.gg/bRCvFy9) server to provide links to my
 [Discord.js Bot Guide](https://www.gitbook.com/book/eslachance/discord-js-bot-guide/details).
 
@@ -11,7 +11,7 @@ Guidebot is a very simple bot that I'm using on the
 There's not "installation" per se, this isn't a module but really just an example code. To get it, run this:
 
 ```
-git clone https://github.com/eslachance/guidebot.git
+git clone https://github.com/eslachance/komada.git
 ```
 
 Create a file called `config.json` with the following content (adjusted to your needs of course):
