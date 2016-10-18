@@ -6,7 +6,7 @@ exports.conf = {
 exports.run = (client, msg, cmd) => {
   return new Promise((resolve, reject) => {
 
-    let usage = client.funcs.parseTags(cmd.help.usage);
+    let usage = client.funcs.parseUsage(cmd.help.usage);
     let prefixLength = client.config.prefix.length;
     if(client.config.prefixMention.test(msg.content)) prefixLength = client.config.prefixMention.exec(msg.content)[0].length +1;
     let args = msg.content.slice(prefixLength).split(" ").slice(1).join(" ").split(cmd.help.usageDelim !== "" ? cmd.help.usageDelim : null);

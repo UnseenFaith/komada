@@ -145,7 +145,7 @@ const parseTagData = (data, disallow, tag) => {
   return toRet;
 };
 
-module.export = (command, disallowCharacters) => {
+module.exports = (command, disallowCharacters) => {
   /***
   parseTags("[asda:asd{1.5,2.2}] <Bar> [asd] [...]").then(tags => console.log(util.inspect(tags, false, null))).catch(e => console.log(e + ""));
   ***/
