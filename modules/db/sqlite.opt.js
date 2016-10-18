@@ -11,29 +11,42 @@ exports.conf = config;
 const dataSchema = {
   str: {
     create: "TEXT",
-    insert: value => value
+    insert: value => value,
+    select: value => value
   },
   int: {
     create: "INTEGER",
-    insert: value => parseInt(value)
+    insert: value => parseInt(value),
+    select: value => value
   },
   autoid: {
     create: "INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE",
-    insert: () => {throw "Cannot insert Auto ID value!";}
+    insert: () => {throw "Cannot insert Auto ID value!";},
+    select: value => value
   },
   timestamp: {
     create: "DATETIME",
-    insert: value => parseInt(value)
+    insert: value => parseInt(value),
+    select: value => value
   },
   autots: {
     create: "DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL",
-    insert: () => {throw "Cannot insert Auto Timestamp value!";}
+    insert: () => {throw "Cannot insert Auto Timestamp value!";},
+    select: value => value
   },
   bool: {
     create: "INTEGER",
-    insert: value => !value ? 0: -1
+    insert: value => !value ? 0: -1,
+    select: value => !!value
+  },
+  json: {
+    create: "TEXT",
+    insert: value => JSON.stringify(value),
+    select: value => JSON.parse(value)
   }
 };
+
+const schemaCache = new Map();
 
 exports.init = client => {
   client.log("Initializing sqlite dataProvider...");
@@ -42,7 +55,11 @@ exports.init = client => {
       if (e) console.error(e);
       db.open(`${config.baseLocation}/db.sqlite`).then(()=> {
         db.run("CREATE TABLE IF NOT EXISTS dataProviderSchemas (id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, name, schema)")
-        .then(resolve)
+        .then(() => {
+          db.getAll("SELECT * FROM dataProviderSchemas")
+          .then(rows => rows.map(r=> schemaCache.set(r.name, r.schema)));
+          resolve();
+        })
         .catch(reject);
       });
     });
@@ -59,23 +76,15 @@ exports.get = (client, table, key, value) => {
 
 exports.insert = (client, table, keys, values) => {
   return new Promise( (resolve, reject) => {
-    this.get(client, "dataProviderSchemas", "name", table)
-    .then(schema => {
-      let insertSchema = JSON.parse(schema.schema);
-      client.funcs.validateData(insertSchema, keys, values)
-      .then(() => {
-        let insertValues = insertSchema.map((field, index)=>dataSchema[field.type].insert(values[index]));
-        let questionMarks = insertSchema.map(()=>"?").join(", ");
-        client.log("Inserting Values: " + insertValues.join(";"));
-        db.run(`INSERT INTO ${table}(${keys.join(", ")}) VALUES(${questionMarks});`, insertValues)
-        .then(resolve(true))
-        .catch(e=>reject("Error inserting data: "+e));
-      })
-      .then(resolve(true))
-      .catch(e=>reject("Error validating schema: "+e));
-    })
+    if(!schemaCache.has(table)) reject("Table not found in schema cache");
+    let schema = schemaCache.get(table);
+    client.funcs.validateData(schema, keys, values); // automatically throws error
+    let insertValues = schema.map((field, index)=>dataSchema[field.type].insert(values[index]));
+    let questionMarks = schema.map(()=>"?").join(", ");
+    client.log("Inserting Values: " + insertValues.join(";"));
+    db.run(`INSERT INTO ${table}(${keys.join(", ")}) VALUES(${questionMarks});`, insertValues)
     .then(resolve(true))
-    .catch(e=>reject("Error retrieving Schema: "+e));
+    .catch(e=>reject("Error inserting data: "+e));
   });
 };
 
@@ -89,27 +98,20 @@ exports.has = (client, table, key, value) => {
 
 exports.update = (client, table, keys, values, whereKey, whereValue) => {
   return new Promise( (resolve, reject) => {
-    this.get(client, "dataProviderSchemas", "name", table)
-    .then(schema => {
-      let tableSchema = JSON.parse(schema.schema);
-      let filtered = tableSchema.filter(f=> keys.includes(f.name));
-      client.funcs.validateData(tableSchema, keys, values)
-      .then(() => {
-        let inserts = filtered.map((field, index)=>`${field.name} = ${dataSchema[field.type].insert(values[index])}`);
-        db.run(`UPDATE ${table} SET ${inserts} WHERE ${whereKey} = '${whereValue}';`)
-        .then(resolve(true))
-        .catch(e=>reject("Error inserting data: "+e));
-      })
-      .then(resolve(true))
-      .catch(e=>reject("Error validating schema: "+e));
-    })
+    if(!schemaCache.has(table)) reject("Table not found in schema cache");
+    let schema = schemaCache.get(table);
+    let filtered = schema.filter(f=> keys.includes(f.name));
+    client.funcs.validateData(schema, keys, values);
+    let inserts = filtered.map((field, index)=>`${field.name} = ${dataSchema[field.type].insert(values[index])}`);
+    db.run(`UPDATE ${table} SET ${inserts} WHERE ${whereKey} = '${whereValue}';`)
     .then(resolve(true))
-    .catch(e=>reject("Error retrieving Schema: "+e));
+    .catch(e=>reject("Error inserting data: "+e));
   });
 };
 
 exports.insertSchema = (client, tableName, schema) => {
-  return db.run("INSERT INTO dataProviderSchemas (name, schema) VALUES (?, ?)", [tableName, schema]);
+  db.run("INSERT INTO dataProviderSchemas (name, schema) VALUES (?, ?)", [tableName, schema]);
+  schemaCache.set(tableName, schema);
 };
 
 exports.delete = (client, table, key) => {
@@ -126,17 +128,14 @@ exports.hasTable = (client, table) => {
 
 exports.createTable = (client, tableName, keys) => {
   return new Promise( (resolve, reject) => {
-    client.funcs.parseTags(keys)
-    .then(tags => {
-      let schema = client.funcs.createDBSchema(tags);
-      let inserts = schema.map(field=>`${field.name} ${dataSchema[field.type].create}`).join(", ");
-      client.log("Inserted Query: "+inserts);
-      db.run(`CREATE TABLE '${tableName}' (${inserts});`)
-       .then(() => {
-         this.insertSchema(client, tableName, JSON.stringify(schema))
-         .then(()=>resolve(true));
-       });
-    }).catch(reject);
+    let tags = client.funcs.parseTags(keys);
+    let schema = client.funcs.createDBSchema(tags);
+    let inserts = schema.map(field=>`${field.name} ${dataSchema[field.type].create}`).join(", ");
+    db.run(`CREATE TABLE '${tableName}' (${inserts});`)
+     .then(() => {
+       this.insertSchema(client, tableName, JSON.stringify(schema));
+       resolve(true);
+     }).catch(reject);
   });
 };
 

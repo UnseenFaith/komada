@@ -24,6 +24,7 @@ module.exports = data => {
       case "int":
       case "long":
       case "double":
+      case "json":
       case "str":
       case "string":
         break;

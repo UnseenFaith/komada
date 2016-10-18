@@ -149,68 +149,62 @@ module.exports = (command, disallowCharacters) => {
   /***
   parseTags("[asda:asd{1.5,2.2}] <Bar> [asd] [...]").then(tags => console.log(util.inspect(tags, false, null))).catch(e => console.log(e + ""));
   ***/
-  return new Promise((resolve, reject) => {
-    let opened, current = "",
-      tags = [],
-      closed = false;
-    try {
-      command.split("").forEach((c, i) => {
+  let opened, current = "",
+    tags = [],
+    closed = false;
+  command.split("").forEach((c, i) => {
 
-        switch (c) {
-          case "<":
-          case "[":
-            if (closed)
-              throw new ParserError("You can't open another tag once a loop tag was set", "char", i + 1, c);
-            if (opened)
-              throw new ParserError("You cannot open a tag inside another tag", "char", i + 1, c);
-            if (current)
-              throw new ParserError("There can't be literals outside a tag", "char", i + 1, current, i + 1 - current.length);
-            opened = c;
-            break;
-          case ">":
-          case "]":
+    switch (c) {
+      case "<":
+      case "[":
+        if (closed)
+          throw new ParserError("You can't open another tag once a loop tag was set", "char", i + 1, c);
+        if (opened)
+          throw new ParserError("You cannot open a tag inside another tag", "char", i + 1, c);
+        if (current)
+          throw new ParserError("There can't be literals outside a tag", "char", i + 1, current, i + 1 - current.length);
+        opened = c;
+        break;
+      case ">":
+      case "]":
 
-            if (!opened)
-              throw new ParserError("Invalid tag closure, no tag was open", "char", i + 1, c);
+        if (!opened)
+          throw new ParserError("Invalid tag closure, no tag was open", "char", i + 1, c);
 
-            if (!current)
-              throw new ParserError("An empty tag was found", "char", i + 1, opened + c, i);
+        if (!current)
+          throw new ParserError("An empty tag was found", "char", i + 1, opened + c, i);
 
-            if (c === ">" && opened !== "<" || c === "]" && opened !== "[")
-              throw new ParserError(`Invalid closure of '${opened}' with '${c}'`, "char", i + 1, opened + current + c, i - current.length);
-            if (current === "..." && opened === "[" && !disallowCharacters) {
-              if (tags.length === 0)
-                throw new ParserError("You cannot specify a loop tag in the begining", "tag", tags.length + 1);
+        if (c === ">" && opened !== "<" || c === "]" && opened !== "[")
+          throw new ParserError(`Invalid closure of '${opened}' with '${c}'`, "char", i + 1, opened + current + c, i - current.length);
+        if (current === "..." && opened === "[" && !disallowCharacters) {
+          if (tags.length === 0)
+            throw new ParserError("You cannot specify a loop tag in the begining", "tag", tags.length + 1);
 
-              tags.push({
-                type: "loop"
-              });
+          tags.push({
+            type: "loop"
+          });
 
               //tags[tags.length -1].loop = true;
 
-              closed = true;
-            } else
+          closed = true;
+        } else
               tags.push({
                 type: c === ">" ? "required" : "optional",
                 possibles: parseTagData(current, disallowCharacters, tags.length + 1)
               });
 
-            current = "";
-            opened = null;
-            break;
-          case "\n":
-            throw new ParserError("New lines are not allowed!");
-          case " ":
-            break;
-          default:
-            current += c;
-            break;
-        }
-
-      });
-      resolve(tags);
-    } catch (e) {
-      reject(e);
+        current = "";
+        opened = null;
+        break;
+      case "\n":
+        throw new ParserError("New lines are not allowed!");
+      case " ":
+        break;
+      default:
+        current += c;
+        break;
     }
+
   });
+  return tags;
 };
