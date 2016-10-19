@@ -5,20 +5,7 @@ const moment = require("moment");
 const chalk = require("chalk");
 const clk = new chalk.constructor({ enabled: true });
 
-// Try local JSON config, if not, expect Process Env (Heroku)
-try {
-  client.config = require("./config.json");
-} catch (e) {
-  if (process.env.botToken) {
-    client.config = {
-      botToken: process.env.botToken,
-      prefix: process.env.prefix,
-      ownerid: process.env.ownerid
-    };
-  } else {
-    throw "NO CONFIG FILE FOUND, NO ENV CONF FOUND, EXITING";
-  }
-}
+client.config = require("./config.json");
 
 // Extend client
 client.log = msg => { console.log(`${clk.bgBlue(`[${moment().format("YYYY-MM-DD HH:mm:ss")}]`)} ${msg}`);};
@@ -58,22 +45,25 @@ client.on("message", msg => {
   if (!msg.content.startsWith(client.config.prefix) && !client.config.prefixMention.test(msg.content)) return;
   let prefixLength = client.config.prefix.length;
   if(client.config.prefixMention.test(msg.content)) prefixLength = client.config.prefixMention.exec(msg.content)[0].length +1;
-  let command = msg.content.slice(prefixLength).split(" ")[0];
+  let command = msg.content.slice(prefixLength).split(" ")[0].toLowerCase();
   let cmd;
   if (client.commands.has(command)) {
     cmd = client.commands.get(command);
   } else if (client.aliases.has(command)) {
     cmd = client.commands.get(client.aliases.get(command));
   }
-  if (cmd) {
-    client.funcs.runCommandInhibitors(client, msg, cmd)
-    .then(params => {
-      cmd.run(client, msg, params);
-    })
-    .catch(reason => {
-      msg.channel.sendMessage(reason);
-    });
-  }
+  if(!cmd) return;
+  client.funcs.runCommandInhibitors(client, msg, cmd)
+  .then(params => {
+    cmd.run(client, msg, params);
+  })
+  .catch(reason => {
+    msg.channel.sendMessage(reason);
+  });
 });
 
 client.login(client.config.botToken);
+
+process.on("unhandledRejection", err => {
+  console.error("Uncaught Promise Error: \n" + err.stack);
+});
