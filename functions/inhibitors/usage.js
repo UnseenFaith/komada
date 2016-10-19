@@ -6,7 +6,7 @@ exports.conf = {
 exports.run = (client, msg, cmd) => {
   return new Promise((resolve, reject) => {
 
-    let usage = client.funcs.parseTags(cmd.help.usage);
+    let usage = client.funcs.parseUsage(cmd.help.usage);
     let prefixLength = client.config.prefix.length;
     if (client.config.prefixMention.test(msg.content)) prefixLength = client.config.prefixMention.exec(msg.content)[0].length + 1;
     let args = msg.content.slice(prefixLength).split(" ").slice(1).join(" ").split(cmd.help.usageDelim !== "" ? cmd.help.usageDelim : null);
@@ -55,7 +55,7 @@ exports.run = (client, msg, cmd) => {
             break;
           case "user":
           case "mention":
-            if (/^<@!?\d+>$/.test(args[i]) && client.users.has(args[i])) {
+            if (/^<@!?\d+>$/.test(args[i]) && client.users.has(args[i]) && args[i].length > 5) {
               args[i] = client.users.get(/\d+/.exec(args[i])[0]);
             } else if (currentUsage.type === "optional" && !repeat) {
               args.splice(i, 0, undefined);
@@ -241,7 +241,7 @@ exports.run = (client, msg, cmd) => {
               break;
             case "user":
             case "mention":
-              if (/^<@!?\d+>$/.test(args[i]) || client.users.has(args[i])) {
+              if ((/^<@!?\d+>$/.test(args[i]) || client.users.has(args[i])) && args[i].length > 5) {
                 args[i] = client.users.get(/\d+/.exec(args[i])[0]);
                 validated = true;
               }
