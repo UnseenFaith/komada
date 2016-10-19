@@ -65,15 +65,14 @@ client.on("message", msg => {
   } else if (client.aliases.has(command)) {
     cmd = client.commands.get(client.aliases.get(command));
   }
-  if (cmd) {
-    client.funcs.runCommandInhibitors(client, msg, cmd)
-    .then(params => {
-      cmd.run(client, msg, params);
-    })
-    .catch(reason => {
-      msg.channel.sendMessage(reason);
-    });
-  }
+  if(!cmd) return;
+  client.funcs.runCommandInhibitors(client, msg, cmd)
+  .then(params => {
+    cmd.run(client, msg, params);
+  })
+  .catch(reason => {
+    msg.channel.sendMessage(reason);
+  });
 });
 
 client.login(client.config.botToken);
