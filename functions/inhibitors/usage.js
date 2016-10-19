@@ -55,7 +55,7 @@ exports.run = (client, msg, cmd) => {
             break;
           case "user":
           case "mention":
-            if (/^<@!?\d+>$/.test(args[i]) && client.users.has(args[i]) && args[i].length > 5) {
+            if (/^<@!?\d+>$/.test(args[i]) && client.users.has(/\d+/.exec(args[i])[0]) && args[i].length > 5) {
               args[i] = client.users.get(/\d+/.exec(args[i])[0]);
             } else if (currentUsage.type === "optional" && !repeat) {
               args.splice(i, 0, undefined);
@@ -224,10 +224,10 @@ exports.run = (client, msg, cmd) => {
         }
       } else {
         let validated = false;
-        currentUsage.possibles.forEach(p => {
-          switch (p.type) {
+        for(let p = 0; p<currentUsage.possibles.length; p++) {
+          switch (currentUsage.possibles[p].type) {
             case "literal":
-              if (args[i].toLowerCase() === p.name.toLowerCase()) {
+              if (args[i].toLowerCase() === currentUsage.possibles[p].name.toLowerCase()) {
                 args[i] = args[i].toLowerCase();
                 validated = true;
               }
@@ -241,7 +241,7 @@ exports.run = (client, msg, cmd) => {
               break;
             case "user":
             case "mention":
-              if ((/^<@!?\d+>$/.test(args[i]) || client.users.has(args[i])) && args[i].length > 5) {
+              if (client.users.has(/\d+/.exec(args[i])[0]) && args[i].length > 5) {
                 args[i] = client.users.get(/\d+/.exec(args[i])[0]);
                 validated = true;
               }
@@ -260,12 +260,18 @@ exports.run = (client, msg, cmd) => {
               break;
             case "str":
             case "string":
-              if (p.min && p.max) {
-                if (args[i].length <= p.max && args[i].length >= p.min) validated = true;
-              } else if (p.min) {
-                if (args[i].length >= p.min) validated = true;
-              } else if (p.max) {
-                if (args[i].length <= p.max) validated = true;
+              if (currentUsage.possibles[p].min && currentUsage.possibles[p].max) {
+                if (args[i].length <= currentUsage.possibles[p].max && args[i].length >= currentUsage.possibles[p].min) {
+                  validated = true;
+                }
+              } else if (currentUsage.possibles[p].min) {
+                if (args[i].length >= currentUsage.possibles[p].min) {
+                  validated = true;
+                }
+              } else if (currentUsage.possibles[p].max) {
+                if (args[i].length <= currentUsage.possibles[p].max) {
+                  validated = true;
+                }
               } else {
                 validated = true;
               }
@@ -274,12 +280,18 @@ exports.run = (client, msg, cmd) => {
             case "integer":
               if (client.funcs.isInteger(args[i])) {
                 args[i] = parseInt(args[i]);
-                if (p.min && p.max) {
-                  if (args[i] <= p.max && args[i] >= p.min) validated = true;
-                } else if (p.min) {
-                  if (args[i] >= p.min) validated = true;
-                } else if (p.max) {
-                  if (args[i] <= p.max) validated = true;
+                if (currentUsage.possibles[p].min && currentUsage.possibles[p].max) {
+                  if (args[i] <= currentUsage.possibles[p].max && args[i] >= currentUsage.possibles[p].min) {
+                    validated = true;
+                  }
+                } else if (currentUsage.possibles[p].min) {
+                  if (args[i] >= currentUsage.possibles[p].min) {
+                    validated = true;
+                  }
+                } else if (currentUsage.possibles[p].max) {
+                  if (args[i] <= currentUsage.possibles[p].max) {
+                    validated = true;
+                  }
                 } else {
                   validated = true;
                 }
@@ -290,12 +302,18 @@ exports.run = (client, msg, cmd) => {
             case "float":
               if (parseFloat(args[i]) !== "NaN") {
                 args[i] = parseFloat(args[i]);
-                if (p.min && p.max) {
-                  if (args[i] <= p.max && args[i] >= p.min) validated = true;
-                } else if (p.min) {
-                  if (args[i] >= p.min) validated = true;
-                } else if (p.max) {
-                  if (args[i] <= p.max) validated = true;
+                if (currentUsage.possibles[p].min && currentUsage.possibles[p].max) {
+                  if (args[i] <= currentUsage.possibles[p].max && args[i] >= currentUsage.possibles[p].min) {
+                    validated = true;
+                  }
+                } else if (currentUsage.possibles[p].min) {
+                  if (args[i] >= currentUsage.possibles[p].min) {
+                    validated = true;
+                  }
+                } else if (currentUsage.possibles[p].max) {
+                  if (args[i] <= currentUsage.possibles[p].max) {
+                    validated = true;
+                  }
                 } else {
                   validated = true;
                 }
@@ -310,7 +328,9 @@ exports.run = (client, msg, cmd) => {
               console.warn("Unknown Argument Type encountered");
               break;
           }
-        });
+          if(validated) break;
+        }
+
         if (!validated) {
           if (currentUsage.type === "optional" && !repeat) {
             args.splice(i, 0, undefined);
