@@ -1,6 +1,6 @@
 const slowmode = new Map();
 const timers = [];
-const ratelimit = 1000;
+const ratelimit = 1250;
 
 exports.conf = {
   enabled: true,
