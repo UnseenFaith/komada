@@ -4,12 +4,12 @@ var fs = require("fs");
 
 exports.run = (client, msg, [url]) => {
   request.get(url, (err, res) => {
-    if(err) console.log(err);
+    if (err) console.log(err);
 
     const collector = msg.channel.createCollector(m => m.author === msg.author, {
       time: 10000
     });
-    msg.channel.sendMessage("Are you sure you want to add the following command to your bot?").then(() =>{
+    msg.channel.sendMessage("Are you sure you want to add the following command to your bot?").then(() => {
       msg.channel.sendCode("js", res.text);
     });
     collector.on("message", m => {
@@ -35,7 +35,7 @@ exports.run = (client, msg, [url]) => {
             let description = mod.exports.help.description;
             client.log(`New Command: ${name} / ${description}`);
             fs.writeFile(`./cmds/Downloaded/${name}.js`, res.text, (err) => {
-              if(err) console.error(err);
+              if (err) console.error(err);
               client.funcs.loadNewCommand(client, `Downloaded/${name}.js`)
                 .then(() => {
                   m.edit(`Successfully Loaded: ${name}`);
@@ -65,6 +65,6 @@ exports.conf = {
 exports.help = {
   name: "download",
   description: "Downloads a command and installs it to Komada",
-  usage: "[url:str]",
+  usage: "<url:url>",
   usageDelim: ""
 };
