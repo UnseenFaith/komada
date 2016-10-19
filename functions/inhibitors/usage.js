@@ -13,14 +13,18 @@ exports.run = (client, msg, cmd) => {
     if (args[0] === "") args = [];
     let currentUsage;
     let repeat = false;
-
     if (usage.length === 0) resolve();
-    for (let i = 0; !(i >= usage.length && i >= args.length); i++) {
-      if (usage[i] && usage[i].type !== "repeat") { //Handle if args length > usage length
-        currentUsage = usage[i];
-      } else if (usage[i].type === "repeat") { //Handle if usage ends in a repeat
-        currentUsage.type = "optional"; //if there are no optional args passed
-        repeat = true;
+
+    (function validateArgs(i) {
+      if (i >= usage.length && i >= args.length) {
+        resolve(args);
+      } else if (usage[i]) {
+        if (usage[i].type !== "repeat") { //Handle if args length > usage length
+          currentUsage = usage[i];
+        } else if (usage[i].type === "repeat") { //Handle if usage ends in a repeat
+          currentUsage.type = "optional"; //if there are no optional args passed
+          repeat = true;
+        }
       } else if (!repeat) { //Handle if usage does not end in a repeat
         resolve(args);
       }
@@ -37,18 +41,33 @@ exports.run = (client, msg, cmd) => {
           case "literal":
             if (args[i].toLowerCase() === currentUsage.possibles[0].name.toLowerCase()) {
               args[i] = args[i].toLowerCase();
+              validateArgs(++i);
             } else if (currentUsage.type === "optional" && !repeat) {
               args.splice(i, 0, undefined);
+              validateArgs(++i);
             } else {
               reject(`Your option did not litterally match the only possibility: (${currentUsage.possibles.map(p => {return p.name;}).join(", ")})\nThis is likely caused by a mistake in the usage string.`);
             }
             break;
           case "msg":
           case "message":
-            if (msg.channel.messages.has(args[i])) {
-              args[i] = msg.channel.messages.get(args[i]);
+            if (/^\d+$/.test(args[i])) {
+              msg.channel.fetchMessage(args[i])
+                .then(m => {
+                  args[i] = m;
+                  validateArgs(++i);
+                })
+                .catch(() => {
+                  if (currentUsage.type === "optional" && !repeat) {
+                    args.splice(i, 0, undefined);
+                    validateArgs(++i);
+                  } else {
+                    reject(`${currentUsage.possibles[0].name} must be a valid message id.`);
+                  }
+                });
             } else if (currentUsage.type === "optional" && !repeat) {
               args.splice(i, 0, undefined);
+              validateArgs(++i);
             } else {
               reject(`${currentUsage.possibles[0].name} must be a valid message id.`);
             }
@@ -57,8 +76,10 @@ exports.run = (client, msg, cmd) => {
           case "mention":
             if (/^<@!?\d+>$/.test(args[i]) && client.users.has(/\d+/.exec(args[i])[0]) && args[i].length > 5) {
               args[i] = client.users.get(/\d+/.exec(args[i])[0]);
+              validateArgs(++i);
             } else if (currentUsage.type === "optional" && !repeat) {
               args.splice(i, 0, undefined);
+              validateArgs(++i);
             } else {
               reject(`${currentUsage.possibles[0].name} must be a mention or valid user id.`);
             }
@@ -66,8 +87,10 @@ exports.run = (client, msg, cmd) => {
           case "channel":
             if (/^<#\d+>$/.test(args[i]) && client.channels.has(args[i])) {
               args[i] = client.channels.get(/\d+/.exec(args[i])[0]);
+              validateArgs(++i);
             } else if (currentUsage.type === "optional" && !repeat) {
               args.splice(i, 0, undefined);
+              validateArgs(++i);
             } else {
               reject(`${currentUsage.possibles[0].name} must be a channel tag or valid channel id.`);
             }
@@ -75,19 +98,21 @@ exports.run = (client, msg, cmd) => {
           case "guild":
             if (client.guilds.has(args[i])) {
               args[i] = client.guilds.get(/\d+/.exec(args[i])[0]);
+              validateArgs(++i);
             } else if (currentUsage.type === "optional" && !repeat) {
               args.splice(i, 0, undefined);
+              validateArgs(++i);
             } else {
               reject(`${currentUsage.possibles[0].name} must be a valid guild id.`);
             }
             break;
           case "str":
           case "string":
-            //is already a string :okhand:
             if (currentUsage.possibles[0].min && currentUsage.possibles[0].max) {
               if (args[i].length < currentUsage.possibles[0].min || args[i].length > currentUsage.possibles[0].max) {
                 if (currentUsage.type === "optional" && !repeat) {
                   args.splice(i, 0, undefined);
+                  validateArgs(++i);
                 } else {
                   if (currentUsage.possibles[0].min === currentUsage.possibles[0].max) {
                     reject(`${currentUsage.possibles[0].name} must be exactly ${currentUsage.possibles[0].min} characters.`);
@@ -95,23 +120,33 @@ exports.run = (client, msg, cmd) => {
                     reject(`${currentUsage.possibles[0].name} must be between ${currentUsage.possibles[0].min} and ${currentUsage.possibles[0].max} characters.`);
                   }
                 }
+              } else {
+                validateArgs(++i);
               }
             } else if (currentUsage.possibles[0].min) {
               if (args[i].length < currentUsage.possibles[0].min) {
                 if (currentUsage.type === "optional" && !repeat) {
                   args.splice(i, 0, undefined);
+                  validateArgs(++i);
                 } else {
                   reject(`${currentUsage.possibles[0].name} must be longer than ${currentUsage.possibles[0].min} characters.`);
                 }
+              } else {
+                validateArgs(++i);
               }
             } else if (currentUsage.possibles[0].max) {
               if (args[i].length > currentUsage.possibles[0].max) {
                 if (currentUsage.type === "optional" && !repeat) {
                   args.splice(i, 0, undefined);
+                  validateArgs(++i);
                 } else {
                   reject(`${currentUsage.possibles[0].name} must be shorter than ${currentUsage.possibles[0].max} characters.`);
                 }
+              } else {
+                validateArgs(++i);
               }
+            } else {
+              validateArgs(++i);
             }
             break;
           case "int":
@@ -119,6 +154,7 @@ exports.run = (client, msg, cmd) => {
             if (!client.funcs.isInteger(args[i])) {
               if (currentUsage.type === "optional" && !repeat) {
                 args.splice(i, 0, undefined);
+                validateArgs(++i);
               } else {
                 reject(`${currentUsage.possibles[0].name} must be an integer.`);
               }
@@ -128,37 +164,48 @@ exports.run = (client, msg, cmd) => {
                 if (currentUsage.possibles[0].min === currentUsage.possibles[0].max) {
                   if (currentUsage.type === "optional" && !repeat) {
                     args.splice(i, 0, undefined);
+                    validateArgs(++i);
                   } else {
                     reject(`${currentUsage.possibles[0].name} must be exactly ${currentUsage.possibles[0].min}\nSo why didn't the dev use a literal?`);
                   }
                 } else {
                   if (currentUsage.type === "optional" && !repeat) {
                     args.splice(i, 0, undefined);
+                    validateArgs(++i);
                   } else {
                     reject(`${currentUsage.possibles[0].name} must be between ${currentUsage.possibles[0].min} and ${currentUsage.possibles[0].max}.`);
                   }
                 }
+              } else {
+                validateArgs(++i);
               }
             } else if (currentUsage.possibles[0].min) {
               args[i] = parseInt(args[i]);
               if (args[i] < currentUsage.possibles[0].min) {
                 if (currentUsage.type === "optional" && !repeat) {
                   args.splice(i, 0, undefined);
+                  validateArgs(++i);
                 } else {
                   reject(`${currentUsage.possibles[0].name} must be greater than ${currentUsage.possibles[0].min}.`);
                 }
+              } else {
+                validateArgs(++i);
               }
             } else if (currentUsage.possibles[0].max) {
               args[i] = parseInt(args[i]);
               if (args[i] > currentUsage.possibles[0].max) {
                 if (currentUsage.type === "optional" && !repeat) {
                   args.splice(i, 0, undefined);
+                  validateArgs(++i);
                 } else {
                   reject(`${currentUsage.possibles[0].name} must be less than ${currentUsage.possibles[0].max}.`);
                 }
+              } else {
+                validateArgs(++i);
               }
             } else {
               args[i] = parseInt(args[i]);
+              validateArgs(++i);
             }
             break;
           case "num":
@@ -167,6 +214,7 @@ exports.run = (client, msg, cmd) => {
             if (parseFloat(args[i]) === "NaN") {
               if (currentUsage.type === "optional" && !repeat) {
                 args.splice(i, 0, undefined);
+                validateArgs(++i);
               } else {
                 reject(`${currentUsage.possibles[0].name} must be a valid number.`);
               }
@@ -176,67 +224,106 @@ exports.run = (client, msg, cmd) => {
                 if (currentUsage.possibles[0].min === currentUsage.possibles[0].max) {
                   if (currentUsage.type === "optional" && !repeat) {
                     args.splice(i, 0, undefined);
+                    validateArgs(++i);
                   } else {
                     reject(`${currentUsage.possibles[0].name} must be exactly ${currentUsage.possibles[0].min}\nSo why didn't the dev use a literal?`);
                   }
                 } else {
                   if (currentUsage.type === "optional" && !repeat) {
                     args.splice(i, 0, undefined);
+                    validateArgs(++i);
                   } else {
                     reject(`${currentUsage.possibles[0].name} must be between ${currentUsage.possibles[0].min} and ${currentUsage.possibles[0].max}.`);
                   }
                 }
+              } else {
+                validateArgs(++i);
               }
             } else if (currentUsage.possibles[0].min) {
               args[i] = parseFloat(args[i]);
               if (args[i] < currentUsage.possibles[0].min) {
                 if (currentUsage.type === "optional" && !repeat) {
                   args.splice(i, 0, undefined);
+                  validateArgs(++i);
                 } else {
                   reject(`${currentUsage.possibles[0].name} must be greater than ${currentUsage.possibles[0].min}.`);
                 }
+              } else {
+                validateArgs(++i);
               }
             } else if (currentUsage.possibles[0].max) {
               args[i] = parseFloat(args[i]);
               if (args[i] > currentUsage.possibles[0].max) {
                 if (currentUsage.type === "optional" && !repeat) {
                   args.splice(i, 0, undefined);
+                  validateArgs(++i);
                 } else {
                   reject(`${currentUsage.possibles[0].name} must be less than ${currentUsage.possibles[0].max}.`);
                 }
+              } else {
+                validateArgs(++i);
               }
             } else {
               args[i] = parseFloat(args[i]);
+              validateArgs(++i);
             }
             break;
           case "url":
             if (!/^((https?|ftps?|sftp):\/\/)?(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|([a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}))(:\b([0-9]|[1-8][0-9]|9[0-9]|[1-8][0-9]{2}|9[0-8][0-9]|99[0-9]|[1-8][0-9]{3}|9[0-8][0-9]{2}|99[0-8][0-9]|999[0-9]|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])\b)?(\/([a-zA-Z0-9:\/\?#\[\]@!$&'()*+,;=%-._~]+)?)?$/.test(args[i])) {
               if (currentUsage.type === "optional" && !repeat) {
                 args.splice(i, 0, undefined);
+                validateArgs(++i);
               } else {
                 reject(`${currentUsage.possibles[0].name} must be a valid url.`);
               }
+            } else {
+              validateArgs(++i);
             }
             break;
           default:
             console.warn("Unknown Argument Type encountered");
+            validateArgs(++i);
             break;
         }
       } else {
         let validated = false;
-        for(let p = 0; p<currentUsage.possibles.length; p++) {
+        (function multiPossibles(p) {
+          if (validated) {
+            validateArgs(++i);
+            return;
+          } else if (p >= currentUsage.possibles.length) {
+            if (currentUsage.type === "optional" && !repeat) {
+              args.splice(i, 0, undefined);
+              validateArgs(++i);
+            } else {
+              reject(`Your option didn't match any of the possibilities: (${currentUsage.possibles.map(p => {return p.name;}).join(", ")})`);
+            }
+            return;
+          }
           switch (currentUsage.possibles[p].type) {
             case "literal":
               if (args[i].toLowerCase() === currentUsage.possibles[p].name.toLowerCase()) {
                 args[i] = args[i].toLowerCase();
                 validated = true;
+                multiPossibles(++p);
+              } else {
+                multiPossibles(++p);
               }
               break;
             case "msg":
             case "message":
-              if (/^\d+$/.test(args[i]) && msg.channel.messages.has(args[i])) {
-                args[i] = msg.channel.messages.get(args[i]);
-                validated = true;
+              if (/^\d+$/.test(args[i])) {
+                msg.channel.fetchMessage(args[i])
+                  .then(m => {
+                    args[i] = m;
+                    validated = true;
+                    multiPossibles(++p);
+                  })
+                  .catch(() => {
+                    multiPossibles(++p);
+                  });
+              } else {
+                multiPossibles(++p);
               }
               break;
             case "user":
@@ -244,18 +331,27 @@ exports.run = (client, msg, cmd) => {
               if (client.users.has(/\d+/.exec(args[i])[0]) && args[i].length > 5) {
                 args[i] = client.users.get(/\d+/.exec(args[i])[0]);
                 validated = true;
+                multiPossibles(++p);
+              } else {
+                multiPossibles(++p);
               }
               break;
             case "channel":
               if (/^<#\d+>$/.test(args[i]) || client.channels.has(args[i])) {
                 args[i] = client.channels.get(/\d+/.exec(args[i])[0]);
                 validated = true;
+                multiPossibles(++p);
+              } else {
+                multiPossibles(++p);
               }
               break;
             case "guild":
               if (client.guilds.has(args[i])) {
                 args[i] = client.guilds.get(/\d+/.exec(args[i])[0]);
                 validated = true;
+                multiPossibles(++p);
+              } else {
+                multiPossibles(++p);
               }
               break;
             case "str":
@@ -263,17 +359,27 @@ exports.run = (client, msg, cmd) => {
               if (currentUsage.possibles[p].min && currentUsage.possibles[p].max) {
                 if (args[i].length <= currentUsage.possibles[p].max && args[i].length >= currentUsage.possibles[p].min) {
                   validated = true;
+                  multiPossibles(++p);
+                } else {
+                  multiPossibles(++p);
                 }
               } else if (currentUsage.possibles[p].min) {
                 if (args[i].length >= currentUsage.possibles[p].min) {
                   validated = true;
+                  multiPossibles(++p);
+                } else {
+                  multiPossibles(++p);
                 }
               } else if (currentUsage.possibles[p].max) {
                 if (args[i].length <= currentUsage.possibles[p].max) {
                   validated = true;
+                  multiPossibles(++p);
+                } else {
+                  multiPossibles(++p);
                 }
               } else {
                 validated = true;
+                multiPossibles(++p);
               }
               break;
             case "int":
@@ -283,18 +389,30 @@ exports.run = (client, msg, cmd) => {
                 if (currentUsage.possibles[p].min && currentUsage.possibles[p].max) {
                   if (args[i] <= currentUsage.possibles[p].max && args[i] >= currentUsage.possibles[p].min) {
                     validated = true;
+                    multiPossibles(++p);
+                  } else {
+                    multiPossibles(++p);
                   }
                 } else if (currentUsage.possibles[p].min) {
                   if (args[i] >= currentUsage.possibles[p].min) {
                     validated = true;
+                    multiPossibles(++p);
+                  } else {
+                    multiPossibles(++p);
                   }
                 } else if (currentUsage.possibles[p].max) {
                   if (args[i] <= currentUsage.possibles[p].max) {
                     validated = true;
+                    multiPossibles(++p);
+                  } else {
+                    multiPossibles(++p);
                   }
                 } else {
                   validated = true;
+                  multiPossibles(++p);
                 }
+              } else {
+                multiPossibles(++p);
               }
               break;
             case "num":
@@ -305,41 +423,47 @@ exports.run = (client, msg, cmd) => {
                 if (currentUsage.possibles[p].min && currentUsage.possibles[p].max) {
                   if (args[i] <= currentUsage.possibles[p].max && args[i] >= currentUsage.possibles[p].min) {
                     validated = true;
+                    multiPossibles(++p);
+                  } else {
+                    multiPossibles(++p);
                   }
                 } else if (currentUsage.possibles[p].min) {
                   if (args[i] >= currentUsage.possibles[p].min) {
                     validated = true;
+                    multiPossibles(++p);
+                  } else {
+                    multiPossibles(++p);
                   }
                 } else if (currentUsage.possibles[p].max) {
                   if (args[i] <= currentUsage.possibles[p].max) {
                     validated = true;
+                    multiPossibles(++p);
+                  } else {
+                    multiPossibles(++p);
                   }
                 } else {
                   validated = true;
+                  multiPossibles(++p);
                 }
+              } else {
+                multiPossibles(++p);
               }
               break;
             case "url":
               if (/^((https?|ftps?|sftp):\/\/)?(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|([a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}))(:\b([0-9]|[1-8][0-9]|9[0-9]|[1-8][0-9]{2}|9[0-8][0-9]|99[0-9]|[1-8][0-9]{3}|9[0-8][0-9]{2}|99[0-8][0-9]|999[0-9]|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])\b)?(\/([a-zA-Z0-9:\/\?#\[\]@!$&'()*+,;=%-._~]+)?)?$/.test(args[i])) {
                 validated = true;
+                multiPossibles(++p);
+              } else {
+                multiPossibles(++p);
               }
               break;
             default:
               console.warn("Unknown Argument Type encountered");
+              multiPossibles(++p);
               break;
           }
-          if(validated) break;
-        }
-
-        if (!validated) {
-          if (currentUsage.type === "optional" && !repeat) {
-            args.splice(i, 0, undefined);
-          } else {
-            reject(`Your option didn't match any of the possibilities: (${currentUsage.possibles.map(p => {return p.name;}).join(", ")})`);
-          }
-        }
+        })(0);
       }
-    }
-    resolve(args);
+    })(0);
   });
 };
