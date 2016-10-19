@@ -5,20 +5,7 @@ const moment = require("moment");
 const chalk = require("chalk");
 const clk = new chalk.constructor({ enabled: true });
 
-// Try local JSON config, if not, expect Process Env (Heroku)
-try {
-  client.config = require("./config.json");
-} catch (e) {
-  if (process.env.botToken) {
-    client.config = {
-      botToken: process.env.botToken,
-      prefix: process.env.prefix,
-      ownerid: process.env.ownerid
-    };
-  } else {
-    throw "NO CONFIG FILE FOUND, NO ENV CONF FOUND, EXITING";
-  }
-}
+client.config = require("./config.json");
 
 // Extend client
 client.log = msg => { console.log(`${clk.bgBlue(`[${moment().format("YYYY-MM-DD HH:mm:ss")}]`)} ${msg}`);};
@@ -76,3 +63,7 @@ client.on("message", msg => {
 });
 
 client.login(client.config.botToken);
+
+process.on("unhandledRejection", err => {
+  console.error("Uncaught Promise Error: \n" + err.stack);
+});
