@@ -64,6 +64,13 @@ exports.run = (client, msg, cmd) => {
               args[i] = client.channels.get(/\d+/.exec(args[i])[0]);
             }
             break;
+          case "role":
+            if (!/^<@&?\d+>$/.test(args[i]) && !msg.guild.roles.has(args[i])) {
+              reject(`${currentUsage.possibles[0].name} must be a role mention or role id.`);
+            } else {
+              args[i] = msg.guild.roles.get(/\d+/.exec(args[i])[0]);
+            }
+            break;
           case "guild":
             if (!client.guilds.has(args[i])) {
               reject(`${currentUsage.possibles[0].name} must be a valid guild id.`);
@@ -171,6 +178,12 @@ exports.run = (client, msg, cmd) => {
             case "channel":
               if (/^<#\d+>$/.test(args[i]) || client.channels.has(args[i])) {
                 args[i] = client.channels.get(/\d+/.exec(args[i])[0]);
+                validated = true;
+              }
+              break;
+            case "role":
+              if (/^<@&?\d+>$/.test(args[i]) || msg.guild.roles.has(args[i])) {
+                args[i] = msg.guild.roles.get(/\d+/.exec(args[i])[0]);
                 validated = true;
               }
               break;
