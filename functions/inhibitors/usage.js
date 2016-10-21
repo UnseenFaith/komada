@@ -106,6 +106,17 @@ exports.run = (client, msg, cmd) => {
               reject(`${currentUsage.possibles[0].name} must be a valid guild id.`);
             }
             break;
+          case "role":
+            if (/^<@&\d+>$/.test(args[i]) || msg.guild.roles.has(args[i])) {
+              args[i] = client.guilds.get(/\d+/.exec(args[i])[0]);
+              validateArgs(++i);
+            } else if (currentUsage.type === "optional" && !repeat) {
+              args.splice(i, 0, undefined);
+              validateArgs(++i);
+            } else {
+              reject(`${currentUsage.possibles[0].name} must be a role mention or role id.`);
+            }
+            break;
           case "str":
           case "string":
             if (currentUsage.possibles[0].min && currentUsage.possibles[0].max) {
@@ -269,7 +280,7 @@ exports.run = (client, msg, cmd) => {
             }
             break;
           case "url":
-            if (!/^((https?|ftps?|sftp):\/\/)?(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|([a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}))(:\b([0-9]|[1-8][0-9]|9[0-9]|[1-8][0-9]{2}|9[0-8][0-9]|99[0-9]|[1-8][0-9]{3}|9[0-8][0-9]{2}|99[0-8][0-9]|999[0-9]|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])\b)?(\/([a-zA-Z0-9:\/\?#\[\]@!$&'()*+,;=%-._~]+)?)?$/.test(args[i])) {
+            if (!/^((https?|ftps?|sftp):\/\/)?(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|(([a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])(\.[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])*\.[a-zA-Z]{2,}))(:\b([0-9]|[1-8][0-9]|9[0-9]|[1-8][0-9]{2}|9[0-8][0-9]|99[0-9]|[1-8][0-9]{3}|9[0-8][0-9]{2}|99[0-8][0-9]|999[0-9]|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])\b)?(\/([a-zA-Z0-9:\/\?#\[\]@!$&'()*+,;=%-._~]+)?)?$/.test(args[i])) {
               if (currentUsage.type === "optional" && !repeat) {
                 args.splice(i, 0, undefined);
                 validateArgs(++i);
@@ -347,6 +358,15 @@ exports.run = (client, msg, cmd) => {
               break;
             case "guild":
               if (client.guilds.has(args[i])) {
+                args[i] = client.guilds.get(/\d+/.exec(args[i])[0]);
+                validated = true;
+                multiPossibles(++p);
+              } else {
+                multiPossibles(++p);
+              }
+              break;
+            case "role":
+              if (/^<@&\d+>$/.test(args[i]) || msg.guild.roles.has(args[i])) {
                 args[i] = client.guilds.get(/\d+/.exec(args[i])[0]);
                 validated = true;
                 multiPossibles(++p);
@@ -450,7 +470,7 @@ exports.run = (client, msg, cmd) => {
               }
               break;
             case "url":
-              if (/^((https?|ftps?|sftp):\/\/)?(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|([a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}))(:\b([0-9]|[1-8][0-9]|9[0-9]|[1-8][0-9]{2}|9[0-8][0-9]|99[0-9]|[1-8][0-9]{3}|9[0-8][0-9]{2}|99[0-8][0-9]|999[0-9]|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])\b)?(\/([a-zA-Z0-9:\/\?#\[\]@!$&'()*+,;=%-._~]+)?)?$/.test(args[i])) {
+              if (/^((https?|ftps?|sftp):\/\/)?(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|(([a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])(\.[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])*\.[a-zA-Z]{2,}))(:\b([0-9]|[1-8][0-9]|9[0-9]|[1-8][0-9]{2}|9[0-8][0-9]|99[0-9]|[1-8][0-9]{3}|9[0-8][0-9]{2}|99[0-8][0-9]|999[0-9]|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])\b)?(\/([a-zA-Z0-9:\/\?#\[\]@!$&'()*+,;=%-._~]+)?)?$/.test(args[i])) {
                 validated = true;
                 multiPossibles(++p);
               } else {
