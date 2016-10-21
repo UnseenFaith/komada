@@ -108,7 +108,7 @@ exports.run = (client, msg, cmd) => {
             break;
           case "role":
             if (/^<@&\d+>$/.test(args[i]) || msg.guild.roles.has(args[i])) {
-              args[i] = client.guilds.get(/\d+/.exec(args[i])[0]);
+              args[i] = msg.guild.roles.get(/\d+/.exec(args[i])[0]);
               validateArgs(++i);
             } else if (currentUsage.type === "optional" && !repeat) {
               args.splice(i, 0, undefined);
@@ -367,7 +367,7 @@ exports.run = (client, msg, cmd) => {
               break;
             case "role":
               if (/^<@&\d+>$/.test(args[i]) || msg.guild.roles.has(args[i])) {
-                args[i] = client.guilds.get(/\d+/.exec(args[i])[0]);
+                args[i] = msg.guild.roles.get(/\d+/.exec(args[i])[0]);
                 validated = true;
                 multiPossibles(++p);
               } else {
