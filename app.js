@@ -17,6 +17,9 @@ module.exports = (config) => {
   client.commandInhibitors = new Discord.Collection();
   client.databaseModules = new Discord.Collection();
 
+  client.coreBaseDir = __dirname + "/";
+  client.clientBaseDir = process.cwd() + "/";
+
   // Load core functions, then everything else
   client.funcs["loadFunctions"] = () => {
     fs.readdir(__dirname + "/functions/core", (err, files) => {
@@ -41,6 +44,10 @@ module.exports = (config) => {
     });
   };
   client.funcs.loadFunctions();
+
+  client.once("ready", () => {
+    client.config.prefixMention = new RegExp(`^<@!?${client.user.id}>`);
+  });
 
   client.on("message", msg => {
     if (!msg.content.startsWith(client.config.prefix) && !client.config.prefixMention.test(msg.content)) return;
