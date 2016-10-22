@@ -52,12 +52,13 @@ exports.run = (client, msg, cmd) => {
           case "msg":
           case "message":
             if (/^\d+$/.test(args[i])) {
-              msg.channel.fetchMessage(args[i])
-                .then(m => {
-                  args[i] = m;
+              if (client.config.selfbot) {
+                msg.channel.fetchMessages({
+                  around: args[i]
+                }).then(m => {
+                  args[i] = m.filter(e => e.id == args[i]).first();
                   validateArgs(++i);
-                })
-                .catch(() => {
+                }).catch(() => {
                   if (currentUsage.type === "optional" && !repeat) {
                     args.splice(i, 0, undefined);
                     validateArgs(++i);
@@ -65,6 +66,21 @@ exports.run = (client, msg, cmd) => {
                     reject(`${currentUsage.possibles[0].name} must be a valid message id.`);
                   }
                 });
+              } else {
+                msg.channel.fetchMessage(args[i])
+                  .then(m => {
+                    args[i] = m;
+                    validateArgs(++i);
+                  })
+                  .catch(() => {
+                    if (currentUsage.type === "optional" && !repeat) {
+                      args.splice(i, 0, undefined);
+                      validateArgs(++i);
+                    } else {
+                      reject(`${currentUsage.possibles[0].name} must be a valid message id.`);
+                    }
+                  });
+              }
             } else if (currentUsage.type === "optional" && !repeat) {
               args.splice(i, 0, undefined);
               validateArgs(++i);
