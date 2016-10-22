@@ -56,8 +56,11 @@ exports.init = client => {
       db.open(`${config.baseLocation}/db.sqlite`).then(()=> {
         db.run("CREATE TABLE IF NOT EXISTS dataProviderSchemas (id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, name, schema)")
         .then(() => {
-          db.getAll("SELECT * FROM dataProviderSchemas")
-          .then(rows => rows.map(r=> schemaCache.set(r.name, r.schema)));
+          db.all("SELECT * FROM dataProviderSchemas")
+          .then(rows => {
+            console.log(rows);
+            rows.map(r=> schemaCache.set(r.name, r.schema));
+          });
           resolve();
         })
         .catch(reject);
@@ -69,6 +72,14 @@ exports.init = client => {
 exports.get = (client, table, key, value) => {
   return new Promise((resolve, reject) => {
     db.get(`SELECT * FROM ${table} WHERE ${key} = '${value}'`)
+    .then(resolve)
+    .catch(reject);
+  });
+};
+
+exports.getAll = (client, table) => {
+  return new Promise((resolve, reject) => {
+    db.get(`SELECT * FROM ${table}`)
     .then(resolve)
     .catch(reject);
   });
