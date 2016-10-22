@@ -35,6 +35,6 @@ module.exports = client => {
         console.error(e);
       }
     }
-    client.log(`Loaded ${p} command inhibitors, with ${o} optional.`);
+    client.funcs.log(`Loaded ${p} command inhibitors, with ${o} optional.`);
   });
 };
