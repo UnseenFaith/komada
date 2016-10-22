@@ -36,6 +36,6 @@ module.exports = client => {
         console.error(e);
       }
     }
-    client.log(`Loaded ${d} database handlers, with ${o} optional.`);
+    client.funcs.log(`Loaded ${d} database handlers, with ${o} optional.`);
   });
 };

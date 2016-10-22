@@ -2,7 +2,7 @@ const fs = require("fs");
 
 exports.run = (client, msg, [commandname]) => {
   if (commandname === "all") {
-    client.log("Reloading all commands");
+    client.funcs.log("Reloading all commands");
     client.funcs.loadCommands(client);
     return;
   }

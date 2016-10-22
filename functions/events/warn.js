@@ -1,3 +1,3 @@
 exports.run = (client, warning) => {
-  console.warn(warning);
+  client.funcs.log(warning, "warn");
 };

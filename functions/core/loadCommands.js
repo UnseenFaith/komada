@@ -32,7 +32,7 @@ module.exports = client => {
         setTimeout(() => {res();}, 800);
       }));
     });
-    Promise.all(mps).then(() => {client.log(`Loaded ${c} commands, with ${a} aliases.`);});
+    Promise.all(mps).then(() => {client.funcs.log(`Loaded ${c} commands, with ${a} aliases.`);});
   });
 };
 

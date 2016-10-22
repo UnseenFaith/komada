@@ -27,8 +27,8 @@ module.exports = client => {
       delete require.cache[require.resolve(`${relative}/${fileinfo.name}${fileinfo.ext}`)];
     })
     .on("end", () => {
-      client.log(`Loaded ${c} commands, with ${a} aliases.`);
-      client.log(`Modules: ${modules.join(",")}`);
+      client.funcs.log(`Loaded ${c} commands, with ${a} aliases.`);
+      client.funcs.log(`Modules: ${modules.join(",")}`);
     });
   } catch (e) {
     if (e.code === "MODULE_NOT_FOUND") {

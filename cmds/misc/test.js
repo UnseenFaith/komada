@@ -1,5 +1,8 @@
 exports.run = (client, msg) => {
-  console.log("Test Executed");
+  client.funcs.log("Testing Log");
+  client.funcs.log("Testing Debug", "debug");
+  client.funcs.log("Testing Warn", "warn");
+  client.funcs.log("Testing Error", "error");
   msg.reply("Test Executed");
 };
 

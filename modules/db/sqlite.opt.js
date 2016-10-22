@@ -49,7 +49,7 @@ const dataSchema = {
 const schemaCache = new Map();
 
 exports.init = client => {
-  client.log("Initializing sqlite dataProvider...");
+  client.funcs.log("Initializing sqlite dataProvider...");
   return new Promise( (resolve, reject) => {
     fs.ensureDir(config.baseLocation, (e) => {
       if (e) console.error(e);
@@ -81,7 +81,7 @@ exports.insert = (client, table, keys, values) => {
     client.funcs.validateData(schema, keys, values); // automatically throws error
     let insertValues = schema.map((field, index)=>dataSchema[field.type].insert(values[index]));
     let questionMarks = schema.map(()=>"?").join(", ");
-    client.log("Inserting Values: " + insertValues.join(";"));
+    client.funcs.log("Inserting Values: " + insertValues.join(";"));
     db.run(`INSERT INTO ${table}(${keys.join(", ")}) VALUES(${questionMarks});`, insertValues)
     .then(resolve(true))
     .catch(e=>reject("Error inserting data: "+e));

@@ -34,7 +34,7 @@ exports.run = (client, msg, [url]) => {
             let name = mod.exports.help.name;
             let description = mod.exports.help.description;
             let dir ="./cmds/downloaded/";
-            client.log(`New Command: ${name} / ${description}`);
+            client.funcs.log(`New Command: ${name} / ${description}`);
             if (!fs.existsSync(dir)) {
               fs.mkdirSync(dir);
             }
