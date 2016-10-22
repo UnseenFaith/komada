@@ -1,7 +1,10 @@
 const fs = require("fs");
+const path = require("path");
+
+const dir = path.resolve(__dirname + "/../../modules/db/");
 
 module.exports = client => {
-  fs.readdir("./modules/db", (err, files) => {
+  fs.readdir(dir, (err, files) => {
     if (err) console.error(err);
     let [d, o] = [0, 0];
     try{
@@ -36,6 +39,6 @@ module.exports = client => {
         console.error(e);
       }
     }
-    client.log(`Loaded ${d} database handlers, with ${o} optional.`);
+    client.funcs.log(`Loaded ${d} database handlers, with ${o} optional.`);
   });
 };

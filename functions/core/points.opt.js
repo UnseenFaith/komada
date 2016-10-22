@@ -21,10 +21,11 @@ module.exports = function(client, msg, action) {
 };
 
 const run = (client, msg, action) => {
-  return new Promise((resolve, reject) => {
-    let db = client.databaseModules.first();
+  return new Promise((resolve) => {
+    let db = client.databaseModules.get("sqlite");
 
-    db.get("quiz", msg.author.id).then(points => {
+    db.get(client, "quiz", "userID", msg.author.id).then(row => {
+      let points = row.points;
       switch (action) {
         case "add":
           points++;
@@ -39,13 +40,13 @@ const run = (client, msg, action) => {
         default:
           break;
       }
-      db.set("quiz", msg.author.id, points).then(() => {
-        resolve(points);
-      });
+      db.update(client, "quiz", ["points"], [points], "userID", msg.author.id)
+      .then(() => resolve(points));
     }).catch(e => {
       console.log(e);
       let points = action === "add" ? 1 : 0;
-      db.set("quiz", msg.author.id, points).then(() => resolve(points));
+      db.update(client, "quiz", ["points"], [points], "userID", msg.author.id)
+      .then(() => resolve(points));
     });
   });
 };
@@ -55,10 +56,11 @@ const init = (client) => {
     if (!client.databaseModules.first()) {
       reject("No Database Found");
     }
-    client.databaseModules.first().hasTable("quiz")
+    client.databaseModules.get("sqlite").hasTable(client, "quiz")
       .then(res => {
         if (!res) {
-          client.databaseModules.first().createTable("quiz");
+          let keys = "<userID:str> <points:int>";
+          client.databaseModules.get("sqlite").createTable(client, "quiz", keys);
         }
         client.config.init.push("points");
         resolve();

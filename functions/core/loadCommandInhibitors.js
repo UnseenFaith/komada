@@ -1,7 +1,10 @@
 const fs = require("fs");
+const path = require("path");
+
+const dir = path.resolve(__dirname + "/../inhibitors/");
 
 module.exports = client => {
-  fs.readdir("./functions/inhibitors", (err, files) => {
+  fs.readdir(dir, (err, files) => {
     if (err) console.error(err);
     let [p, o] = [0, 0];
     try{
@@ -35,6 +38,6 @@ module.exports = client => {
         console.error(e);
       }
     }
-    client.log(`Loaded ${p} command inhibitors, with ${o} optional.`);
+    client.funcs.log(`Loaded ${p} command inhibitors, with ${o} optional.`);
   });
 };
