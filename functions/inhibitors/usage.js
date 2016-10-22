@@ -52,9 +52,10 @@ exports.run = (client, msg, cmd) => {
           case "msg":
           case "message":
             if (/^\d+$/.test(args[i])) {
-              msg.channel.fetchMessage(args[i])
+              msg.channel.fetchMessages({ around: args[i] })
                 .then(m => {
-                  args[i] = m;
+                  args[i] = m.filter(e => e.id == args[i]).first();
+                  // args[i] = m;
                   validateArgs(++i);
                 })
                 .catch(() => {
