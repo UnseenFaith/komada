@@ -1,4 +1,4 @@
-const fs = require("fs");
+const fs = require("fs-extra");
 const path = require("path");
 
 
@@ -13,32 +13,35 @@ module.exports = client => {
 const loadCommands = (client, baseDir) => {
   return new Promise( (resolve, reject) => {
     let dir = path.resolve(baseDir + "./cmds/");
-    fs.readdir(dir, (err, files) => {
+    fs.ensureDir(dir, err => {
       if (err) console.error(err);
-      let folders = files.filter(f => { return f.split(".").length === 1; });
-      files = files.filter(f => { return f.slice(-3) === ".js"; });
-      loadFiles(client, files, dir);
-      let mps = [true];
-      folders.forEach(folder => {
-        mps.push(new Promise(res => {
-          fs.readdir(`${dir}/${folder}/`, (err, subFiles) => {
-            if (err) console.error(err);
-            let subFolders = subFiles.filter(f => { return f.split(".").length === 1; });
-            subFiles = subFiles.filter(f => { return f.slice(-3) === ".js"; });
-            loadFiles(client, subFiles, `${dir}/${folder}/`);
-            subFolders.forEach(subfolder => {
-              fs.readdir(`${dir}/${folder}/${subfolder}/`, (err, subSubFiles) => {
-                if (err) console.error(err);
-                //category/subcategory is enough
-                subSubFiles = subSubFiles.filter(f => { return f.slice(-3) === ".js"; });
-                loadFiles(client, subSubFiles, `${dir}/${folder}/${subfolder}/`);
+      fs.readdir(dir, (err, files) => {
+        if (err) console.error(err);
+        let folders = files.filter(f => { return f.split(".").length === 1; });
+        files = files.filter(f => { return f.slice(-3) === ".js"; });
+        loadFiles(client, files, dir);
+        let mps = [true];
+        folders.forEach(folder => {
+          mps.push(new Promise(res => {
+            fs.readdir(`${dir}/${folder}/`, (err, subFiles) => {
+              if (err) console.error(err);
+              let subFolders = subFiles.filter(f => { return f.split(".").length === 1; });
+              subFiles = subFiles.filter(f => { return f.slice(-3) === ".js"; });
+              loadFiles(client, subFiles, `${dir}/${folder}/`);
+              subFolders.forEach(subfolder => {
+                fs.readdir(`${dir}/${folder}/${subfolder}/`, (err, subSubFiles) => {
+                  if (err) console.error(err);
+                  //category/subcategory is enough
+                  subSubFiles = subSubFiles.filter(f => { return f.slice(-3) === ".js"; });
+                  loadFiles(client, subSubFiles, `${dir}/${folder}/${subfolder}/`);
+                });
               });
             });
-          });
-          setTimeout(() => {res();}, 800);
-        }));
+            setTimeout(() => {res();}, 800);
+          }));
+        });
+        Promise.all(mps).then(resolve).catch(reject);
       });
-      Promise.all(mps).then(resolve).catch(reject);
     });
   });
 };
