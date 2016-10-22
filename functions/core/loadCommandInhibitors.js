@@ -5,7 +5,7 @@ const path = require("path");
 
 module.exports = client => {
   loadCommandInhibitors(client, client.coreBaseDir);
-  //loadCommandInhibitors(client, client.clientBaseDir);
+  loadCommandInhibitors(client, client.clientBaseDir);
 };
 
 const loadCommandInhibitors = (client, baseDir) => {
@@ -20,11 +20,11 @@ const loadCommandInhibitors = (client, baseDir) => {
           let file = f.split(".");
           let props;
           if (file[1] !== "opt") {
-            props = require(`../inhibitors/${f}`);
+            props = require(`${dir}/${f}`);
             client.commandInhibitors.set(file[0], props);
             p++;
           } else if (client.config.commandInhibitors.includes(file[0])) {
-            props = require(`../inhibitors/${f}`);
+            props = require(`${dir}/${f}`);
             client.commandInhibitors.set(file[0], props);
             o++;
           }

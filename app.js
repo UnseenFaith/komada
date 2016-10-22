@@ -3,7 +3,7 @@ const fs = require("fs");
 const chalk = require("chalk");
 const clk = new chalk.constructor({ enabled: true });
 
-module.exports = (config) => {
+exports.start = (config) => {
 
   const client = new Discord.Client(config.discordOptions);
 
