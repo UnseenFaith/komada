@@ -15,6 +15,6 @@ module.exports = client => {
       client.on(name, (...args) => require(`../events/${f}`).run(client, ...args));
       e++;
     });
-    client.log(`Loaded ${e} events`);
+    client.funcs.log(`Loaded ${e} events`);
   });
 };

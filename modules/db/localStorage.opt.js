@@ -10,7 +10,7 @@ const config = {
 exports.conf = config;
 
 exports.debug = client => {
-  client.log(tables);
+  client.funcs.log(tables);
 };
 
 exports.init = (client) => {
@@ -32,7 +32,7 @@ exports.init = (client) => {
           tables[name] = new LocalStorage(`${config.baseLocation}/${name}`);
           c++;
         });
-        client.log(`Loaded ${c} tables in ${config.moduleName} database.`);
+        client.funcs.log(`Loaded ${c} tables in ${config.moduleName} database.`);
       });
     });
 

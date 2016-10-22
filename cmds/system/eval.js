@@ -22,7 +22,7 @@ exports.conf = {
 
 exports.help = {
   name: "eval",
-  description: "Evaluates arbitrary Javascript. Not for the faint of heart.\nExpression may contain multiple lines. Oh and **you** can't use it.",
+  description: "Evaluates arbitrary Javascript. Reserved for bot owner.",
   usage: "<expression:str>",
   usageDelim: ""
 };

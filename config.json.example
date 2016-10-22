@@ -1,5 +1,6 @@
 {
   "botToken": "your-bot-token",
+  "selfbot":"false",
   "ownerid" : "your-user-id",
   "clientID": "your-bot-client-id",
   "prefix": "?",
