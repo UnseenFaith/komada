@@ -51,33 +51,22 @@ exports.run = (client, msg, cmd) => {
             break;
           case "msg":
           case "message":
-            if (client.config.selfbot) {
-              if (/^\d+$/.test(args[i])) {
+            if (/^\d+$/.test(args[i])) {
+              if (client.config.selfbot) {
                 msg.channel.fetchMessages({
                   around: args[i]
-                })
-                  .then(m => {
-                    args[i] = m.filter(e => e.id == args[i]).first();
-                    // args[i] = m;
+                }).then(m => {
+                  args[i] = m.filter(e => e.id == args[i]).first();
+                  validateArgs(++i);
+                }).catch(() => {
+                  if (currentUsage.type === "optional" && !repeat) {
+                    args.splice(i, 0, undefined);
                     validateArgs(++i);
-                  })
-                  .catch(() => {
-                    if (currentUsage.type === "optional" && !repeat) {
-                      args.splice(i, 0, undefined);
-                      validateArgs(++i);
-                    } else {
-                      reject(`${currentUsage.possibles[0].name} must be a valid message id.`);
-                    }
-                  });
-              } else if (currentUsage.type === "optional" && !repeat) {
-                args.splice(i, 0, undefined);
-                validateArgs(++i);
+                  } else {
+                    reject(`${currentUsage.possibles[0].name} must be a valid message id.`);
+                  }
+                });
               } else {
-                reject(`${currentUsage.possibles[0].name} must be a valid message id.`);
-              }
-
-            } else {
-              if (/^\d+$/.test(args[i])) {
                 msg.channel.fetchMessage(args[i])
                   .then(m => {
                     args[i] = m;
@@ -91,15 +80,14 @@ exports.run = (client, msg, cmd) => {
                       reject(`${currentUsage.possibles[0].name} must be a valid message id.`);
                     }
                   });
-              } else if (currentUsage.type === "optional" && !repeat) {
-                args.splice(i, 0, undefined);
-                validateArgs(++i);
-              } else {
-                reject(`${currentUsage.possibles[0].name} must be a valid message id.`);
               }
+            } else if (currentUsage.type === "optional" && !repeat) {
+              args.splice(i, 0, undefined);
+              validateArgs(++i);
+            } else {
+              reject(`${currentUsage.possibles[0].name} must be a valid message id.`);
             }
             break;
-
           case "user":
           case "mention":
             if (/^<@!?\d+>$/.test(args[i]) && client.users.has(/\d+/.exec(args[i])[0]) && args[i].length > 5) {
