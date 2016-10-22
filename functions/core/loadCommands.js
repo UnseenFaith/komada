@@ -1,6 +1,8 @@
 const fs = require("fs");
+const path = require("path");
 
-const dir = "./cmds/";
+const dir = path.resolve(__dirname + "/../../cmds/");
+//const dir = "./cmds/";
 let [c, a] = [0,0];
 
 module.exports = client => {
@@ -15,17 +17,17 @@ module.exports = client => {
     let mps = [true];
     folders.forEach(folder => {
       mps.push(new Promise(res => {
-        fs.readdir(`${dir}${folder}/`, (err, subFiles) => {
+        fs.readdir(`${dir}/${folder}/`, (err, subFiles) => {
           if (err) console.error(err);
           let subFolders = subFiles.filter(f => { return f.split(".").length === 1; });
           subFiles = subFiles.filter(f => { return f.slice(-3) === ".js"; });
-          loadFiles(client, subFiles, `${dir}${folder}/`);
+          loadFiles(client, subFiles, `${dir}/${folder}/`);
           subFolders.forEach(subfolder => {
-            fs.readdir(`${dir}${folder}/${subfolder}/`, (err, subSubFiles) => {
+            fs.readdir(`${dir}/${folder}/${subfolder}/`, (err, subSubFiles) => {
               if (err) console.error(err);
               //category/subcategory is enough
               subSubFiles = subSubFiles.filter(f => { return f.slice(-3) === ".js"; });
-              loadFiles(client, subSubFiles, `${dir}${folder}/${subfolder}/`);
+              loadFiles(client, subSubFiles, `${dir}/${folder}/${subfolder}/`);
             });
           });
         });
@@ -39,7 +41,7 @@ module.exports = client => {
 const loadFiles = (client, files, directory) => {
   try {
     files.forEach(f => {
-      let props = require(`../../${directory}/${f}`);
+      let props = require(`${directory}${f}`);
       props.help["category"] = directory.slice(7, -1);
       client.commands.set(props.help.name, props);
       c++;
@@ -48,7 +50,7 @@ const loadFiles = (client, files, directory) => {
         client.aliases.set(alias, props.help.name);
         a++;
       });
-      delete require.cache[require.resolve(`../../${directory}/${f}`)];
+      delete require.cache[require.resolve(`${directory}${f}`)];
     });
   } catch (e) {
     if (e.code === "MODULE_NOT_FOUND") {
