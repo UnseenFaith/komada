@@ -3,9 +3,13 @@ const path = require("path");
 let events = require("discord.js/src/util/Constants.js").Events;
 events = Object.keys(events).map(k => events[k]);
 
-const dir = path.resolve(__dirname + "/../events/");
-
 module.exports = client => {
+  loadEvents(client, client.coreBaseDir);
+  loadEvents(client, client.clientBaseDir);
+};
+
+const loadEvents = (client, baseDir) => {
+  let dir = path.resolve(baseDir + "./functions/events/");
   fs.readdir(dir, (err, files) => {
     if(err) console.error(err);
     let e = 0;
@@ -15,7 +19,7 @@ module.exports = client => {
     });
     files.forEach(f=> {
       let name = f.split(".")[0];
-      client.on(name, (...args) => require(`../events/${f}`).run(client, ...args));
+      client.on(name, (...args) => require(`${dir}/${f}`).run(client, ...args));
       e++;
     });
     client.funcs.log(`Loaded ${e} events`);
