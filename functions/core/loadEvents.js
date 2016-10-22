@@ -1,9 +1,12 @@
 const fs = require("fs");
+const path = require("path");
 let events = require("discord.js/src/util/Constants.js").Events;
 events = Object.keys(events).map(k => events[k]);
 
+const dir = path.resolve(__dirname + "/../events/");
+
 module.exports = client => {
-  fs.readdir("./functions/events", (err, files) => {
+  fs.readdir(dir, (err, files) => {
     if(err) console.error(err);
     let e = 0;
     files = files.filter(f => {
