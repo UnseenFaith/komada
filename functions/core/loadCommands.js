@@ -46,7 +46,6 @@ const loadCommands = (client, baseDir) => {
 const loadFiles = (client, files, directory) => {
   try {
     files.forEach(f => {
-      console.log(directory);
       let props = require(`${directory}${f}`);
       if(!props.help.category) {
         props.help.category = directory.slice(7, -1);

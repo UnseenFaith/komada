@@ -5,6 +5,7 @@ const path = require("path");
 
 module.exports = client => {
   loadCommandInhibitors(client, client.coreBaseDir);
+  //loadCommandInhibitors(client, client.clientBaseDir);
 };
 
 const loadCommandInhibitors = (client, baseDir) => {
