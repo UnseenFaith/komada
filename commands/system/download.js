@@ -1,57 +1,76 @@
 const request = require("superagent");
 const vm = require("vm");
-var fs = require("fs");
+var fs = require("fs-extra");
 
 exports.run = (client, msg, [url]) => {
   request.get(url, (err, res) => {
     if (err) console.log(err);
 
+    // Load Command Data
+    var mod = {
+      exports: {}
+    };
+    try {
+      vm.runInNewContext(res.text, { module: mod, exports: mod.exports }, {timeout: 500});
+    } catch (e) {
+      msg.reply(`URL command not valid: ${e}`);
+      return;
+    }
+
+    let name = mod.exports.help.name;
+    let description = mod.exports.help.description;
+
+    if (client.commands.has(name)) {
+      msg.reply(`The command \`${name}\` already exists in the bot!`);
+      return;
+    }
+
+    msg.channel.sendMessage(`Are you sure you want to load the following command into your bot?
+\`\`\`asciidoc
+=== NAME ===
+${name}
+
+=== DESCRIPTION ===
+${description}
+\`\`\``);
+
     const collector = msg.channel.createCollector(m => m.author === msg.author, {
-      time: 10000
+      time: 5000
     });
-    msg.channel.sendMessage("Are you sure you want to add the following command to your bot?").then(() => {
-      msg.channel.sendCode("js", res.text);
-    });
+
     collector.on("message", m => {
-      if (m.content === "no") collector.stop("aborted");
-      if (m.content === "yes") collector.stop("success");
+      if (m.content.toLowerCase() === "no") collector.stop("aborted");
+      if (m.content.toLowerCase() === "yes") collector.stop("success");
     });
+
     collector.on("end", (collected, reason) => {
-      if (reason === "time") return msg.channel.sendMessage("Timed out: Maybe you should review the code before trying to add it?");
-      if (reason === "aborted") return msg.channel.sendMessage("Canceled: The script **has not** been added.");
+      if (reason === "time") return msg.channel.sendMessage(":timer: 5s timeout. Can you read a bit faster?");
+      if (reason === "aborted") return msg.channel.sendMessage(":no_mobile_phones: Load Aborted. Command not installed.");
       if (reason === "success") {
-        msg.channel.sendMessage("Adding to Commands...")
-          .then((m) => {
-            var mod = {
-              exports: {}
-            };
-            try {
-              vm.runInNewContext(res.text, { module: mod, exports: mod.exports }, {});
-            } catch (e) {
-              m.edit(`Command not valid: ${e}`);
-              return;
+        msg.channel.sendMessage(":inbox_tray: `Loading Command...`").then(m => {
+          let category = mod.exports.help.category ? mod.exports.help.category : "Downloaded";
+          let dir = require("path").resolve(`${client.clientBaseDir}/commands/${category}/`);
+          client.funcs.log(dir);
+          m.edit(`:inbox_tray: \`Loading Command into ${dir}/${name}.js...\``);
+
+          fs.ensureDir(dir, err => {
+            if (err) {
+              fs.mkDirSync(dir);
             }
-            let name = mod.exports.help.name;
-            let description = mod.exports.help.description;
-            let dir = client.clientBaseDir + "commands/downloaded/";
-            client.funcs.log(`New Command: ${name} / ${description}`);
-            if (!fs.existsSync(dir)) {
-              fs.mkdirSync(dir);
-            }
-            fs.writeFile(`${dir}${name}.js`, res.text, (err) => {
+            fs.writeFile(`${dir}/${name}.js`, res.text, (err) => {
               if(err) console.error(err);
-              client.funcs.loadNewCommand(client, client.clientBaseDir + "commands/downloaded/" + `${name}.js`)
+              let relativePath = require("path").relative(client.clientBasePath, dir);
+              client.funcs.loadNewCommand(client, `${relativePath}/${name}.js`)
                 .then(() => {
-                  m.edit(`Successfully Loaded: ${name}`);
+                  m.edit(`:inbox_tray: Successfully Loaded: ${name}`);
                 })
                 .catch(e => {
-                  m.edit(`Command load failed: ${name}\n\`\`\`${e.stack}\`\`\``);
+                  m.edit(`:no_mobile_phones: Command load failed: ${name}\n\`\`\`${e.stack}\`\`\``);
+                  fs.unlink(`${dir}/${name}.js`);
                 });
             });
-          })
-          .catch(e => {
-            console.error(e);
           });
+        });
       }
     });
   });
