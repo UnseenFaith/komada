@@ -44,8 +44,8 @@ exports.start = (config) => {
     });
   };
   client.funcs.loadFunctions();
-  fs.ensureDir(clientFunctionsDir, err => {
   let clientFunctionsDir = require("path").resolve(client.clientBaseDir + "./functions");
+  fs.ensureDir(clientFunctionsDir, err => {
     if (err) console.error(err);
     fs.readdir(clientFunctionsDir, (err, files) => {
       if (err) console.error(err);
