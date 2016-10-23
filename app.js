@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-const fs = require("fs");
+const fs = require("fs-extra");
 const chalk = require("chalk");
 const clk = new chalk.constructor({ enabled: true });
 
@@ -44,20 +44,23 @@ exports.start = (config) => {
     });
   };
   client.funcs.loadFunctions();
+  fs.ensureDir(clientFunctionsDir, err => {
   let clientFunctionsDir = require("path").resolve(client.clientBaseDir + "./functions");
-  fs.readdir(clientFunctionsDir, (err, files) => {
     if (err) console.error(err);
-    files = files.filter(f => { return f.slice(-3) === ".js"; });
-    let [d,o] = [0,0];
-    files.forEach(f=> {
-      let file = f.split(".");
-      if (file[1] !== "opt") {
-        client.funcs[file[0]] = require(`${clientFunctionsDir}/${f}`);
-        d++;
-      } else if (client.config.functions.includes(file[0])) {
-        client.funcs[file[0]] = require(`${clientFunctionsDir}/${f}`);
-        o++;
-      }
+    fs.readdir(clientFunctionsDir, (err, files) => {
+      if (err) console.error(err);
+      files = files.filter(f => { return f.slice(-3) === ".js"; });
+      let [d,o] = [0,0];
+      files.forEach(f=> {
+        let file = f.split(".");
+        if (file[1] !== "opt") {
+          client.funcs[file[0]] = require(`${clientFunctionsDir}/${f}`);
+          d++;
+        } else if (client.config.functions.includes(file[0])) {
+          client.funcs[file[0]] = require(`${clientFunctionsDir}/${f}`);
+          o++;
+        }
+      });
     });
   });
 
