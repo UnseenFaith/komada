@@ -51,7 +51,7 @@ const loadFiles = (client, files, directory) => {
     files.forEach(f => {
       let props = require(`${directory}${f}`);
       if(!props.help.category) {
-        props.help.category = directory.slice(7, -1);
+        props.help.category = directory;
       }
 
       client.commands.set(props.help.name, props);

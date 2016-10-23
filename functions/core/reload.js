@@ -3,7 +3,7 @@ module.exports = function(client, command) {
     try {
       let c = client.commands.get(command);
       let directory = `${c.help.category ? c.help.category +"/" : ""}${c.help.name}.js`;
-      let cmd = require(`../../cmds/${directory}`);
+      let cmd = require(`${directory}`);
       cmd.help["category"] = c.help.category;
       client.commands.delete(command);
       client.aliases.forEach((cmd, alias) => {
@@ -14,7 +14,7 @@ module.exports = function(client, command) {
       cmd.conf.aliases.forEach(alias => {
         client.aliases.set(alias, cmd.help.name);
       });
-      delete require.cache[require.resolve(`../../cmds/${directory}`)];
+      delete require.cache[require.resolve(`${directory}`)];
       resolve();
     } catch (e){
       reject(e);
