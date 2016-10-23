@@ -6,25 +6,33 @@ Komada is a very simple bot that I'm using on the
 [Discord.js Official](https://discord.gg/bRCvFy9) server to provide links to my
 [Discord.js Bot Guide](https://www.gitbook.com/book/eslachance/discord-js-bot-guide/details).
 
-## Installing this
+## Installing Komada
 
-There's not "installation" per se, this isn't a module but really just an example code. To get it, run this:
+Time to take the plunge! Komada is on NPM and can be easily installed.
+
+> I assume you know how to open a command prompt in a folder where you want to install this. Please don't prove me wrong.
 
 ```
-git clone https://github.com/eslachance/komada.git
+npm install --save komada
 ```
 
-Create a file called `config.json` with the following content (adjusted to your needs of course):
+Create a file called `app.js` (or whatever you prefer) which will initiate and configure Komada.
 
-```json
-{
-  "botToken": "Your-Bot-Token-Here",
+```js
+const komada = require('komada');
+komada.start({
+  "botToken": "your-bot-token",
   "ownerid" : "your-user-id",
-  "prefix": "?"
-}
+  "clientID": "the-invite-app-id",
+  "prefix": "+",
+  "functions": [],
+  "commandInhibitors": ["disable", "permissions", "missingBotPermissions"],
+  "dataHandlers": [],
+  "clientOptions": {
+    forceFetchUsers: true
+  }
+});
 ```
-
-> you can copy `config.json.example` to `config.json` and modify that instead, too!
 
 Then, run the following in your folder:
 
@@ -34,5 +42,3 @@ node app.js
 ```
 
 > Requires Node 6 or higher (because discord.js requires that), also requires Discord.js v10 (currently #indev), installed automatically with `npm install`.
-
-**DOCUMENTATION IS UPCOMING FOR COMMAND PARSERS AND MORE**
