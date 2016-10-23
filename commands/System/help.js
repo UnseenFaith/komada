@@ -46,8 +46,9 @@ const buildHelp = (client, msg) => {
       mps.push(new Promise(res => {
         client.funcs.runCommandInhibitors(client, msg, command, true)
        .then(() => {
-         let cat = command.help.category.split("/")[0];
-         let subcat = command.help.category.split("/")[1];
+
+         let cat = command.help.category.slice(command.help.category.charAt(command.help.category.indexOf("commands") +9) === "/" ? command.help.category.indexOf("commands")+10 : command.help.category.indexOf("commands") + 9).split("/")[0];
+         let subcat = command.help.category.slice(command.help.category.charAt(command.help.category.indexOf("commands") +9) === "/" ? command.help.category.indexOf("commands")+10 : command.help.category.indexOf("commands") + 9).split("/")[1];
          if (!cat) cat = "General";
          if (!subcat) subcat ="General";
          if (!help.hasOwnProperty(cat)) help[cat] = {};
