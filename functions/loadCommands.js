@@ -12,7 +12,7 @@ module.exports = client => {
 
 const loadCommands = (client, baseDir) => {
   return new Promise( (resolve, reject) => {
-    let dir = path.resolve(baseDir + "./cmds/");
+    let dir = path.resolve(baseDir + "./commands/");
     fs.ensureDir(dir, err => {
       if (err) console.error(err);
       fs.readdir(dir, (err, files) => {

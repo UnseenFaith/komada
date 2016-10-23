@@ -33,14 +33,14 @@ exports.run = (client, msg, [url]) => {
             }
             let name = mod.exports.help.name;
             let description = mod.exports.help.description;
-            let dir ="./cmds/downloaded/";
+            let dir = client.clientBaseDir + "commands/downloaded/";
             client.funcs.log(`New Command: ${name} / ${description}`);
             if (!fs.existsSync(dir)) {
               fs.mkdirSync(dir);
             }
             fs.writeFile(`${dir}${name}.js`, res.text, (err) => {
               if(err) console.error(err);
-              client.funcs.loadNewCommand(client, `downloaded/${name}.js`)
+              client.funcs.loadNewCommand(client, client.clientBaseDir + "commands/downloaded/" + `${name}.js`)
                 .then(() => {
                   m.edit(`Successfully Loaded: ${name}`);
                 })

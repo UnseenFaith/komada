@@ -7,7 +7,7 @@ module.exports = client => {
 };
 
 const loadDataProviders = (client, baseDir) => {
-  let dir = path.resolve(baseDir + "./modules/db/");
+  let dir = path.resolve(baseDir + "./dataProviders/");
   fs.readdir(dir, (err, files) => {
     if (err) console.error(err);
     let [d, o] = [0, 0];
@@ -18,12 +18,12 @@ const loadDataProviders = (client, baseDir) => {
         let props;
         if (file[1] !== "opt") {
           props = require(`${dir}/${f}`);
-          client.databaseModules.set(file[0], props);
+          client.dataProviders.set(file[0], props);
           props.init(client);
           d++;
-        } else if (client.config.databaseModules.includes(file[0])) {
+        } else if (client.config.dataProviders.includes(file[0])) {
           props = require(`${dir}/${f}`);
-          client.databaseModules.set(file[0], props);
+          client.dataProviders.set(file[0], props);
           props.init(client);
           o++;
         }

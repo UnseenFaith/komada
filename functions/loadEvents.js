@@ -9,7 +9,7 @@ module.exports = client => {
 };
 
 const loadEvents = (client, baseDir) => {
-  let dir = path.resolve(baseDir + "./functions/events/");
+  let dir = path.resolve(baseDir + "./events/");
   fs.ensureDir(dir, err => {
     if(err) console.error(err);
     fs.readdir(dir, (err, files) => {

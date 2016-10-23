@@ -14,7 +14,7 @@ exports.run = (client, msg, [commandname]) => {
   }
   if (!command) {
     commandname = commandname.slice(-3) === ".js" ? commandname : commandname + ".js";
-    fs.stat(`./cmds/${commandname}`, (err, stats) => {
+    fs.stat(`./commands/${commandname}`, (err, stats) => {
       if (err) return msg.channel.sendMessage(`I cannot find the command: ${commandname}`);
       if (stats.isFile()) {
         msg.channel.sendMessage(`Loading New Command: ${commandname}`)

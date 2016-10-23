@@ -27,7 +27,7 @@ komada.start({
   "prefix": "+",
   "functions": [],
   "commandInhibitors": ["disable", "permissions", "missingBotPermissions"],
-  "databaseModules": [],
+  "dataHandlers": [],
   "clientOptions": {
     forceFetchUsers: true
   }

@@ -1,8 +1,6 @@
 const fs = require("fs-extra");
 const path = require("path");
 
-//const dir = path.resolve(__dirname + "/../inhibitors/");
-
 module.exports = client => {
   loadCommandInhibitors(client, client.coreBaseDir);
   loadCommandInhibitors(client, client.clientBaseDir);
@@ -10,7 +8,7 @@ module.exports = client => {
 
 const loadCommandInhibitors = (client, baseDir) => {
   return new Promise( (resolve, reject) => {
-    let dir = path.resolve(baseDir + "./functions/inhibitors/");
+    let dir = path.resolve(baseDir + "./inhibitors/");
     fs.ensureDir(dir, err => {
       if (err) console.error(err);
       fs.readdir(dir, (err, files) => {
