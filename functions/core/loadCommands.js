@@ -49,7 +49,7 @@ const loadCommands = (client, baseDir) => {
 const loadFiles = (client, files, directory) => {
   try {
     files.forEach(f => {
-      let props = require(`${directory}${f}`);
+      let props = require(`${directory}/${f}`);
       if(!props.help.category) {
         props.help.category = directory;
       }
@@ -60,7 +60,7 @@ const loadFiles = (client, files, directory) => {
       props.conf.aliases.forEach(alias => {
         client.aliases.set(alias, props.help.name);
       });
-      delete require.cache[require.resolve(`${directory}${f}`)];
+      delete require.cache[require.resolve(`${directory}/${f}`)];
     });
 
   } catch (e) {
