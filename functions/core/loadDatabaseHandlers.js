@@ -1,9 +1,13 @@
 const fs = require("fs");
 const path = require("path");
 
-const dir = path.resolve(__dirname + "/../../modules/db/");
-
 module.exports = client => {
+  loadDataProviders(client, client.coreBaseDir);
+  loadDataProviders(client, client.clientBaseDir);
+};
+
+const loadDataProviders = (client, baseDir) => {
+  let dir = path.resolve(baseDir + "./modules/db/");
   fs.readdir(dir, (err, files) => {
     if (err) console.error(err);
     let [d, o] = [0, 0];
@@ -13,12 +17,12 @@ module.exports = client => {
         let file = f.split(".");
         let props;
         if (file[1] !== "opt") {
-          props = require(`../../modules/db/${f}`);
+          props = require(`${dir}/${f}`);
           client.databaseModules.set(file[0], props);
           props.init(client);
           d++;
         } else if (client.config.databaseModules.includes(file[0])) {
-          props = require(`../../modules/db/${f}`);
+          props = require(`${dir}/${f}`);
           client.databaseModules.set(file[0], props);
           props.init(client);
           o++;

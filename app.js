@@ -44,6 +44,22 @@ exports.start = (config) => {
     });
   };
   client.funcs.loadFunctions();
+  let clientFunctionsDir = require("path").resolve(client.clientBaseDir + "./functions/core");
+  fs.readdir(clientFunctionsDir, (err, files) => {
+    if (err) console.error(err);
+    files = files.filter(f => { return f.slice(-3) === ".js"; });
+    let [d,o] = [0,0];
+    files.forEach(f=> {
+      let file = f.split(".");
+      if (file[1] !== "opt") {
+        client.funcs[file[0]] = require(`${clientFunctionsDir}/${f}`);
+        d++;
+      } else if (client.config.functions.includes(file[0])) {
+        client.funcs[file[0]] = require(`${clientFunctionsDir}/${f}`);
+        o++;
+      }
+    });
+  });
 
   client.once("ready", () => {
     client.config.prefixMention = new RegExp(`^<@!?${client.user.id}>`);
