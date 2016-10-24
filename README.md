@@ -32,7 +32,7 @@ komada.start({
   "commandInhibitors": ["disable", "permissions", "missingBotPermissions"],
   "dataHandlers": [],
   "clientOptions": {
-    forceFetchUsers: true
+    fetchAllMembers: true
   }
 });
 ```
