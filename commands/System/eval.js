@@ -3,7 +3,7 @@ exports.run = (client, msg, [code]) => {
       var evaled = eval(code);
       if (typeof evaled !== "string")
         evaled = require("util").inspect(evaled);
-      msg.channel.sendCode("xl", client.funcs.clean(evaled, client).replace(client.user.email, '「ｒｅｄａｃｔｅｄ」');
+      msg.channel.sendCode("xl", client.funcs.clean(evaled, client).replace(client.user.email, '「ｒｅｄａｃｔｅｄ」'));
       }
       catch (err) {
         msg.channel.sendMessage("`ERROR` ```xl\n" +
