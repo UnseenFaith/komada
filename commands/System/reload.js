@@ -1,5 +1,3 @@
-const fs = require("fs");
-
 exports.run = (client, msg, [commandname]) => {
   if (commandname === "all") {
     client.funcs.log("Reloading all commands");
@@ -13,31 +11,30 @@ exports.run = (client, msg, [commandname]) => {
     command = client.aliases.get(commandname);
   }
   if (!command) {
-    commandname = commandname.slice(-3) === ".js" ? commandname : commandname + ".js";
-    fs.stat(`./commands/${commandname}`, (err, stats) => {
-      if (err) return msg.channel.sendMessage(`I cannot find the command: ${commandname}`);
-      if (stats.isFile()) {
-        msg.channel.sendMessage(`Loading New Command: ${commandname}`)
+    client.funcs.getFileListing(client, client.coreBaseDir, "commands")
+      .then(files => {
+        let newCommands = files.filter(f=>f.name == command);
+        newCommands.forEach(file => {
+          msg.channel.sendMessage(`Loading New Command: ${commandname}`)
           .then(m => {
-            client.funcs.loadNewCommand(client, commandname)
-              .then(() => {
-                m.edit(`Successfully Loaded: ${commandname}`);
-              })
-              .catch(e => {
-                m.edit(`Command load failed: ${commandname}\n\`\`\`${e.stack}\`\`\``);
-              });
+            client.funcs.loadSingleCommand(client, command, false, `${file.path}${require("path").sep}${file.base}`).then(cmd => {
+              m.edit(`Successfully Loaded: ${cmd.help.name}`);
+            })
+            .catch(e => {
+              m.edit(`Command load failed for ${command}: \n\`\`\`${e.stack}\`\`\``);
+            });
           });
-      }
-    });
+        });
+      });
   } else {
     msg.channel.sendMessage(`Reloading: ${command}`)
       .then(m => {
-        client.funcs.reload(client, command)
-          .then(() => {
-            m.edit(`Successfully reloaded: ${command}`);
+        client.funcs.loadSingleCommand(client, command, true)
+          .then(cmd => {
+            m.edit(`Successfully reloaded: ${cmd.help.name}`);
           })
           .catch(e => {
-            m.edit(`Command reload failed: ${command}\n\`\`\`${e.stack}\`\`\``);
+            m.edit(`Command reload failed for ${command}: \n\`\`\`${e}\`\`\``);
           });
       });
   }
