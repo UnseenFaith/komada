@@ -6,9 +6,7 @@ exports.run = (client, msg, [cmd]) => {
       helpMessage.push(`**${category} Commands**: \`\`\`asciidoc`);
       for(let [subCategory, commands] of subCategories) {
         helpMessage.push(`= ${subCategory} =`);
-        client.funcs.log(`There are ${commands.size} commands in ${subCategory}`);
         for(let [command, description] of commands) {
-          client.funcs.log(`Help command for ${command} :: ${description}`);
           helpMessage.push(`${command} :: ${description}`);
         }
         helpMessage.push(" ");
