@@ -4,7 +4,7 @@ const clk = new chalk.constructor({ enabled: true });
 
 exports.start = (config) => {
 
-  const client = new Discord.Client(config.discordOptions);
+  const client = new Discord.Client(config.clientOptions);
 
   client.config = config;
 
