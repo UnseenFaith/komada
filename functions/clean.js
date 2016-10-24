@@ -1,6 +1,6 @@
 module.exports = (text, client) => {
   if (typeof(text) === "string") {
-    return text.replace(sensitivePattern(client), "「ｒｅｄａｃｔｅｄ」").replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
+    return text.replace(sensitivePattern(client), "「ｒｅｄａｃｔｅｄ」").replace(client.user.email, '「ｒｅｄａｃｔｅｄ」').replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
   } else {
     return text;
   }
