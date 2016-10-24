@@ -1,3 +1,5 @@
+const pad = require("../../functions/pad.js");
+
 exports.run = (client, msg, [cmd]) => {
   if (!cmd) {
     let helpMessage = [];
@@ -7,9 +9,13 @@ exports.run = (client, msg, [cmd]) => {
       for(let [subCategory, commands] of subCategories) {
         helpMessage.push(`= ${subCategory} =`);
         client.funcs.log(`There are ${commands.size} commands in ${subCategory}`);
+
+        let commandNames = Array.from(commands.keys());
+        let longest = commandNames.reduce((longest, name) => Math.max(longest, name.length), 0);
+
         for(let [command, description] of commands) {
           client.funcs.log(`Help command for ${command} :: ${description}`);
-          helpMessage.push(`${command} :: ${description}`);
+          helpMessage.push(`${pad(command + "::", longest + 2)} ${description}`);
         }
         helpMessage.push(" ");
       }
