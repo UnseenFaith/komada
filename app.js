@@ -12,6 +12,7 @@ exports.start = (config) => {
   // Extend client
   client.config["init"] = [];
   client.funcs = {};
+  client.helpStructure = new Map();
   client.commands = new Discord.Collection();
   client.aliases = new Discord.Collection();
   client.commandInhibitors = new Discord.Collection();

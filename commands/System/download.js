@@ -2,7 +2,7 @@ const request = require("superagent");
 const vm = require("vm");
 var fs = require("fs-extra");
 
-exports.run = (client, msg, [url]) => {
+exports.run = (client, msg, [url, folder = "Downloaded"]) => {
   request.get(url, (err, res) => {
     if (err) console.log(err);
 
@@ -48,21 +48,17 @@ ${description}
       if (reason === "aborted") return msg.channel.sendMessage(":no_mobile_phones: Load Aborted. Command not installed.");
       if (reason === "success") {
         msg.channel.sendMessage(":inbox_tray: `Loading Command...`").then(m => {
-          let category = mod.exports.help.category ? mod.exports.help.category : "Downloaded";
+          let category = mod.exports.help.category ? mod.exports.help.category : client.funcs.toTitleCase(folder);
           let dir = require("path").resolve(`${client.clientBaseDir}/commands/${category}/`);
-          client.funcs.log(dir);
           m.edit(`:inbox_tray: \`Loading Command into ${dir}/${name}.js...\``);
 
           fs.ensureDir(dir, err => {
-            if (err) {
-              fs.mkDirSync(dir);
-            }
+            if (err) console.error(err);
             fs.writeFile(`${dir}/${name}.js`, res.text, (err) => {
               if(err) console.error(err);
-              let relativePath = require("path").relative(client.clientBasePath, dir);
-              client.funcs.loadNewCommand(client, `${relativePath}/${name}.js`)
-                .then(() => {
-                  m.edit(`:inbox_tray: Successfully Loaded: ${name}`);
+              client.funcs.loadSingleCommand(client, name, false, `${dir}/${name}.js`)
+                .then((cmd) => {
+                  m.edit(`:inbox_tray: Successfully Loaded: ${cmd.help.name}`);
                 })
                 .catch(e => {
                   m.edit(`:no_mobile_phones: Command load failed: ${name}\n\`\`\`${e.stack}\`\`\``);
@@ -88,6 +84,6 @@ exports.conf = {
 exports.help = {
   name: "download",
   description: "Downloads a command and installs it to Komada",
-  usage: "<url:url>",
-  usageDelim: ""
+  usage: "<url:url> [folder:str]",
+  usageDelim: " "
 };
