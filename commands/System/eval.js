@@ -1,9 +1,10 @@
+const vm = require("vm");
+const util = require("util");
+
 exports.run = (client, msg, [code]) => {
   try {
-    var evaled = eval(code);
-    if (typeof evaled !== "string")
-      evaled = require("util").inspect(evaled);
-    msg.channel.sendCode("xl",client.funcs.clean(evaled));
+    const evaled = vm.runInNewContext(code, { client, msg, message: msg });
+    msg.channel.sendCode("xl", client.funcs.clean(typeof evaled === "string" ? evaled : util.inspect("evaled")));
   } catch (err) {
     msg.channel.sendMessage("`ERROR` ```xl\n" +
       client.funcs.clean(err) +
