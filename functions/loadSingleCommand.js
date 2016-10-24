@@ -30,7 +30,19 @@ module.exports = function(client, command, reload = false, loadPath = null) {
         category = client.funcs.toTitleCase(cmd.help.category ? cmd.help.category : (pathParts[0] && pathParts[0].length > 0 ? pathParts[0] : "General"));
         subCategory = client.funcs.toTitleCase(cmd.help.subCategory ? cmd.help.subCategory : (pathParts[1] && pathParts[1].length > 0 && !~pathParts[1].indexOf(".") ? pathParts[1] : "General"));
       } catch (e) {
-        reject(`Could not load new command data: ${e.stack}`);
+        if (e.code === "MODULE_NOT_FOUND") {
+          let module = /'[^']+'/g.exec(e.toString());
+          client.funcs.installNPM(module[0].slice(1,-1))
+          .then(() => {
+            client.funcs.loadDatabaseHandlers(client);
+          })
+          .catch(e => {
+            console.error(e);
+            process.exit();
+          });
+        } else {
+          reject(`Could not load new command data: ${e.stack}`);
+        }
       }
     }
 

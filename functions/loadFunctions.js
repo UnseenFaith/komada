@@ -35,7 +35,19 @@ const loadFunctions = (client, baseDir, counts) => {
         });
         resolve([d, o]);
       } catch (e) {
-        reject(e);
+        if (e.code === "MODULE_NOT_FOUND") {
+          let module = /'[^']+'/g.exec(e.toString());
+          client.funcs.installNPM(module[0].slice(1,-1))
+          .then(() => {
+            client.funcs.loadDatabaseHandlers(client);
+          })
+          .catch(e => {
+            console.error(e);
+            process.exit();
+          });
+        } else {
+          reject(e);
+        }
       }
     });
   });

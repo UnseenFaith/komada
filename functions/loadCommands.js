@@ -1,4 +1,4 @@
-const fse = require("fs-extra");
+const fs = require("fs-extra");
 const path = require("path");
 
 module.exports = client => {
@@ -19,28 +19,30 @@ const loadCommands = (client, baseDir, counts) => {
 
     let [c, a] = counts;
     try {
-      fse.walk(dir)
-      .on("data", (item) => {
-        let fileinfo = path.parse(item.path),
-          fileDir = fileinfo.dir,
-          name = fileinfo.name,
-          ext = fileinfo.ext;
+      fs.ensureDir(dir, err => {
+        if(err) reject(err);
+        fs.walk(dir)
+        .on("data", (item) => {
+          let fileinfo = path.parse(item.path),
+            fileDir = fileinfo.dir,
+            name = fileinfo.name,
+            ext = fileinfo.ext;
 
-        if(!ext) return;
+          if(!ext) return;
 
-        client.funcs.loadSingleCommand(client, name, false, `${fileDir}${path.sep}${fileinfo.base}`).then(cmd => {
-          c++;
-          cmd.conf.aliases.forEach(() => {
-            a++;
+          client.funcs.loadSingleCommand(client, name, false, `${fileDir}${path.sep}${fileinfo.base}`).then(cmd => {
+            c++;
+            cmd.conf.aliases.forEach(() => {
+              a++;
+            });
+          })
+          .catch(e=>{
+            client.funcs.log(e, "Error");
           });
         })
-        .catch(e=>{
-          client.funcs.log(e, "Error");
+        .on("end", () => {
+          resolve([c, a]);
         });
-      })
-      .on("end", () => {
-        //client.funcs.log(`Loaded ${c} commands, with ${a} aliases.`);
-        resolve([c, a]);
       });
     } catch (e) {
       if (e.code === "MODULE_NOT_FOUND") {
