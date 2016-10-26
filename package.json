@@ -6,6 +6,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
+    "lint": "eslint commands functions inhibitors",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "license": "ISC",
@@ -18,5 +19,8 @@
   },
   "engines": {
     "node": "6.4.0"
+  },
+  "devDependencies": {
+    "eslint": "^3.8.1"
   }
 }

@@ -101,7 +101,7 @@ exports.run = (client, msg, cmd) => {
             }
             break;
           case "channel":
-            if (/^<#\d+>$/.test(args[i]) && client.channels.has(args[i])) {
+            if (/^<#\d+>$/.test(args[i]) || client.channels.has(args[i])) {
               args[i] = client.channels.get(/\d+/.exec(args[i])[0]);
               validateArgs(++i);
             } else if (currentUsage.type === "optional" && !repeat) {
