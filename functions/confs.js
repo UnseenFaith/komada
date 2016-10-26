@@ -6,37 +6,47 @@ let defaultFile = "default.json";
 let defaultConf = {};
 
 exports.init = (client) => {
-  defaultConf = {prefix:client.config.prefix};
   dataDir = path.resolve(`${client.clientBaseDir}${path.sep}bwd${path.sep}conf`);
-  fs.outputJSONSync(dataDir + path.sep + defaultFile, defaultConf);
-  defaultConf = fs.readJSONSync(path.resolve(dataDir + path.sep + defaultFile));
-  const configs = fs.readdirSync(dataDir);
-  client.funcs.log(`Loading ${configs.length-1} configurations from memory`);
-  for(const conf of configs) {
-    if(conf !== defaultFile);
-    const guildID = conf.split(".")[0];
-    const thisConf = fs.readJSONSync(path.resolve(dataDir + path.sep + conf));
-    guildConfs.set(guildID, thisConf);
+
+  // Load default configuration, create if not exist.
+  defaultConf = {prefix:client.config.prefix};
+  fs.ensureFileSync(dataDir + path.sep + defaultFile);
+  try {
+    defaultConf = fs.readJSONSync(path.resolve(dataDir + path.sep + defaultFile));
+  } catch(e) {
+    fs.outputJSONSync(dataDir + path.sep + defaultFile, defaultConf);
   }
-  client.funcs.log(`Re-Checking Configuration for ${client.guilds.size} guilds`);
-  client.guilds.forEach(guild => {
-    if(!guildConfs.has(guild.id)) {
-      const conf = {};
-      conf.guildName = guild.name;
-      conf.guildID = guild.id;
-      try {
-        fs.outputJSONSync(path.resolve(dataDir + path.sep + guild.id + ".json"), conf);
-        guildConfs.set(guild.id, conf);
-      } catch(e) {
-        client.funcs.log("Error creating config file: "+e, "error");
+
+  fs.walk(dataDir)
+  .on("data", (item) => {
+    let fileinfo = path.parse(item.path);
+    if(!fileinfo.ext) return;
+    if(fileinfo.name == "default") return;
+    const guildID = fileinfo.name;
+    const thisConf = fs.readJSONSync(path.resolve(dataDir + path.sep + fileinfo.base));
+    guildConfs.set(guildID, thisConf);
+  })
+  .on("end", () => {
+    client.guilds.forEach(guild => {
+      if(!guildConfs.has(guild.id)) {
+        const conf = {};
+        conf.guildName = guild.name;
+        conf.guildID = guild.id;
+        try {
+          fs.outputJSONSync(path.resolve(dataDir + path.sep + guild.id + ".json"), conf);
+          guildConfs.set(guild.id, conf);
+        } catch(e) {
+          client.funcs.log("Error creating config file: "+e, "error");
+        }
       }
-    }
+    });
+    client.emit("confsRead");
   });
 };
 
 exports.add = (client, guild) => {
   if(guildConfs.has(guild.id)) {
-    throw new Error("Guild is already in the configurations");
+    return console.log(`Attempting to add ${guild.name} but it's already there.`);
   }
   const conf = {};
   conf.guildName = guild.name;
@@ -48,10 +58,13 @@ exports.add = (client, guild) => {
 
 exports.remove = (client, guild) => {
   if(!guildConfs.has(guild.id)) {
-    throw new Error("Guild does not exist in configurations");
+    return console.log(`Attempting to remove ${guild.name} but it's not there.`);
   }
-  fs.unlinkSync(path.resolve(dataDir + path.sep + guild.id + ".json"));
-
+  try {
+    fs.unlinkSync(path.resolve(dataDir + path.sep + guild.id + ".json"));
+  } catch (e) {
+    client.funcs.log(e, "error");
+  }
   return true;
 };
 
@@ -102,6 +115,10 @@ exports.delKey = (client, key, delFromAll) => {
       fs.outputJSONSync(path.resolve(dataDir + path.sep + conf.guildID + ".json"), conf);
     });
   }
+};
+
+exports.hasKey = (client, key) => {
+  return (key in defaultConf);
 };
 
 exports.set = (client, guild, key, value) => {
