@@ -8,6 +8,7 @@ let defaultConf = {};
 exports.init = (client) => {
   defaultConf = {prefix:client.config.prefix};
   dataDir = path.resolve(`${client.clientBaseDir}${path.sep}bwd${path.sep}conf`);
+  fs.ensureDirSync(dataDir);
   fs.outputJSONSync(dataDir + path.sep + defaultFile, defaultConf);
   defaultConf = fs.readJSONSync(path.resolve(dataDir + path.sep + defaultFile));
   const configs = fs.readdirSync(dataDir);
