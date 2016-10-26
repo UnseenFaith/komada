@@ -42,7 +42,7 @@ const loadDataProviders = (client, baseDir, counts) => {
             let module = /'[^']+'/g.exec(e.toString());
             client.funcs.installNPM(module[0].slice(1,-1))
             .then(() => {
-              client.funcs.loadDatabaseHandlers(client);
+              client.funcs.loadDataProvider(client, baseDir, counts);
             })
             .catch(e => {
               console.error(e);

@@ -28,7 +28,7 @@ const loadCommands = (client, baseDir, counts) => {
             name = fileinfo.name,
             ext = fileinfo.ext;
 
-          if(!ext) return;
+          if(!ext || ext !== ".js") return;
 
           client.funcs.loadSingleCommand(client, name, false, `${fileDir}${path.sep}${fileinfo.base}`).then(cmd => {
             c++;
