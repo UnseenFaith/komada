@@ -50,20 +50,15 @@ ${description}
         msg.channel.sendMessage(":inbox_tray: `Loading Command...`").then(m => {
           let category = mod.exports.help.category ? mod.exports.help.category : client.funcs.toTitleCase(folder);
           let dir = require("path").resolve(`${client.clientBaseDir}/commands/${category}/`);
-          client.funcs.log(dir);
           m.edit(`:inbox_tray: \`Loading Command into ${dir}/${name}.js...\``);
 
           fs.ensureDir(dir, err => {
             if (err) console.error(err);
             fs.writeFile(`${dir}/${name}.js`, res.text, (err) => {
               if(err) console.error(err);
-              console.log(client.clientBaseDir);
-              console.log(dir);
-              let relativePath = require("path").relative(client.clientBaseDir +"/commands", dir);
-              console.log(`${relativePath}/${name}.js`);
-              client.funcs.loadNewCommand(client, `${relativePath}/${name}.js`)
-                .then(() => {
-                  m.edit(`:inbox_tray: Successfully Loaded: ${name}`);
+              client.funcs.loadSingleCommand(client, name, false, `${dir}/${name}.js`)
+                .then((cmd) => {
+                  m.edit(`:inbox_tray: Successfully Loaded: ${cmd.help.name}`);
                 })
                 .catch(e => {
                   m.edit(`:no_mobile_phones: Command load failed: ${name}\n\`\`\`${e.stack}\`\`\``);

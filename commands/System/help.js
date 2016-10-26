@@ -1,18 +1,19 @@
 exports.run = (client, msg, [cmd]) => {
   if (!cmd) {
-    buildHelp(client, msg)
-    .then(help => {
-      let helpMessage = [];
-      for (let key in help) {
-        helpMessage.push(`**${key} Commands**: \`\`\`asciidoc`);
-        for (let key2 in help[key]) {
-          helpMessage.push(`= ${key2} =`);
-          helpMessage.push(help[key][key2].join("\n") + "\n");
+    let helpMessage = [];
+
+    for (let [category, subCategories] of client.helpStructure) {
+      helpMessage.push(`**${category} Commands**: \`\`\`asciidoc`);
+      for(let [subCategory, commands] of subCategories) {
+        helpMessage.push(`= ${subCategory} =`);
+        for(let [command, description] of commands) {
+          helpMessage.push(`${command} :: ${description}`);
         }
-        helpMessage.push("```\n\u200b");
+        helpMessage.push(" ");
       }
-      msg.channel.sendMessage(helpMessage, { split: { char: "\u200b" } }).catch(e => { console.error(e); });
-    });
+      helpMessage.push("```\n\u200b");
+    }
+    msg.channel.sendMessage(helpMessage, { split: { char: "\u200b" } }).catch(e => { console.error(e); });
 
   } else {
     if (client.commands.has(cmd)) {
@@ -36,33 +37,4 @@ exports.help = {
   description: "Display help for a command.",
   usage: "[command:str]",
   usageDelim: ""
-};
-
-const buildHelp = (client, msg) => {
-  return new Promise(resolve => {
-    let help = {};
-    let mps = [];
-    client.commands.forEach(command => {
-      mps.push(new Promise(res => {
-        client.funcs.runCommandInhibitors(client, msg, command, true)
-       .then(() => {
-
-         let cat = command.help.category.slice(command.help.category.charAt(command.help.category.indexOf("commands") +9) === "/" ? command.help.category.indexOf("commands")+10 : command.help.category.indexOf("commands") + 9).split("/")[0];
-         let subcat = command.help.category.slice(command.help.category.charAt(command.help.category.indexOf("commands") +9) === "/" ? command.help.category.indexOf("commands")+10 : command.help.category.indexOf("commands") + 9).split("/")[1];
-         if (!cat) cat = "General";
-         if (!subcat) subcat ="General";
-         if (!help.hasOwnProperty(cat)) help[cat] = {};
-         if (!help[cat].hasOwnProperty(subcat)) help[cat][subcat] = [];
-         help[cat][subcat].push(`${client.config.prefix}${command.help.name} :: ${command.help.description}`);
-         res();
-       })
-       .catch(() => {
-         res();
-       });
-      }));
-    });
-    Promise.all(mps).then(() => {
-      resolve(help);
-    });
-  });
 };

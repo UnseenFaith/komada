@@ -1,10 +1,13 @@
 # Komada
 
+[![Discord](https://discordapp.com/api/guilds/234357395646578688/embed.png)](https://discord.gg/bRCvFy9)
+[![npm](https://img.shields.io/npm/v/komada.svg?maxAge=3600)](https://www.npmjs.com/package/komada)
+[![npm](https://img.shields.io/npm/dt/komada.svg?maxAge=3600)](https://www.npmjs.com/package/komada)
+[![David](https://img.shields.io/david/eslachance/komada.svg?maxAge=3600)](https://david-dm.org/eslachance/komada)
+
 > "Stay a while, and listen!"
 
-Komada is a very simple bot that I'm using on the
-[Discord.js Official](https://discord.gg/bRCvFy9) server to provide links to my
-[Discord.js Bot Guide](https://www.gitbook.com/book/eslachance/discord-js-bot-guide/details).
+Komada is a modular framework for bots built on top of [Discord.js](https://github.com/hydrabolt/dicord.js). It offers an extremely easy installation, downloadable commands, and a framework to build your own commands, modules, and functions.
 
 ## Installing Komada
 
@@ -29,7 +32,7 @@ komada.start({
   "commandInhibitors": ["disable", "permissions", "missingBotPermissions"],
   "dataHandlers": [],
   "clientOptions": {
-    forceFetchUsers: true
+    fetchAllMembers: true
   }
 });
 ```

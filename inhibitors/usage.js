@@ -101,7 +101,7 @@ exports.run = (client, msg, cmd) => {
             }
             break;
           case "channel":
-            if (/^<#\d+>$/.test(args[i]) && client.channels.has(args[i])) {
+            if (/^<#\d+>$/.test(args[i]) || client.channels.has(args[i])) {
               args[i] = client.channels.get(/\d+/.exec(args[i])[0]);
               validateArgs(++i);
             } else if (currentUsage.type === "optional" && !repeat) {
@@ -178,7 +178,7 @@ exports.run = (client, msg, cmd) => {
             break;
           case "int":
           case "integer":
-            if (!Number.isInteger(args[i])) {
+            if (!Number.isInteger(parseInt(args[i]))) {
               if (currentUsage.type === "optional" && !repeat) {
                 args.splice(i, 0, undefined);
                 validateArgs(++i);
@@ -420,7 +420,7 @@ exports.run = (client, msg, cmd) => {
               break;
             case "int":
             case "integer":
-              if (Number.isInteger(args[i])) {
+              if (Number.isInteger(parseInt(args[i]))) {
                 args[i] = parseInt(args[i]);
                 if (currentUsage.possibles[p].min && currentUsage.possibles[p].max) {
                   if (args[i] <= currentUsage.possibles[p].max && args[i] >= currentUsage.possibles[p].min) {
