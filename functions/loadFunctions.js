@@ -17,6 +17,7 @@ module.exports = client => {
 const loadFunctions = (client, baseDir, counts) => {
   return new Promise( (resolve, reject) => {
     let dir = path.resolve(baseDir + "./functions/");
+    fs.ensureDirSync(dir);
     fs.readdir(dir, (err, files) => {
       if (err) reject(err);
       files = files.filter(f => { return f.slice(-3) === ".js"; });
