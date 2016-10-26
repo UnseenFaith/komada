@@ -1,5 +1,3 @@
-const pad = require("../../functions/pad.js");
-
 exports.run = (client, msg, [cmd]) => {
   if (!cmd) {
     let helpMessage = [];
@@ -15,7 +13,7 @@ exports.run = (client, msg, [cmd]) => {
 
         for(let [command, description] of commands) {
           client.funcs.log(`Help command for ${command} :: ${description}`);
-          helpMessage.push(`${pad(command + "::", longest + 2)} ${description}`);
+          helpMessage.push(`${command}::${" ".repeat(longest - command.length)} ${description}`);
         }
         helpMessage.push(" ");
       }
