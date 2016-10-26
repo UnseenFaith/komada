@@ -2,28 +2,30 @@ const fs = require("fs-extra");
 const path = require("path");
 const guildConfs = new Map();
 let dataDir = "";
+let defaultFile = "default.json";
 let defaultConf = {};
 
 exports.init = (client) => {
+  defaultConf = {prefix:client.config.prefix};
   dataDir = path.resolve(`${client.clientBaseDir}${path.sep}bwd${path.sep}conf`);
-  defaultConf = JSON.parse(fs.readFileSync(path.resolve(dataDir + path.sep + "default.json"), "utf8"));
-  fs.ensureDirSync(dataDir);
+  fs.outputJSONSync(dataDir + path.sep + defaultFile, defaultConf);
+  defaultConf = fs.readJSONSync(path.resolve(dataDir + path.sep + defaultFile));
   const configs = fs.readdirSync(dataDir);
   client.funcs.log(`Loading ${configs.length-1} configurations from memory`);
   for(const conf of configs) {
-    if(conf !== "default.json");
+    if(conf !== defaultFile.json);
     const guildID = conf.split(".")[0];
-    const thisConf = JSON.parse(fs.readFileSync(path.resolve(dataDir + path.sep + conf), "utf8"));
+    const thisConf = fs.readJSONSync(path.resolve(dataDir + path.sep + conf));
     guildConfs.set(guildID, thisConf);
   }
-  client.funcs.log(`Re-Checking Configuration for ${client.guilds.size}`);
+  client.funcs.log(`Re-Checking Configuration for ${client.guilds.size} guilds`);
   client.guilds.forEach(guild => {
     if(!guildConfs.has(guild.id)) {
       const conf = {};
       conf.guildName = guild.name;
       conf.guildID = guild.id;
       try {
-        fs.writeFileSync(path.resolve(dataDir + path.sep + guild.id + ".json"), JSON.stringify(conf));
+        fs.outputJSONSync(path.resolve(dataDir + path.sep + guild.id + ".json"), conf);
         guildConfs.set(guild.id, conf);
       } catch(e) {
         client.funcs.log("Error creating config file: "+e, "error");
@@ -37,7 +39,7 @@ exports.add = (client, guild) => {
   const conf = {};
   conf.guildName = guild.name;
   conf.guildID = guild.id;
-  fs.writeFileSync(path.resolve(dataDir + path.sep + guild.id + ".json"), JSON.stringify(conf));
+  fs.outputJSONSync(path.resolve(dataDir + path.sep + guild.id + ".json"), conf);
   guildConfs.set(guild.id, conf);
   return conf;
 };
@@ -71,7 +73,7 @@ exports.get = (guild) => {
 
 exports.addKey = (client, key, defaultValue) => {
   defaultConf[key] = defaultValue;
-  fs.writeFileSync(path.resolve(dataDir + path.sep + "default.json"), JSON.stringify(defaultConf));
+  fs.outputJSONSync(path.resolve(dataDir + path.sep + "default.json"), defaultConf);
 };
 
 exports.setKey = (client, key, defaultValue) => {
@@ -79,7 +81,7 @@ exports.setKey = (client, key, defaultValue) => {
     throw new Error(`:x: The key \`${key}\` does not seem to be present in the default configuration.`);
   }
   defaultConf[key] = defaultValue;
-  fs.writeFileSync(path.resolve(dataDir + path.sep + "default.json"), JSON.stringify(defaultConf));
+  fs.outputJSONSync(path.resolve(dataDir + path.sep + "default.json"), defaultConf);
 };
 
 exports.set = (client, guild, key, value) => {
@@ -96,6 +98,6 @@ exports.set = (client, guild, key, value) => {
 
   thisConf[key] = value;
   guildConfs.set(guild.id, thisConf);
-  fs.writeFile(path.resolve(dataDir + path.sep + guild.id + ".json"), JSON.stringify(thisConf));
+  fs.outputJSONSync(path.resolve(dataDir + path.sep + guild.id + ".json"), thisConf);
   return thisConf;
 };
