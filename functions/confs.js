@@ -13,7 +13,7 @@ exports.init = (client) => {
   const configs = fs.readdirSync(dataDir);
   client.funcs.log(`Loading ${configs.length-1} configurations from memory`);
   for(const conf of configs) {
-    if(conf !== defaultFile.json);
+    if(conf !== defaultFile);
     const guildID = conf.split(".")[0];
     const thisConf = fs.readJSONSync(path.resolve(dataDir + path.sep + conf));
     guildConfs.set(guildID, thisConf);
