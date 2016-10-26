@@ -30,11 +30,14 @@ exports.start = (config) => {
 
   client.once("ready", () => {
     client.config.prefixMention = new RegExp(`^<@!?${client.user.id}>`);
+    client.funcs.confs.init(client);
   });
 
   client.on("message", msg => {
-    if (!msg.content.startsWith(client.config.prefix) && !client.config.prefixMention.test(msg.content)) return;
-    let prefixLength = client.config.prefix.length;
+    let conf = client.funcs.confs.get(msg.guild);
+    msg.guildConf = conf;
+    if (!msg.content.startsWith(conf.prefix) && !client.config.prefixMention.test(msg.content)) return;
+    let prefixLength = conf.prefix.length;
     if(client.config.prefixMention.test(msg.content)) prefixLength = client.config.prefixMention.exec(msg.content)[0].length +1;
     let command = msg.content.slice(prefixLength).split(" ")[0].toLowerCase();
     let suffix = msg.content.slice(prefixLength).split(" ").slice(1).join(" ");
