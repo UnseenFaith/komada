@@ -35,7 +35,9 @@ exports.init = (client) => {
 };
 
 exports.add = (client, guild) => {
-  if(guildConfs.has(guild.id)) throw new Error("Guild is already in the configurations");
+  if(guildConfs.has(guild.id)) {
+    throw new Error("Guild is already in the configurations");
+  }
   const conf = {};
   conf.guildName = guild.name;
   conf.guildID = guild.id;
@@ -45,7 +47,9 @@ exports.add = (client, guild) => {
 };
 
 exports.remove = (client, guild) => {
-  if(!guildConfs.has(guild.id)) throw new Error("Guild does not exist in configurations");
+  if(!guildConfs.has(guild.id)) {
+    throw new Error("Guild does not exist in configurations");
+  }
   fs.unlinkSync(path.resolve(dataDir + path.sep + guild.id + ".json"));
 
   return true;
@@ -82,6 +86,22 @@ exports.setKey = (client, key, defaultValue) => {
   }
   defaultConf[key] = defaultValue;
   fs.outputJSONSync(path.resolve(dataDir + path.sep + "default.json"), defaultConf);
+};
+
+exports.delKey = (client, key, delFromAll) => {
+  if(!(key in defaultConf)) {
+    throw new Error(`:x: The key \`${key}\` does not seem to be present in the default configuration.`);
+  }
+  if(["serverID", "serverName", "prefix"].includes(key)) {
+    throw new Error(`:x: The key \`${key}\` is core and cannot be deleted.`);
+  }
+  delete defaultConf[key];
+  if(delFromAll) {
+    guildConfs.forEach(conf => {
+      delete conf[key];
+      fs.outputJSONSync(path.resolve(dataDir + path.sep + conf.guildID + ".json"), conf);
+    });
+  }
 };
 
 exports.set = (client, guild, key, value) => {
