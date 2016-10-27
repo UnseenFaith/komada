@@ -34,7 +34,7 @@ module.exports = function(client, command, reload = false, loadPath = null) {
           let module = /'[^']+'/g.exec(e.toString());
           client.funcs.installNPM(module[0].slice(1,-1))
           .then(() => {
-            client.funcs.loadDatabaseHandlers(client);
+            client.funcs.loadSingleCommand(client, command, false, loadPath);
           })
           .catch(e => {
             console.error(e);

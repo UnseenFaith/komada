@@ -33,6 +33,14 @@ exports.start = (config) => {
     client.funcs.confs.init(client);
   });
 
+  client.once("confsRead", () => {
+    client.commands.forEach(command => {
+      if(command.init) {
+        command.init(client);
+      }
+    });
+  });
+
   client.on("message", msg => {
     let conf = client.funcs.confs.get(msg.guild);
     msg.guildConf = conf;
