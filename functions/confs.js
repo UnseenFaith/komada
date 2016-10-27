@@ -9,7 +9,7 @@ exports.init = (client) => {
   dataDir = path.resolve(`${client.clientBaseDir}${path.sep}bwd${path.sep}conf`);
 
   // Load default configuration, create if not exist.
-  defaultConf = {prefix:client.config.prefix};
+  defaultConf = {prefix:client.config.prefix, disabledCommands: []};
   fs.ensureFileSync(dataDir + path.sep + defaultFile);
   try {
     defaultConf = fs.readJSONSync(path.resolve(dataDir + path.sep + defaultFile));
@@ -99,6 +99,18 @@ exports.setKey = (client, key, defaultValue) => {
   }
   defaultConf[key] = defaultValue;
   fs.outputJSONSync(path.resolve(dataDir + path.sep + "default.json"), defaultConf);
+};
+
+exports.resetKey = (client, guild, key) => {
+  if(!guildConfs.has(guild.id)) {
+    throw new Error(`:x: The guild ${guild.id} not found while trying to reset ${key}`);
+  }
+  let thisConf = this.get(guild);
+  if(!(key in thisConf)) {
+    throw new Error(`:x: The key \`${key}\` does not seem to be present in the server configuration.`);
+  }
+  delete thisConf[key];
+  fs.outputJSONSync(path.resolve(dataDir + path.sep + guild.id + ".json"), thisConf);
 };
 
 exports.delKey = (client, key, delFromAll) => {
