@@ -6,6 +6,7 @@ Thumbs.db
 config.json
 temp
 bwd
+index.js
 
 # C/C++
 *.slo
@@ -94,3 +95,13 @@ jspm_packages
 
 # Optional REPL history
 .node_repl_history
+
+
+# Extra Komada commands
+commands/Docs
+commands/Fun
+commands/Misc
+commands/Moderation
+commands/Self
+commands/System/prefix.js
+commands/System/clean.js
