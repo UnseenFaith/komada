@@ -9,7 +9,11 @@ exports.init = (client) => {
   dataDir = path.resolve(`${client.clientBaseDir}${path.sep}bwd${path.sep}conf`);
 
   // Load default configuration, create if not exist.
-  defaultConf = {prefix:client.config.prefix, disabledCommands: []};
+  defaultConf = {
+    prefix: {type: "str", data: client.config.prefix},
+    disabledCommands: {type: "array", data: "[]"}
+  };
+
   fs.ensureFileSync(dataDir + path.sep + defaultFile);
   try {
     defaultConf = fs.readJSONSync(path.resolve(dataDir + path.sep + defaultFile));
@@ -27,44 +31,17 @@ exports.init = (client) => {
     guildConfs.set(guildID, thisConf);
   })
   .on("end", () => {
-    client.guilds.forEach(guild => {
-      if(!guildConfs.has(guild.id)) {
-        const conf = {};
-        conf.guildName = guild.name;
-        conf.guildID = guild.id;
-        try {
-          fs.outputJSONSync(path.resolve(dataDir + path.sep + guild.id + ".json"), conf);
-          guildConfs.set(guild.id, conf);
-        } catch(e) {
-          client.funcs.log("Error creating config file: "+e, "error");
-        }
-      }
-    });
     client.emit("confsRead");
   });
 };
 
-exports.add = (client, guild) => {
-  if(guildConfs.has(guild.id)) {
-    return console.log(`Attempting to add ${guild.name} but it's already there.`);
-  }
-  const conf = {};
-  conf.guildName = guild.name;
-  conf.guildID = guild.id;
-  fs.outputJSONSync(path.resolve(dataDir + path.sep + guild.id + ".json"), conf);
-  guildConfs.set(guild.id, conf);
-  return conf;
-};
-
-exports.remove = (client, guild) => {
+exports.remove = (guild) => {
   if(!guildConfs.has(guild.id)) {
     return console.log(`Attempting to remove ${guild.name} but it's not there.`);
   }
-  try {
-    fs.unlinkSync(path.resolve(dataDir + path.sep + guild.id + ".json"));
-  } catch (e) {
-    client.funcs.log(e, "error");
-  }
+
+  fs.unlinkSync(path.resolve(dataDir + path.sep + guild.id + ".json"));
+
   return true;
 };
 
@@ -73,35 +50,44 @@ exports.has = (guild) => {
 };
 
 exports.get = (guild) => {
+  let conf = {};
   if(guildConfs.has(guild.id)) {
     let guildConf = guildConfs.get(guild.id);
-    const conf = {};
     for(let key in guildConf) {
-      if(guildConf[key]) conf[key] = guildConf[key];
-      else conf[key] = defaultConf[key];
+      if(guildConf[key]) conf[key] = guildConf[key].data;
+      else conf[key] = defaultConf[key].data;
     }
-    for(let key in defaultConf) {
-      if(!conf[key]) conf[key] = defaultConf[key];
-    }
-    return conf;
   }
-  else return defaultConf;
+  for(let key in defaultConf) {
+    if(!conf[key]) conf[key] = defaultConf[key].data;
+  }
+  return conf;
 };
 
-exports.addKey = (client, key, defaultValue) => {
-  defaultConf[key] = defaultValue;
+exports.addKey = (key, defaultValue) => {
+  let type = defaultValue.constructor.name;
+  if(["TextChannel", "GuildChannel", "Message", "User", "GuildMember", "Guild", "Role", "VoiceChannel", "Emoji", "Invite"].includes(type)) {
+    defaultValue = defaultValue.id;
+  }
+  if(defaultValue.constructor.name !== type && defaultValue.constructor.name !== null) {
+    return false;
+  }
+  defaultConf[key] = {type: defaultValue.constructor.name, data: defaultValue};
   fs.outputJSONSync(path.resolve(dataDir + path.sep + "default.json"), defaultConf);
 };
 
-exports.setKey = (client, key, defaultValue) => {
+exports.setKey = (key, defaultValue) => {
   if(!(key in defaultConf)) {
     throw new Error(`:x: The key \`${key}\` does not seem to be present in the default configuration.`);
   }
-  defaultConf[key] = defaultValue;
+  if(defaultValue.constructor.name !== defaultConf[key].type) {
+    throw new Error(`:x: The key \`${key}\` does not correspond to the type: ${defaultConf[key].type}.`);
+  }
+  defaultConf[key].data = defaultValue;
   fs.outputJSONSync(path.resolve(dataDir + path.sep + "default.json"), defaultConf);
 };
 
-exports.resetKey = (client, guild, key) => {
+exports.resetKey = (guild, key) => {
   if(!guildConfs.has(guild.id)) {
     throw new Error(`:x: The guild ${guild.id} not found while trying to reset ${key}`);
   }
@@ -110,10 +96,11 @@ exports.resetKey = (client, guild, key) => {
     throw new Error(`:x: The key \`${key}\` does not seem to be present in the server configuration.`);
   }
   delete thisConf[key];
+  guildConfs.set(guild.id, thisConf);
   fs.outputJSONSync(path.resolve(dataDir + path.sep + guild.id + ".json"), thisConf);
 };
 
-exports.delKey = (client, key, delFromAll) => {
+exports.delKey = (key, delFromAll) => {
   if(!(key in defaultConf)) {
     throw new Error(`:x: The key \`${key}\` does not seem to be present in the default configuration.`);
   }
@@ -129,24 +116,32 @@ exports.delKey = (client, key, delFromAll) => {
   }
 };
 
-exports.hasKey = (client, key) => {
+exports.hasKey = (key) => {
   return (key in defaultConf);
 };
 
-exports.set = (client, guild, key, value) => {
-  if(!guildConfs.has(guild.id)) {
-    throw new Error(`:x: The guild ${guild.id} not found while trying to set ${key} to ${value}`);
+exports.set = (guild, key, value) => {
+  let thisConf = {};
+  if(guildConfs.has(guild.id)) {
+    thisConf = guildConfs.get(guild);
   }
 
-  let thisConf = this.get(guild);
-  if(!(key in thisConf)) {
-    throw new Error(`:x: The key \`${key}\` was not found in the configuration for ${guild.name}.`);
+  if(!(key in defaultConf)) {
+    throw new Error(`:x: The key \`${key}\` is not valid according to the Default Configuration.`);
   }
 
-  if(["serverID", "serverName"].includes(key)) throw new Error(`:x: The key \`${key}\` is read-only.`);
+  if(value.constructor.name !== defaultConf[key].type) {
+    throw new Error(`:x: The key \`${key}\` does not correspond to the type: ${defaultConf[key].type}.`);
+  }
 
-  thisConf[key] = value;
+  let type = value.constructor.name;
+  if(["TextChannel", "GuildChannel", "Message", "User", "GuildMember", "Guild", "Role", "VoiceChannel", "Emoji", "Invite"].includes(type)) {
+    value = value.id;
+  }
+
+  thisConf[key] = {data : value , type : defaultConf[key].type};
   guildConfs.set(guild.id, thisConf);
   fs.outputJSONSync(path.resolve(dataDir + path.sep + guild.id + ".json"), thisConf);
+  
   return thisConf;
 };

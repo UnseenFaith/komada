@@ -5,7 +5,6 @@ exports.conf = {
 
 exports.run = (client, msg, cmd) => {
   return new Promise((resolve, reject) => {
-
     let usage = client.funcs.parseUsage(cmd.help.usage);
     let prefixLength = client.config.prefix.length;
     if (client.config.prefixMention.test(msg.content)) prefixLength = client.config.prefixMention.exec(msg.content)[0].length + 1;
@@ -355,7 +354,8 @@ exports.run = (client, msg, cmd) => {
               break;
             case "user":
             case "mention":
-              if (client.users.has(/\d+/.exec(args[i])[0]) && args[i].length > 5) {
+              const result = /\d+/.exec(args[i]);
+              if (result && args[i].length > 5 &&  client.users.has(result[0])) {
                 args[i] = client.users.get(/\d+/.exec(args[i])[0]);
                 validated = true;
                 multiPossibles(++p);
