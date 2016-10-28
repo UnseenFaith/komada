@@ -11,8 +11,8 @@ exports.help = {
 };
 
 exports.conf = {
-  enabled: false,
-  guildOnly: false,
+  enabled: true,
+  guildOnly: true,
   aliases: [],
   permLevel: 0,
   botPerms: [],
