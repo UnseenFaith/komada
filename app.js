@@ -74,7 +74,9 @@ exports.start = (config) => {
       cmd.run(client, msg, params);
     })
     .catch(reason => {
-      msg.channel.sendMessage(reason);
+      if(reason) {
+        msg.channel.sendMessage(reason).catch(console.error);
+      }
     });
   });
 
