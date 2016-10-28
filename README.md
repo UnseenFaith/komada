@@ -104,7 +104,8 @@ by the `usage` property and its given arguments.
 
 #### Command Arguments
 
-** Usage Structure **
+**Usage Structure**
+
 `<>` required argument, `[]` optional argument
 `<Name:Type{min,max}>`
 
@@ -114,6 +115,7 @@ by the `usage` property and its given arguments.
 - **Special Repeat Tag** `[...]` will repeat the last usage optionally until you run out of arguments. Useful for doing something like `<SearchTerm:str> [...]` which will allow you to take as many search terms as you want, per your Usage Deliminator.
 
 **Usage Types**
+
 - `literal` : Literally equal to the Name. This is the default type if none is defined.
 - `str`, `string` : Strings
 - `int`, `integer` : Integers
