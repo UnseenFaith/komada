@@ -35,6 +35,6 @@ exports.conf = {
 exports.help = {
   name: "conf",
   description: "Define per-server configuration.",
-  usage: "<set|get|reset|list> [key:str] [channel:channel|user:user|int:int|str:str]",
+  usage: "<set|get|reset|list> [key:str] [channel:channel|user:user|role:role|int:int|str:str]",
   usageDelim: " "
 };
