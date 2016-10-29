@@ -20,6 +20,10 @@ exports.run = (client, msg, [url, folder = "Downloaded"]) => {
     let name = mod.exports.help.name;
     let description = mod.exports.help.description;
 
+    if (mod.exports.conf.selfbot && client.config.selfbot) {
+      msg.reply(`The command \`${name}\` is only usable in selfbots!`);
+      return;
+    }
     if (client.commands.has(name)) {
       msg.reply(`The command \`${name}\` already exists in the bot!`);
       return;

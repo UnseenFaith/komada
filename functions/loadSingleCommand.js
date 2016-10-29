@@ -25,6 +25,9 @@ module.exports = function(client, command, reload = false, loadPath = null) {
     } else {
       try {
         cmd = require(loadPath);
+        if (cmd.conf.selfbot && client.config.selfbot) {
+          return reject(`The command \`${cmd.help.name}\` is only usable in selfbots!`);
+        }
         let pathParts = loadPath.split(path.sep);
         pathParts = pathParts.slice(pathParts.indexOf("commands")+1);
         category = client.funcs.toTitleCase(cmd.help.category ? cmd.help.category : (pathParts[0] && pathParts[0].length > 0 ? pathParts[0] : "General"));
