@@ -123,7 +123,7 @@ exports.hasKey = (key) => {
 exports.set = (guild, key, value) => {
   let thisConf = {};
   if(guildConfs.has(guild.id)) {
-    thisConf = guildConfs.get(guild);
+    thisConf = guildConfs.get(guild.id);
   }
 
   if(!(key in defaultConf)) {
