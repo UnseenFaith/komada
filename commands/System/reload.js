@@ -43,7 +43,7 @@ exports.run = (client, msg, [commandname]) => {
 exports.conf = {
   enabled: true,
   guildOnly: false,
-  aliases: ["r", "enable", "load"],
+  aliases: ["r", "load"],
   permLevel: 4,
   botPerms: [],
   requiredFuncs: []
