@@ -10,8 +10,8 @@ exports.init = (client) => {
 
   // Load default configuration, create if not exist.
   defaultConf = {
-    prefix: {type: "str", data: client.config.prefix},
-    disabledCommands: {type: "array", data: "[]"}
+    prefix: {type: "String", data: client.config.prefix},
+    disabledCommands: {type: "Array", data: "[]"}
   };
 
   fs.ensureFileSync(dataDir + path.sep + defaultFile);
@@ -142,6 +142,6 @@ exports.set = (guild, key, value) => {
   thisConf[key] = {data : value , type : defaultConf[key].type};
   guildConfs.set(guild.id, thisConf);
   fs.outputJSONSync(path.resolve(dataDir + path.sep + guild.id + ".json"), thisConf);
-  
+
   return thisConf;
 };
