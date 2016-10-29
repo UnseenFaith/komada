@@ -11,7 +11,9 @@ exports.init = (client) => {
   // Load default configuration, create if not exist.
   defaultConf = {
     prefix: {type: "String", data: client.config.prefix},
-    disabledCommands: {type: "Array", data: "[]"}
+    disabledCommands: {type: "Array", data: []},
+    mod_role: {type: "String", data: "Mods"},
+    admin_role: {type: "String", data: "Devs"}
   };
 
   fs.ensureFileSync(dataDir + path.sep + defaultFile);
