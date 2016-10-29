@@ -51,7 +51,7 @@ exports.has = (guild) => {
 
 exports.get = (guild) => {
   let conf = {};
-  if(guildConfs.has(guild.id)) {
+  if(!!guild && guildConfs.has(guild.id)) {
     let guildConf = guildConfs.get(guild.id);
     for(let key in guildConf) {
       if(guildConf[key]) conf[key] = guildConf[key].data;
