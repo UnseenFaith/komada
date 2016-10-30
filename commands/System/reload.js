@@ -44,7 +44,7 @@ exports.conf = {
   enabled: true,
   guildOnly: false,
   aliases: ["r", "load"],
-  permLevel: 4,
+  permLevel: 10,
   botPerms: [],
   requiredFuncs: []
 };
