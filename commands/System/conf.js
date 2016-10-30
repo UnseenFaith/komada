@@ -1,4 +1,5 @@
-exports.run = (client, msg, [action, key, value]) => {
+exports.run = (client, msg, [action, key, ... value]) => {
+  value = value.join(" ");
   if(action === "list") {
     msg.channel.sendCode("json", require("util").inspect(msg.guildConf));
     return;
