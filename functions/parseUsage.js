@@ -10,7 +10,7 @@ const parseTag = (tag, count) => {
   const members = tag.split("|");
 
   members.forEach((e, i) => { // i is the current bound if required for errors.
-    const result = /^([a-z09]+)(?::([a-z09]+)(?:{(?:(\d+(?:\.\d+)?))?(?:,(\d+(?:\.\d+)?))?})?)?$/i.exec(e);
+    const result = /^([a-z0-9]+)(?::([a-z0-9]+)(?:{(?:(\d+(?:\.\d+)?))?(?:,(\d+(?:\.\d+)?))?})?)?$/i.exec(e);
     // I require to modify the regex if we wan't to handle invalid types instead of defaulting them
 
     if (!result)
