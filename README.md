@@ -44,18 +44,18 @@ npm install
 node app.js
 ```
 
-> Requires Node 6 or higher (because discord.js requires that), also requires Discord.js v10 (currently #indev), installed automatically with `npm install`.
+> Requires Node 6 or higher (because Discord.js requires that), also requires Discord.js v10, installed automatically with `npm install`.
 
 ## Quick & Dirty Reference Guide
 > For creating your own pieces
 
-Essentially, the way Komada works is that we have *core* pieces (functions, events, commands, etc) loaded automatically. 
-But you can add your own pieces easily by adding files to your *local* folders (which are created on first load)
+Essentially, the way Komada works is that we have *core* pieces (functions, events, commands, etc.) loaded automatically. 
+But you can add your own pieces easily by adding files to your *local* folders (which are created on first load).
 
 These pieces are: 
-- **Commands** which add in-chat functionality to your bot
+- **commands** which add in-chat functionality to your bot.
 - **functions** which can be used by other pieces or anywhere in the bot.
-- **dataHandlers** which are database connectors (in progress at the moment)
+- **dataHandlers** which are database connectors (in progress at the moment).
 
 ### Creating a new command
 
@@ -69,7 +69,7 @@ your command will override the core one. This can let you modify the core
 behaviour. Note also that you cannot have more than one command with the same name.
 
 ```js
-exports.run = (client, msg. [...args]) => {
+exports.run = (client, msg, [...args]) => {
   // Place Code Here
 };
 
@@ -97,10 +97,10 @@ by the `usage` property and its given arguments.
 **Non-obvious options**: 
 - **enabled**: Set to false to completely disable this command, it cannot be forecefully enabled.
 - **aliases**: Array of aliases for the command, which will *also* trigger it.
-- **permLevel**: Permission level, controlled via `./functions/permissionLevel.js`
+- **permLevel**: Permission level, controlled via `./functions/permissionLevel.js`.
 - **botPerms**: An array of permission strings (such as `"MANAGE_MESSAGES"`) required for the command to run.
-- **requiredFuncs**: An array of function names required for this command to execute (dependency)
-- **usage**: The usage string as determined by the Argument Usage (see below)
+- **requiredFuncs**: An array of function names required for this command to execute (dependency).
+- **usage**: The usage string as determined by the Argument Usage (see below).
 
 #### Command Arguments
 
@@ -110,21 +110,21 @@ by the `usage` property and its given arguments.
 `<Name:Type{min,max}>`
 
 - **Name** Mostly used for debugging message, unless the type is Litteral in which it compares the argument to the name.
-- **Type** The type of variable you are expecting
+- **Type** The type of variable you are expecting.
 - **Min, Max** Minimum or Maximum for a giving variable (works on strings in terms of length, and on all types of numbers in terms of value) You are allowed to define any combination of min and max. Omit for none, `{min}` for min, `{,max}` for max.
-- **Special Repeat Tag** `[...]` will repeat the last usage optionally until you run out of arguments. Useful for doing something like `<SearchTerm:str> [...]` which will allow you to take as many search terms as you want, per your Usage Deliminator.
+- **Special Repeat Tag** `[...]` will repeat the last usage optionally until you run out of arguments. Useful for doing something like `<SearchTerm:str> [...]` which will allow you to take as many search terms as you want, per your Usage Delimiter.
 
 **Usage Types**
 
 - `literal` : Literally equal to the Name. This is the default type if none is defined.
-- `str`, `string` : Strings
-- `int`, `integer` : Integers
-- `num`, `number`, `Float` : Floating point numbers
-- `url` : a url
-- `msg`, `message` : A message object returned from the message id (now using fetchMessage as of d3d498c99d5eca98b5cbcefb9838fa7d96f17c93)
-- `channel` : A channel object returned from the channel id or channel tag
-- `guild` : A guild object returned from the guild id
-- `user`, `mention` : A user object returned from the user id or mention
+- `str`, `string` : Strings.
+- `int`, `integer` : Integers.
+- `num`, `number`, `Float` : Floating point numbers.
+- `url` : A URL.
+- `msg`, `message` : A message object returned from the message ID (now using fetchMessage as of d3d498c99d5eca98b5cbcefb9838fa7d96f17c93).
+- `channel` : A channel object returned from the channel ID or channel tag.
+- `guild` : A guild object returned from the guild ID.
+- `user`, `mention` : A user object returned from the user ID or mention.
  
 ### Creating an event
 
@@ -140,7 +140,7 @@ exports.run = (client, [...args]) => {
 };
 ```
 
-Where `[...args]` is arguments you would *normally* get from those events.
+Where `[...args]` are arguments you would *normally* get from those events.
 For example, while the `ready` event would only have `(client)`, the 
 `guildMemberAdd` event would be `(guild, member)`.
 
