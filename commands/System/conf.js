@@ -1,5 +1,7 @@
 exports.run = (client, msg, [action, key, ... value]) => {
-  value = value.join(" ");
+  if (value[1] != undefined) {
+    value = value.join(' ');
+  }
   if(action === "list") {
     msg.channel.sendCode("json", require("util").inspect(msg.guildConf));
     return;
@@ -13,11 +15,7 @@ exports.run = (client, msg, [action, key, ... value]) => {
 
   if(action === "set") {
     if(!key || !value) return msg.reply("Please provide both a key and value!");
-    if (value === "true")
-      value = true;
-    if (value === "false")
-      value = false;
-    client.funcs.confs.set(msg.guild, key, value);
+    client.funcs.confs.set(msg.guild, key, value[1] === undefined ? value[0] : value);
     return msg.reply(`The value for ${key} has been set to: ${value}`);
   } else
 
@@ -40,6 +38,6 @@ exports.conf = {
 exports.help = {
   name: "conf",
   description: "Define per-server configuration.",
-  usage: "<set|get|reset|list> [key:str] [true|false|channel:channel|user:user|role:role|int:int|str:str]",
+  usage: "<set|get|reset|list> [key:str] [boolean:boolean|channel:channel|user:user|role:role|int:int|str:str]",
   usageDelim: " "
 };

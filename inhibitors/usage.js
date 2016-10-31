@@ -99,6 +99,19 @@ exports.run = (client, msg, cmd) => {
               reject(`${currentUsage.possibles[0].name} must be a mention or valid user id.`);
             }
             break;
+          case "boolean":
+            if (/^true|false$/.test(args[i])) {
+              if (args[i] === "true")
+                args[i] = true;
+              else args[i] = false;
+              validateArgs(++i);
+            } else if (currentUsage.type === "optional" && !repeat) {
+              args.splice(i, 0, undefined);
+              validateArgs(++i);
+            } else {
+              reject(`${currentUsage.possibles[0].name} must be true or false.`)
+            }
+            break;
           case "member":
             if (/^<@!?\d+>$/.test(args[i]) && msg.guild.members.has(/\d+/.exec(args[i])[0]) && args[i].length > 5) {
               args[i] = msg.guild.members.get(/\d+/.exec(args[i])[0]);
@@ -368,6 +381,16 @@ exports.run = (client, msg, cmd) => {
               const result = /\d+/.exec(args[i]);
               if (result && args[i].length > 5 &&  client.users.has(result[0])) {
                 args[i] = client.users.get(/\d+/.exec(args[i])[0]);
+                validated = true;
+                multiPossibles(++p);
+              } else {
+                multiPossibles(++p);
+              }
+              break;
+            case "boolean":
+              if (/^true|false$/.test(args[i])) {
+                if (args[i] === "true") args[i] = true;
+                else args[i] = false;
                 validated = true;
                 multiPossibles(++p);
               } else {
