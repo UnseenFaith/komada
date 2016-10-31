@@ -13,6 +13,10 @@ exports.run = (client, msg, [action, key, ... value]) => {
 
   if(action === "set") {
     if(!key || !value) return msg.reply("Please provide both a key and value!");
+    if (value === "true")
+      value = true;
+    if (value === "false")
+      value = false;
     client.funcs.confs.set(msg.guild, key, value);
     return msg.reply(`The value for ${key} has been set to: ${value}`);
   } else
@@ -36,6 +40,6 @@ exports.conf = {
 exports.help = {
   name: "conf",
   description: "Define per-server configuration.",
-  usage: "<set|get|reset|list> [key:str] [channel:channel|user:user|role:role|int:int|str:str]",
+  usage: "<set|get|reset|list> [key:str] [true|false|channel:channel|user:user|role:role|int:int|str:str]",
   usageDelim: " "
 };
