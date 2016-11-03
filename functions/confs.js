@@ -18,11 +18,17 @@ exports.init = (client) => {
 
   fs.ensureFileSync(dataDir + path.sep + defaultFile);
   try {
-    defaultConf = fs.readJSONSync(path.resolve(dataDir + path.sep + defaultFile));
+    let currentDefaultConf = fs.readJSONSync(path.resolve(dataDir + path.sep + defaultFile));
+    if (JSON.stringify(defaultConf) !== JSON.stringify(currentDefaultConf)) {
+      client.funcs.log("Default Configuration out of date. Fixing that now.");
+      fs.outputJSONSync(dataDir + path.set + defaultFile, defaultConf);
+      let defaultConf = fs.readJSONSync(path.resolve(dataDir + path.sep + defaultFile));
+    } else {
+      defaultConf = currentDefaultConf;
+    }
   } catch(e) {
     fs.outputJSONSync(dataDir + path.sep + defaultFile, defaultConf);
   }
-
   fs.walk(dataDir)
   .on("data", (item) => {
     let fileinfo = path.parse(item.path);
