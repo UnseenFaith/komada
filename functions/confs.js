@@ -8,7 +8,6 @@ let defaultConf = {};
 exports.init = (client) => {
   dataDir = path.resolve(`${client.clientBaseDir}${path.sep}bwd${path.sep}conf`);
 
-  // Load default configuration, create if not exist.
   defaultConf = {
     prefix: {type: "String", data: client.config.prefix},
     disabledCommands: {type: "Array", data: []},
@@ -18,11 +17,15 @@ exports.init = (client) => {
 
   fs.ensureFileSync(dataDir + path.sep + defaultFile);
   try {
-    defaultConf = fs.readJSONSync(path.resolve(dataDir + path.sep + defaultFile));
+    let currentDefaultConf = fs.readJSONSync(path.resolve(dataDir + path.sep + defaultFile));
+      Object.keys(defaultConf).forEach(key => {
+        if(!currentDefaultConf.hasOwnProperty(key)) currentDefaultConf[key] = defaultConf[key];
+      });
+      fs.outputJSONSync(dataDir + path.sep + defaultFile, currentDefaultConf);
+      defaultConf = currentDefaultConf;
   } catch(e) {
     fs.outputJSONSync(dataDir + path.sep + defaultFile, defaultConf);
   }
-
   fs.walk(dataDir)
   .on("data", (item) => {
     let fileinfo = path.parse(item.path);
