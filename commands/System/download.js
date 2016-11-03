@@ -59,11 +59,29 @@ exports.run = (client, msg, [url, folder = "Downloaded"]) => {
 
     if (client.commands.has(name)) {
       msg.reply(`The command \`${name}\` already exists in the bot!`);
+      delete client.tempmodules;
       return;
     }
 
     if (mod.exports.conf.selfbot && !client.config.selfbot) {
-      msg.reply(`The command \`${name}\` is only usable in selfbots!`);
+      msg.channel.sendMessage(`The command \`${name}\` is only usable in selfbots! I'll uninstall the modules for you.`).then(m => {
+        exec(`npm uninstall ${client.tempmodules.join(' ')}`, (e, stdout, stderr) => {
+          if (e) {
+            msg.channel.sendMessage(`Failed uninstalling the modules.. Sorry about that.`);
+            console.log(e);
+            return;
+          } else {
+            console.log(stdout);
+            console.log(stderr);
+            m.edit(`Succesfully uninstalled : **${client.tempmodules.join(', ')}**`);
+            client.tempmodules.forEach(module => {
+              delete require.cache[require.resolve(module)];
+            });
+            delete client.tempmodules;
+            return;
+          }
+      });
+      })
       return;
     }
 
@@ -77,7 +95,7 @@ ${description}
 \`\`\``);
 
     const collector = msg.channel.createCollector(m => m.author === msg.author, {
-      time: 5000
+      time: 8000
     });
 
     collector.on("message", m => {
@@ -91,7 +109,7 @@ ${description}
         msg.channel.sendMessage(":no_mobile_phones: Load Aborted. Command not installed. Lemme remove those useless modules for you :smile:").then(m => {
           exec(`npm uninstall ${client.tempmodules.join(' ')}`, (e, stdout, stderr) => {
             if (e) {
-              msg.channel.sendMessage(`Failed uninstalling the modules.. Sorry about that.`);
+              msg.channel.sendMessage(`Failed uninstalling the modules.. Sorry about that, the modules you need to uninstall are in \`client.tempmodules\``);
               console.log(e);
               return;
             } else {
