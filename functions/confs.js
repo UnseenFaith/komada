@@ -19,11 +19,7 @@ exports.init = (client) => {
   try {
     let currentDefaultConf = fs.readJSONSync(path.resolve(dataDir + path.sep + defaultFile));
       Object.keys(defaultConf).forEach(key => {
-        if (currentDefaultConf[key] === undefined) {
-          currentDefaultConf[key] = defaultConf[key];
-        } else {
-          return;
-        }
+        if(!currentDefaultConf.hasOwnProperty(key)) currentDefaultConf[key] = defaultConf[key];
       });
       fs.outputJSONSync(dataDir + path.sep + defaultFile, currentDefaultConf);
       defaultConf = currentDefaultConf;
