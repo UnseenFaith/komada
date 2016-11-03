@@ -62,6 +62,11 @@ exports.run = (client, msg, [url, folder = "Downloaded"]) => {
       return;
     }
 
+    if (mod.exports.conf.selfbot && !client.config.selfbot) {
+      msg.reply(`The command \`${name}\` is only usable in selfbots!`);
+      return;
+    }
+
     msg.channel.sendMessage(`Are you sure you want to load the following command into your bot?
 \`\`\`asciidoc
 === NAME ===
