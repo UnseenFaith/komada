@@ -25,7 +25,7 @@ module.exports = function(client, command, reload = false, loadPath = null) {
     } else {
       try {
         cmd = require(loadPath);
-        if (cmd.conf.selfbot && client.config.selfbot) {
+        if (cmd.conf.selfbot && !client.config.selfbot) {
           return reject(`The command \`${cmd.help.name}\` is only usable in selfbots!`);
         }
         let pathParts = loadPath.split(path.sep);
