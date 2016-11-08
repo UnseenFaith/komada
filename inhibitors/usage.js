@@ -109,7 +109,7 @@ exports.run = (client, msg, cmd) => {
               args.splice(i, 0, undefined);
               validateArgs(++i);
             } else {
-              reject(`${currentUsage.possibles[0].name} must be true or false.`)
+              reject(`${currentUsage.possibles[0].name} must be true or false.`);
             }
             break;
           case "member":
@@ -379,7 +379,7 @@ exports.run = (client, msg, cmd) => {
             case "user":
             case "mention":
               const result = /\d+/.exec(args[i]);
-              if (result && args[i].length > 5 &&  client.users.has(result[0])) {
+              if (result && args[i].length > 5 && client.users.has(result[0])) {
                 args[i] = client.users.get(/\d+/.exec(args[i])[0]);
                 validated = true;
                 multiPossibles(++p);
@@ -398,7 +398,7 @@ exports.run = (client, msg, cmd) => {
               }
               break;
             case "member":
-              if (result && args[i].length > 5 &&  msg.guild.members.has(result[0])) {
+              if (result && args[i].length > 5 && msg.guild.members.has(result[0])) {
                 args[i] = msg.guild.members.get(/\d+/.exec(args[i])[0]);
                 validated = true;
                 multiPossibles(++p);

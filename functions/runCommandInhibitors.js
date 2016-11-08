@@ -1,5 +1,5 @@
 module.exports = (client, msg, cmd, selective = false) => {
-  return new Promise ((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     let mps = [true];
     let i = 1;
     let usage;
@@ -11,10 +11,10 @@ module.exports = (client, msg, cmd, selective = false) => {
       i++;
     });
     Promise.all(mps)
-    .then(value => {
-      resolve(value[usage]);
-    }, reason => {
-      reject(reason);
-    });
+      .then(value => {
+        resolve(value[usage]);
+      }, reason => {
+        reject(reason);
+      });
   });
 };

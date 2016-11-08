@@ -2,7 +2,7 @@ module.exports = (client, user, guild = null) => {
   return new Promise((resolve, reject) => {
     let guildConf = client.funcs.confs.get(guild);
     let permlvl = 0;
-    if(guild) {
+    if (guild) {
       try {
         let member = guild.member(user);
         let mod_role = guild.roles.find("name", guildConf.mod_role);
@@ -11,7 +11,7 @@ module.exports = (client, user, guild = null) => {
         let admin_role = guild.roles.find("name", guildConf.admin_role);
         if (admin_role && member.roles.has(admin_role.id))
           permlvl = 3;
-        if(member === guild.owner)
+        if (member === guild.owner)
           permlvl = 4;
       } catch (e) {
         reject(e);

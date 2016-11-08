@@ -13,18 +13,18 @@ module.exports = client => {
 };
 
 const loadEvents = (client, baseDir, count) => {
-  return new Promise( (resolve, reject) => {
+  return new Promise((resolve, reject) => {
     let dir = path.resolve(baseDir + "./events/");
     fs.ensureDir(dir, err => {
-      if(err) reject(err);
+      if (err) reject(err);
       fs.readdir(dir, (err, files) => {
-        if(err) reject(err);
+        if (err) reject(err);
         let e = count;
         files = files.filter(f => {
           let name = f.split(".")[0];
           return events.includes(name);
         });
-        files.forEach(f=> {
+        files.forEach(f => {
           let name = f.split(".")[0];
           client.on(name, (...args) => require(`${dir}/${f}`).run(client, ...args));
           e++;

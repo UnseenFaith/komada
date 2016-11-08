@@ -27,7 +27,6 @@ module.exports = (data, properties, values) => {
         throw `at value #${i +1}: Can't be null`;
     }
 
-
     switch (bound.type) {
       case "autots":
       case "autoid":

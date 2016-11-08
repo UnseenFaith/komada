@@ -184,14 +184,14 @@ module.exports = (command, disallowCharacters) => {
             type: "loop"
           });
 
-              //tags[tags.length -1].loop = true;
+          //tags[tags.length -1].loop = true;
 
           closed = true;
         } else
-              tags.push({
-                type: c === ">" ? "required" : "optional",
-                possibles: parseTagData(current, disallowCharacters, tags.length + 1)
-              });
+          tags.push({
+            type: c === ">" ? "required" : "optional",
+            possibles: parseTagData(current, disallowCharacters, tags.length + 1)
+          });
 
         current = "";
         opened = null;

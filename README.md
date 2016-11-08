@@ -49,10 +49,10 @@ node app.js
 ## Quick & Dirty Reference Guide
 > For creating your own pieces
 
-Essentially, the way Komada works is that we have *core* pieces (functions, events, commands, etc.) loaded automatically. 
+Essentially, the way Komada works is that we have *core* pieces (functions, events, commands, etc.) loaded automatically.
 But you can add your own pieces easily by adding files to your *local* folders (which are created on first load).
 
-These pieces are: 
+These pieces are:
 - **commands** which add in-chat functionality to your bot.
 - **functions** which can be used by other pieces or anywhere in the bot.
 - **dataHandlers** which are database connectors (in progress at the moment).
@@ -64,7 +64,7 @@ the categories offered in the help command. For instance adding `./commands/Misc
 will create a command named `test` in the `Misc` category. Subcategories can
 also be created by adding a second folder level.
 
-> If a command is present both in the *core* folders and your client folders, 
+> If a command is present both in the *core* folders and your client folders,
 your command will override the core one. This can let you modify the core
 behaviour. Note also that you cannot have more than one command with the same name.
 
@@ -94,7 +94,7 @@ exports.help = {
 run. The name of the arguments in the array (and their count) is determined
 by the `usage` property and its given arguments.
 
-**Non-obvious options**: 
+**Non-obvious options**:
 - **enabled**: Set to false to completely disable this command, it cannot be forecefully enabled.
 - **aliases**: Array of aliases for the command, which will *also* trigger it.
 - **permLevel**: Permission level, controlled via `./functions/permissionLevel.js`.
@@ -125,7 +125,7 @@ by the `usage` property and its given arguments.
 - `channel` : A channel object returned from the channel ID or channel tag.
 - `guild` : A guild object returned from the guild ID.
 - `user`, `mention` : A user object returned from the user ID or mention.
- 
+
 ### Creating an event
 
 Events are placed in `./events/` and their filename must be `eventName.js`.
@@ -141,7 +141,7 @@ exports.run = (client, [...args]) => {
 ```
 
 Where `[...args]` are arguments you would *normally* get from those events.
-For example, while the `ready` event would only have `(client)`, the 
+For example, while the `ready` event would only have `(client)`, the
 `guildMemberAdd` event would be `(guild, member)`.
 
 ### Creating a function

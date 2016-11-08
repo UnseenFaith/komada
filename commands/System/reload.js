@@ -13,17 +13,17 @@ exports.run = (client, msg, [commandname]) => {
   if (!command) {
     client.funcs.getFileListing(client, client.coreBaseDir, "commands")
       .then(files => {
-        let newCommands = files.filter(f=>f.name == command);
+        let newCommands = files.filter(f => f.name == command);
         newCommands.forEach(file => {
           msg.channel.sendMessage(`Loading New Command: ${commandname}`)
-          .then(m => {
-            client.funcs.loadSingleCommand(client, command, false, `${file.path}${require("path").sep}${file.base}`).then(cmd => {
-              m.edit(`Successfully Loaded: ${cmd.help.name}`);
-            })
-            .catch(e => {
-              m.edit(`Command load failed for ${command}: \n\`\`\`${e.stack}\`\`\``);
+            .then(m => {
+              client.funcs.loadSingleCommand(client, command, false, `${file.path}${require("path").sep}${file.base}`).then(cmd => {
+                m.edit(`Successfully Loaded: ${cmd.help.name}`);
+              })
+                .catch(e => {
+                  m.edit(`Command load failed for ${command}: \n\`\`\`${e.stack}\`\`\``);
+                });
             });
-          });
         });
       });
   } else {
