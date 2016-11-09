@@ -1,3 +1,5 @@
+const path = require("path");
+
 exports.run = (client, msg, [commandname]) => {
   if (commandname === "all") {
     client.funcs.log("Reloading all commands");
@@ -12,15 +14,15 @@ exports.run = (client, msg, [commandname]) => {
   }
   if (!command) {
     client.funcs.getFileListing(client, client.coreBaseDir, "commands")
-      .then(files => {
-        let newCommands = files.filter(f => f.name == command);
-        newCommands.forEach(file => {
+      .then((files) => {
+        const newCommands = files.filter(f => f.name === command);
+        newCommands.forEach((file) => {
           msg.channel.sendMessage(`Loading New Command: ${commandname}`)
-            .then(m => {
-              client.funcs.loadSingleCommand(client, command, false, `${file.path}${require("path").sep}${file.base}`).then(cmd => {
+            .then((m) => {
+              client.funcs.loadSingleCommand(client, command, false, `${file.path}${path.sep}${file.base}`).then((cmd) => {
                 m.edit(`Successfully Loaded: ${cmd.help.name}`);
               })
-                .catch(e => {
+                .catch((e) => {
                   m.edit(`Command load failed for ${command}: \n\`\`\`${e.stack}\`\`\``);
                 });
             });
@@ -28,12 +30,12 @@ exports.run = (client, msg, [commandname]) => {
       });
   } else {
     msg.channel.sendMessage(`Reloading: ${command}`)
-      .then(m => {
+      .then((m) => {
         client.funcs.loadSingleCommand(client, command, true)
-          .then(cmd => {
+          .then((cmd) => {
             m.edit(`Successfully reloaded: ${cmd.help.name}`);
           })
-          .catch(e => {
+          .catch((e) => {
             m.edit(`Command reload failed for ${command}: \n\`\`\`${e}\`\`\``);
           });
       });
@@ -46,11 +48,11 @@ exports.conf = {
   aliases: ["r", "load"],
   permLevel: 10,
   botPerms: [],
-  requiredFuncs: []
+  requiredFuncs: [],
 };
 
 exports.help = {
   name: "reload",
   description: "Reloads the command file, if it's been updated or modified.",
-  usage: "<all:literal|commandname:str>"
+  usage: "<all:literal|commandname:str>",
 };

@@ -1,13 +1,14 @@
 exports.run = (client, msg, [code]) => {
   try {
-    var evaled = eval(code);
-    if (typeof evaled !== "string")
+    let evaled = eval(code);
+    if (typeof evaled !== "string") {
       evaled = require("util").inspect(evaled);
+    }
     msg.channel.sendCode("xl", client.funcs.clean(client, evaled));
   } catch (err) {
-    msg.channel.sendMessage("`ERROR` ```xl\n" +
-      client.funcs.clean(err) +
-      "\n```");
+    msg.channel.sendMessage(`\`ERROR\` \`\`\`xl\n${
+      client.funcs.clean(err)
+      }\n\`\`\``);
   }
 };
 
@@ -17,12 +18,12 @@ exports.conf = {
   aliases: ["ev"],
   permLevel: 10,
   botPerms: [],
-  requiredFuncs: []
+  requiredFuncs: [],
 };
 
 exports.help = {
   name: "eval",
   description: "Evaluates arbitrary Javascript. Reserved for bot owner.",
   usage: "<expression:str>",
-  usageDelim: ""
+  usageDelim: "",
 };

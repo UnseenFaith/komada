@@ -1,10 +1,10 @@
 const moment = require("moment");
 const chalk = require("chalk");
+
 const clk = new chalk.constructor({ enabled: true });
 
-module.exports = function(data, type = "log") {
-
-  switch(type.toLowerCase()) {
+module.exports = (data, type = "log") => {
+  switch (type.toLowerCase()) {
     case "debug":
       console.log(`${clk.bgMagenta(`[${moment().format("YYYY-MM-DD HH:mm:ss")}]`)} ${data}`);
       break;
@@ -17,6 +17,6 @@ module.exports = function(data, type = "log") {
     case "log":
       console.log(`${clk.bgBlue(`[${moment().format("YYYY-MM-DD HH:mm:ss")}]`)} ${data}`);
       break;
+    // no default
   }
-
 };

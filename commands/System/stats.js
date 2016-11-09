@@ -3,7 +3,7 @@ const moment = require("moment");
 require("moment-duration-format");
 
 exports.run = (client, msg) => {
-  let duration = moment.duration(client.uptime).format(" D [days], H [hrs], m [mins], s [secs]");
+  const duration = moment.duration(client.uptime).format(" D [days], H [hrs], m [mins], s [secs]");
   msg.channel.sendCode("asciidoc", `= STATISTICS =
 
 • Mem Usage  :: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB
@@ -20,12 +20,12 @@ exports.conf = {
   aliases: ["details", "what"],
   permLevel: 0,
   botPerms: [],
-  requiredFuncs: []
+  requiredFuncs: [],
 };
 
 exports.help = {
   name: "stats",
   description: "Provides some details about the bot and stats.",
   usage: "",
-  usageDelim: ""
+  usageDelim: "",
 };
