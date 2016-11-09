@@ -34,8 +34,8 @@ const parseTagData = (data, disallow, tag) => {
 
   const possiblilies = data.split("|");
 
-  if (disallow && possiblilies.length > 1) // Remove this in case you want posibilities
-    {
+  // Remove this in case you want posibilities
+  if (disallow && possiblilies.length > 1) {
     throw new ParserError("There can't be a more than one posibility in the tag", "tag", tag);
   }
 
@@ -143,7 +143,7 @@ const parseTagData = (data, disallow, tag) => {
       }
 
       if (["string", "str"].includes(bound.type)) {
-        if (bound.max && bound.max % 1 !== 0 || bound.min && bound.min % 1 !== 0) {
+        if ((bound.max && bound.max % 1 !== 0) || (bound.min && bound.min % 1 !== 0)) {
           throw new ParserError("String types may have an integer length", "tag(possibility)", `${tag}(${i + 1}) in the length definition`);
         }
       }
@@ -186,7 +186,7 @@ module.exports = (command, disallowCharacters) => {
         if (opened) {
           throw new ParserError("You cannot open a tag inside another tag", "char", i + 1, c);
         }
-        if (current) { throw new ParserError("There can't be literals outside a tag", "char", i + 1, current, i + 1 - current.length); }
+        if (current) { throw new ParserError("There can't be literals outside a tag", "char", i + 1, current, (i + 1) - current.length); }
         opened = c;
         break;
       case ">":
@@ -200,7 +200,7 @@ module.exports = (command, disallowCharacters) => {
           throw new ParserError("An empty tag was found", "char", i + 1, opened + c, i);
         }
 
-        if (c === ">" && opened !== "<" || c === "]" && opened !== "[") {
+        if ((c === ">" && opened !== "<") || (c === "]" && opened !== "[")) {
           throw new ParserError(`Invalid closure of '${opened}' with '${c}'`, "char", i + 1, opened + current + c, i - current.length);
         }
         if (current === "..." && opened === "[" && !disallowCharacters) {

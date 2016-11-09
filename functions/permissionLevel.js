@@ -5,12 +5,12 @@ module.exports = (client, user, guild = null) =>
      if (guild) {
        try {
          const member = guild.member(user);
-         const mod_role = guild.roles.find("name", guildConf.mod_role);
-         if (mod_role && member.roles.has(mod_role.id)) {
+         const modRole = guild.roles.find("name", guildConf.modRole);
+         if (modRole && member.roles.has(modRole.id)) {
            permlvl = 2;
          }
-         const admin_role = guild.roles.find("name", guildConf.admin_role);
-         if (admin_role && member.roles.has(admin_role.id)) {
+         const adminRole = guild.roles.find("name", guildConf.adminRole);
+         if (adminRole && member.roles.has(adminRole.id)) {
            permlvl = 3;
          }
          if (member === guild.owner) {

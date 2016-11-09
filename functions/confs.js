@@ -12,8 +12,8 @@ exports.init = (client) => {
   defaultConf = {
     prefix: { type: "String", data: client.config.prefix },
     disabledCommands: { type: "Array", data: [] },
-    mod_role: { type: "String", data: "Mods" },
-    admin_role: { type: "String", data: "Devs" },
+    modRole: { type: "String", data: "Mods" },
+    adminRole: { type: "String", data: "Devs" },
   };
 
   fs.ensureFileSync(dataDir + path.sep + defaultFile);

@@ -8,7 +8,8 @@ exports.run = (client, msg, cmd) =>
      const usage = client.funcs.parseUsage(cmd.help.usage);
      let prefixLength = msg.guildConf.prefix.length;
      if (client.config.prefixMention.test(msg.content)) prefixLength = client.config.prefixMention.exec(msg.content)[0].length + 1;
-     let args = msg.content.slice(prefixLength).split(" ").slice(1).join(" ").split(cmd.help.usageDelim !== "" ? cmd.help.usageDelim : null);
+     let args = msg.content.slice(prefixLength).split(" ").slice(1).join(" ")
+     .split(cmd.help.usageDelim !== "" ? cmd.help.usageDelim : null);
      if (args[0] === "") args = [];
      let currentUsage;
      let repeat = false;
@@ -55,7 +56,7 @@ exports.run = (client, msg, cmd) =>
                  msg.channel.fetchMessages({
                    around: args[i],
                  }).then((m) => {
-                   args[i] = m.filter(e => e.id == args[i]).first();
+                   args[i] = m.filter(e => e.id === args[i]).first();
                    validateArgs(++i);
                  }).catch(() => {
                    if (currentUsage.type === "optional" && !repeat) {

@@ -72,8 +72,8 @@ module.exports = (command) => {
   let last = false;
   const cmd = command.split("");
   cmd.forEach((c, i) => {
-    if (last && c !== " ") // Allow spaces which are ignored?
-      {
+     // Allow spaces which are ignored?
+    if (last && c !== " ") {
       throw new Error(`at char #${i + 1} '${c}': there can't be anything else after the repeat tag.`);
     }
 
@@ -82,7 +82,7 @@ module.exports = (command) => {
         throw new Error(`at char #${i + 1} '<': you might not open a tag inside another tag.`);
       }
       if (current) {
-        throw new Error(`from char #${i + 1 - current.length} to #${i + 1} '${current}': there can't be a literal outside a tag`);
+        throw new Error(`from char #${(i + 1) - current.length} to #${i + 1} '${current}': there can't be a literal outside a tag`);
       }
       opened++;
       openReq = true;
@@ -106,7 +106,7 @@ module.exports = (command) => {
         throw new Error(`at char #${i + 1} '[': you might not open a tag inside another tag.`);
       }
       if (current) {
-        throw new Error(`from char #${i + 1 - current.length} to #${i + 1} '${current}': there can't be a literal outside a tag`);
+        throw new Error(`from char #${(i + 1) - current.length} to #${i + 1} '${current}': there can't be a literal outside a tag`);
       }
       opened++;
       openReq = false;
@@ -133,7 +133,7 @@ module.exports = (command) => {
     } else if (c === " ") {
       if (opened) { throw new Error(`at char #${i + 1}: spaces aren't allowed inside a tag`); }
       if (current) {
-        throw new Error(`from char #${i + 1 - current.length} to char #${i} '${current}': there can't be a literal outside a tag.`);
+        throw new Error(`from char #${(i + 1) - current.length} to char #${i} '${current}': there can't be a literal outside a tag.`);
       }
     } else current += c;
   });
@@ -143,7 +143,7 @@ module.exports = (command) => {
   }
 
   if (current) {
-    throw new Error(`from char #${command.length + 1 - current.length} to end '${current}' a literal was found outside a tag.`);
+    throw new Error(`from char #${(command.length + 1) - current.length} to end '${current}' a literal was found outside a tag.`);
   }
 
   return tags;
