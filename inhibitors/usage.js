@@ -12,11 +12,11 @@ exports.run = (client, msg, cmd) => {
     if (args[0] === "") args = [];
     let currentUsage;
     let repeat = false;
-    if (usage.length === 0) resolve();
+    if (usage.length === 0) return resolve();
 
     (function validateArgs(i) {
       if (i >= usage.length && i >= args.length) {
-        resolve(args);
+        return resolve(args);
       } else if (usage[i]) {
         if (usage[i].type !== "repeat") { //Handle if args length > usage length
           currentUsage = usage[i];
@@ -25,16 +25,16 @@ exports.run = (client, msg, cmd) => {
           repeat = true;
         }
       } else if (!repeat) { //Handle if usage does not end in a repeat
-        resolve(args);
+        return resolve(args);
       }
       if (currentUsage.type === "optional" && (args[i] === undefined || args[i] === "")) { //Handle if args length < required usage length
         if (usage.slice(i).some(u => { return u.type === "required"; })) {
-          reject("Missing one or more required arguments after end of input.");
+          return reject("Missing one or more required arguments after end of input.");
         } else {
-          resolve(args);
+          return resolve(args);
         }
       } else if (currentUsage.type === "required" && args[i] === undefined) {
-        reject(currentUsage.possibles.length === 1 ? `${currentUsage.possibles[0].name} is a required argument.` : `Missing a required option: (${currentUsage.possibles.map(p => {return p.name;}).join(", ")})`);
+        return reject(currentUsage.possibles.length === 1 ? `${currentUsage.possibles[0].name} is a required argument.` : `Missing a required option: (${currentUsage.possibles.map(p => {return p.name;}).join(", ")})`);
       } else if (currentUsage.possibles.length === 1) {
         switch (currentUsage.possibles[0].type) {
           case "literal":
@@ -45,7 +45,7 @@ exports.run = (client, msg, cmd) => {
               args.splice(i, 0, undefined);
               validateArgs(++i);
             } else {
-              reject(`Your option did not litterally match the only possibility: (${currentUsage.possibles.map(p => {return p.name;}).join(", ")})\nThis is likely caused by a mistake in the usage string.`);
+              return reject(`Your option did not litterally match the only possibility: (${currentUsage.possibles.map(p => {return p.name;}).join(", ")})\nThis is likely caused by a mistake in the usage string.`);
             }
             break;
           case "msg":
@@ -62,7 +62,7 @@ exports.run = (client, msg, cmd) => {
                     args.splice(i, 0, undefined);
                     validateArgs(++i);
                   } else {
-                    reject(`${currentUsage.possibles[0].name} must be a valid message id.`);
+                    return reject(`${currentUsage.possibles[0].name} must be a valid message id.`);
                   }
                 });
               } else {
@@ -76,7 +76,7 @@ exports.run = (client, msg, cmd) => {
                       args.splice(i, 0, undefined);
                       validateArgs(++i);
                     } else {
-                      reject(`${currentUsage.possibles[0].name} must be a valid message id.`);
+                      return reject(`${currentUsage.possibles[0].name} must be a valid message id.`);
                     }
                   });
               }
@@ -84,7 +84,7 @@ exports.run = (client, msg, cmd) => {
               args.splice(i, 0, undefined);
               validateArgs(++i);
             } else {
-              reject(`${currentUsage.possibles[0].name} must be a valid message id.`);
+              return reject(`${currentUsage.possibles[0].name} must be a valid message id.`);
             }
             break;
           case "user":
@@ -96,7 +96,7 @@ exports.run = (client, msg, cmd) => {
               args.splice(i, 0, undefined);
               validateArgs(++i);
             } else {
-              reject(`${currentUsage.possibles[0].name} must be a mention or valid user id.`);
+              return reject(`${currentUsage.possibles[0].name} must be a mention or valid user id.`);
             }
             break;
           case "boolean":
@@ -109,7 +109,7 @@ exports.run = (client, msg, cmd) => {
               args.splice(i, 0, undefined);
               validateArgs(++i);
             } else {
-              reject(`${currentUsage.possibles[0].name} must be true or false.`);
+              return reject(`${currentUsage.possibles[0].name} must be true or false.`);
             }
             break;
           case "member":
@@ -120,7 +120,7 @@ exports.run = (client, msg, cmd) => {
               args.splice(i, 0, undefined);
               validateArgs(++i);
             } else {
-              reject(`${currentUsage.possibles[0].name} must be a mention or valid user id.`);
+              return reject(`${currentUsage.possibles[0].name} must be a mention or valid user id.`);
             }
             break;
           case "channel":
@@ -131,7 +131,7 @@ exports.run = (client, msg, cmd) => {
               args.splice(i, 0, undefined);
               validateArgs(++i);
             } else {
-              reject(`${currentUsage.possibles[0].name} must be a channel tag or valid channel id.`);
+              return reject(`${currentUsage.possibles[0].name} must be a channel tag or valid channel id.`);
             }
             break;
           case "guild":
@@ -142,7 +142,7 @@ exports.run = (client, msg, cmd) => {
               args.splice(i, 0, undefined);
               validateArgs(++i);
             } else {
-              reject(`${currentUsage.possibles[0].name} must be a valid guild id.`);
+              return reject(`${currentUsage.possibles[0].name} must be a valid guild id.`);
             }
             break;
           case "role":
@@ -153,7 +153,7 @@ exports.run = (client, msg, cmd) => {
               args.splice(i, 0, undefined);
               validateArgs(++i);
             } else {
-              reject(`${currentUsage.possibles[0].name} must be a role mention or role id.`);
+              return reject(`${currentUsage.possibles[0].name} must be a role mention or role id.`);
             }
             break;
           case "str":
@@ -165,9 +165,9 @@ exports.run = (client, msg, cmd) => {
                   validateArgs(++i);
                 } else {
                   if (currentUsage.possibles[0].min === currentUsage.possibles[0].max) {
-                    reject(`${currentUsage.possibles[0].name} must be exactly ${currentUsage.possibles[0].min} characters.`);
+                    return reject(`${currentUsage.possibles[0].name} must be exactly ${currentUsage.possibles[0].min} characters.`);
                   } else {
-                    reject(`${currentUsage.possibles[0].name} must be between ${currentUsage.possibles[0].min} and ${currentUsage.possibles[0].max} characters.`);
+                    return reject(`${currentUsage.possibles[0].name} must be between ${currentUsage.possibles[0].min} and ${currentUsage.possibles[0].max} characters.`);
                   }
                 }
               } else {
@@ -179,7 +179,7 @@ exports.run = (client, msg, cmd) => {
                   args.splice(i, 0, undefined);
                   validateArgs(++i);
                 } else {
-                  reject(`${currentUsage.possibles[0].name} must be longer than ${currentUsage.possibles[0].min} characters.`);
+                  return reject(`${currentUsage.possibles[0].name} must be longer than ${currentUsage.possibles[0].min} characters.`);
                 }
               } else {
                 validateArgs(++i);
@@ -190,7 +190,7 @@ exports.run = (client, msg, cmd) => {
                   args.splice(i, 0, undefined);
                   validateArgs(++i);
                 } else {
-                  reject(`${currentUsage.possibles[0].name} must be shorter than ${currentUsage.possibles[0].max} characters.`);
+                  return reject(`${currentUsage.possibles[0].name} must be shorter than ${currentUsage.possibles[0].max} characters.`);
                 }
               } else {
                 validateArgs(++i);
@@ -206,7 +206,7 @@ exports.run = (client, msg, cmd) => {
                 args.splice(i, 0, undefined);
                 validateArgs(++i);
               } else {
-                reject(`${currentUsage.possibles[0].name} must be an integer.`);
+                return reject(`${currentUsage.possibles[0].name} must be an integer.`);
               }
             } else if (currentUsage.possibles[0].min && currentUsage.possibles[0].max) {
               args[i] = parseInt(args[i]);
@@ -216,14 +216,14 @@ exports.run = (client, msg, cmd) => {
                     args.splice(i, 0, undefined);
                     validateArgs(++i);
                   } else {
-                    reject(`${currentUsage.possibles[0].name} must be exactly ${currentUsage.possibles[0].min}\nSo why didn't the dev use a literal?`);
+                    return reject(`${currentUsage.possibles[0].name} must be exactly ${currentUsage.possibles[0].min}\nSo why didn't the dev use a literal?`);
                   }
                 } else {
                   if (currentUsage.type === "optional" && !repeat) {
                     args.splice(i, 0, undefined);
                     validateArgs(++i);
                   } else {
-                    reject(`${currentUsage.possibles[0].name} must be between ${currentUsage.possibles[0].min} and ${currentUsage.possibles[0].max}.`);
+                    return reject(`${currentUsage.possibles[0].name} must be between ${currentUsage.possibles[0].min} and ${currentUsage.possibles[0].max}.`);
                   }
                 }
               } else {
@@ -236,7 +236,7 @@ exports.run = (client, msg, cmd) => {
                   args.splice(i, 0, undefined);
                   validateArgs(++i);
                 } else {
-                  reject(`${currentUsage.possibles[0].name} must be greater than ${currentUsage.possibles[0].min}.`);
+                  return reject(`${currentUsage.possibles[0].name} must be greater than ${currentUsage.possibles[0].min}.`);
                 }
               } else {
                 validateArgs(++i);
@@ -248,7 +248,7 @@ exports.run = (client, msg, cmd) => {
                   args.splice(i, 0, undefined);
                   validateArgs(++i);
                 } else {
-                  reject(`${currentUsage.possibles[0].name} must be less than ${currentUsage.possibles[0].max}.`);
+                  return reject(`${currentUsage.possibles[0].name} must be less than ${currentUsage.possibles[0].max}.`);
                 }
               } else {
                 validateArgs(++i);
@@ -266,7 +266,7 @@ exports.run = (client, msg, cmd) => {
                 args.splice(i, 0, undefined);
                 validateArgs(++i);
               } else {
-                reject(`${currentUsage.possibles[0].name} must be a valid number.`);
+                return reject(`${currentUsage.possibles[0].name} must be a valid number.`);
               }
             } else if (currentUsage.possibles[0].min && currentUsage.possibles[0].max) {
               args[i] = parseFloat(args[i]);
@@ -276,14 +276,14 @@ exports.run = (client, msg, cmd) => {
                     args.splice(i, 0, undefined);
                     validateArgs(++i);
                   } else {
-                    reject(`${currentUsage.possibles[0].name} must be exactly ${currentUsage.possibles[0].min}\nSo why didn't the dev use a literal?`);
+                    return reject(`${currentUsage.possibles[0].name} must be exactly ${currentUsage.possibles[0].min}\nSo why didn't the dev use a literal?`);
                   }
                 } else {
                   if (currentUsage.type === "optional" && !repeat) {
                     args.splice(i, 0, undefined);
                     validateArgs(++i);
                   } else {
-                    reject(`${currentUsage.possibles[0].name} must be between ${currentUsage.possibles[0].min} and ${currentUsage.possibles[0].max}.`);
+                    return reject(`${currentUsage.possibles[0].name} must be between ${currentUsage.possibles[0].min} and ${currentUsage.possibles[0].max}.`);
                   }
                 }
               } else {
@@ -296,7 +296,7 @@ exports.run = (client, msg, cmd) => {
                   args.splice(i, 0, undefined);
                   validateArgs(++i);
                 } else {
-                  reject(`${currentUsage.possibles[0].name} must be greater than ${currentUsage.possibles[0].min}.`);
+                  return reject(`${currentUsage.possibles[0].name} must be greater than ${currentUsage.possibles[0].min}.`);
                 }
               } else {
                 validateArgs(++i);
@@ -308,7 +308,7 @@ exports.run = (client, msg, cmd) => {
                   args.splice(i, 0, undefined);
                   validateArgs(++i);
                 } else {
-                  reject(`${currentUsage.possibles[0].name} must be less than ${currentUsage.possibles[0].max}.`);
+                  return reject(`${currentUsage.possibles[0].name} must be less than ${currentUsage.possibles[0].max}.`);
                 }
               } else {
                 validateArgs(++i);
@@ -324,7 +324,7 @@ exports.run = (client, msg, cmd) => {
                 args.splice(i, 0, undefined);
                 validateArgs(++i);
               } else {
-                reject(`${currentUsage.possibles[0].name} must be a valid url.`);
+                return reject(`${currentUsage.possibles[0].name} must be a valid url.`);
               }
             } else {
               validateArgs(++i);
@@ -346,7 +346,7 @@ exports.run = (client, msg, cmd) => {
               args.splice(i, 0, undefined);
               validateArgs(++i);
             } else {
-              reject(`Your option didn't match any of the possibilities: (${currentUsage.possibles.map(p => {return p.name;}).join(", ")})`);
+              return reject(`Your option didn't match any of the possibilities: (${currentUsage.possibles.map(p => {return p.name;}).join(", ")})`);
             }
             return;
           }
