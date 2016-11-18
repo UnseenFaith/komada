@@ -6,8 +6,8 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "lint": "eslint commands functions inhibitors",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint commands functions inhibitors, events",
+    "lint:fix": "npm run lint -- --fix"
   },
   "repository": {
     "type": "git",
@@ -28,6 +28,8 @@
     "node": ">=6.0.0"
   },
   "devDependencies": {
-    "eslint": "^3.8.1"
+    "eslint": "^3.10.2",
+    "eslint-config-airbnb-base": "^10.0.1",
+    "eslint-plugin-import": "^2.2.0"
   }
 }
