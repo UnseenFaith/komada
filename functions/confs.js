@@ -50,9 +50,7 @@ exports.remove = (guild) => {
   return true;
 };
 
-exports.has = (guild) => {
-  return guildConfs.has(guild.id);
-};
+exports.has = guild => guildConfs.has(guild.id);
 
 exports.get = (guild) => {
   const conf = {};
@@ -132,9 +130,7 @@ exports.delKey = (key, delFromAll) => {
   }
 };
 
-exports.hasKey = (key) => {
-  return (key in defaultConf);
-};
+exports.hasKey = key => (key in defaultConf);
 
 exports.set = (guild, key, value) => {
   let thisConf = {};
