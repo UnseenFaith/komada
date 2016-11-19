@@ -1,8 +1,10 @@
 const path = require("path");
 
-module.exports = function(client, command, reload = false, loadPath = null) {
+module.exports = function (client, command, reload = false, loadPath = null) {
   return new Promise((resolve, reject) => {
-    let category, subCategory, cmd;
+    let category;
+    let subCategory;
+    let cmd;
     if (!loadPath && !reload) return reject("Path must be provided when loading a new command.");
     if (reload) {
       if (!client.commands.has(command)) {
@@ -21,7 +23,6 @@ module.exports = function(client, command, reload = false, loadPath = null) {
       } catch (e) {
         reject(`Could not load existing command data: ${e.stack}`);
       }
-
     } else {
       try {
         cmd = require(loadPath);
@@ -34,12 +35,12 @@ module.exports = function(client, command, reload = false, loadPath = null) {
         subCategory = client.funcs.toTitleCase(cmd.help.subCategory ? cmd.help.subCategory : (pathParts[1] && pathParts[1].length > 0 && !~pathParts[1].indexOf(".") ? pathParts[1] : "General"));
       } catch (e) {
         if (e.code === "MODULE_NOT_FOUND") {
-          let module = /'[^']+'/g.exec(e.toString());
+          const module = /'[^']+'/g.exec(e.toString());
           client.funcs.installNPM(module[0].slice(1, -1))
             .then(() => {
               client.funcs.loadSingleCommand(client, command, false, loadPath);
             })
-            .catch(e => {
+            .catch((e) => {
               console.error(e);
               process.exit();
             });
@@ -55,7 +56,7 @@ module.exports = function(client, command, reload = false, loadPath = null) {
     cmd.help.filePath = loadPath;
 
     // Load Aliases
-    cmd.conf.aliases.forEach(alias => {
+    cmd.conf.aliases.forEach((alias) => {
       client.aliases.set(alias, cmd.help.name);
     });
 
@@ -63,16 +64,15 @@ module.exports = function(client, command, reload = false, loadPath = null) {
     if (!client.helpStructure.has(category)) {
       client.helpStructure.set(category, new Map());
     }
-    let catMap = client.helpStructure.get(category);
+    const catMap = client.helpStructure.get(category);
     if (!catMap.has(subCategory)) {
       catMap.set(subCategory, new Map());
     }
-    let subCatMap = catMap.get(subCategory);
+    const subCatMap = catMap.get(subCategory);
     subCatMap.set(cmd.help.name, cmd.help.description);
 
     client.commands.set(cmd.help.name, cmd);
 
     resolve(cmd);
-
   });
 };

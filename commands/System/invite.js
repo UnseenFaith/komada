@@ -7,7 +7,7 @@ exports.help = {
   name: "invite",
   description: "Displays the join server link of the bot.",
   usage: "",
-  usageDelim: ""
+  usageDelim: "",
 };
 
 exports.conf = {
@@ -16,5 +16,5 @@ exports.conf = {
   aliases: [],
   permLevel: 0,
   botPerms: [],
-  requiredFuncs: []
+  requiredFuncs: [],
 };

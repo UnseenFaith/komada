@@ -9,12 +9,12 @@ exports.conf = {
   aliases: ["details", "what"],
   permLevel: 0,
   botPerms: [],
-  requiredFuncs: []
+  requiredFuncs: [],
 };
 
 exports.help = {
   name: "info",
   description: "Provides some information about this bot.",
   usage: "",
-  usageDelim: ""
+  usageDelim: "",
 };

@@ -1,5 +1,4 @@
 exports.run = (client, msg, [action, key, ...value]) => {
-
   if (action === "list") {
     msg.channel.sendCode("json", require("util").inspect(msg.guildConf));
   } else
@@ -26,6 +25,7 @@ exports.run = (client, msg, [action, key, ...value]) => {
     client.funcs.confs.resetKey(msg.guild, key);
     return msg.reply("The key has been reset.");
   }
+  return false;
 };
 
 exports.conf = {

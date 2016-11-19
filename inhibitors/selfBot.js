@@ -1,6 +1,6 @@
 exports.conf = {
   enabled: true,
-  spamProtection: false
+  spamProtection: false,
 };
 
 exports.run = (client, msg, cmd) => {

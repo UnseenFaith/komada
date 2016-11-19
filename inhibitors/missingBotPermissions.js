@@ -1,17 +1,16 @@
 exports.conf = {
   enabled: true,
-  spamProtection: false
+  spamProtection: false,
 };
 
 exports.run = (client, msg, cmd) => {
   return new Promise((resolve, reject) => {
-
     let missing = [];
     if (msg.channel.type === "text") {
       missing = msg.channel.permissionsFor(client.user).missingPermissions(cmd.conf.botPerms);
     } else {
-      let impliedPermissions = client.funcs.impliedPermissions();
-      cmd.conf.botPerms.forEach(perm => {
+      const impliedPermissions = client.funcs.impliedPermissions();
+      cmd.conf.botPerms.forEach((perm) => {
         if (!impliedPermissions[perm]) missing.push(perm);
       });
     }
