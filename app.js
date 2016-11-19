@@ -44,7 +44,7 @@ exports.start = (config) => {
   });
 
   client.on("message", (msg) => {
-    if (msg.user === client.user) return;
+    if (msg.author.bot) return;
     const conf = client.funcs.confs.get(msg.guild);
     msg.guildConf = conf;
     client.funcs.runCommandMonitors(client, msg).catch(reason => msg.channel.sendMessage(reason).catch(console.error));
@@ -78,8 +78,8 @@ exports.start = (config) => {
     })
     .catch((reason) => {
       if (reason) {
-        console.log(reason.stack);
-        msg.channel.sendMessage(reason).catch(console.error);
+        client.funcs.log(reason.stack, 'error');
+        msg.channel.sendCode(reason).catch(console.error);
       }
     });
   });
