@@ -1,14 +1,18 @@
 exports.conf = {
   enabled: true,
-  spamProtection: true
+  spamProtection: true,
 };
 
 exports.run = (client, msg, cmd) => {
   return new Promise((resolve, reject) => {
-    let usage = client.funcs.parseUsage(cmd.help.usage);
+    const usage = client.funcs.parseUsage(cmd.help.usage);
     let prefixLength = msg.guildConf.prefix.length;
     if (client.config.prefixMention.test(msg.content)) prefixLength = client.config.prefixMention.exec(msg.content)[0].length + 1;
-    let args = msg.content.slice(prefixLength).split(" ").slice(1).join(" ").split(cmd.help.usageDelim !== "" ? cmd.help.usageDelim : null);
+    let args = msg.content.slice(prefixLength)
+    .split(" ")
+    .slice(1)
+    .join(" ")
+    .split(cmd.help.usageDelim !== "" ? cmd.help.usageDelim : null);
     if (args[0] === "") args = [];
     let currentUsage;
     let repeat = false;
@@ -18,23 +22,23 @@ exports.run = (client, msg, cmd) => {
       if (i >= usage.length && i >= args.length) {
         return resolve(args);
       } else if (usage[i]) {
-        if (usage[i].type !== "repeat") { //Handle if args length > usage length
+        if (usage[i].type !== "repeat") { // Handle if args length > usage length
           currentUsage = usage[i];
-        } else if (usage[i].type === "repeat") { //Handle if usage ends in a repeat
-          currentUsage.type = "optional"; //if there are no optional args passed
+        } else if (usage[i].type === "repeat") { // Handle if usage ends in a repeat
+          currentUsage.type = "optional"; // if there are no optional args passed
           repeat = true;
         }
-      } else if (!repeat) { //Handle if usage does not end in a repeat
+      } else if (!repeat) { // Handle if usage does not end in a repeat
         return resolve(args);
       }
-      if (currentUsage.type === "optional" && (args[i] === undefined || args[i] === "")) { //Handle if args length < required usage length
-        if (usage.slice(i).some(u => { return u.type === "required"; })) {
+      if (currentUsage.type === "optional" && (args[i] === undefined || args[i] === "")) { // Handle if args length < required usage length
+        if (usage.slice(i).some((u) => { return u.type === "required"; })) {
           return reject("Missing one or more required arguments after end of input.");
         } else {
           return resolve(args);
         }
       } else if (currentUsage.type === "required" && args[i] === undefined) {
-        return reject(currentUsage.possibles.length === 1 ? `${currentUsage.possibles[0].name} is a required argument.` : `Missing a required option: (${currentUsage.possibles.map(p => {return p.name;}).join(", ")})`);
+        return reject(currentUsage.possibles.length === 1 ? `${currentUsage.possibles[0].name} is a required argument.` : `Missing a required option: (${currentUsage.possibles.map((p) => { return p.name; }).join(", ")})`);
       } else if (currentUsage.possibles.length === 1) {
         switch (currentUsage.possibles[0].type) {
           case "literal":
@@ -45,7 +49,7 @@ exports.run = (client, msg, cmd) => {
               args.splice(i, 0, undefined);
               validateArgs(++i);
             } else {
-              return reject(`Your option did not litterally match the only possibility: (${currentUsage.possibles.map(p => {return p.name;}).join(", ")})\nThis is likely caused by a mistake in the usage string.`);
+              return reject(`Your option did not litterally match the only possibility: (${currentUsage.possibles.map((p) => { return p.name; }).join(", ")})\nThis is likely caused by a mistake in the usage string.`);
             }
             break;
           case "msg":
@@ -53,9 +57,9 @@ exports.run = (client, msg, cmd) => {
             if (/^\d+$/.test(args[i])) {
               if (client.config.selfbot) {
                 msg.channel.fetchMessages({
-                  around: args[i]
-                }).then(m => {
-                  args[i] = m.filter(e => e.id == args[i]).first();
+                  around: args[i],
+                }).then((m) => {
+                  args[i] = m.filter(e => e.id === args[i]).first();
                   validateArgs(++i);
                 }).catch(() => {
                   if (currentUsage.type === "optional" && !repeat) {
@@ -67,7 +71,7 @@ exports.run = (client, msg, cmd) => {
                 });
               } else {
                 msg.channel.fetchMessage(args[i])
-                  .then(m => {
+                  .then((m) => {
                     args[i] = m;
                     validateArgs(++i);
                   })
@@ -101,10 +105,12 @@ exports.run = (client, msg, cmd) => {
             break;
           case "boolean":
             if (/^true|false$/.test(args[i])) {
-              if (args[i] === "true")
+              if (args[i] === "true") {
                 args[i] = true;
-              else args[i] = false;
-              validateArgs(++i);
+              } else {
+                args[i] = false;
+                validateArgs(++i);
+              }
             } else if (currentUsage.type === "optional" && !repeat) {
               args.splice(i, 0, undefined);
               validateArgs(++i);
@@ -163,12 +169,10 @@ exports.run = (client, msg, cmd) => {
                 if (currentUsage.type === "optional" && !repeat) {
                   args.splice(i, 0, undefined);
                   validateArgs(++i);
+                } else if (currentUsage.possibles[0].min === currentUsage.possibles[0].max) {
+                  return reject(`${currentUsage.possibles[0].name} must be exactly ${currentUsage.possibles[0].min} characters.`);
                 } else {
-                  if (currentUsage.possibles[0].min === currentUsage.possibles[0].max) {
-                    return reject(`${currentUsage.possibles[0].name} must be exactly ${currentUsage.possibles[0].min} characters.`);
-                  } else {
-                    return reject(`${currentUsage.possibles[0].name} must be between ${currentUsage.possibles[0].min} and ${currentUsage.possibles[0].max} characters.`);
-                  }
+                  return reject(`${currentUsage.possibles[0].name} must be between ${currentUsage.possibles[0].min} and ${currentUsage.possibles[0].max} characters.`);
                 }
               } else {
                 validateArgs(++i);
@@ -218,13 +222,11 @@ exports.run = (client, msg, cmd) => {
                   } else {
                     return reject(`${currentUsage.possibles[0].name} must be exactly ${currentUsage.possibles[0].min}\nSo why didn't the dev use a literal?`);
                   }
+                } else if (currentUsage.type === "optional" && !repeat) {
+                  args.splice(i, 0, undefined);
+                  validateArgs(++i);
                 } else {
-                  if (currentUsage.type === "optional" && !repeat) {
-                    args.splice(i, 0, undefined);
-                    validateArgs(++i);
-                  } else {
-                    return reject(`${currentUsage.possibles[0].name} must be between ${currentUsage.possibles[0].min} and ${currentUsage.possibles[0].max}.`);
-                  }
+                  return reject(`${currentUsage.possibles[0].name} must be between ${currentUsage.possibles[0].min} and ${currentUsage.possibles[0].max}.`);
                 }
               } else {
                 validateArgs(++i);
@@ -278,13 +280,11 @@ exports.run = (client, msg, cmd) => {
                   } else {
                     return reject(`${currentUsage.possibles[0].name} must be exactly ${currentUsage.possibles[0].min}\nSo why didn't the dev use a literal?`);
                   }
+                } else if (currentUsage.type === "optional" && !repeat) {
+                  args.splice(i, 0, undefined);
+                  validateArgs(++i);
                 } else {
-                  if (currentUsage.type === "optional" && !repeat) {
-                    args.splice(i, 0, undefined);
-                    validateArgs(++i);
-                  } else {
-                    return reject(`${currentUsage.possibles[0].name} must be between ${currentUsage.possibles[0].min} and ${currentUsage.possibles[0].max}.`);
-                  }
+                  return reject(`${currentUsage.possibles[0].name} must be between ${currentUsage.possibles[0].min} and ${currentUsage.possibles[0].max}.`);
                 }
               } else {
                 validateArgs(++i);
@@ -319,7 +319,7 @@ exports.run = (client, msg, cmd) => {
             }
             break;
           case "url":
-            if (!/^((https?|ftps?|sftp):\/\/)?(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|(([a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])(\.[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])*\.[a-zA-Z]{2,}))(:\b([0-9]|[1-8][0-9]|9[0-9]|[1-8][0-9]{2}|9[0-8][0-9]|99[0-9]|[1-8][0-9]{3}|9[0-8][0-9]{2}|99[0-8][0-9]|999[0-9]|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])\b)?(\/([a-zA-Z0-9:\/\?#\[\]@!$&'()*+,;=%-._~]+)?)?$/.test(args[i])) {
+            if (!/^((https?|ftps?|sftp):\/\/)?(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|(([a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])(\.[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])*\.[a-zA-Z]{2,}))(:\b([0-9]|[1-8][0-9]|9[0-9]|[1-8][0-9]{2}|9[0-8][0-9]|99[0-9]|[1-8][0-9]{3}|9[0-8][0-9]{2}|99[0-8][0-9]|999[0-9]|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])\b)?(\/([a-zA-Z0-9:#[\]@!$&'()*+,;=%-._~]+)?)?$/.test(args[i])) {
               if (currentUsage.type === "optional" && !repeat) {
                 args.splice(i, 0, undefined);
                 validateArgs(++i);
@@ -346,7 +346,7 @@ exports.run = (client, msg, cmd) => {
               args.splice(i, 0, undefined);
               validateArgs(++i);
             } else {
-              return reject(`Your option didn't match any of the possibilities: (${currentUsage.possibles.map(p => {return p.name;}).join(", ")})`);
+              return reject(`Your option didn't match any of the possibilities: (${currentUsage.possibles.map((p) => { return p.name; }).join(", ")})`);
             }
             return;
           }
@@ -364,7 +364,7 @@ exports.run = (client, msg, cmd) => {
             case "message":
               if (/^\d+$/.test(args[i])) {
                 msg.channel.fetchMessage(args[i])
-                  .then(m => {
+                  .then((m) => {
                     args[i] = m;
                     validated = true;
                     multiPossibles(++p);
@@ -377,7 +377,7 @@ exports.run = (client, msg, cmd) => {
               }
               break;
             case "user":
-            case "mention":
+            case "mention": {
               const result = /\d+/.exec(args[i]);
               if (result && args[i].length > 5 && client.users.has(result[0])) {
                 args[i] = client.users.get(/\d+/.exec(args[i])[0]);
@@ -387,6 +387,7 @@ exports.run = (client, msg, cmd) => {
                 multiPossibles(++p);
               }
               break;
+            }
             case "boolean":
               if (/^true|false$/.test(args[i])) {
                 if (args[i] === "true") args[i] = true;
@@ -397,7 +398,8 @@ exports.run = (client, msg, cmd) => {
                 multiPossibles(++p);
               }
               break;
-            case "member":
+            case "member": {
+              const result = /\d+/.exec(args[i]);
               if (result && args[i].length > 5 && msg.guild.members.has(result[0])) {
                 args[i] = msg.guild.members.get(/\d+/.exec(args[i])[0]);
                 validated = true;
@@ -406,6 +408,7 @@ exports.run = (client, msg, cmd) => {
                 multiPossibles(++p);
               }
               break;
+            }
             case "channel":
               if (/^<#\d+>$/.test(args[i]) || client.channels.has(args[i])) {
                 args[i] = client.channels.get(/\d+/.exec(args[i])[0]);
@@ -529,7 +532,7 @@ exports.run = (client, msg, cmd) => {
               }
               break;
             case "url":
-              if (/^((https?|ftps?|sftp):\/\/)?(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|(([a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])(\.[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])*\.[a-zA-Z]{2,}))(:\b([0-9]|[1-8][0-9]|9[0-9]|[1-8][0-9]{2}|9[0-8][0-9]|99[0-9]|[1-8][0-9]{3}|9[0-8][0-9]{2}|99[0-8][0-9]|999[0-9]|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])\b)?(\/([a-zA-Z0-9:\/\?#\[\]@!$&'()*+,;=%-._~]+)?)?$/.test(args[i])) {
+              if (/^((https?|ftps?|sftp):\/\/)?(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|(([a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])(\.[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])*\.[a-zA-Z]{2,}))(:\b([0-9]|[1-8][0-9]|9[0-9]|[1-8][0-9]{2}|9[0-8][0-9]|99[0-9]|[1-8][0-9]{3}|9[0-8][0-9]{2}|99[0-8][0-9]|999[0-9]|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])\b)?(\/([a-zA-Z0-9:#[\]@!$&'()*+,;=%-._~]+)?)?$/.test(args[i])) {
                 validated = true;
                 multiPossibles(++p);
               } else {

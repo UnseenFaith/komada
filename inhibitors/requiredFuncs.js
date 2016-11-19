@@ -1,11 +1,11 @@
 exports.conf = {
   enabled: true,
-  spamProtection: false
+  spamProtection: false,
 };
 
 exports.run = (client, msg, cmd) => {
   return new Promise((resolve, reject) => {
-    cmd.conf.requiredFuncs.forEach(func => {
+    cmd.conf.requiredFuncs.forEach((func) => {
       if (!client.funcs.hasOwnProperty(func)) reject(`The client is missing **${func}**, and cannot run.`);
     });
     resolve();

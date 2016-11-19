@@ -1,6 +1,6 @@
 module.exports = (client, msg, cmd, selective = false) => {
   return new Promise((resolve, reject) => {
-    let mps = [true];
+    const mps = [true];
     let i = 1;
     let usage;
     client.commandInhibitors.forEach((mProc, key) => {
@@ -11,9 +11,9 @@ module.exports = (client, msg, cmd, selective = false) => {
       i++;
     });
     Promise.all(mps)
-      .then(value => {
+      .then((value) => {
         resolve(value[usage]);
-      }, reason => {
+      }, (reason) => {
         reject(reason);
       });
   });
