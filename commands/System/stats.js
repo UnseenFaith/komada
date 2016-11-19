@@ -1,6 +1,6 @@
   const Discord = require("discord.js");
   const moment = require("moment");
-  const komada = require("../package.json");
+  const komada = require("../../package.json");
   require("moment-duration-format");
 
   exports.run = (client, msg) => {
