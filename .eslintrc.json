@@ -21,6 +21,7 @@
     "no-restricted-syntax": "warn",
     "guard-for-in": "warn",
     "consistent-return": ["warn", { "treatUndefinedAsUnspecified": true }],
-    "no-use-before-define": ["warn", { "functions": true, "classes": true }]
+    "no-use-before-define": ["warn", { "functions": true, "classes": true }],
+    "no-eval": "warn"
   }
 }

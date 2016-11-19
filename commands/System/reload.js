@@ -1,3 +1,5 @@
+const path = require("path");
+
 exports.run = (client, msg, [commandname]) => {
   if (commandname === "all") {
     client.funcs.log("Reloading all commands");
@@ -17,7 +19,7 @@ exports.run = (client, msg, [commandname]) => {
         newCommands.forEach((file) => {
           msg.channel.sendMessage(`Loading New Command: ${commandname}`)
             .then((m) => {
-              client.funcs.loadSingleCommand(client, command, false, `${file.path}${require("path").sep}${file.base}`).then((cmd) => {
+              client.funcs.loadSingleCommand(client, command, false, `${file.path}${path.sep}${file.base}`).then((cmd) => {
                 m.edit(`Successfully Loaded: ${cmd.help.name}`);
               })
                 .catch((e) => {

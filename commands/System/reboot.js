@@ -19,6 +19,7 @@ exports.run = (client, msg) => {
           console.error(e);
         });
     }
+    return true;
   });
 };
 

@@ -1,12 +1,11 @@
 const path = require("path");
 const fs = require("fs-extra");
 
-module.exports = (client, baseDir, type) => {
-  return new Promise((resolve, reject) => {
-    const dir = path.resolve(`${baseDir}/${type}/`);
-    const files = [];
-    try {
-      fs.walk(dir)
+module.exports = (client, baseDir, type) => new Promise((resolve, reject) => {
+  const dir = path.resolve(`${baseDir}/${type}/`);
+  const files = [];
+  try {
+    fs.walk(dir)
         .on("data", (item) => {
           const fileinfo = path.parse(item.path);
           if (!fileinfo.ext) return;
@@ -22,26 +21,25 @@ module.exports = (client, baseDir, type) => {
           resolve(files);
         })
         .on("errors", (root, nodeStatsArray, next) => {
-          nodeStatsArray.forEach(function (n) {
+          nodeStatsArray.forEach((n) => {
             client.funcs.log(`[ERROR] " ${n.name}, "error"`);
             client.funcs.log(n.error.message || (`${n.error.code}: ${n.error.path}`), "error");
           });
           next();
         });
-    } catch (e) {
-      if (e.code === "MODULE_NOT_FOUND") {
-        const module = /'[^']+'/g.exec(e.toString());
-        client.funcs.installNPM(module[0].slice(1, -1))
+  } catch (e) {
+    if (e.code === "MODULE_NOT_FOUND") {
+      const module = /'[^']+'/g.exec(e.toString());
+      client.funcs.installNPM(module[0].slice(1, -1))
           .then(() => {
             client.funcs.loadCommands(client);
           })
-          .catch((e) => {
-            console.error(e);
+          .catch((err) => {
+            console.error(err);
             process.exit();
           });
-      } else {
-        reject(e);
-      }
+    } else {
+      reject(e);
     }
-  });
-};
+  }
+});

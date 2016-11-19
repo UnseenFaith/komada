@@ -96,7 +96,7 @@ const parseTagData = (data, disallow, tag) => {
               try {
                 bound.min = parseFloat(current);
               } catch (e) {
-                throw "";
+                throw new Error("");
               }
               current = "";
             }
@@ -133,7 +133,7 @@ const parseTagData = (data, disallow, tag) => {
       }
 
       if (["string", "str"].includes(bound.type)) {
-        if (bound.max && bound.max % 1 !== 0 || bound.min && bound.min % 1 !== 0) {
+        if ((bound.max && bound.max % 1 !== 0) || (bound.min && bound.min % 1 !== 0)) {
           throw new ParserError("String types may have an integer length", "tag(possibility)", `${tag}(${i + 1}) in the length definition`);
         }
       }
@@ -159,52 +159,60 @@ const parseTagData = (data, disallow, tag) => {
 };
 
 module.exports = (command, disallowCharacters) => {
-  /***
+  /** *
    parseTags("[asda:asd{1.5,2.2}] <Bar> [asd] [...]").then(tags => console.log(util.inspect(tags, false, null))).catch(e => console.log(e + ""));
   ***/
-  let opened, current = "",
-    tags = [],
-    closed = false;
+  let opened;
+  let current = "";
+  const tags = [];
+  let closed = false;
   command.split("").forEach((c, i) => {
-
     switch (c) {
       case "<":
       case "[":
-        if (closed)
+        if (closed) {
           throw new ParserError("You can't open another tag once a loop tag was set", "char", i + 1, c);
-        if (opened)
+        }
+        if (opened) {
           throw new ParserError("You cannot open a tag inside another tag", "char", i + 1, c);
-        if (current)
-          throw new ParserError("There can't be literals outside a tag", "char", i + 1, current, i + 1 - current.length);
+        }
+        if (current) {
+          throw new ParserError("There can't be literals outside a tag", "char", i + 1, current, (i + 1) - current.length);
+        }
         opened = c;
         break;
       case ">":
       case "]":
 
-        if (!opened)
+        if (!opened) {
           throw new ParserError("Invalid tag closure, no tag was open", "char", i + 1, c);
+        }
 
-        if (!current)
+        if (!current) {
           throw new ParserError("An empty tag was found", "char", i + 1, opened + c, i);
+        }
 
-        if (c === ">" && opened !== "<" || c === "]" && opened !== "[")
+        if ((c === ">" && opened !== "<") || (c === "]" && opened !== "[")) {
           throw new ParserError(`Invalid closure of '${opened}' with '${c}'`, "char", i + 1, opened + current + c, i - current.length);
+        }
         if (current === "..." && opened === "[" && !disallowCharacters) {
-          if (tags.length === 0)
+          if (tags.length === 0) {
             throw new ParserError("You cannot specify a loop tag in the begining", "tag", tags.length + 1);
+          }
 
           tags.push({
-            type: "loop"
+            type: "loop",
           });
 
-          //tags[tags.length -1].loop = true;
+          // tags[tags.length -1].loop = true;
 
           closed = true;
-        } else
+        } else {
           tags.push({
             type: c === ">" ? "required" : "optional",
-            possibles: parseTagData(current, disallowCharacters, tags.length + 1)
+            possibles: parseTagData(current, disallowCharacters, tags.length + 1),
           });
+        }
 
         current = "";
         opened = null;
@@ -217,7 +225,6 @@ module.exports = (command, disallowCharacters) => {
         current += c;
         break;
     }
-
   });
   return tags;
 };

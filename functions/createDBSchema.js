@@ -9,7 +9,7 @@ module.exports = (data) => {
       current.canNull = true;
     }
     if (loc >= 0) {
-      throw `at field #${loc + 1} and #${i + 1}: There can't be two fields with the same name`;
+      throw new Error(`at field #${loc + 1} and #${i + 1}: There can't be two fields with the same name`);
     }
     names.push(current.name);
 
@@ -18,7 +18,7 @@ module.exports = (data) => {
       case "autoid":
       case "bool":
         if (current.max || current.min) {
-          throw `at field #${i + 1}: The type '${current.type}'' may not have a length`;
+          throw new Error(`at field #${i + 1}: The type '${current.type}'' may not have a length`);
         }
         break;
       case "timestamp":
@@ -30,7 +30,7 @@ module.exports = (data) => {
       case "string":
         break;
       default:
-        throw `at field #${i + 1}: The type '${current.type}' is not supported`;
+        throw new Error(`at field #${i + 1}: The type '${current.type}' is not supported`);
     }
 
     toRet.push(current);
