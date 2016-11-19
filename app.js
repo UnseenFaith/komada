@@ -18,7 +18,7 @@ exports.start = (config) => {
   client.dataProviders = new Discord.Collection();
 
   client.coreBaseDir = `${__dirname}/`;
-  client.clientBaseDir = `${__dirname}/`;
+  client.clientBaseDir = `${process.cwd()}/`;
 
   // Load core functions, then everything else
   require("./functions/loadFunctions.js")(client).then(() => {
