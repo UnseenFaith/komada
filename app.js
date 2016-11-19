@@ -15,6 +15,7 @@ exports.start = (config) => {
   client.commands = new Discord.Collection();
   client.aliases = new Discord.Collection();
   client.commandInhibitors = new Discord.Collection();
+  client.commandMonitors = new Discord.Collection();
   client.dataProviders = new Discord.Collection();
 
   client.coreBaseDir = `${__dirname}/`;
@@ -25,6 +26,7 @@ exports.start = (config) => {
     client.funcs.loadDataProviders(client);
     client.funcs.loadCommands(client);
     client.funcs.loadCommandInhibitors(client);
+    client.funcs.loadCommandMonitors(client);
     client.funcs.loadEvents(client);
   });
 
@@ -42,8 +44,10 @@ exports.start = (config) => {
   });
 
   client.on("message", (msg) => {
+    if (msg.author.bot) return;
     const conf = client.funcs.confs.get(msg.guild);
     msg.guildConf = conf;
+    client.funcs.runCommandMonitors(client, msg).catch(reason => msg.channel.sendMessage(reason).catch(console.error));
     if (!msg.content.startsWith(conf.prefix) && !client.config.prefixMention.test(msg.content)) return;
     let prefixLength = conf.prefix.length;
     if (client.config.prefixMention.test(msg.content)) prefixLength = client.config.prefixMention.exec(msg.content)[0].length + 1;
@@ -74,7 +78,8 @@ exports.start = (config) => {
     })
     .catch((reason) => {
       if (reason) {
-        msg.channel.sendMessage(reason).catch(console.error);
+        client.funcs.log(reason.stack, 'error');
+        msg.channel.sendCode(reason).catch(console.error);
       }
     });
   });
