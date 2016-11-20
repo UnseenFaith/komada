@@ -47,9 +47,8 @@ const loadCommandMonitors = (client, baseDir, counts) => {
                 process.exit();
               });
           } else {
-            console.error(e);
+            reject(e);
           }
-          reject();
         }
         resolve([p, o]);
       });
