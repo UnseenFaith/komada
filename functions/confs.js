@@ -53,6 +53,7 @@ exports.remove = (guild) => {
 exports.has = guild => guildConfs.has(guild.id);
 
 exports.get = (guild) => {
+  const defaultConf = fs.readJSONSync(path.resolve(`${dataDir}${path.sep}${defaultFile}`));
   const conf = {};
   if (!!guild && guildConfs.has(guild.id)) {
     const guildConf = guildConfs.get(guild.id);
