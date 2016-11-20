@@ -44,7 +44,7 @@ exports.start = (config) => {
   });
 
   client.on("message", (msg) => {
-    if (msg.author.bot) return;
+    if (msg.author.bot && msg.author.id !== client.user.id) return;
     const conf = client.funcs.confs.get(msg.guild);
     msg.guildConf = conf;
     client.funcs.runCommandMonitors(client, msg).catch(reason => msg.channel.sendMessage(reason).catch(console.error));
