@@ -46,9 +46,8 @@ const loadCommandInhibitors = (client, baseDir, counts) => new Promise((resolve,
                 process.exit();
               });
         } else {
-          console.error(e);
+          reject(e);
         }
-        reject();
       }
       resolve([p, o]);
     });
