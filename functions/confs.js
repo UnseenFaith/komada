@@ -84,11 +84,39 @@ exports.setKey = (key, defaultValue) => {
   if (!(key in defaultConf)) {
     throw new Error(`:x: The key \`${key}\` does not seem to be present in the default configuration.`);
   }
-  if (defaultValue.constructor.name !== defaultConf[key].type) {
-    throw new Error(`:x: The key \`${key}\` does not correspond to the type: ${defaultConf[key].type}.`);
+  switch (defaultConf[key].type) {
+    case "Array": {
+      const dataArray = [];
+      if (defaultConf[key]) {
+        dataArray.splice(dataArray.indexOf(defaultValue), 1);
+        defaultValue = dataArray;
+      } else {
+        dataArray.push(defaultValue);
+        defaultValue = dataArray;
+      }
+      break;
+    }
+    case "Boolean":
+      if (defaultValue === "true") {
+        defaultValue = true;
+      } else if (defaultValue === "false") {
+        defaultValue = false;
+      } else {
+        throw new Error(`:x: The value ${defaultValue} does not correspond to the type boolean.`);
+      }
+      break;
+    case "Integer":
+      defaultValue = parseInt(defaultValue);
+      if (isNaN(defaultValue)) {
+        throw new Error(`:x: The value ${defaultValue} does not correspond to the type integer.`);
+      }
+      break;
+    default:
+      defaultValue = defaultValue.toString();
   }
   defaultConf[key].data = defaultValue;
   fs.outputJSONSync(path.resolve(`${dataDir}${path.sep}${defaultFile}`), defaultConf);
+  return defaultConf;
 };
 
 exports.resetKey = (guild, key) => {
@@ -103,16 +131,17 @@ exports.resetKey = (guild, key) => {
   if (Object.keys(thisConf).length > 0) {
     guildConfs.set(guild.id, thisConf);
     fs.outputJSONSync(path.resolve(`${dataDir}${path.sep}${guild.id}.json`), thisConf);
-  } else {
-    fs.unlinkSync(path.resolve(`${dataDir}${path.sep}${guild.id}.json`));
+    return thisConf;
   }
+  fs.unlinkSync(path.resolve(`${dataDir}${path.sep}${guild.id}.json`));
+  return `Deleted empty configuration file for ${guild.name}`;
 };
 
 exports.delKey = (key, delFromAll) => {
   if (!(key in defaultConf)) {
     throw new Error(`:x: The key \`${key}\` does not seem to be present in the default configuration.`);
   }
-  if (["mod_role", "admin_role", "disabledCommands", "prefix"].includes(key)) {
+  if (["modRole", "adminRole", "disabledCommands", "prefix"].includes(key)) {
     throw new Error(`:x: The key \`${key}\` is core and cannot be deleted.`);
   }
   delete defaultConf[key];
@@ -123,9 +152,10 @@ exports.delKey = (key, delFromAll) => {
       delete conf[key];
       if (Object.keys(conf).length > 0) {
         fs.outputJSONSync(path.resolve(`${dataDir}${path.sep}${MapIter.next().value}.json`), conf);
-      } else {
-        fs.unlinkSync(path.resolve(`${dataDir}${path.sep}${MapIter.next().value}.json`));
+        return true;
       }
+      fs.unlinkSync(path.resolve(`${dataDir}${path.sep}${MapIter.next().value}.json`));
+      return "Deleted Empty Configuration Files";
     });
   }
 };
@@ -142,13 +172,35 @@ exports.set = (guild, key, value) => {
     throw new Error(`:x: The key \`${key}\` is not valid according to the Default Configuration.`);
   }
 
-  if (value.constructor.name !== defaultConf[key].type) {
-    throw new Error(`:x: The key \`${key}\` does not correspond to the type: ${defaultConf[key].type}.`);
-  }
-
-  const type = value.constructor.name;
-  if (["TextChannel", "GuildChannel", "Message", "User", "GuildMember", "Guild", "Role", "VoiceChannel", "Emoji", "Invite"].includes(type)) {
-    value = value.id;
+  switch (defaultConf[key].type) {
+    case "Array": {
+      const dataArray = [];
+      if (thisConf[key]) {
+        dataArray.splice(dataArray.indexOf(value), 1);
+        value = dataArray;
+      } else {
+        dataArray.push(value);
+        value = dataArray;
+      }
+      break;
+    }
+    case "Boolean":
+      if (value === "true") {
+        value = true;
+      } else if (value === "false") {
+        value = false;
+      } else {
+        throw new Error(`:x: The value ${value} does not correspond to the Boolean type.`);
+      }
+      break;
+    case "Integer":
+      value = parseInt(value);
+      if (isNaN(value)) {
+        throw new Error(`:x: The value ${value} does not correspond to the Integer type.`);
+      }
+      break;
+    default:
+      value = value.toString();
   }
 
   thisConf[key] = { data: value, type: defaultConf[key].type };

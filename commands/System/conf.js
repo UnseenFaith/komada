@@ -11,14 +11,20 @@ exports.run = (client, msg, [action, key, ...value]) => {
   } else
 
   if (action === "set") {
-    if (!key || value === undefined) return msg.reply("Please provide both a key and value!");
-    if (msg.guildConf[key].constructor.name === "String") {
-      value = value.join(" ");
-    } else
-    if (msg.guildConf[key].constructor.name === "Boolean") {
-      value = value[0];
+    if (!key || value[0] === undefined) return msg.reply("Please provide both a key and value!");
+    const type = value[0].constructor.name;
+    if (["TextChannel", "GuildChannel", "Message", "User", "GuildMember", "Guild", "Role", "VoiceChannel", "Emoji", "Invite"].includes(type)) {
+      value = value[0].id;
+    } else {
+      value = value.join(" ").toString();
     }
     client.funcs.confs.set(msg.guild, key, value);
+    if (msg.guildConf[key].constructor.name === "Array") {
+      if (msg.guildConf[key].includes(value)) {
+        return msg.reply(`The value ${value} for ${key} has been added.`);
+      }
+      return msg.reply(`The value ${value} for ${key} has been removed.`);
+    }
     return msg.reply(`The value for ${key} has been set to: ${value}`);
   } else
 
