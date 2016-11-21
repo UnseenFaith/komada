@@ -28,9 +28,6 @@ komada.start({
   "ownerid" : "your-user-id",
   "clientID": "the-invite-app-id",
   "prefix": "+",
-  "functions": [],
-  "commandInhibitors": [],
-  "dataHandlers": [],
   "clientOptions": {
     "fetchAllMembers": true
   }
