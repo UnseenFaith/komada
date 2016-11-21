@@ -7,24 +7,23 @@ exports.run = (client, msg, [commandname]) => {
   }
   if (!command) {
     return msg.channel.sendMessage(`I cannot find the command: ${commandname}`);
-  } else {
-    client.commands.get(command).conf.enabled = true;
-    return msg.channel.sendMessage(`Successfully enabled: ${commandname}`);
   }
+  client.commands.get(command).conf.enabled = true;
+  return msg.channel.sendMessage(`Successfully enabled: ${commandname}`);
 };
 
 exports.conf = {
   enabled: true,
   guildOnly: false,
   aliases: [],
-  permLevel: 4,
+  permLevel: 10,
   botPerms: [],
-  requiredFuncs: []
+  requiredFuncs: [],
 };
 
 exports.help = {
   name: "enable",
   description: "Re-enables or temporarily enables a command. Default state restored on reboot.",
   usage: "<commandname:str>",
-  usageDelim: ""
+  usageDelim: "",
 };

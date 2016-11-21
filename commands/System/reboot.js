@@ -1,9 +1,9 @@
 exports.run = (client, msg) => {
   const collector = msg.channel.createCollector(m => m.author === msg.author, {
-    time: 10000
+    time: 10000,
   });
   msg.channel.sendMessage("are you sure?");
-  collector.on("message", m => {
+  collector.on("message", (m) => {
     if (m.content === "no") collector.stop("aborted");
     if (m.content === "yes") collector.stop("success");
   });
@@ -15,10 +15,11 @@ exports.run = (client, msg) => {
         .then(() => {
           process.exit();
         })
-        .catch(e => {
+        .catch((e) => {
           console.error(e);
         });
     }
+    return true;
   });
 };
 
@@ -28,12 +29,12 @@ exports.conf = {
   aliases: [],
   permLevel: 10,
   botPerms: [],
-  requiredFuncs: []
+  requiredFuncs: [],
 };
 
 exports.help = {
   name: "reboot",
   description: "reboots the bot.",
   usage: "",
-  usageDelim: ""
+  usageDelim: "",
 };

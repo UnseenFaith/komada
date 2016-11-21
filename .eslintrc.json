@@ -3,13 +3,26 @@
     "es6": true,
     "node": true
   },
-  "extends": "eslint:recommended",
-  "parserOptions": { "sourceType": "module" },
+  "extends": "airbnb-base",
   "rules": {
     "no-console": "off",
-    "indent": ["error", 2, { "SwitchCase": 1 } ],
+    "indent": ["error", 2, { "SwitchCase": 1 }],
     "linebreak-style": "off",
-    "quotes": [ "warn", "double" ],
-    "semi": [ "warn", "always" ]
+    "quotes": ["warn", "double"],
+    "semi": ["warn", "always"],
+    "no-param-reassign": "off",
+    "no-shadow": "warn",
+    "no-plusplus": "off",
+    "radix": ["error", "as-needed"],
+    "max-len": "warn",
+    "import/no-extraneous-dependencies": "off",
+    "import/no-unresolved": "off",
+    "no-prototype-builtins": "warn",
+    "no-restricted-syntax": "warn",
+    "guard-for-in": "warn",
+    "consistent-return": ["warn", { "treatUndefinedAsUnspecified": true }],
+    "no-use-before-define": ["warn", { "functions": true, "classes": true }],
+    "no-eval": "warn",
+    "max-len": "off"
   }
 }
