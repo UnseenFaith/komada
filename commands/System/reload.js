@@ -1,44 +1,67 @@
-const path = require("path");
-
-exports.run = (client, msg, [commandname]) => {
-  if (commandname === "all") {
-    client.funcs.log("Reloading all commands");
-    client.funcs.loadCommands(client);
-    return;
-  }
-  let command;
-  if (client.commands.has(commandname)) {
-    command = commandname;
-  } else if (client.aliases.has(commandname)) {
-    command = client.aliases.get(commandname);
-  }
-  if (!command) {
-    client.funcs.getFileListing(client, client.coreBaseDir, "commands")
-      .then((files) => {
-        const newCommands = files.filter(f => f.name === command);
-        newCommands.forEach((file) => {
-          msg.channel.sendMessage(`Loading New Command: ${commandname}`)
-            .then((m) => {
-              client.funcs.loadSingleCommand(client, command, false, `${file.path}${path.sep}${file.base}`).then((cmd) => {
-                m.edit(`Successfully Loaded: ${cmd.help.name}`);
-              })
-                .catch((e) => {
-                  m.edit(`Command load failed for ${command}: \n\`\`\`${e.stack}\`\`\``);
-                });
-            });
+exports.run = (client, msg, [type, name]) => {
+  switch (type) {
+    case "function":
+      msg.channel.sendMessage(`Attemping to reload function ${name}`).then((m) => {
+        client.funcs.reload.function(client, msg, client.clientBaseDir, name).then(() => {
+          m.edit(`:white_check_mark: Succesfully reloaded function ${name}`);
+        }).catch((e) => {
+          m.edit(e);
         });
       });
-  } else {
-    msg.channel.sendMessage(`Reloading: ${command}`)
-      .then((m) => {
-        client.funcs.loadSingleCommand(client, command, true)
-          .then((cmd) => {
-            m.edit(`Successfully reloaded: ${cmd.help.name}`);
-          })
-          .catch((e) => {
-            m.edit(`Command reload failed for ${command}: \n\`\`\`${e}\`\`\``);
-          });
+      break;
+    case "inhibitor":
+      msg.channel.sendMessage(`Attempting to reload inhibitor ${name}`).then((m) => {
+        client.funcs.reload.inhibitor(client, msg, client.clientBaseDir, name).then(() => {
+          m.edit(`:white_check_mark: Succesfully reloaded inhibitor ${name}`);
+        }).catch((e) => {
+          m.edit(e);
+        });
       });
+      break;
+    case "monitor":
+      msg.channel.sendMessage(`Attempting to reload monitor ${name}`).then((m) => {
+        client.funcs.reload.monitor(client, msg, client.clientBaseDir, name).then(() => {
+          m.edit(`:white_check_mark: Succesfully reloaded monitor ${name}`);
+        }).catch((e) => {
+          m.edit(e);
+        });
+      });
+      break;
+    case "provider":
+      msg.channel.sendMessage(`Attempting to reload provider ${name}`).then((m) => {
+        client.funcs.reload.provider(client, msg, client.clientBaseDir, name).then(() => {
+          m.edit(`:white_check_mark: Succesfully reloaded provider ${name}`);
+        }).catch((e) => {
+          m.edit(e);
+        });
+      });
+      break;
+    case "event":
+      msg.channel.sendMessage(`Attempting to reload event ${name}`).then((m) => {
+        client.funcs.reload.event(client, msg, name).then(() => {
+          m.edit(`:white_check_mark: Succesfully reloaded event ${name}`);
+        }).catch((e) => {
+          m.edit(e);
+        });
+      });
+      break;
+    case "command":
+      switch (name) {
+        case "all":
+          client.funcs.loadCommands(client);
+          msg.channel.sendMessage(":white_check_mark: Reloaded all commands.");
+          break;
+        default:
+          msg.channel.sendMessage(`Attempting to reload command ${name}`).then((m) => {
+            client.funcs.reload.command(client, msg, client.clientBaseDir, name).then(() => {
+              m.edit(`:white_check_mark: Succesfully reloaded command ${name}`);
+            }).catch((e) => {
+              m.edit(e);
+            });
+          });
+          break;
+      }
+      break;
   }
 };
 
@@ -54,5 +77,6 @@ exports.conf = {
 exports.help = {
   name: "reload",
   description: "Reloads the command file, if it's been updated or modified.",
-  usage: "<all:literal|commandname:str>",
+  usage: "<function|inhibitor|monitor|provider|event|command> <name:str>",
+  usageDelim: " ",
 };
