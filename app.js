@@ -1,5 +1,6 @@
 const Discord = require("discord.js");
 const chalk = require("chalk");
+const loadFunctions = require("./functions/loadFunctions.js");
 
 const clk = new chalk.constructor({ enabled: true });
 
@@ -22,7 +23,7 @@ exports.start = (config) => {
   client.clientBaseDir = `${process.cwd()}/`;
 
   // Load core functions, then everything else
-  require("./functions/loadFunctions.js")(client).then(() => {
+  loadFunctions(client).then(() => {
     client.funcs.loadDataProviders(client);
     client.funcs.loadCommands(client);
     client.funcs.loadCommandInhibitors(client);
@@ -78,8 +79,8 @@ exports.start = (config) => {
     })
     .catch((reason) => {
       if (reason) {
-        client.funcs.log(reason.stack, 'error');
-        msg.channel.sendCode(reason).catch(console.error);
+        if (reason.stack) client.funcs.log(reason.stack, "error");
+        msg.channel.sendCode("", reason).catch(console.error);
       }
     });
   });
