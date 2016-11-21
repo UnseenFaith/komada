@@ -28,14 +28,13 @@ komada.start({
   "ownerid" : "your-user-id",
   "clientID": "the-invite-app-id",
   "prefix": "+",
-  "functions": [],
-  "commandInhibitors": ["disable", "permissions", "missingBotPermissions"],
-  "dataHandlers": [],
   "clientOptions": {
     "fetchAllMembers": true
   }
 });
 ```
+
+> For all you selfbot users out there, you can add a option ('selfbot': true) to have Komada enabled for selfbot usage. i.e. only respond to commands from you.
 
 Then, run the following in your folder:
 
@@ -55,7 +54,10 @@ But you can add your own pieces easily by adding files to your *local* folders (
 These pieces are:
 - **commands** which add in-chat functionality to your bot.
 - **functions** which can be used by other pieces or anywhere in the bot.
-- **dataHandlers** which are database connectors (in progress at the moment).
+- **inhibitors** which are used to check if a command should be run or not.
+- **monitors** which are used to check a message before it's a command.
+- **events**
+- **dataProviders** which are database connectors (in progress at the moment).
 
 ### Creating a new command
 
@@ -66,7 +68,7 @@ also be created by adding a second folder level.
 
 > If a command is present both in the *core* folders and your client folders,
 your command will override the core one. This can let you modify the core
-behaviour. Note also that you cannot have more than one command with the same name.
+behavior. Note also that you cannot have more than one command with the same name.
 
 ```js
 exports.run = (client, msg, [...args]) => {
@@ -89,13 +91,15 @@ exports.help = {
   usageDelim: ""
 };
 ```
+> Tip: If you need something created before the command is ever ran, you can specify
+exports.init = (client) => {...} to make Komada run that portion of code beforehand.
 
 `[...args]` represents a variable number of arguments give when the command is
 run. The name of the arguments in the array (and their count) is determined
 by the `usage` property and its given arguments.
 
 **Non-obvious options**:
-- **enabled**: Set to false to completely disable this command, it cannot be forecefully enabled.
+- **enabled**: Set to false to completely disable this command, it cannot be forcefully enabled.
 - **aliases**: Array of aliases for the command, which will *also* trigger it.
 - **permLevel**: Permission level, controlled via `./functions/permissionLevel.js`.
 - **botPerms**: An array of permission strings (such as `"MANAGE_MESSAGES"`) required for the command to run.
@@ -109,7 +113,7 @@ by the `usage` property and its given arguments.
 `<>` required argument, `[]` optional argument
 `<Name:Type{min,max}>`
 
-- **Name** Mostly used for debugging message, unless the type is Litteral in which it compares the argument to the name.
+- **Name** Mostly used for debugging message, unless the type is Literal in which it compares the argument to the name.
 - **Type** The type of variable you are expecting.
 - **Min, Max** Minimum or Maximum for a giving variable (works on strings in terms of length, and on all types of numbers in terms of value) You are allowed to define any combination of min and max. Omit for none, `{min}` for min, `{,max}` for max.
 - **Special Repeat Tag** `[...]` will repeat the last usage optionally until you run out of arguments. Useful for doing something like `<SearchTerm:str> [...]` which will allow you to take as many search terms as you want, per your Usage Delimiter.
@@ -120,8 +124,10 @@ by the `usage` property and its given arguments.
 - `str`, `string` : Strings.
 - `int`, `integer` : Integers.
 - `num`, `number`, `Float` : Floating point numbers.
+- `boolean`, : A true or false statement.
 - `url` : A URL.
 - `msg`, `message` : A message object returned from the message ID (now using fetchMessage as of d3d498c99d5eca98b5cbcefb9838fa7d96f17c93).
+- `role` : A role object returned from the role ID or mention.
 - `channel` : A channel object returned from the channel ID or channel tag.
 - `guild` : A guild object returned from the guild ID.
 - `user`, `mention` : A user object returned from the user ID or mention.
@@ -165,3 +171,48 @@ module.exports = (str) => {
 
 The arguments are arbitrary - just like a regular function. It may, or may not,
 return anything. Basically any functions. You know what I mean.
+
+### Creating a inhibitors
+
+Inhibitors are only ran on commands. They are used to check a variety of conditions
+before a command is ever ran, such as checking if a user has the right amount of permissions
+to use a command. Inhibitors are loaded as core first, and if your code contains a inhibitor
+of the same name it overrides the core inhibitor.
+
+Their structure is restricted, meaning to work they must be defined exactly like this.
+
+```js
+exports.conf = {
+  enabled: true,
+  spamProtection: false,
+};
+
+exports.run = (client, msg, cmd) => {
+  // code here
+}
+```
+
+> Note: The order does not matter.
+
+### Creating a monitors
+
+Monitors are special in that they will always run on any message. This is particularly
+useful when you need to do checking on the message, such as checking if a message
+contains a vulgar word (profanity filter). They are almost completely identical to
+inhibitors, the only difference between one is ran on the message, and the other
+is ran on the command. Monitors are loaded as core first, and if your code contains
+a monitor of the same name it overrides the core monitor.
+
+Their structure is identical to inhibitors, being the only difference is that you
+don't pass a command parameter to them.
+
+```js
+exports.conf = {
+  enabled: true,
+  spamProtection: false,
+};
+
+exports.run = (client, msg) => {
+  // code here
+};
+```
