@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](http://keepachangelog.com/) 
+The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
@@ -41,8 +41,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - [vzwGrey]:        1 contribution
 
 
-[Unreleased]: https://github.com/eslachance/komada/compare/v0.10.0...HEAD
-[0.10.0]: https://github.com/eslachance/komada/compare/1627e6deb1d8c352d83e52ccd590f2330f5f8bb2...v0.10.0
+[Unreleased]: https://github.com/eslachance/komada/compare/0.10.0...HEAD
+[0.10.0]: https://github.com/eslachance/komada/compare/1627e6deb1d8c352d83e52ccd590f2330f5f8bb2...0.10.0
 
 [vzwGrey]: https://github.com/vzwGrey
 [eslachance]: https://github.com/eslachance
