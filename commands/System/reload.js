@@ -1,9 +1,9 @@
 exports.run = (client, msg, [type, name]) => {
-  switch (type) { // eslint-disable-line default-case
+  switch (type) {
     case "function":
       msg.channel.sendMessage(`Attemping to reload function ${name}`).then((m) => {
         client.funcs.reload.function(client, msg, client.clientBaseDir, name).then(() => {
-          m.edit(`:white_check_mark: Succesfully reloaded local function ${name}`);
+          m.edit(`:white_check_mark: Succesfully reloaded function ${name}`);
         }).catch((e) => {
           m.edit(e);
         });
@@ -12,7 +12,7 @@ exports.run = (client, msg, [type, name]) => {
     case "inhibitor":
       msg.channel.sendMessage(`Attempting to reload inhibitor ${name}`).then((m) => {
         client.funcs.reload.inhibitor(client, msg, client.clientBaseDir, name).then(() => {
-          m.edit(`:white_check_mark: Succesfully reloaded local inhibitor ${name}`);
+          m.edit(`:white_check_mark: Succesfully reloaded inhibitor ${name}`);
         }).catch((e) => {
           m.edit(e);
         });
@@ -21,7 +21,7 @@ exports.run = (client, msg, [type, name]) => {
     case "monitor":
       msg.channel.sendMessage(`Attempting to reload monitor ${name}`).then((m) => {
         client.funcs.reload.monitor(client, msg, client.clientBaseDir, name).then(() => {
-          m.edit(`:white_check_mark: Succesfully reloaded local monitor ${name}`);
+          m.edit(`:white_check_mark: Succesfully reloaded monitor ${name}`);
         }).catch((e) => {
           m.edit(e);
         });
@@ -30,16 +30,16 @@ exports.run = (client, msg, [type, name]) => {
     case "provider":
       msg.channel.sendMessage(`Attempting to reload provider ${name}`).then((m) => {
         client.funcs.reload.provider(client, msg, client.clientBaseDir, name).then(() => {
-          m.edit(`:white_check_mark: Succesfully reloaded local provider ${name}`);
+          m.edit(`:white_check_mark: Succesfully reloaded provider ${name}`);
         }).catch((e) => {
           m.edit(e);
         });
       });
       break;
     case "event":
-      msg.channel.sendMessage(`Attempting to reload provider ${name}`).then((m) => {
+      msg.channel.sendMessage(`Attempting to reload event ${name}`).then((m) => {
         client.funcs.reload.event(client, msg, name).then(() => {
-          m.edit(`:white_check_mark: Succesfully reloaded local event ${name}`);
+          m.edit(`:white_check_mark: Succesfully reloaded event ${name}`);
         }).catch((e) => {
           m.edit(e);
         });
@@ -54,7 +54,7 @@ exports.run = (client, msg, [type, name]) => {
         default:
           msg.channel.sendMessage(`Attempting to reload command ${name}`).then((m) => {
             client.funcs.reload.command(client, msg, client.clientBaseDir, name).then(() => {
-              m.edit(`:white_check_mark: Succesfully reloaded local command ${name}`);
+              m.edit(`:white_check_mark: Succesfully reloaded command ${name}`);
             }).catch((e) => {
               m.edit(e);
             });
