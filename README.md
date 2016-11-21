@@ -210,6 +210,11 @@ Their structure is identical to inhibitors, being the only difference is that yo
 don't pass a command parameter to them.
 
 ```js
+exports.conf = {
+  enabled: true,
+  spamProtection: false,
+};
+
 exports.run = (client, msg) => {
   // code here
 };
