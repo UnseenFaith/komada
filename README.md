@@ -59,7 +59,8 @@ These pieces are:
 - **functions** which can be used by other pieces or anywhere in the bot.
 - **inhibitors** which are used to check if a command should be run or not.
 - **monitors** which are used to check a message before it's a command.
-- **dataHandlers** which are database connectors (in progress at the moment).
+- **events**
+- **dataProviders** which are database connectors (in progress at the moment).
 
 ### Creating a new command
 
