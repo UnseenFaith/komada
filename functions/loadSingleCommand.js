@@ -39,8 +39,8 @@ module.exports = (client, command, reload = false, loadPath = null) => new Promi
             .then(() => {
               client.funcs.loadSingleCommand(client, command, false, loadPath);
             })
-            .catch((e) => {
-              console.error(e);
+            .catch((err) => {
+              console.error(err);
               process.exit();
             });
       } else {

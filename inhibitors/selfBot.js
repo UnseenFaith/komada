@@ -3,7 +3,7 @@ exports.conf = {
   spamProtection: false,
 };
 
-exports.run = (client, msg, cmd) => new Promise((resolve, reject) => {
+exports.run = (client, msg) => new Promise((resolve, reject) => {
   if (client.config.selfbot) {
     if (msg.author === client.user) {
       resolve();

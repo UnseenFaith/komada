@@ -5,6 +5,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- Travis CI
+
+### Fixed
+- Various linting issues (still more to come)
+- Fixed README errors.
 
 ## [0.10.0] - 2016-11-21
 ### Added
@@ -32,16 +38,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Various Confs fixes from [UnseenFaith]
 - Usage Addition/ParseUsage fix from [UnseenFaith]
 
-### Contribution Count (Latest Update)
-- [UnseenFaith]:    12 contributions
-- [CyberiumShadow]: 4 contributions
-- [bdistin]:        1 contribution
-- [hkwu]:           1 contribution
-- [eslachance]:     1 contribution
-- [vzwGrey]:        1 contribution
-
-
-[Unreleased]: https://github.com/eslachance/komada/compare/0.10.0...HEAD
+[Unreleased]: https://github.com/eslachance/komada/compare/0.10.0...indev
 [0.10.0]: https://github.com/eslachance/komada/compare/1627e6deb1d8c352d83e52ccd590f2330f5f8bb2...0.10.0
 
 [vzwGrey]: https://github.com/vzwGrey

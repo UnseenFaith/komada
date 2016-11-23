@@ -40,7 +40,7 @@ const buildHelp = (client, msg) => new Promise((resolve) => {
   const mps = [];
 
   const commandNames = Array.from(client.commands.keys());
-  const longest = commandNames.reduce((longest, str) => Math.max(longest, str.length), 0);
+  const longest = commandNames.reduce((long, str) => Math.max(long, str.length), 0);
 
   client.commands.forEach((command) => {
     mps.push(new Promise((res) => {

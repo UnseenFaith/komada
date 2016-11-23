@@ -62,6 +62,7 @@ exports.run = (client, msg, [type, name]) => {
           break;
       }
       break;
+      // no default
   }
 };
 
