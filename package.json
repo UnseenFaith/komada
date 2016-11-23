@@ -6,9 +6,8 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "test": "npm run lint",
-    "lint": "eslint commands functions inhibitors events monitors app.js",
-    "lint:fix": "npm run lint -- --fix"
+    "test": "eslint commands functions inhibitors events monitors app.js",
+    "lint": "npm run test -- --fix"
   },
   "repository": {
     "type": "git",
