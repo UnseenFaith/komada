@@ -57,7 +57,7 @@ These pieces are:
 - **functions** which can be used by other pieces or anywhere in the bot.
 - **inhibitors** which are used to check if a command should be run or not.
 - **monitors** which are used to check a message before it's a command.
-- **events**
+- **events** which are triggered based on what happens in Discord.
 - **dataProviders** which are database connectors (in progress at the moment).
 
 ### Creating a new command
@@ -103,6 +103,7 @@ by the `usage` property and its given arguments.
 - **enabled**: Set to false to completely disable this command, it cannot be forcefully enabled.
 - **aliases**: Array of aliases for the command, which will *also* trigger it.
 - **permLevel**: Permission level, controlled via `./functions/permissionLevel.js`.
+- **selfbot**: Set to true to only load this command if the bot is configured to be a selfbot.
 - **botPerms**: An array of permission strings (such as `"MANAGE_MESSAGES"`) required for the command to run.
 - **requiredFuncs**: An array of function names required for this command to execute (dependency).
 - **usage**: The usage string as determined by the Argument Usage (see below).
@@ -173,7 +174,7 @@ module.exports = (str) => {
 The arguments are arbitrary - just like a regular function. It may, or may not,
 return anything. Basically any functions. You know what I mean.
 
-### Creating a inhibitors
+### Creating Inhibitors
 
 Inhibitors are only ran on commands. They are used to check a variety of conditions
 before a command is ever ran, such as checking if a user has the right amount of permissions
@@ -195,7 +196,7 @@ exports.run = (client, msg, cmd) => {
 
 > Note: The order does not matter.
 
-### Creating a monitors
+### Creating Monitors
 
 Monitors are special in that they will always run on any message. This is particularly
 useful when you need to do checking on the message, such as checking if a message
