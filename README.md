@@ -3,6 +3,7 @@
 [![Discord](https://discordapp.com/api/guilds/234357395646578688/embed.png)](https://discord.gg/bRCvFy9)
 [![npm](https://img.shields.io/npm/v/komada.svg?maxAge=3600)](https://www.npmjs.com/package/komada)
 [![npm](https://img.shields.io/npm/dt/komada.svg?maxAge=3600)](https://www.npmjs.com/package/komada)
+[![Build Status](https://travis-ci.org/eslachance/komada.svg?branch=indev)](https://travis-ci.org/eslachance/komada)
 [![David](https://img.shields.io/david/eslachance/komada.svg?maxAge=3600)](https://david-dm.org/eslachance/komada)
 
 > "Stay a while, and listen!"
