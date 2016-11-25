@@ -18,7 +18,7 @@ exports.function = (client, dir, funcName) => new Promise((resolve, reject) => {
           reject(error);
           return;
         }
-        resolve(`Succesfully reloaded the function ${funcName}.`);
+        resolve(`Successfully reloaded the function ${funcName}.`);
       } else {
         reject(`The function **${funcName}** does not reside in ${dir}functions`);
       }
@@ -32,7 +32,7 @@ exports.function = (client, dir, funcName) => new Promise((resolve, reject) => {
               client.funcs[funcName].init(client);
             }
           });
-          resolve(`Succesfully loaded a new function called ${funcName}.`);
+          resolve(`Successfully loaded a new function called ${funcName}.`);
         } catch (error) {
           if (error.code === "MODULE_NOT_FOUND") {
             const module = /'[^']+'/g.exec(error.toString());
@@ -72,7 +72,7 @@ exports.inhibitor = (client, dir, inhibName) => new Promise((resolve, reject) =>
           reject(error);
           return;
         }
-        resolve(`Succesfully reloaded the inhibitor ${inhibName}`);
+        resolve(`Successfully reloaded the inhibitor ${inhibName}`);
       } else {
         reject(`The inhibitor **${inhibName}** does not seem to reside in ${dir}inhibitors`);
       }
@@ -87,7 +87,7 @@ exports.inhibitor = (client, dir, inhibName) => new Promise((resolve, reject) =>
               props.init(client);
             }
           });
-          resolve(`Succesfully loaded a new inhibitor called ${inhibName}.`);
+          resolve(`Successfully loaded a new inhibitor called ${inhibName}.`);
         } catch (error) {
           if (error.code === "MODULE_NOT_FOUND") {
             const module = /'[^']+'/g.exec(error.toString());
@@ -142,7 +142,7 @@ exports.monitor = (client, dir, monitName) => new Promise((resolve, reject) => {
               props.init(client);
             }
           });
-          resolve(`Succesfully loaded a new monitor called ${monitName}.`);
+          resolve(`Successfully loaded a new monitor called ${monitName}.`);
         } catch (error) {
           if (error.code === "MODULE_NOT_FOUND") {
             const module = /'[^']+'/g.exec(error.toString());
@@ -182,7 +182,7 @@ exports.provider = (client, dir, providerName) => new Promise((resolve, reject) 
           reject(error);
           return;
         }
-        resolve(`Succesfully reloaded the provider ${providerName}.`);
+        resolve(`Successfully reloaded the provider ${providerName}.`);
       } else {
         reject(`The provider **${providerName}** does not seem to reside in ${dir}dataProviders`);
       }
@@ -197,7 +197,7 @@ exports.provider = (client, dir, providerName) => new Promise((resolve, reject) 
               props.init(client);
             }
           });
-          resolve(`Succesfully loaded a new provider called ${providerName}.`);
+          resolve(`Successfully loaded a new provider called ${providerName}.`);
         } catch (error) {
           if (error.code === "MODULE_NOT_FOUND") {
             const module = /'[^']+'/g.exec(error.toString());
@@ -238,7 +238,7 @@ exports.event = (client, eventName) => new Promise((resolve, reject) => {
         reject(error);
         return;
       }
-      resolve(`Sucesfully reloaded the event ${eventName}`);
+      resolve(`Successfully reloaded the event ${eventName}`);
     } else {
       reject(`The event **${eventName}** does not seem to exist!`);
     }
