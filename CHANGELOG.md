@@ -8,7 +8,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Travis CI
 
+### Changed
+- Functions.js now able to reload new pieces.
+- Reload.js removal of msgs.
+- ESLint Errors downgraded to Warnings
+
 ### Fixed
+- Bitwise Ternary removal
+- Updated README
 - Various linting issues (still more to come)
 - Fixed README errors.
 
