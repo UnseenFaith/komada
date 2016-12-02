@@ -1,4 +1,4 @@
-const fs = require("fs-extra");
+const fs = require("fs-extra-promise");
 const path = require("path");
 
 module.exports = (client) => {

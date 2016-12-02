@@ -1,4 +1,4 @@
-const fs = require("fs-extra");
+const fs = require("fs-extra-promise");
 const path = require("path");
 
 const loadCommands = (client, baseDir, counts) => new Promise((resolve, reject) => {
