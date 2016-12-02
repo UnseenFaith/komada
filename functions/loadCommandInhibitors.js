@@ -1,12 +1,12 @@
-const fs = require("fs-extra");
+const fs = require("fs-extra-promise");
 const path = require("path");
 
 module.exports = (client) => {
   client.commandInhibitors.clear();
-  const counts = [0, 0];
-  loadCommandInhibitors(client, client.coreBaseDir, counts).then((counts) => {
-    loadCommandInhibitors(client, client.clientBaseDir, counts).then((counts) => {
-      const [p, o] = counts;
+  const count = [0, 0];
+  loadCommandInhibitors(client, client.coreBaseDir, count).then((counts) => {
+    loadCommandInhibitors(client, client.clientBaseDir, counts).then((countss) => {
+      const [p, o] = countss;
       client.funcs.log(`Loaded ${p} command inhibitors, with ${o} optional.`);
     });
   });
@@ -14,10 +14,10 @@ module.exports = (client) => {
 
 const loadCommandInhibitors = (client, baseDir, counts) => new Promise((resolve, reject) => {
   const dir = path.resolve(`${baseDir}./inhibitors/`);
-  fs.ensureDir(dir, (err) => {
-    if (err) console.error(err);
-    fs.readdir(dir, (err, files) => {
-      if (err) console.error(err);
+  fs.ensureDirAsync(dir)
+  .then(() => {
+    fs.readdirAsync(dir)
+    .then((files) => {
       let [p, o] = counts;
       try {
         files = files.filter(f => f.slice(-3) === ".js");
@@ -50,6 +50,10 @@ const loadCommandInhibitors = (client, baseDir, counts) => new Promise((resolve,
         }
       }
       resolve([p, o]);
+    })
+    .catch((err) => {
+      client.funcs.log(err, "error");
     });
-  });
+  })
+.catch(err => client.funcs.log(err, "error"));
 });
