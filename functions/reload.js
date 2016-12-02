@@ -1,5 +1,5 @@
 const path = require("path");
-
+/* eslint-disable import/no-dynamic-require, global-require */
 exports.function = (client, dir, funcName) => new Promise((resolve, reject) => {
   client.funcs.getFileListing(client, dir, "functions").then((files) => {
     if (client.funcs.hasOwnProperty(funcName)) {
