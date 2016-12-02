@@ -18,7 +18,7 @@ exports.init = (client) => {
   fs.ensureFileAsync(`${dataDir}${path.sep}${defaultFile}`)
   .then(() => {
     fs.readJSONAsync(path.resolve(`${dataDir}${path.sep}${defaultFile}`))
-      .then((err, currentDefaultConf) => {
+      .then((currentDefaultConf) => {
         Object.keys(defaultConf).forEach((key) => {
           if (!currentDefaultConf.hasOwnProperty(key)) currentDefaultConf[key] = defaultConf[key];
         });
@@ -27,7 +27,7 @@ exports.init = (client) => {
           defaultConf = currentDefaultConf;
         });
       }).catch(() => {
-        fs.outputJSONAsync(`${dataDir}${path.sep}${defaultFile}`, defaultConf).catch(err => client.funcs.log(err, "error"));
+        fs.outputJSONAsync(`${dataDir}${path.sep}${defaultFile}`, defaultConf);
       });
     fs.walk(dataDir)
       .on("data", (item) => {
@@ -59,7 +59,7 @@ exports.has = guild => guildConfs.has(guild.id);
 
 exports.get = (guild) => {
   fs.readJSONAsync(path.resolve(`${dataDir}${path.sep}${defaultFile}`))
-  .then((err, defConf) => {
+  .then((defConf) => {
     const conf = {};
     if (!!guild && guildConfs.has(guild.id)) {
       const guildConf = guildConfs.get(guild.id);
@@ -131,18 +131,18 @@ exports.resetKey = (guild, key) => {
   if (!guildConfs.has(guild.id)) {
     throw new Error(`:x: The guild ${guild.id} not found while trying to reset ${key}`);
   }
-  fs.readJSONSync(path.resolve(`${dataDir}${path.sep}${guild.id}.json`))
-  .then((err, thisConf) => {
+  fs.readJSONAsync(path.resolve(`${dataDir}${path.sep}${guild.id}.json`))
+  .then((thisConf) => {
     if (!(key in thisConf)) {
       throw new Error(`:x: The key \`${key}\` does not seem to be present in the server configuration.`);
     }
     delete thisConf[key];
     if (Object.keys(thisConf).length > 0) {
       guildConfs.set(guild.id, thisConf);
-      fs.outputJSONSync(path.resolve(`${dataDir}${path.sep}${guild.id}.json`), thisConf);
+      fs.outputJSONAsync(path.resolve(`${dataDir}${path.sep}${guild.id}.json`), thisConf);
       return thisConf;
     }
-    fs.removeSync(path.resolve(`${dataDir}${path.sep}${guild.id}.json`));
+    fs.removeAsync(path.resolve(`${dataDir}${path.sep}${guild.id}.json`));
     return `Deleted empty configuration file for ${guild.name}`;
   });
 };
@@ -162,10 +162,10 @@ exports.delKey = (key, delFromAll) => {
       guildConfs.forEach((conf) => {
         delete conf[key];
         if (Object.keys(conf).length > 0) {
-          fs.outputJSONSync(path.resolve(`${dataDir}${path.sep}${MapIter.next().value}.json`), conf);
+          fs.outputJSONAsync(path.resolve(`${dataDir}${path.sep}${MapIter.next().value}.json`), conf);
           return true;
         }
-        fs.removeSync(path.resolve(`${dataDir}${path.sep}${MapIter.next().value}.json`));
+        fs.removeAsync(path.resolve(`${dataDir}${path.sep}${MapIter.next().value}.json`));
         return "Deleted Empty Configuration Files";
       });
     }
@@ -218,7 +218,7 @@ exports.set = (guild, key, value) => {
   thisConf[key] = { data: value, type: defaultConf[key].type };
 
   guildConfs.set(guild.id, thisConf);
-  fs.outputJSONSync(path.resolve(`${dataDir}${path.sep}${guild.id}.json`), thisConf);
+  fs.outputJSONAsync(path.resolve(`${dataDir}${path.sep}${guild.id}.json`), thisConf);
 
   return thisConf;
 };
