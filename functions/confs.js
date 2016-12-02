@@ -17,8 +17,7 @@ exports.init = (client) => {
   };
   fs.ensureFileAsync(`${dataDir}${path.sep}${defaultFile}`)
   .then(() => {
-    try {
-      fs.readJSONAsync(path.resolve(`${dataDir}${path.sep}${defaultFile}`))
+    fs.readJSONAsync(path.resolve(`${dataDir}${path.sep}${defaultFile}`))
       .then((err, currentDefaultConf) => {
         Object.keys(defaultConf).forEach((key) => {
           if (!currentDefaultConf.hasOwnProperty(key)) currentDefaultConf[key] = defaultConf[key];
@@ -27,10 +26,9 @@ exports.init = (client) => {
         .then(() => {
           defaultConf = currentDefaultConf;
         });
+      }).catch(() => {
+        fs.outputJSONAsync(`${dataDir}${path.sep}${defaultFile}`, defaultConf).catch(err => client.funcs.log(err, "error"));
       });
-    } catch (e) {
-      fs.outputJSONAsync(`${dataDir}${path.sep}${defaultFile}`, defaultConf).catch(err => client.funcs.log(err, "error"));
-    }
     fs.walk(dataDir)
       .on("data", (item) => {
         const fileinfo = path.parse(item.path);
