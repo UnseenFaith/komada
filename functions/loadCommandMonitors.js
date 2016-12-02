@@ -3,10 +3,10 @@ const path = require("path");
 
 module.exports = (client) => {
   client.commandMonitors.clear();
-  const counts = [0, 0];
-  loadCommandMonitors(client, client.coreBaseDir, counts).then((counts) => {
-    loadCommandMonitors(client, client.clientBaseDir, counts).then((counts) => {
-      const [p, o] = counts;
+  const count = [0, 0];
+  loadCommandMonitors(client, client.coreBaseDir, count).then((counts) => {
+    loadCommandMonitors(client, client.clientBaseDir, counts).then((countss) => {
+      const [p, o] = countss;
       client.funcs.log(`Loaded ${p} command monitors, with ${o} optional.`);
     });
   });
@@ -14,10 +14,10 @@ module.exports = (client) => {
 
 const loadCommandMonitors = (client, baseDir, counts) => new Promise((resolve, reject) => {
   const dir = path.resolve(`${baseDir}./monitors/`);
-  fs.ensureDir(dir, (err) => {
-    if (err) console.error(err);
-    fs.readdir(dir, (err, files) => {
-      if (err) console.error(err);
+  fs.ensureDirAsync(dir)
+  .then(() => {
+    fs.readdirAsync(dir)
+    .then((files) => {
       let [p, o] = counts;
       try {
         files = files.filter(f => f.slice(-3) === ".js");
@@ -50,6 +50,7 @@ const loadCommandMonitors = (client, baseDir, counts) => new Promise((resolve, r
         }
       }
       resolve([p, o]);
-    });
-  });
+    }).catch(err => client.funcs.log(err, "error"));
+  })
+  .catch(err => client.funcs.log(err, "error"));
 });
