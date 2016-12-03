@@ -58,21 +58,18 @@ exports.remove = (guild) => {
 exports.has = guild => guildConfs.has(guild.id);
 
 exports.get = (guild) => {
-  fs.readJSONAsync(path.resolve(`${dataDir}${path.sep}${defaultFile}`))
-  .then((defConf) => {
-    const conf = {};
-    if (!!guild && guildConfs.has(guild.id)) {
-      const guildConf = guildConfs.get(guild.id);
-      for (const key in guildConf) {
-        if (guildConf[key]) conf[key] = guildConf[key].data;
-        else conf[key] = defConf[key].data;
-      }
+  const conf = {};
+  if (!!guild && guildConfs.has(guild.id)) {
+    const guildConf = guildConfs.get(guild.id);
+    for (const key in guildConf) {
+      if (guildConf[key]) conf[key] = guildConf[key].data;
+      else conf[key] = defaultConf[key].data;
     }
-    for (const key in defaultConf) {
-      if (!conf[key]) conf[key] = defConf[key].data;
-    }
-    return conf;
-  });
+  }
+  for (const key in defaultConf) {
+    if (!conf[key]) conf[key] = defaultConf[key].data;
+  }
+  return conf;
 };
 
 exports.addKey = (key, defaultValue) => {
@@ -84,7 +81,7 @@ exports.addKey = (key, defaultValue) => {
     return false;
   }
   defaultConf[key] = { type: defaultValue.constructor.name, data: defaultValue };
-  fs.outputJSONSync(path.resolve(`${dataDir}${path.sep}${defaultFile}`), defaultConf);
+  fs.outputJSONAsync(path.resolve(`${dataDir}${path.sep}${defaultFile}`), defaultConf);
   return true;
 };
 
@@ -123,7 +120,7 @@ exports.setKey = (key, defaultValue) => {
       defaultValue = defaultValue.toString();
   }
   defaultConf[key].data = defaultValue;
-  fs.outputJSONSync(path.resolve(`${dataDir}${path.sep}${defaultFile}`), defaultConf);
+  fs.outputJSONAsync(path.resolve(`${dataDir}${path.sep}${defaultFile}`), defaultConf);
   return defaultConf;
 };
 
