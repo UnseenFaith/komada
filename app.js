@@ -29,6 +29,8 @@ exports.start = (config) => {
     client.funcs.loadCommandInhibitors(client);
     client.funcs.loadCommandMonitors(client);
     client.funcs.loadEvents(client);
+    client.i18n = client.funcs.loadLocalizations;
+    client.i18n.init(client);
   });
 
   client.once("ready", () => {
@@ -48,6 +50,7 @@ exports.start = (config) => {
     if (msg.author.bot && msg.author.id !== client.user.id) return;
     const conf = client.funcs.confs.get(msg.guild);
     msg.guildConf = conf;
+    client.i18n.use(conf.lang);
     client.funcs.runCommandMonitors(client, msg).catch(reason => msg.channel.sendMessage(reason).catch(console.error));
     if (!msg.content.startsWith(conf.prefix) && !client.config.prefixMention.test(msg.content)) return;
     let prefixLength = conf.prefix.length;

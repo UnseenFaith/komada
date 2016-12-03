@@ -14,6 +14,7 @@ exports.init = (client) => {
     disabledCommands: { type: "Array", data: [] },
     modRole: { type: "String", data: "Mods" },
     adminRole: { type: "String", data: "Devs" },
+    lang: { type: "String", data: "en" },
   };
   fs.ensureFileAsync(`${dataDir}${path.sep}${defaultFile}`)
   .then(() => {
