@@ -1,12 +1,12 @@
-const fs = require("fs-extra");
+const fs = require("fs-extra-promise");
 const path = require("path");
 
 const loadDataProviders = (client, baseDir, counts) => new Promise((resolve, reject) => {
   const dir = path.resolve(`${baseDir}./dataProviders/`);
-  fs.ensureDir(dir, (err) => {
-    if (err) console.error(err);
-    fs.readdir(dir, (err, files) => {
-      if (err) console.error(err);
+  fs.ensureDirAsync(dir)
+  .then(() => {
+    fs.readdirAsync(dir)
+    .then((files) => {
       let [d, o] = counts;
       try {
         files = files.filter(f => f.slice(-3) === ".js");
@@ -41,16 +41,16 @@ const loadDataProviders = (client, baseDir, counts) => new Promise((resolve, rej
         }
       }
       resolve([d, o]);
-    });
-  });
+    }).catch(err => client.funcs.log(err, "error"));
+  }).catch(err => client.funcs.log(err, "error"));
 });
 
 module.exports = (client) => {
   client.dataProviders.clear();
-  const counts = [0, 0];
-  loadDataProviders(client, client.coreBaseDir, counts).then((counts) => {
-    loadDataProviders(client, client.clientBaseDir, counts).then((counts) => {
-      const [d, o] = counts;
+  const count = [0, 0];
+  loadDataProviders(client, client.coreBaseDir, count).then((counts) => {
+    loadDataProviders(client, client.clientBaseDir, counts).then((countss) => {
+      const [d, o] = countss;
       client.funcs.log(`Loaded ${d} database handlers, with ${o} optional.`);
     });
   });

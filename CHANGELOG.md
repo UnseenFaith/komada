@@ -9,15 +9,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Travis CI
 
 ### Changed
+- confs.js is back to Async (Critical Performance bug fixed)
 - Functions.js now able to reload new pieces.
 - Reload.js removal of msgs.
 - ESLint Errors downgraded to Warnings
 
 ### Fixed
+- Typos
 - Bitwise Ternary removal
 - Updated README
 - Various linting issues (still more to come)
 - Fixed README errors.
+
+### Removed
+- Herobrine
 
 ## [0.10.0] - 2016-11-21
 ### Added
