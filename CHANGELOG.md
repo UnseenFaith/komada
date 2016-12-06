@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Updated README
 - Various linting issues (still more to come)
 - Fixed README errors.
+- Fixed Unnecessary 'Redacted' values
 
 ### Removed
 - Herobrine
