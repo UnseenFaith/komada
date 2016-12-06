@@ -19,7 +19,7 @@ exports.init = (client) => {
 
   // Get strings from localized JSON files
   const dir = path.resolve(`${client.coreBaseDir}/locs/`);
-  for(const lang in bundles) {
+  for (const lang in bundles) {
     const bundleContents = JSON.parse(fs.readFileSync(`${dir}/${bundles[lang].locale}.json`, "utf8"));
     bundles[lang].strings = bundleContents;
   }
