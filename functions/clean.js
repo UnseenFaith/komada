@@ -12,7 +12,10 @@ function sensitivePattern(client) {
 
 module.exports = (client, text) => {
   if (typeof (text) === "string") {
-    return text.replace(sensitivePattern(client), "「ｒｅｄａｃｔｅｄ」").replace(client.user.email, "「ｒｅｄａｃｔｅｄ」").replace(/`/g, `\`${String.fromCharCode(8203)}`).replace(/@/g, `@${String.fromCharCode(8203)}`);
+    if (client.user.email) {
+      text.replace(client.user.email, "「ｒｅｄａｃｔｅｄ」");
+    }
+    return text.replace(sensitivePattern(client), "「ｒｅｄａｃｔｅｄ」").replace(/`/g, `\`${String.fromCharCode(8203)}`).replace(/@/g, `@${String.fromCharCode(8203)}`);
   }
   return text;
 };
