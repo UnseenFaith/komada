@@ -9,8 +9,9 @@ exports.run = (client, msg, [code]) => {
     msg.channel.sendCode("xl", client.funcs.clean(client, evaled));
   } catch (err) {
     msg.channel.sendMessage(`\`ERROR\` \`\`\`xl\n${
-      client.funcs.clean(err)
+      client.funcs.clean(client, err)
       }\n\`\`\``);
+      if (err.stack) client.funcs.log(err.stack, 'error');
   }
 };
 
