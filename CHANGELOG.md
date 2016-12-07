@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Various linting issues (still more to come)
 - Fixed README errors.
 - Fixed Unnecessary 'Redacted' values
+- Eval Now Properly Shows Errors (and Traces in Console)
 
 ### Removed
 - Herobrine
