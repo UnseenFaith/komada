@@ -320,7 +320,6 @@ exports.run = (client, msg, cmd) => new Promise((resolve, reject) => {
           break;
         case "url": // eslint-disable-line no-case-declarations
           const res = url.parse(args[i]);
-          console.log(res);
           if (!res.protocol && !res.hostname) {
             if (currentUsage.type === "optional" && !repeat) {
               args.splice(i, 0, undefined);
@@ -535,7 +534,6 @@ exports.run = (client, msg, cmd) => new Promise((resolve, reject) => {
             break;
           case "url": // eslint-disable-line no-case-declarations
             const res = url.parse(args[i]);
-            console.log(res);
             if (res.protocol && res.hostname) {
               validated = true;
               multiPossibles(++p);
