@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Travis CI
 
 ### Changed
+- All pieces will now initialize their .init() function if available.
 - Permissions. guild.member is now guild.fetchMember (Allows invisible users). This is Evie's addition.
 - Changed `if (msg.author.bot && msg.author.id !== client.user.id) return;` back to `if (msg.author.bot) return;`
 - Various Changes to commands (by Evie)
@@ -19,6 +20,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - ESLint Errors downgraded to Warnings
 
 ### Fixed
+- Pieces loading twice on standalone versions of Komada
 - Critical Bug in confs.js AGAIN. (Aka me derping forgetting its a promise)
 - A derp in my non Node 7 version of Evie's commit.
 - Eval Now Properly Shows Errors (and Traces in Console)
@@ -30,6 +32,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Fixed README errors.
 
 ### Removed
+- ConfsRead event removed.
+- Optional Pieces
 - Herobrine
 
 ## [0.10.0] - 2016-11-21

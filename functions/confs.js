@@ -42,7 +42,7 @@ exports.init = (client) => {
         }).catch(err => client.funcs.log(err, "error"));
       })
       .on("end", () => {
-        client.emit("confsRead");
+        client.funcs.log(`Guild Confs have finished loading`, "log");
       });
   });
 };

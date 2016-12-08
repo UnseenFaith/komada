@@ -28,9 +28,15 @@ const loadEvents = (client, baseDir, count) => new Promise((resolve, reject) => 
 
 module.exports = (client) => {
   const count = 0;
-  loadEvents(client, client.coreBaseDir, count).then((counts) => {
-    loadEvents(client, client.clientBaseDir, counts).then((countss) => {
-      client.funcs.log(`Loaded ${countss} events`);
+  if (client.coreBaseDir !== client.clientBaseDir) {
+    loadEvents(client, client.coreBaseDir, count).then((counts) => {
+      loadEvents(client, client.clientBaseDir, counts).then((countss) => {
+        client.funcs.log(`Loaded ${countss} events`);
+      });
     });
-  });
+  } else {
+    loadEvents(client, client.coreBaseDir, count).then((counts) => {
+      client.funcs.log(`Loaded ${counts} events`);
+    });
+  }
 };
