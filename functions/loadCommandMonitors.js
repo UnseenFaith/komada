@@ -1,38 +1,23 @@
 const fs = require("fs-extra-promise");
 const path = require("path");
 
-module.exports = (client) => {
-  client.commandMonitors.clear();
-  const count = [0, 0];
-  loadCommandMonitors(client, client.coreBaseDir, count).then((counts) => {
-    loadCommandMonitors(client, client.clientBaseDir, counts).then((countss) => {
-      const [p, o] = countss;
-      client.funcs.log(`Loaded ${p} command monitors, with ${o} optional.`);
-    });
-  });
-};
-
 const loadCommandMonitors = (client, baseDir, counts) => new Promise((resolve, reject) => {
   const dir = path.resolve(`${baseDir}./monitors/`);
   fs.ensureDirAsync(dir)
   .then(() => {
     fs.readdirAsync(dir)
     .then((files) => {
-      let [p, o] = counts;
+      let c = counts;
       try {
         files = files.filter(f => f.slice(-3) === ".js");
         files.forEach((f) => {
           const file = f.split(".");
-          let props;
-          if (file[1] !== "opt") {
-            props = require(`${dir}/${f}`);
-            client.commandMonitors.set(file[0], props);
-            p++;
-          } else if (client.config.commandMonitors.includes(file[0])) {
-            props = require(`${dir}/${f}`);
-            client.commandMonitors.set(file[0], props);
-            o++;
+          const props = require(`${dir}/${f}`);
+          client.commandMonitors.set(file[0], props);
+          if (props.init) {
+            props.init(client);
           }
+          c++;
         });
       } catch (e) {
         if (e.code === "MODULE_NOT_FOUND") {
@@ -41,16 +26,34 @@ const loadCommandMonitors = (client, baseDir, counts) => new Promise((resolve, r
               .then(() => {
                 client.funcs.loadCommandMonitors(client);
               })
-              .catch((e) => {
-                console.error(e);
+              .catch((err) => {
+                console.error(err);
                 process.exit();
               });
         } else {
           reject(e);
         }
       }
-      resolve([p, o]);
+      resolve(c);
     }).catch(err => client.funcs.log(err, "error"));
   })
   .catch(err => client.funcs.log(err, "error"));
 });
+
+module.exports = (client) => {
+  client.commandMonitors.clear();
+  const count = 0;
+  if (client.coreBaseDir !== client.clientBaseDir) {
+    loadCommandMonitors(client, client.coreBaseDir, count).then((counts) => {
+      loadCommandMonitors(client, client.clientBaseDir, counts).then((countss) => {
+        const c = countss;
+        client.funcs.log(`Loaded ${c} command monitors.`);
+      });
+    });
+  } else {
+    loadCommandMonitors(client, client.coreBaseDir, count).then((counts) => {
+      const c = counts;
+      client.funcs.log(`Loaded ${c} command monitors.`);
+    });
+  }
+};

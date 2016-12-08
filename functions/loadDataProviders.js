@@ -7,23 +7,17 @@ const loadDataProviders = (client, baseDir, counts) => new Promise((resolve, rej
   .then(() => {
     fs.readdirAsync(dir)
     .then((files) => {
-      let [d, o] = counts;
+      let c = counts;
       try {
         files = files.filter(f => f.slice(-3) === ".js");
         files.forEach((f) => {
           const file = f.split(".");
-          let props;
-          if (file[1] !== "opt") {
-            props = require(`${dir}/${f}`);
-            client.dataProviders.set(file[0], props);
+          const props = require(`${dir}/${f}`);
+          client.dataProviders.set(file[0], props);
+          if (props.init) {
             props.init(client);
-            d++;
-          } else if (client.config.dataProviders.includes(file[0])) {
-            props = require(`${dir}/${f}`);
-            client.dataProviders.set(file[0], props);
-            props.init(client);
-            o++;
           }
+          c++;
         });
       } catch (e) {
         if (e.code === "MODULE_NOT_FOUND") {
@@ -32,26 +26,33 @@ const loadDataProviders = (client, baseDir, counts) => new Promise((resolve, rej
               .then(() => {
                 client.funcs.loadDataProviders(client, baseDir, counts);
               })
-              .catch((e) => {
-                console.error(e);
+              .catch((err) => {
+                console.error(err);
                 process.exit();
               });
         } else {
           reject(e);
         }
       }
-      resolve([d, o]);
+      resolve(c);
     }).catch(err => client.funcs.log(err, "error"));
   }).catch(err => client.funcs.log(err, "error"));
 });
 
 module.exports = (client) => {
   client.dataProviders.clear();
-  const count = [0, 0];
-  loadDataProviders(client, client.coreBaseDir, count).then((counts) => {
-    loadDataProviders(client, client.clientBaseDir, counts).then((countss) => {
-      const [d, o] = countss;
-      client.funcs.log(`Loaded ${d} database handlers, with ${o} optional.`);
+  const count = 0;
+  if (client.coreBaseDir !== client.clientBaseDir) {
+    loadDataProviders(client, client.coreBaseDir, count).then((counts) => {
+      loadDataProviders(client, client.clientBaseDir, counts).then((countss) => {
+        const c = countss;
+        client.funcs.log(`Loaded ${c} database handlers.`);
+      });
     });
-  });
+  } else {
+    loadDataProviders(client, client.coreBaseDir, count).then((counts) => {
+      const c = counts;
+      client.funcs.log(`Loaded ${c} database handlers.`);
+    });
+  }
 };

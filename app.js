@@ -35,17 +35,6 @@ exports.start = (config) => {
 
   client.once("ready", () => {
     client.config.prefixMention = new RegExp(`^<@!?${client.user.id}>`);
-    for (const func in client.funcs) {
-      if (client.funcs[func].init) client.funcs[func].init(client);
-    }
-  });
-
-  client.once("confsRead", () => {
-    client.commands.forEach((command) => {
-      if (command.init) {
-        command.init(client);
-      }
-    });
   });
 
   client.on("message", (msg) => {
