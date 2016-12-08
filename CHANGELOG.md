@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - ESLint Errors downgraded to Warnings
 
 ### Fixed
+- Critical Bug in confs.js AGAIN. (Aka me derping forgetting its a promise)
 - A derp in my non Node 7 version of Evie's commit.
 - Eval Now Properly Shows Errors (and Traces in Console)
 - Fixed Unnecessary 'Redacted' values

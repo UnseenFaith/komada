@@ -37,9 +37,9 @@ exports.init = (client) => {
         if (fileinfo.name === "default") return;
         const guildID = fileinfo.name;
         fs.readJSONAsync(path.resolve(`${dataDir}${path.sep}${fileinfo.base}`))
-        .then((err, thisConf) => {
+        .then((thisConf) => {
           guildConfs.set(guildID, thisConf);
-        });
+        }).catch(err => client.funcs.log(err, "error"));
       })
       .on("end", () => {
         client.emit("confsRead");
