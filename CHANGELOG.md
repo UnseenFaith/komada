@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Fixed README errors.
 
 ### Removed
+- ConfsRead event removed.
 - Optional Pieces
 - Herobrine
 
