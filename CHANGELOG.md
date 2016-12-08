@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Travis CI
 
 ### Changed
+- Permissions. guild.member is now guild.fetchMember (Allows invisible users). This is Evie's addition.
+- Changed `if (msg.author.bot && msg.author.id !== client.user.id) return;` back to `if (msg.author.bot) return;`
+- Various Changes to commands (by Evie)
 - Usage URL Tag has been changed from Regex to Native Node `URL` Module.
 - confs.js is back to Async (Critical Performance bug fixed)
 - Functions.js now able to reload new pieces.
@@ -16,6 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - ESLint Errors downgraded to Warnings
 
 ### Fixed
+- A derp in my non Node 7 version of Evie's commit.
 - Eval Now Properly Shows Errors (and Traces in Console)
 - Fixed Unnecessary 'Redacted' values
 - Typos
