@@ -3,7 +3,7 @@ module.exports = (client, user, guild = null) => new Promise((resolve, reject) =
   let permlvl = 0;
   if (guild) {
     try {
-      const member = guild.member(user);
+      const member = guild.fetchMember(user);
       const modRole = guild.roles.find("name", guildConf.modRole);
       if (modRole && member.roles.has(modRole.id)) {
         permlvl = 2;

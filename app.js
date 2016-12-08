@@ -35,7 +35,9 @@ exports.start = (config) => {
 
   client.once("ready", () => {
     client.config.prefixMention = new RegExp(`^<@!?${client.user.id}>`);
-    client.funcs.confs.init(client);
+    for (const func in client.funcs) {
+      if (client.funcs[func].init) client.funcs[func].init(client);
+    }
   });
 
   client.once("confsRead", () => {
@@ -47,7 +49,7 @@ exports.start = (config) => {
   });
 
   client.on("message", (msg) => {
-    if (msg.author.bot && msg.author.id !== client.user.id) return;
+    if (msg.author.bot) return;
     const conf = client.funcs.confs.get(msg.guild);
     msg.guildConf = conf;
     client.i18n.use(conf.lang);
