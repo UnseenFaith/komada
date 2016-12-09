@@ -2,46 +2,46 @@ exports.run = (client, msg, [type, name]) => {
   switch (type) {
     case "function":
       msg.channel.sendMessage(`Attemping to reload function ${name}`).then((m) => {
-        client.funcs.reload.function(client, msg, client.clientBaseDir, name).then(() => {
-          m.edit(`:white_check_mark: Succesfully reloaded function ${name}`);
+        client.funcs.reload.function(client, client.clientBaseDir, name).then((message) => {
+          m.edit(`:white_check_mark: ${message}`);
         }).catch((e) => {
-          m.edit(e);
+          m.edit(`:x: ${e}`);
         });
       });
       break;
     case "inhibitor":
       msg.channel.sendMessage(`Attempting to reload inhibitor ${name}`).then((m) => {
-        client.funcs.reload.inhibitor(client, msg, client.clientBaseDir, name).then(() => {
-          m.edit(`:white_check_mark: Succesfully reloaded inhibitor ${name}`);
+        client.funcs.reload.inhibitor(client, client.clientBaseDir, name).then((message) => {
+          m.edit(`:white_check_mark: ${message}`);
         }).catch((e) => {
-          m.edit(e);
+          m.edit(`:x: ${e}`);
         });
       });
       break;
     case "monitor":
       msg.channel.sendMessage(`Attempting to reload monitor ${name}`).then((m) => {
-        client.funcs.reload.monitor(client, msg, client.clientBaseDir, name).then(() => {
-          m.edit(`:white_check_mark: Succesfully reloaded monitor ${name}`);
+        client.funcs.reload.monitor(client, client.clientBaseDir, name).then((message) => {
+          m.edit(`:white_check_mark: ${message}`);
         }).catch((e) => {
-          m.edit(e);
+          m.edit(`:x: ${e}`);
         });
       });
       break;
     case "provider":
       msg.channel.sendMessage(`Attempting to reload provider ${name}`).then((m) => {
-        client.funcs.reload.provider(client, msg, client.clientBaseDir, name).then(() => {
-          m.edit(`:white_check_mark: Succesfully reloaded provider ${name}`);
+        client.funcs.reload.provider(client, client.clientBaseDir, name).then((message) => {
+          m.edit(`:white_check_mark: ${message}`);
         }).catch((e) => {
-          m.edit(e);
+          m.edit(`:x: ${e}`);
         });
       });
       break;
     case "event":
       msg.channel.sendMessage(`Attempting to reload event ${name}`).then((m) => {
-        client.funcs.reload.event(client, msg, name).then(() => {
-          m.edit(`:white_check_mark: Succesfully reloaded event ${name}`);
+        client.funcs.reload.event(client, name).then((message) => {
+          m.edit(`:white_check_mark: ${message}`);
         }).catch((e) => {
-          m.edit(e);
+          m.edit(`:x: ${e}`);
         });
       });
       break;
@@ -53,15 +53,16 @@ exports.run = (client, msg, [type, name]) => {
           break;
         default:
           msg.channel.sendMessage(`Attempting to reload command ${name}`).then((m) => {
-            client.funcs.reload.command(client, msg, client.clientBaseDir, name).then(() => {
-              m.edit(`:white_check_mark: Succesfully reloaded command ${name}`);
+            client.funcs.reload.command(client, client.clientBaseDir, name).then((message) => {
+              m.edit(`:white_check_mark: ${message}`);
             }).catch((e) => {
-              m.edit(e);
+              m.edit(`:x: ${e}`);
             });
           });
           break;
       }
       break;
+      // no default
   }
 };
 

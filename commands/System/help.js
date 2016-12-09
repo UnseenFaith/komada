@@ -40,7 +40,7 @@ const buildHelp = (client, msg) => new Promise((resolve) => {
   const mps = [];
 
   const commandNames = Array.from(client.commands.keys());
-  const longest = commandNames.reduce((longest, str) => Math.max(longest, str.length), 0);
+  const longest = commandNames.reduce((long, str) => Math.max(long, str.length), 0);
 
   client.commands.forEach((command) => {
     mps.push(new Promise((res) => {
@@ -50,7 +50,7 @@ const buildHelp = (client, msg) => new Promise((resolve) => {
             const subcat = command.help.subCategory;
             if (!help.hasOwnProperty(cat)) help[cat] = {};
             if (!help[cat].hasOwnProperty(subcat)) help[cat][subcat] = [];
-            help[cat][subcat].push(`${msg.guildConf.prefix}${command.help.name}::${" ".repeat(longest - command.help.name.length)} ${command.help.description}`);
+            help[cat][subcat].push(`${msg.guildConf.prefix}${command.help.name}${" ".repeat(longest - command.help.name.length)} :: ${command.help.description}`);
             res();
           })
           .catch(() => {

@@ -1,3 +1,5 @@
+const url = require("url");
+
 exports.conf = {
   enabled: true,
   spamProtection: true,
@@ -316,8 +318,9 @@ exports.run = (client, msg, cmd) => new Promise((resolve, reject) => {
             validateArgs(++i);
           }
           break;
-        case "url":
-          if (!/^((https?|ftps?|sftp):\/\/)?(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|(([a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])(\.[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])*\.[a-zA-Z]{2,}))(:\b([0-9]|[1-8][0-9]|9[0-9]|[1-8][0-9]{2}|9[0-8][0-9]|99[0-9]|[1-8][0-9]{3}|9[0-8][0-9]{2}|99[0-8][0-9]|999[0-9]|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])\b)?(\/([a-zA-Z0-9:#[\]@!$&'()*+,;=%-._~]+)?)?$/.test(args[i])) {
+        case "url": // eslint-disable-line no-case-declarations
+          const res = url.parse(args[i]);
+          if (!res.protocol && !res.hostname) {
             if (currentUsage.type === "optional" && !repeat) {
               args.splice(i, 0, undefined);
               validateArgs(++i);
@@ -344,7 +347,7 @@ exports.run = (client, msg, cmd) => new Promise((resolve, reject) => {
             args.splice(i, 0, undefined);
             validateArgs(++i);
           } else {
-            return reject(`Your option didn't match any of the possibilities: (${currentUsage.possibles.map(p => p.name).join(", ")})`);
+            return reject(`Your option didn't match any of the possibilities: (${currentUsage.possibles.map(possibles => possibles.name).join(", ")})`);
           }
           return;
         }
@@ -529,8 +532,9 @@ exports.run = (client, msg, cmd) => new Promise((resolve, reject) => {
               multiPossibles(++p);
             }
             break;
-          case "url":
-            if (/^((https?|ftps?|sftp):\/\/)?(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|(([a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])(\.[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])*\.[a-zA-Z]{2,}))(:\b([0-9]|[1-8][0-9]|9[0-9]|[1-8][0-9]{2}|9[0-8][0-9]|99[0-9]|[1-8][0-9]{3}|9[0-8][0-9]{2}|99[0-8][0-9]|999[0-9]|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])\b)?(\/([a-zA-Z0-9:#[\]@!$&'()*+,;=%-._~]+)?)?$/.test(args[i])) {
+          case "url": // eslint-disable-line no-case-declarations
+            const res = url.parse(args[i]);
+            if (res.protocol && res.hostname) {
               validated = true;
               multiPossibles(++p);
             } else {

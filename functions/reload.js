@@ -1,13 +1,13 @@
 const path = require("path");
-
-exports.function = (client, msg, dir, funcName) => new Promise((resolve, reject) => {
-  if (client.funcs.hasOwnProperty(funcName)) {
-    client.funcs.getFileListing(client, dir, "functions").then((files) => {
+/* eslint-disable import/no-dynamic-require, global-require */
+exports.function = (client, dir, funcName) => new Promise((resolve, reject) => {
+  client.funcs.getFileListing(client, dir, "functions").then((files) => {
+    if (client.funcs.hasOwnProperty(funcName)) {
       const oldFunction = files.filter(f => f.name === funcName);
       if (oldFunction[0]) {
-        client.funcs[funcName] = "";
         try {
           oldFunction.forEach((file) => {
+            client.funcs[funcName] = "";
             delete require.cache[require.resolve(`${file.path}${path.sep}${file.base}`)];
             client.funcs[funcName] = require(`${file.path}${path.sep}${file.base}`);
             if (client.funcs[funcName].init) {
@@ -15,22 +15,47 @@ exports.function = (client, msg, dir, funcName) => new Promise((resolve, reject)
             }
           });
         } catch (error) {
-          reject(`:x: ${error}`);
+          reject(error);
           return;
         }
-        resolve();
+        resolve(`Successfully reloaded the function ${funcName}.`);
       } else {
-        reject(`:x: The function **${funcName}** does not reside in ${dir}functions`);
+        reject(`The function **${funcName}** does not reside in ${dir}functions`);
       }
-    });
-  } else {
-    reject(`:x: The function **${funcName}** does not seem to exist!`);
-  }
+    } else {
+      const newFunction = files.filter(f => f.name === funcName);
+      if (newFunction[0]) {
+        try {
+          newFunction.forEach((file) => {
+            client.funcs[funcName] = require(`${file.path}${path.sep}${file.base}`);
+            if (client.funcs[funcName].init) {
+              client.funcs[funcName].init(client);
+            }
+          });
+          resolve(`Successfully loaded a new function called ${funcName}.`);
+        } catch (error) {
+          if (error.code === "MODULE_NOT_FOUND") {
+            const module = /'[^']+'/g.exec(error.toString());
+            client.funcs.installNPM(module[0].slice(1, -1)).then(() => {
+              client.funcs.reload.function(client, dir, funcName);
+            }).catch((e) => {
+              console.error(e);
+              process.exit();
+            });
+          } else {
+            reject(`Could not load new function data: ${error}`);
+          }
+        }
+      } else {
+        reject(`Could not locate a new function ${funcName} in ${dir}functions`);
+      }
+    }
+  });
 });
 
-exports.inhibitor = (client, msg, dir, inhibName) => new Promise((resolve, reject) => {
-  if (client.commandInhibitors.has(inhibName)) {
-    client.funcs.getFileListing(client, dir, "inhibitors").then((files) => {
+exports.inhibitor = (client, dir, inhibName) => new Promise((resolve, reject) => {
+  client.funcs.getFileListing(client, dir, "inhibitors").then((files) => {
+    if (client.commandInhibitors.has(inhibName)) {
       const oldInhibitor = files.filter(f => f.name === inhibName);
       if (oldInhibitor[0]) {
         try {
@@ -44,22 +69,48 @@ exports.inhibitor = (client, msg, dir, inhibName) => new Promise((resolve, rejec
             }
           });
         } catch (error) {
-          reject(`:x: ${error}`);
+          reject(error);
           return;
         }
-        resolve();
+        resolve(`Successfully reloaded the inhibitor ${inhibName}`);
       } else {
-        reject(`:x: The inhibitor **${inhibName}** does not seem to reside in ${dir}inhibitors`);
+        reject(`The inhibitor **${inhibName}** does not seem to reside in ${dir}inhibitors`);
       }
-    });
-  } else {
-    reject(`:x: The inhibitor **${inhibName}** does not seem to exist!`);
-  }
+    } else {
+      const newInhibitor = files.filter(f => f.name === inhibName);
+      if (newInhibitor[0]) {
+        try {
+          newInhibitor.forEach((file) => {
+            const props = require(`${file.path}${path.sep}${file.base}`);
+            client.commandInhibitors.set(file.name, props);
+            if (props.init) {
+              props.init(client);
+            }
+          });
+          resolve(`Successfully loaded a new inhibitor called ${inhibName}.`);
+        } catch (error) {
+          if (error.code === "MODULE_NOT_FOUND") {
+            const module = /'[^']+'/g.exec(error.toString());
+            client.funcs.installNPM(module[0].slice(1, -1)).then(() => {
+              client.funcs.reload.inhibitor(client, dir, inhibName);
+            }).catch((e) => {
+              console.error(e);
+              process.exit();
+            });
+          } else {
+            reject(`Could not load new inhibitor data: ${error}`);
+          }
+        }
+      } else {
+        reject(`Could not locate a new inhibitor ${inhibName} in ${dir}inhibitors`);
+      }
+    }
+  });
 });
 
-exports.monitor = (client, msg, dir, monitName) => new Promise((resolve, reject) => {
-  if (client.commandMonitors.has(monitName)) {
-    client.funcs.getFileListing(client, dir, "monitors").then((files) => {
+exports.monitor = (client, dir, monitName) => new Promise((resolve, reject) => {
+  client.funcs.getFileListing(client, dir, "monitors").then((files) => {
+    if (client.commandMonitors.has(monitName)) {
       const oldMonitor = files.filter(f => f.name === monitName);
       if (oldMonitor[0]) {
         try {
@@ -73,22 +124,48 @@ exports.monitor = (client, msg, dir, monitName) => new Promise((resolve, reject)
             }
           });
         } catch (error) {
-          reject(`:x: ${error}`);
+          reject(error);
           return;
         }
-        resolve();
+        resolve(`Succesfully reloaded the monitor ${monitName}.`);
       } else {
-        reject(`:x: The monitor **${monitName}** does not reside in ${dir}monitors`);
+        reject(`The monitor **${monitName}** does not reside in ${dir}monitors`);
       }
-    });
-  } else {
-    reject(`:x: The monitor **${monitName}** does not seem to exist!`);
-  }
+    } else {
+      const newMonitor = files.filter(f => f.name === monitName);
+      if (newMonitor[0]) {
+        try {
+          newMonitor.forEach((file) => {
+            const props = require(`${file.path}${path.sep}${file.base}`);
+            client.commandMonitors.set(file.name, props);
+            if (props.init) {
+              props.init(client);
+            }
+          });
+          resolve(`Successfully loaded a new monitor called ${monitName}.`);
+        } catch (error) {
+          if (error.code === "MODULE_NOT_FOUND") {
+            const module = /'[^']+'/g.exec(error.toString());
+            client.funcs.installNPM(module[0].slice(1, -1)).then(() => {
+              client.funcs.reload.monitor(client, dir, monitName);
+            }).catch((e) => {
+              console.error(e);
+              process.exit();
+            });
+          } else {
+            reject(`Could not load new monitor data: ${error}`);
+          }
+        }
+      } else {
+        reject(`Could not locate a new monitor ${monitName} in ${dir}monitors`);
+      }
+    }
+  });
 });
 
-exports.provider = (client, msg, dir, providerName) => new Promise((resolve, reject) => {
-  if (client.dataProviders.has(providerName)) {
-    client.funcs.getFileListing(client, dir, "dataProviders").then((files) => {
+exports.provider = (client, dir, providerName) => new Promise((resolve, reject) => {
+  client.funcs.getFileListing(client, dir, "dataProviders").then((files) => {
+    if (client.dataProviders.has(providerName)) {
       const oldProvider = files.filter(f => f.name === providerName);
       if (oldProvider[0]) {
         try {
@@ -102,20 +179,46 @@ exports.provider = (client, msg, dir, providerName) => new Promise((resolve, rej
             }
           });
         } catch (error) {
-          reject(`:x: ${error}`);
+          reject(error);
           return;
         }
-        resolve();
+        resolve(`Successfully reloaded the provider ${providerName}.`);
       } else {
-        reject(`:x: The provider **${providerName}** does not seem to reside in ${dir}dataProviders`);
+        reject(`The provider **${providerName}** does not seem to reside in ${dir}dataProviders`);
       }
-    });
-  } else {
-    reject(`:x: The provider **${providerName}** does not seem to exist!`);
-  }
+    } else {
+      const newProvider = files.filter(f => f.name === providerName);
+      if (newProvider[0]) {
+        try {
+          newProvider.forEach((file) => {
+            const props = require(`${file.path}${path.sep}${file.base}`);
+            client.dataProviders.set(file.name, props);
+            if (props.init) {
+              props.init(client);
+            }
+          });
+          resolve(`Successfully loaded a new provider called ${providerName}.`);
+        } catch (error) {
+          if (error.code === "MODULE_NOT_FOUND") {
+            const module = /'[^']+'/g.exec(error.toString());
+            client.funcs.installNPM(module[0].slice(1, -1)).then(() => {
+              client.funcs.reload.provider(client, dir, providerName);
+            }).catch((e) => {
+              console.error(e);
+              process.exit();
+            });
+          } else {
+            reject(`Could not load new provider data: ${error}`);
+          }
+        }
+      } else {
+        reject(`Could not locate a new provider ${providerName} in ${dir}providers`);
+      }
+    }
+  });
 });
 
-exports.event = (client, msg, eventName) => new Promise((resolve, reject) => {
+exports.event = (client, eventName) => new Promise((resolve, reject) => {
   client.funcs.getFileListing(client, client.clientBaseDir, "events").then((files) => {
     const oldEvent = files.filter(f => f.name === eventName);
     if (oldEvent[0] && oldEvent[0].name === eventName) {
@@ -132,17 +235,17 @@ exports.event = (client, msg, eventName) => new Promise((resolve, reject) => {
           client.on(file.name, (...args) => require(`${file.path}${path.sep}${file.base}`).run(client, ...args));
         });
       } catch (error) {
-        reject(`:x: ${error}`);
+        reject(error);
         return;
       }
-      resolve();
+      resolve(`Successfully reloaded the event ${eventName}`);
     } else {
-      reject(`:x: The event **${eventName}** does not seem to exist!`);
+      reject(`The event **${eventName}** does not seem to exist!`);
     }
   });
 });
 
-exports.command = (client, msg, commandName) => new Promise((resolve, reject) => {
+exports.command = (client, dir, commandName) => new Promise((resolve, reject) => {
   let command;
   if (client.commands.has(commandName)) {
     command = commandName;
@@ -156,18 +259,18 @@ exports.command = (client, msg, commandName) => new Promise((resolve, reject) =>
         newCommands.forEach((file) => {
           client.funcs.loadSingleCommand(client, command, false, `${file.path}${path.sep}${file.base}`)
                 .catch((e) => {
-                  reject(`:x: ${e}`);
+                  reject(e);
                 });
         });
       });
-    resolve();
+    resolve(`Succesully loaded a new command called ${commandName}`);
   } else {
     client.funcs.loadSingleCommand(client, command, true)
           .then(() => {
-            resolve();
+            resolve(`Succesfully reloaded the command ${commandName}`);
           })
           .catch((e) => {
-            reject(`:x: ${e}`);
+            reject(e);
           });
   }
 });

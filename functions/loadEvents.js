@@ -1,4 +1,4 @@
-const fs = require("fs-extra");
+const fs = require("fs-extra-promise");
 const path = require("path");
 
 let events = require("discord.js/src/util/Constants.js").Events;
@@ -7,10 +7,10 @@ events = Object.keys(events).map(k => events[k]);
 
 const loadEvents = (client, baseDir, count) => new Promise((resolve, reject) => {
   const dir = path.resolve(`${baseDir}./events/`);
-  fs.ensureDir(dir, (err) => {
-    if (err) reject(err);
-    fs.readdir(dir, (error, files) => {
-      if (error) reject(err);
+  fs.ensureDirAsync(dir)
+  .then(() => {
+    fs.readdirAsync(dir)
+    .then((files) => {
       let e = count;
       files = files.filter((f) => {
         const name = f.split(".")[0];
@@ -22,15 +22,21 @@ const loadEvents = (client, baseDir, count) => new Promise((resolve, reject) => 
         e++;
       });
       resolve(e);
-    });
-  });
+    }).catch(err => reject(err));
+  }).catch(err => reject(err));
 });
 
 module.exports = (client) => {
   const count = 0;
-  loadEvents(client, client.coreBaseDir, count).then((counts) => {
-    loadEvents(client, client.clientBaseDir, counts).then((countss) => {
-      client.funcs.log(`Loaded ${countss} events`);
+  if (client.coreBaseDir !== client.clientBaseDir) {
+    loadEvents(client, client.coreBaseDir, count).then((counts) => {
+      loadEvents(client, client.clientBaseDir, counts).then((countss) => {
+        client.funcs.log(`Loaded ${countss} events`);
+      });
     });
-  });
+  } else {
+    loadEvents(client, client.coreBaseDir, count).then((counts) => {
+      client.funcs.log(`Loaded ${counts} events`);
+    });
+  }
 };

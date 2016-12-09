@@ -1,12 +1,12 @@
-const fs = require("fs-extra");
+const fs = require("fs-extra-promise");
 const path = require("path");
 
 const loadCommands = (client, baseDir, counts) => new Promise((resolve, reject) => {
   const dir = path.resolve(`${baseDir}./commands/`);
   let [c, a] = counts;
   try {
-    fs.ensureDir(dir, (err) => {
-      if (err) reject(err);
+    fs.ensureDirAsync(dir)
+    .then(() => {
       fs.walk(dir)
         .on("data", (item) => {
           const fileinfo = path.parse(item.path);
@@ -29,7 +29,7 @@ const loadCommands = (client, baseDir, counts) => new Promise((resolve, reject) 
         .on("end", () => {
           resolve([c, a]);
         });
-    });
+    }).catch(err => reject(err));
   } catch (e) {
     if (e.code === "MODULE_NOT_FOUND") {
       const module = /'[^']+'/g.exec(e.toString());
@@ -50,9 +50,9 @@ const loadCommands = (client, baseDir, counts) => new Promise((resolve, reject) 
 module.exports = (client) => {
   client.commands.clear();
   client.aliases.clear();
-  const counts = [0, 0];
-  loadCommands(client, client.coreBaseDir, counts).then((count) => {
-    loadCommands(client, client.clientBaseDir, count).then((countss) => {
+  const count = [0, 0];
+  loadCommands(client, client.coreBaseDir, count).then((counts) => {
+    loadCommands(client, client.clientBaseDir, counts).then((countss) => {
       const [c, a] = countss;
       client.funcs.log(`Loaded ${c} commands, with ${a} aliases.`);
     });

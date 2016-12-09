@@ -1,38 +1,23 @@
-const fs = require("fs-extra");
+const fs = require("fs-extra-promise");
 const path = require("path");
-
-module.exports = (client) => {
-  client.commandInhibitors.clear();
-  const counts = [0, 0];
-  loadCommandInhibitors(client, client.coreBaseDir, counts).then((counts) => {
-    loadCommandInhibitors(client, client.clientBaseDir, counts).then((counts) => {
-      const [p, o] = counts;
-      client.funcs.log(`Loaded ${p} command inhibitors, with ${o} optional.`);
-    });
-  });
-};
 
 const loadCommandInhibitors = (client, baseDir, counts) => new Promise((resolve, reject) => {
   const dir = path.resolve(`${baseDir}./inhibitors/`);
-  fs.ensureDir(dir, (err) => {
-    if (err) console.error(err);
-    fs.readdir(dir, (err, files) => {
-      if (err) console.error(err);
-      let [p, o] = counts;
+  fs.ensureDirAsync(dir)
+  .then(() => {
+    fs.readdirAsync(dir)
+    .then((files) => {
+      let c = counts;
       try {
         files = files.filter(f => f.slice(-3) === ".js");
         files.forEach((f) => {
           const file = f.split(".");
-          let props;
-          if (file[1] !== "opt") {
-            props = require(`${dir}/${f}`);
-            client.commandInhibitors.set(file[0], props);
-            p++;
-          } else if (client.config.commandInhibitors.includes(file[0])) {
-            props = require(`${dir}/${f}`);
-            client.commandInhibitors.set(file[0], props);
-            o++;
+          const props = require(`${dir}/${f}`);
+          client.commandInhibitors.set(file[0], props);
+          if (props.init) {
+            props.init(client);
           }
+          c++;
         });
       } catch (e) {
         if (e.code === "MODULE_NOT_FOUND") {
@@ -41,15 +26,38 @@ const loadCommandInhibitors = (client, baseDir, counts) => new Promise((resolve,
               .then(() => {
                 client.funcs.loadCommandInhibitors(client);
               })
-              .catch((e) => {
-                console.error(e);
+              .catch((err) => {
+                console.error(err);
                 process.exit();
               });
         } else {
           reject(e);
         }
       }
-      resolve([p, o]);
+      resolve(c);
+    })
+    .catch((err) => {
+      client.funcs.log(err, "error");
     });
-  });
+  })
+.catch(err => client.funcs.log(err, "error"));
 });
+
+
+module.exports = (client) => {
+  client.commandInhibitors.clear();
+  const count = 0;
+  if (client.coreBaseDir !== client.clientBaseDir) {
+    loadCommandInhibitors(client, client.coreBaseDir, count).then((counts) => {
+      loadCommandInhibitors(client, client.clientBaseDir, counts).then((countss) => {
+        const c = countss;
+        client.funcs.log(`Loaded ${c} command inhibitors.`);
+      });
+    });
+  } else {
+    loadCommandInhibitors(client, client.coreBaseDir, count).then((counts) => {
+      const c = counts;
+      client.funcs.log(`Loaded ${c} command inhibitors.`);
+    });
+  }
+};

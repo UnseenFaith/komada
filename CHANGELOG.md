@@ -6,6 +6,38 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [0.11.0] - 2016-12-9
+### Added
+- Travis CI
+
+### Changed
+- All pieces will now initialize their .init() function if available.
+- Permissions. guild.member is now guild.fetchMember (Allows invisible users). This is Evie's addition.
+- Changed `if (msg.author.bot && msg.author.id !== client.user.id) return;` back to `if (msg.author.bot) return;`
+- Various Changes to commands (by Evie)
+- Usage URL Tag has been changed from Regex to Native Node `URL` Module.
+- confs.js is back to Async (Critical Performance bug fixed)
+- Functions.js now able to reload new pieces.
+- Reload.js removal of msgs.
+- ESLint Errors downgraded to Warnings
+
+### Fixed
+- Pieces loading twice on standalone versions of Komada
+- Critical Bug in confs.js AGAIN. (Aka me derping forgetting its a promise)
+- A derp in my non Node 7 version of Evie's commit.
+- Eval Now Properly Shows Errors (and Traces in Console)
+- Fixed Unnecessary 'Redacted' values
+- Typos
+- Bitwise Ternary removal
+- Updated README
+- Various linting issues (still more to come)
+- Fixed README errors.
+
+### Removed
+- ConfsRead event removed.
+- Optional Pieces
+- Herobrine
+
 ## [0.10.0] - 2016-11-21
 ### Added
 - Reloading for Functions, Events, Inhibitors, Monitors from [UnseenFaith]
@@ -32,17 +64,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Various Confs fixes from [UnseenFaith]
 - Usage Addition/ParseUsage fix from [UnseenFaith]
 
-### Contribution Count (Latest Update)
-- [UnseenFaith]:    12 contributions
-- [CyberiumShadow]: 4 contributions
-- [bdistin]:        1 contribution
-- [hkwu]:           1 contribution
-- [eslachance]:     1 contribution
-- [vzwGrey]:        1 contribution
-
-
-[Unreleased]: https://github.com/eslachance/komada/compare/0.10.0...HEAD
+[Unreleased]: https://github.com/eslachance/komada/compare/0.11.0...indev
 [0.10.0]: https://github.com/eslachance/komada/compare/1627e6deb1d8c352d83e52ccd590f2330f5f8bb2...0.10.0
+[0.11.0]: https://github.com/eslachance/komada/compare/0.10.0...0.11.0
 
 [vzwGrey]: https://github.com/vzwGrey
 [eslachance]: https://github.com/eslachance

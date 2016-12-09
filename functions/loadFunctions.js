@@ -1,51 +1,59 @@
-const fs = require("fs-extra");
+const fs = require("fs-extra-promise");
 const path = require("path");
 
 const loadFunctions = (client, baseDir, counts) => new Promise((resolve, reject) => {
   const dir = path.resolve(`${baseDir}./functions/`);
-  fs.ensureDirSync(dir);
-  fs.readdir(dir, (err, files) => {
-    if (err) reject(err);
-    files = files.filter(f => f.slice(-3) === ".js");
-    let [d, o] = counts;
-    try {
-      files.forEach((f) => {
-        const file = f.split(".");
-        if (file[0] === "loadFunctions") return;
-        if (file[1] !== "opt") {
+  fs.ensureDirAsync(dir)
+  .then(() => {
+    fs.readdirAsync(dir)
+    .then((files) => {
+      files = files.filter(f => f.slice(-3) === ".js");
+      let c = counts;
+      try {
+        files.forEach((f) => {
+          const file = f.split(".");
+          if (file[0] === "loadFunctions") return;
           client.funcs[file[0]] = require(`${dir}/${f}`);
-          d++;
-        } else if (client.config.functions.includes(file[0])) {
-          client.funcs[file[0]] = require(`${dir}/${f}`);
-          o++;
+          if (client.funcs[file[0]].init) {
+            client.funcs[file[0]].init(client);
+          }
+          c++;
+        });
+        resolve(c);
+      } catch (e) {
+        if (e.code === "MODULE_NOT_FOUND") {
+          const module = /'[^']+'/g.exec(e.toString());
+          client.funcs.installNPM(module[0].slice(1, -1))
+              .then(() => {
+                client.funcs.loadFunctions(client);
+              })
+              .catch((error) => {
+                console.error(error);
+                process.exit();
+              });
+        } else {
+          reject(e);
         }
-      });
-      resolve([d, o]);
-    } catch (e) {
-      if (e.code === "MODULE_NOT_FOUND") {
-        const module = /'[^']+'/g.exec(e.toString());
-        client.funcs.installNPM(module[0].slice(1, -1))
-            .then(() => {
-              client.funcs.loadDatabaseHandlers(client);
-            })
-            .catch((error) => {
-              console.error(error);
-              process.exit();
-            });
-      } else {
-        reject(e);
       }
-    }
-  });
+    }).catch(err => client.funcs.log(err, "error"));
+  }).catch(err => client.funcs.log(err, "error"));
 });
 
 module.exports = client => new Promise((resolve, reject) => {
-  const counts = [0, 0];
-  loadFunctions(client, client.coreBaseDir, counts).then((count) => {
-    loadFunctions(client, client.clientBaseDir, count).then((countss) => {
-      const [d, o] = countss;
-      client.funcs.log(`Loaded ${d} functions, with ${o} optional.`);
+  const count = 0;
+  if (client.coreBaseDir !== client.clientBaseDir) {
+    loadFunctions(client, client.coreBaseDir, count).then((counts) => {
+      loadFunctions(client, client.clientBaseDir, counts).then((countss) => {
+        const c = countss;
+        client.funcs.log(`Loaded ${c} functions.`);
+        resolve();
+      });
+    }).catch(reject);
+  } else {
+    loadFunctions(client, client.coreBaseDir, count).then((counts) => {
+      const c = counts;
+      client.funcs.log(`Loaded ${c} functions.`);
       resolve();
-    });
-  }).catch(reject);
+    }).catch(reject);
+  }
 });
