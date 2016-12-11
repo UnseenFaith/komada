@@ -5,6 +5,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Changed
+- Help no longer placing un-catergorised commands in its own "catergory"
+
+### Fixed
+- guildConfs not being in sync after file operation + Better error handling
+
 
 ## [0.11.0] - 2016-12-9
 ### Added
