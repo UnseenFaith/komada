@@ -19,9 +19,6 @@ module.exports = (client, command, reload = false, loadPath = null) => new Promi
       });
       delete require.cache[require.resolve(loadPath)];
       cmd = require(loadPath);
-      if (cmd.init) {
-        cmd.init(client);
-      }
     } catch (e) {
       reject(`Could not load existing command data: ${e.stack}`);
     }
@@ -31,12 +28,9 @@ module.exports = (client, command, reload = false, loadPath = null) => new Promi
       if (cmd.conf.selfbot && !client.config.selfbot) {
         return reject(`The command \`${cmd.help.name}\` is only usable in selfbots!`);
       }
-      if (cmd.init) {
-        cmd.init(client);
-      }
       let pathParts = loadPath.split(path.sep);
       pathParts = pathParts.slice(pathParts.indexOf("commands") + 1);
-      category = client.funcs.toTitleCase(cmd.help.category ? cmd.help.category : (pathParts[0] && pathParts[0].length > 0 ? pathParts[0] : "General"));
+      category = client.funcs.toTitleCase(cmd.help.category ? cmd.help.category : (pathParts[0] && pathParts[0].length > 0 && pathParts[0].indexOf(".") === -1 ? pathParts[0] : "General"));
       subCategory = client.funcs.toTitleCase(cmd.help.subCategory ? cmd.help.subCategory : (pathParts[1] && pathParts[1].length > 0 && pathParts[1].indexOf(".") === -1 ? pathParts[1] : "General"));
     } catch (e) {
       if (e.code === "MODULE_NOT_FOUND") {
