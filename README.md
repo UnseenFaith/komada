@@ -228,11 +228,11 @@ a larger bot and you need to make use of the shardingManager, but can't do since
 it's a native Discord.js function, well now you can.
 
 Current Methods are:
-Collections => `client.methods.collection`
-Rich Embed Builder => `client.methods.embed`
-Message Collector => `client.methods.messageCollector`
-ShardingManager => `client.methods.shard`
-WebhookClient => `client.methods.webhook`
+Collections => `client.methods.Collection`
+Rich Embed Builder => `client.methods.Embed`
+Message Collector => `client.methods.MessageCollector`
+ShardingManager => `client.methods.Shard`
+WebhookClient => `client.methods.Webhook`
 
 To use any of the methods, you follow this same structure:
 ```js
@@ -241,5 +241,5 @@ let method = new client.methods.<MethodName>(OptionalMethodProperties);
 
 So if you need to create a Message Collector, you will do:
 ```js
-let messageCollector = new client.methods.messageCollector(channelid, filter, options);
+let messageCollector = new client.methods.MessageCollector(channelid, filter, options);
 ```
