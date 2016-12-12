@@ -1,6 +1,6 @@
 module.exports = (client, msg) => new Promise((resolve, reject) => {
   const mps = [true];
-  client.commandMonitors.forEach((mProc) => {
+  client.messageMonitors.forEach((mProc) => {
     if (mProc.conf.enabled) {
       mps.push(mProc.run(client, msg));
     }

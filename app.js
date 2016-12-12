@@ -16,8 +16,16 @@ exports.start = (config) => {
   client.commands = new Discord.Collection();
   client.aliases = new Discord.Collection();
   client.commandInhibitors = new Discord.Collection();
-  client.commandMonitors = new Discord.Collection();
+  client.messageMonitors = new Discord.Collection();
   client.dataProviders = new Discord.Collection();
+
+  // Extend Client with Native Discord.js Functions for use in our pieces.
+  client.methods = {};
+  client.methods.Collection = Discord.Collection;
+  client.methods.Embed = Discord.RichEmbed;
+  client.methods.MessageCollector = Discord.MessageCollector;
+  client.methods.Shard = Discord.ShardingManager;
+  client.methods.Webhook = Discord.WebhookClient;
 
   client.coreBaseDir = `${__dirname}/`;
   client.clientBaseDir = `${process.cwd()}/`;
@@ -27,7 +35,7 @@ exports.start = (config) => {
     client.funcs.loadDataProviders(client);
     client.funcs.loadCommands(client);
     client.funcs.loadCommandInhibitors(client);
-    client.funcs.loadCommandMonitors(client);
+    client.funcs.loadmessageMonitors(client);
     client.funcs.loadEvents(client);
     client.i18n = client.funcs.loadLocalizations;
     client.i18n.init(client);
@@ -42,7 +50,7 @@ exports.start = (config) => {
     const conf = client.funcs.confs.get(msg.guild);
     msg.guildConf = conf;
     client.i18n.use(conf.lang);
-    client.funcs.runCommandMonitors(client, msg).catch(reason => msg.channel.sendMessage(reason).catch(console.error));
+    client.funcs.runMessageMonitors(client, msg).catch(reason => msg.channel.sendMessage(reason).catch(console.error));
     if (!msg.content.startsWith(conf.prefix) && !client.config.prefixMention.test(msg.content)) return;
     let prefixLength = conf.prefix.length;
     if (client.config.prefixMention.test(msg.content)) prefixLength = client.config.prefixMention.exec(msg.content)[0].length + 1;
