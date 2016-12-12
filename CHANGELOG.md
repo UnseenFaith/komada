@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Added
-- client.methods.<MethodName>
+- client.methods.MethodName
 
 ### Changed
 - commandMonitors renamed to messageMonitors
