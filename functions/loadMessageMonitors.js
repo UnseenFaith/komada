@@ -1,7 +1,7 @@
 const fs = require("fs-extra-promise");
 const path = require("path");
 
-const loadCommandMonitors = (client, baseDir, counts) => new Promise((resolve, reject) => {
+const loadMessageMonitors = (client, baseDir, counts) => new Promise((resolve, reject) => {
   const dir = path.resolve(`${baseDir}./monitors/`);
   fs.ensureDirAsync(dir)
   .then(() => {
@@ -13,7 +13,7 @@ const loadCommandMonitors = (client, baseDir, counts) => new Promise((resolve, r
         files.forEach((f) => {
           const file = f.split(".");
           const props = require(`${dir}/${f}`);
-          client.commandMonitors.set(file[0], props);
+          client.messageMonitors.set(file[0], props);
           if (props.init) {
             props.init(client);
           }
@@ -24,7 +24,7 @@ const loadCommandMonitors = (client, baseDir, counts) => new Promise((resolve, r
           const module = /'[^']+'/g.exec(e.toString());
           client.funcs.installNPM(module[0].slice(1, -1))
               .then(() => {
-                client.funcs.loadCommandMonitors(client);
+                client.funcs.loadMessageMonitors(client);
               })
               .catch((err) => {
                 console.error(err);
@@ -41,17 +41,17 @@ const loadCommandMonitors = (client, baseDir, counts) => new Promise((resolve, r
 });
 
 module.exports = (client) => {
-  client.commandMonitors.clear();
+  client.messageMonitors.clear();
   const count = 0;
   if (client.coreBaseDir !== client.clientBaseDir) {
-    loadCommandMonitors(client, client.coreBaseDir, count).then((counts) => {
-      loadCommandMonitors(client, client.clientBaseDir, counts).then((countss) => {
+    loadMessageMonitors(client, client.coreBaseDir, count).then((counts) => {
+      loadMessageMonitors(client, client.clientBaseDir, counts).then((countss) => {
         const c = countss;
         client.funcs.log(`Loaded ${c} command monitors.`);
       });
     });
   } else {
-    loadCommandMonitors(client, client.coreBaseDir, count).then((counts) => {
+    loadMessageMonitors(client, client.coreBaseDir, count).then((counts) => {
       const c = counts;
       client.funcs.log(`Loaded ${c} command monitors.`);
     });

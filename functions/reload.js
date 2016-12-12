@@ -110,15 +110,15 @@ exports.inhibitor = (client, dir, inhibName) => new Promise((resolve, reject) =>
 
 exports.monitor = (client, dir, monitName) => new Promise((resolve, reject) => {
   client.funcs.getFileListing(client, dir, "monitors").then((files) => {
-    if (client.commandMonitors.has(monitName)) {
+    if (client.messageMonitors.has(monitName)) {
       const oldMonitor = files.filter(f => f.name === monitName);
       if (oldMonitor[0]) {
         try {
           oldMonitor.forEach((file) => {
-            client.commandMonitors.delete(file.name);
+            client.messageMonitors.delete(file.name);
             delete require.cache[require.resolve(`${file.path}${path.sep}${file.base}`)];
             const props = require(`${file.path}${path.sep}${file.base}`);
-            client.commandMonitors.set(file.name, props);
+            client.messageMonitors.set(file.name, props);
             if (props.init) {
               props.init(client);
             }
@@ -137,7 +137,7 @@ exports.monitor = (client, dir, monitName) => new Promise((resolve, reject) => {
         try {
           newMonitor.forEach((file) => {
             const props = require(`${file.path}${path.sep}${file.base}`);
-            client.commandMonitors.set(file.name, props);
+            client.messageMonitors.set(file.name, props);
             if (props.init) {
               props.init(client);
             }

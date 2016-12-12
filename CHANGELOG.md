@@ -5,7 +5,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- client.methods.<MethodName>
+
 ### Changed
+- messageMonitors renamed to messageMonitors
 - Help no longer placing un-catergorised commands in its own "catergory"
 
 ### Fixed
