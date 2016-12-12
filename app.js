@@ -19,6 +19,14 @@ exports.start = (config) => {
   client.commandMonitors = new Discord.Collection();
   client.dataProviders = new Discord.Collection();
 
+  // Extend Client with Native Discord.js Functions for use in our pieces.
+  client.methods = {};
+  client.methods.collection = Discord.Collection;
+  client.methods.embed = Discord.RichEmbed;
+  client.methods.messageCollector = Discord.MessageCollector;
+  client.methods.shard = Discord.ShardingManager;
+  client.methods.webhook = Discord.WebhookClient;
+
   client.coreBaseDir = `${__dirname}/`;
   client.clientBaseDir = `${process.cwd()}/`;
 
