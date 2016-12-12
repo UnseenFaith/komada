@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - client.methods.<MethodName>
 
 ### Changed
-- messageMonitors renamed to messageMonitors
+- commandMonitors renamed to messageMonitors
 - Help no longer placing un-catergorised commands in its own "catergory"
 
 ### Fixed
