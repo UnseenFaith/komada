@@ -227,6 +227,13 @@ export them to any other piece that we may need them in. For example, if your bo
 a larger bot and you need to make use of the shardingManager, but can't do since
 it's a native Discord.js function, well now you can.
 
+Current Methods are:
+Collections => `client.methods.collection`
+Rich Embed Builder => `client.methods.embed`
+Message Collector => `client.methods.messageCollector`
+ShardingManager => `client.methods.shard`
+WebhookClient => `client.methods.webhook`
+
 To use any of the methods, you follow this same structure:
 ```js
 let method = new client.methods.<MethodName>(OptionalMethodProperties);
