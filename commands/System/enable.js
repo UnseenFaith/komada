@@ -4,7 +4,7 @@ exports.run = (client, msg, [type, name]) => {
     case "inhibitor":
       let inhibitor;
       if (client.commandInhibitors.has(name)) {
-        inhibitor = client.commandInhibitors.get(name);
+        inhibitor = name;
       }
       if (!inhibitor) {
         msg.channel.sendCode("diff", `- I cannot find the inhibitor: ${name}`);
@@ -15,7 +15,7 @@ exports.run = (client, msg, [type, name]) => {
     case "monitor":
       let monitor;
       if (client.messageMonitors.has(name)) {
-        monitor = client.messageMonitors.get(name);
+        monitor = name;
       }
       if (!monitor) {
         return msg.channel.sendCode("diff", `- I cannot find the monitor: ${name}`);
