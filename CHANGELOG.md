@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Help no longer placing un-catergorised commands in its own "catergory"
 
 ### Fixed
+- User && Member usage types now correctly work when given IDs
 - MessageMonitor function now actually called MessageMonitor instead of commandMonitor
 - guildConfs not being in sync after file operation + Better error handling
 
