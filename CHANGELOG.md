@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - client.methods.MethodName
 
 ### Changed
+- Disable Command changed to allow Inhibitors, Monitors and Commands to be disabled
+- Enable Command Changed to allow Inhibitors, Monitors and Commands to be disabled
 - commandMonitors renamed to messageMonitors
 - Help no longer placing un-catergorised commands in its own "catergory"
 
