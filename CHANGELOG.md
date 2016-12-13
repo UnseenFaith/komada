@@ -5,6 +5,49 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- client.methods.MethodName
+
+### Changed
+- commandMonitors renamed to messageMonitors
+- Help no longer placing un-catergorised commands in its own "catergory"
+
+### Fixed
+- MessageMonitor function now actually called MessageMonitor instead of commandMonitor
+- guildConfs not being in sync after file operation + Better error handling
+
+
+## [0.11.0] - 2016-12-9
+### Added
+- Travis CI
+
+### Changed
+- All pieces will now initialize their .init() function if available.
+- Permissions. guild.member is now guild.fetchMember (Allows invisible users). This is Evie's addition.
+- Changed `if (msg.author.bot && msg.author.id !== client.user.id) return;` back to `if (msg.author.bot) return;`
+- Various Changes to commands (by Evie)
+- Usage URL Tag has been changed from Regex to Native Node `URL` Module.
+- confs.js is back to Async (Critical Performance bug fixed)
+- Functions.js now able to reload new pieces.
+- Reload.js removal of msgs.
+- ESLint Errors downgraded to Warnings
+
+### Fixed
+- Pieces loading twice on standalone versions of Komada
+- Critical Bug in confs.js AGAIN. (Aka me derping forgetting its a promise)
+- A derp in my non Node 7 version of Evie's commit.
+- Eval Now Properly Shows Errors (and Traces in Console)
+- Fixed Unnecessary 'Redacted' values
+- Typos
+- Bitwise Ternary removal
+- Updated README
+- Various linting issues (still more to come)
+- Fixed README errors.
+
+### Removed
+- ConfsRead event removed.
+- Optional Pieces
+- Herobrine
 
 ## [0.11.0] - 2016-12-9
 ### Added

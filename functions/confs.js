@@ -42,7 +42,7 @@ exports.init = (client) => {
         }).catch(err => client.funcs.log(err, "error"));
       })
       .on("end", () => {
-        client.funcs.log(`Guild Confs have finished loading`, "log");
+        client.funcs.log("Guild Confs have finished loading", "log");
       });
   });
 };
@@ -88,7 +88,7 @@ exports.addKey = (key, defaultValue) => {
 
 exports.setKey = (key, defaultValue) => {
   if (!(key in defaultConf)) {
-    throw new Error(`:x: The key \`${key}\` does not seem to be present in the default configuration.`);
+    throw new Error(`The key \`${key}\` does not seem to be present in the default configuration.`);
   }
   switch (defaultConf[key].type) {
     case "Array": {
@@ -108,13 +108,13 @@ exports.setKey = (key, defaultValue) => {
       } else if (defaultValue === "false") {
         defaultValue = false;
       } else {
-        throw new Error(`:x: The value ${defaultValue} does not correspond to the type boolean.`);
+        throw new Error(`The value ${defaultValue} does not correspond to the type boolean.`);
       }
       break;
     case "Integer":
       defaultValue = parseInt(defaultValue);
       if (isNaN(defaultValue)) {
-        throw new Error(`:x: The value ${defaultValue} does not correspond to the type integer.`);
+        throw new Error(`The value ${defaultValue} does not correspond to the type integer.`);
       }
       break;
     default:
@@ -126,13 +126,16 @@ exports.setKey = (key, defaultValue) => {
 };
 
 exports.resetKey = (guild, key) => {
+  if (!(key in defaultConf)) {
+    throw new Error(`The key ${key} does not seem to be present in the default configuration.`);
+  }
   if (!guildConfs.has(guild.id)) {
-    throw new Error(`:x: The guild ${guild.name}(${guild.id}) not found while trying to reset ${key}`);
+    throw new Error(`The guild ${guild.name}(${guild.id}) not found while trying to reset ${key}`);
   }
   fs.readJSONAsync(path.resolve(`${dataDir}${path.sep}${guild.id}.json`))
   .then((thisConf) => {
     if (!(key in thisConf)) {
-      throw new Error(`:x: The key \`${key}\` does not seem to be present in the server configuration.`);
+      throw new Error(`The key ${key} does not seem to be present in the server configuration.`);
     }
     delete thisConf[key];
     if (Object.keys(thisConf).length > 0) {
@@ -141,16 +144,17 @@ exports.resetKey = (guild, key) => {
       return thisConf;
     }
     fs.removeAsync(path.resolve(`${dataDir}${path.sep}${guild.id}.json`));
+    guildConfs.set(guild.id, defaultConf);
     return `Deleted empty configuration file for ${guild.name}`;
   });
 };
 
 exports.delKey = (key) => {
   if (!(key in defaultConf)) {
-    throw new Error(`:x: The key \`${key}\` does not seem to be present in the default configuration.`);
+    throw new Error(`The key \`${key}\` does not seem to be present in the default configuration.`);
   }
   if (["modRole", "adminRole", "disabledCommands", "prefix"].includes(key)) {
-    throw new Error(`:x: The key \`${key}\` is core and cannot be deleted.`);
+    throw new Error(`The key \`${key}\` is core and cannot be deleted.`);
   }
   delete defaultConf[key];
   fs.outputJSONAsync(path.resolve(`${dataDir}${path.sep}${defaultFile}`), defaultConf)
