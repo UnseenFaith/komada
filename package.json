@@ -1,6 +1,6 @@
 {
   "name": "komada",
-  "version": "0.11.2",
+  "version": "0.11.3",
   "author": "Evelyne Lachance",
   "description": "Komada: Croatian for 'pieces', is a modular bot system including reloading modules and easy to use custom commands.",
   "main": "app.js",
