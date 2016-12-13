@@ -93,7 +93,7 @@ exports.run = (client, msg, cmd) => new Promise((resolve, reject) => {
           break;
         case "user":
         case "mention":
-          if (/^<@!?\d+>$/.test(args[i]) || (client.users.has(/\d+/.exec(args[i])[0]) && args[i].length > 5)) {
+          if (/^<@!?\d+>$/.test(args[i]) && client.users.has(/\d+/.exec(args[i])[0]) && args[i].length > 5) {
             args[i] = client.users.get(/\d+/.exec(args[i])[0]);
             validateArgs(++i);
           } else if (currentUsage.type === "optional" && !repeat) {
@@ -119,7 +119,7 @@ exports.run = (client, msg, cmd) => new Promise((resolve, reject) => {
           }
           break;
         case "member":
-          if (/^<@!?\d+>$/.test(args[i]) || (msg.guild.members.has(/\d+/.exec(args[i])[0]) && args[i].length > 5)) {
+          if (/^<@!?\d+>$/.test(args[i]) && msg.guild.members.has(/\d+/.exec(args[i])[0]) && args[i].length > 5) {
             args[i] = msg.guild.members.get(/\d+/.exec(args[i])[0]);
             validateArgs(++i);
           } else if (currentUsage.type === "optional" && !repeat) {
