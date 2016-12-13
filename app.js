@@ -35,7 +35,7 @@ exports.start = (config) => {
     client.funcs.loadDataProviders(client);
     client.funcs.loadCommands(client);
     client.funcs.loadCommandInhibitors(client);
-    client.funcs.loadmessageMonitors(client);
+    client.funcs.loadMessageMonitors(client);
     client.funcs.loadEvents(client);
     client.i18n = client.funcs.loadLocalizations;
     client.i18n.init(client);
