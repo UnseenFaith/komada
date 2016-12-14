@@ -42,7 +42,7 @@ exports.init = (client) => {
         }).catch(err => client.funcs.log(err, "error"));
       })
       .on("end", () => {
-        client.funcs.log(`Guild Confs have finished loading`, "log");
+        client.funcs.log("Guild Confs have finished loading", "log");
       });
   });
 };
@@ -125,19 +125,23 @@ exports.setKey = (key, defaultValue) => {
   return defaultConf;
 };
 
-exports.resetKey = (guild, key) => {
-  if (!(key in defaultConf)) {
-    throw new Error(`The key ${key} does not seem to be present in the default configuration.`);
-  }
+exports.resetKey = (guild, ...keys) => {
+  keys.forEach((key, element) => { // eslint-disable-line no-unused-vars
+    if (!(key in defaultConf)) {
+      throw new Error(`The key ${key} does not seem to be present in the default configuration.`);
+    }
+  });
   if (!guildConfs.has(guild.id)) {
-    throw new Error(`The guild ${guild.name}(${guild.id}) not found while trying to reset ${key}`);
+    throw new Error(`The guild ${guild.name}(${guild.id}) not found while trying to reset ${keys.join(", ")}`);
   }
   fs.readJSONAsync(path.resolve(`${dataDir}${path.sep}${guild.id}.json`))
   .then((thisConf) => {
-    if (!(key in thisConf)) {
-      throw new Error(`The key ${key} does not seem to be present in the server configuration.`);
-    }
-    delete thisConf[key];
+    keys.forEach((key, element) => { // eslint-disable-line no-unused-vars
+      if (!(key in thisConf)) {
+        throw new Error(`The key ${key} does not seem to be present in the server configuration.`);
+      }
+      delete thisConf[key];
+    });
     if (Object.keys(thisConf).length > 0) {
       guildConfs.set(guild.id, thisConf);
       fs.outputJSONAsync(path.resolve(`${dataDir}${path.sep}${guild.id}.json`), thisConf);
