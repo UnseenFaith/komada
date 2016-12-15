@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [0.12.0] - 2016-12-15
 ### Added
 - client.methods.MethodName
 
@@ -81,9 +83,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Various Confs fixes from [UnseenFaith]
 - Usage Addition/ParseUsage fix from [UnseenFaith]
 
-[Unreleased]: https://github.com/eslachance/komada/compare/80e1117f7022fd2cecb654066b6f79c451f3e9f4...indev
+[Unreleased]: https://github.com/eslachance/komada/compare/0.12.0...indev
 [0.10.0]: https://github.com/eslachance/komada/compare/1627e6deb1d8c352d83e52ccd590f2330f5f8bb2...0.10.0
 [0.11.0]: https://github.com/eslachance/komada/compare/0.10.0...0.11.0
+[0.12.0]: https://github.com/eslachance/komada/compare/0.11.0...0.12.0
 
 [vzwGrey]: https://github.com/vzwGrey
 [eslachance]: https://github.com/eslachance
