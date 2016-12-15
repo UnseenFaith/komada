@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - client.methods.MethodName
 
 ### Changed
+- ownerid is now following camelCase (ownerID). If this not changed in your client app.js. Your permissions **WILL** Break.
 - Disable Command changed to allow Inhibitors, Monitors and Commands to be disabled
 - Enable Command Changed to allow Inhibitors, Monitors and Commands to be disabled
 - commandMonitors renamed to messageMonitors

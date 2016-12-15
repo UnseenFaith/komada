@@ -26,7 +26,7 @@ Create a file called `app.js` (or whatever you prefer) which will initiate and c
 const komada = require('komada');
 komada.start({
   "botToken": "your-bot-token",
-  "ownerid" : "your-user-id",
+  "ownerID" : "your-user-id",
   "clientID": "the-invite-app-id",
   "prefix": "+",
   "clientOptions": {
