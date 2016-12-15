@@ -15,7 +15,7 @@ module.exports = (client, user, guild = null) => new Promise((resolve, reject) =
         if (member === guild.owner) {
           permlvl = 4;
         }
-        if (user.id === client.config.ownerid) {
+        if (user.id === client.config.ownerID) {
           permlvl = 10;
         }
         resolve(permlvl);
