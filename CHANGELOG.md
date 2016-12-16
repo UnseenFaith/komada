@@ -5,6 +5,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- confs.getRaw(<Guild>) returns the entire configuration for developers.
+
+### Changed
+- confs.addKey(key, defaultValue, min value, max value) and .setKey() and .set() changed to account for integers. This is backwards compatible with older versions.
+
+### Fixed
+- Tons of Confs fixes and changes to be more consistent.
 
 ## [0.12.0] - 2016-12-15
 ### Added
