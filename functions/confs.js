@@ -16,6 +16,7 @@ exports.init = (client) => {
     adminRole: { type: "String", data: "Devs" },
     lang: { type: "String", data: "en" },
   };
+
   fs.ensureFileAsync(`${dataDir}${path.sep}${defaultFile}`)
   .then(() => {
     fs.readJSONAsync(path.resolve(`${dataDir}${path.sep}${defaultFile}`))
@@ -73,7 +74,22 @@ exports.get = (guild) => {
   return conf;
 };
 
-exports.addKey = (key, defaultValue) => {
+exports.getRaw = (guild) => {
+  const conf = {};
+  if (guild && guildConfs.has(guild.id)) {
+    const guildConf = guildConfs.get(guild.id);
+    for (const key in guildConf) {
+      if (guildConf[key]) conf[key] = guildConf[key];
+      else conf[key] = defaultConf[key];
+    }
+  }
+  for (const key in defaultConf) {
+    if (!conf[key]) conf[key] = defaultConf[key];
+  }
+  return conf;
+};
+
+exports.addKey = (key, defaultValue, min = null, max = null) => {
   const type = defaultValue.constructor.name;
   if (["TextChannel", "GuildChannel", "Message", "User", "GuildMember", "Guild", "Role", "VoiceChannel", "Emoji", "Invite"].includes(type)) {
     defaultValue = defaultValue.id;
@@ -82,13 +98,17 @@ exports.addKey = (key, defaultValue) => {
     return "Invalid Value was provided";
   }
   defaultConf[key] = { type: defaultValue.constructor.name, data: defaultValue };
+  if (type === "Number") {
+    defaultConf[key].min = min;
+    defaultConf[key].max = max;
+  }
   fs.outputJSONAsync(path.resolve(`${dataDir}${path.sep}${defaultFile}`), defaultConf);
   return "Key has been successfully added.";
 };
 
 exports.setKey = (key, defaultValue) => {
   if (!(key in defaultConf)) {
-    throw new Error(`The key \`${key}\` does not seem to be present in the default configuration.`);
+    throw new Error(`The key ${key} does not seem to be present in the default configuration.`);
   }
   switch (defaultConf[key].type) {
     case "Array": {
@@ -111,10 +131,14 @@ exports.setKey = (key, defaultValue) => {
         throw new Error(`The value ${defaultValue} does not correspond to the type boolean.`);
       }
       break;
-    case "Integer":
+    case "Number":
       defaultValue = parseInt(defaultValue);
       if (isNaN(defaultValue)) {
         throw new Error(`The value ${defaultValue} does not correspond to the type integer.`);
+      } else if (defaultConf[key].max !== null && defaultValue > defaultConf[key].max) {
+        throw new Error(`The value ${defaultValue} is bigger than the max value ${defaultConf[key].max}`);
+      } else if (defaultConf[key].min !== null && defaultValue < defaultConf[key].min) {
+        throw new Error(`The value ${defaultValue} is smaller than the min value ${defaultConf[key].min}`);
       }
       break;
     default:
@@ -145,20 +169,19 @@ exports.resetKey = (guild, ...keys) => {
     if (Object.keys(thisConf).length > 0) {
       guildConfs.set(guild.id, thisConf);
       fs.outputJSONAsync(path.resolve(`${dataDir}${path.sep}${guild.id}.json`), thisConf);
-      return thisConf;
+      return;
     }
-    fs.removeAsync(path.resolve(`${dataDir}${path.sep}${guild.id}.json`));
     guildConfs.set(guild.id, defaultConf);
-    return `Deleted empty configuration file for ${guild.name}`;
+    fs.removeAsync(path.resolve(`${dataDir}${path.sep}${guild.id}.json`));
   });
 };
 
 exports.delKey = (key) => {
   if (!(key in defaultConf)) {
-    throw new Error(`The key \`${key}\` does not seem to be present in the default configuration.`);
+    throw new Error(`The key ${key} does not seem to be present in the default configuration.`);
   }
-  if (["modRole", "adminRole", "disabledCommands", "prefix"].includes(key)) {
-    throw new Error(`The key \`${key}\` is core and cannot be deleted.`);
+  if (["modRole", "adminRole", "disabledCommands", "prefix", "lang"].includes(key)) {
+    throw new Error(`The key ${key} is core and cannot be deleted.`);
   }
   delete defaultConf[key];
   fs.outputJSONAsync(path.resolve(`${dataDir}${path.sep}${defaultFile}`), defaultConf)
@@ -168,10 +191,9 @@ exports.delKey = (key) => {
       delete conf[key];
       if (Object.keys(conf).length > 0) {
         fs.outputJSONAsync(path.resolve(`${dataDir}${path.sep}${MapIter.next().value}.json`), conf);
-        return true;
+        return;
       }
       fs.removeAsync(path.resolve(`${dataDir}${path.sep}${MapIter.next().value}.json`));
-      return "Deleted Empty Configuration Files";
     });
   });
 };
@@ -185,7 +207,7 @@ exports.set = (guild, key, value) => {
   }
 
   if (!(key in defaultConf)) {
-    throw new Error(`:x: The key \`${key}\` is not valid according to the Default Configuration.`);
+    throw new Error(`The key ${key} is not valid according to the Default Configuration.`);
   }
 
   switch (defaultConf[key].type) {
@@ -206,13 +228,17 @@ exports.set = (guild, key, value) => {
       } else if (value === "false") {
         value = false;
       } else {
-        throw new Error(`:x: The value ${value} does not correspond to the Boolean type.`);
+        throw new Error(`The value ${value} does not correspond to the Boolean type.`);
       }
       break;
-    case "Integer":
+    case "Number":
       value = parseInt(value);
       if (isNaN(value)) {
-        throw new Error(`:x: The value ${value} does not correspond to the Integer type.`);
+        throw new Error(`The value ${value} does not correspond to the Number type.`);
+      } else if (defaultConf[key].max !== null && value > defaultConf[key].max) {
+        throw new Error(`The value ${value} is bigger than the max value ${defaultConf[key].max}`);
+      } else if (defaultConf[key].min !== null && value < defaultConf[key].min) {
+        throw new Error(`The value ${value} is smaller than the min value ${defaultConf[key].min}`);
       }
       break;
     default:
