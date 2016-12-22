@@ -12,8 +12,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - confs.addKey(key, defaultValue, min value, max value) and .setKey() and .set() changed to account for integers. This is backwards compatible with older versions.
 
 ### Fixed
-- Tons of Confs fixes and changes to be more consistent.
 - Commands can now be used in DM with proper permission levels
+- Tons of Confs fixes and changes to be more consistent.
 
 ### Removed
 - Removed `client.methods.Shard` aka `ShardingManager` due to how Sharding works (ie. Needs an additional file to spawn the ShardingManager)
