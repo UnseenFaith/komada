@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - confs.addKey(key, defaultValue, min value, max value) and .setKey() and .set() changed to account for integers. This is backwards compatible with older versions.
 
 ### Fixed
+- Commands can now be used in DM with proper permission levels
 - Tons of Confs fixes and changes to be more consistent.
 
 ### Removed
