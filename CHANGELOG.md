@@ -14,6 +14,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - Tons of Confs fixes and changes to be more consistent.
 
+### Removed
+- Removed `client.methods.Shard` aka `ShardingManager` due to how Sharding works (ie. Needs an additional file to spawn the ShardingManager)
+
 ## [0.12.0] - 2016-12-15
 ### Added
 - client.methods.MethodName

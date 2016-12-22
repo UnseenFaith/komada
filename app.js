@@ -24,7 +24,6 @@ exports.start = (config) => {
   client.methods.Collection = Discord.Collection;
   client.methods.Embed = Discord.RichEmbed;
   client.methods.MessageCollector = Discord.MessageCollector;
-  client.methods.Shard = Discord.ShardingManager;
   client.methods.Webhook = Discord.WebhookClient;
 
   client.coreBaseDir = `${__dirname}/`;
