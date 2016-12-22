@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - Tons of Confs fixes and changes to be more consistent.
+- Commands can now be used in DM with proper permission levels
 
 ### Removed
 - Removed `client.methods.Shard` aka `ShardingManager` due to how Sharding works (ie. Needs an additional file to spawn the ShardingManager)
