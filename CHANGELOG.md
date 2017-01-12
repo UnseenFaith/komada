@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [0.12.4] - 2017-01-13
 ### Added
 - confs.getRaw(<Guild>) returns the entire configuration for developers.
 
@@ -12,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - confs.addKey(key, defaultValue, min value, max value) and .setKey() and .set() changed to account for integers. This is backwards compatible with older versions.
 
 ### Fixed
+- Dependecy Issue with Upstream Dependency changing repo structure.
 - Commands can now be used in DM with proper permission levels
 - Tons of Confs fixes and changes to be more consistent.
 
@@ -95,10 +98,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Various Confs fixes from [UnseenFaith]
 - Usage Addition/ParseUsage fix from [UnseenFaith]
 
-[Unreleased]: https://github.com/eslachance/komada/compare/0.12.0...indev
+[Unreleased]: https://github.com/eslachance/komada/compare/0.12.4...indev
 [0.10.0]: https://github.com/eslachance/komada/compare/1627e6deb1d8c352d83e52ccd590f2330f5f8bb2...0.10.0
 [0.11.0]: https://github.com/eslachance/komada/compare/0.10.0...0.11.0
 [0.12.0]: https://github.com/eslachance/komada/compare/0.11.0...0.12.0
+[0.12.4]: https://github.com/eslachance/komada/compare/0.12.0...0.12.4
 
 [vzwGrey]: https://github.com/vzwGrey
 [eslachance]: https://github.com/eslachance
