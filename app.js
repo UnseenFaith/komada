@@ -44,6 +44,10 @@ exports.start = (config) => {
     client.config.prefixMention = new RegExp(`^<@!?${client.user.id}>`);
   });
 
+  client.on("error", e => client.funcs.log(e, "error"));
+  client.on("warn", w => client.funcs.log(w, "warning"));
+  client.on("disconnect", e => client.funcs.log(e, "error"));
+
   client.on("message", (msg) => {
     if (msg.author.bot) return;
     const conf = client.funcs.confs.get(msg.guild);
