@@ -50,9 +50,9 @@ exports.start = (config) => {
     msg.guildConf = conf;
     client.i18n.use(conf.lang);
     client.funcs.runMessageMonitors(client, msg).catch(reason => msg.channel.sendMessage(reason).catch(console.error));
-    if (!msg.content.startsWith(conf.prefix) && !client.config.prefixMention.test(msg.content)) return;
+    if (!msg.content.startsWith(conf.prefix) && (client.config.prefixMention && !client.config.prefixMention.test(msg.content))) return;
     let prefixLength = conf.prefix.length;
-    if (client.config.prefixMention.test(msg.content)) prefixLength = client.config.prefixMention.exec(msg.content)[0].length + 1;
+    if (client.config.prefixMention && client.config.prefixMention.test(msg.content)) prefixLength = client.config.prefixMention.exec(msg.content)[0].length + 1;
     const command = msg.content.slice(prefixLength).split(" ")[0].toLowerCase();
     const suffix = msg.content.slice(prefixLength).split(" ").slice(1).join(" ");
     let commandLog;
