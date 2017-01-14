@@ -6,6 +6,7 @@ exports.conf = {
 exports.run = (client, msg, cmd) => new Promise((resolve, reject) => {
   client.funcs.permissionLevel(client, msg.author, msg.guild)
       .then((permlvl) => {
+        msg.member.permLevel = permlvl;
         if (permlvl >= cmd.conf.permLevel) {
           resolve();
         } else {
