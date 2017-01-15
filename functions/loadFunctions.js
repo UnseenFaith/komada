@@ -14,9 +14,10 @@ const loadFunctions = (client, baseDir, counts) => new Promise((resolve, reject)
           const file = f.split(".");
           if (file[0] === "loadFunctions") return;
           client.funcs[file[0]] = require(`${dir}/${f}`);
-          if (client.funcs[file[0]].init) {
-            client.funcs[file[0]].init(client);
-          }
+          // Currently disabled for workaround (See ready event)
+          // if (client.funcs[file[0]].init) {
+          //   client.funcs[file[0]].init(client);
+          // }
           c++;
         });
         resolve(c);
