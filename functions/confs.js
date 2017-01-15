@@ -50,7 +50,7 @@ exports.init = (client) => {
 
 exports.remove = (guild) => {
   if (!guildConfs.has(guild.id)) {
-    return console.log(`Attempting to remove ${guild.name} but it's not there.`);
+    return false;
   }
 
   fs.removeAsync(path.resolve(`${dataDir}${path.sep}${guild.id}.json`));
