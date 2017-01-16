@@ -1,6 +1,6 @@
 # Komada
 
-[![Discord](https://discordapp.com/api/guilds/234357395646578688/embed.png)](http://discord.gg/QnWkbXV)
+[![Discord](https://discordapp.com/api/guilds/234357395646578688/embed.png)](https://discord.gg/dgs8263)
 [![npm](https://img.shields.io/npm/v/komada.svg?maxAge=3600)](https://www.npmjs.com/package/komada)
 [![npm](https://img.shields.io/npm/dt/komada.svg?maxAge=3600)](https://www.npmjs.com/package/komada)
 [![Build Status](https://travis-ci.org/eslachance/komada.svg?branch=indev)](https://travis-ci.org/eslachance/komada)
@@ -44,7 +44,7 @@ npm install
 node app.js
 ```
 
-> Requires Node 6 or higher (because Discord.js requires that), also requires Discord.js v10, installed automatically with `npm install`.
+> Requires Node 6 or higher (because Discord.js requires that), also requires Discord.js v11, installed automatically with `npm install`.
 
 ## Quick & Dirty Reference Guide
 > For creating your own pieces
@@ -220,6 +220,9 @@ exports.run = (client, msg) => {
 };
 ```
 
+> Note: Technically, this means that monitors are message events. You can use this trick
+to get around the normal amount of message events in Komada.. *cough*
+
 ### Using Methods
 
 Methods are just Discord.js native functions added to Komada, so that we may
@@ -231,7 +234,6 @@ Current Methods are:
 Collections => `client.methods.Collection`
 Rich Embed Builder => `client.methods.Embed`
 Message Collector => `client.methods.MessageCollector`
-ShardingManager => `client.methods.Shard`
 WebhookClient => `client.methods.Webhook`
 
 To use any of the methods, you follow this same structure:
