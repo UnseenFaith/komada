@@ -1,6 +1,7 @@
 const Discord = require("discord.js");
 const chalk = require("chalk");
 const loadFunctions = require("./functions/loadFunctions.js");
+const Config = require("./classes/Config.js");
 
 const clk = new chalk.constructor({ enabled: true });
 
@@ -28,6 +29,8 @@ exports.start = (config) => {
 
   client.coreBaseDir = `${__dirname}/`;
   client.clientBaseDir = `${process.cwd()}/`;
+  client.guildConfs = Config.guildConfs;
+  client.configuration = Config;
 
   // Load core functions, then everything else
   loadFunctions(client).then(() => {
@@ -42,6 +45,7 @@ exports.start = (config) => {
 
   client.once("ready", () => {
     client.config.prefixMention = new RegExp(`^<@!?${client.user.id}>`);
+    Config.initialize(client);
     for (const func in client.funcs) {
       if (client.funcs[func].init) client.funcs[func].init(client);
     }
@@ -53,7 +57,7 @@ exports.start = (config) => {
 
   client.on("message", (msg) => {
     if (msg.author.bot) return;
-    const conf = client.funcs.confs.get(msg.guild);
+    const conf = Config.get(msg.guild);
     msg.guildConf = conf;
     client.i18n.use(conf.lang);
     client.funcs.runMessageMonitors(client, msg).catch(reason => msg.channel.sendMessage(reason).catch(console.error));

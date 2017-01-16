@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- New Beta Configuration (Needs heavy testing)
+
+### Removed
+- Old Configuration System
 
 ## [0.12.4] - 2017-01-13
 ### Added
