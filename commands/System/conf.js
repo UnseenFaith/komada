@@ -12,25 +12,17 @@ exports.run = (client, msg, [action, key, ...value]) => {
 
   if (action === "set") {
     if (!key || value[0] === undefined) return msg.reply("Please provide both a key and value!");
-    const type = value[0].constructor.name;
-    if (["TextChannel", "GuildChannel", "Message", "User", "GuildMember", "Guild", "Role", "VoiceChannel", "Emoji", "Invite"].includes(type)) {
-      value = value[0].id;
-    } else {
-      value = value.join(" ").toString();
-    }
-    client.funcs.confs.set(msg.guild, key, value);
-    if (msg.guildConf[key].constructor.name === "Array") {
-      if (msg.guildConf[key].includes(value)) {
-        return msg.reply(`The value ${value} for ${key} has been added.`);
-      }
-      return msg.reply(`The value ${value} for ${key} has been removed.`);
-    }
-    return msg.reply(`The value for ${key} has been set to: ${value}`);
+    const conf = client.guildConfs.get(msg.guild.id);
+    if (conf[key].type === "Boolean") conf[key].toggle();
+    if (conf[key].type === "String") conf[key].set(value[0]);
+    if (conf[key].type === "Number") conf[key].set(value[0]);
+    if (conf[key].type === "Array") conf[key].add(value);
+    return msg.reply(`The new value for ${key} is: ${conf[key].data}`);
   } else
 
   if (action === "reset") {
     if (!key) return msg.reply("Please provide a key you wish to reset");
-    client.funcs.confs.resetKey(msg.guild, key);
+    client.guildConfs.get(msg.guild.id).reset(key);
     return msg.reply("The key has been reset.");
   }
   return false;

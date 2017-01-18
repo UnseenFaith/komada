@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - New Beta Configuration (Needs heavy testing)
 
+### Changed
+- Confs.js uses new configuration system now
 ### Removed
 - Old Configuration System
 
