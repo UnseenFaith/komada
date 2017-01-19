@@ -102,5 +102,6 @@ exports.start = (config) => {
 };
 
 process.on("unhandledRejection", (err) => {
+  if (!err) return;
   console.error(`Uncaught Promise Error: \n${err.stack}`);
 });
