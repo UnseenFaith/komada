@@ -7,7 +7,7 @@ module.exports = (client, msg, cmd, args, error) => {
     })
     .then((param) => {
       message.delete();
-      if (param.first().content === "ABORT") return;
+      if (param.first().content.toLowerCase() === "abort") return;
       args.push(param.first().content);
       client.funcs.runCommandInhibitors(client, msg, cmd, args)
       .then((params) => {
