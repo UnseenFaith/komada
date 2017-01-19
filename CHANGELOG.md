@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 - Confs.js uses new configuration system now
+- Configuration now split into smaller parts as requested.
+
 ### Removed
 - Old Configuration System
 
