@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - loadCommands no longer counts/loads "Ghost" commands.
+- DMs throwing errors with new Config System && permLevel
 
 ### Removed
 - Old Configuration System
