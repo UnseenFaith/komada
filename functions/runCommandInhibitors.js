@@ -1,4 +1,4 @@
-module.exports = (client, msg, cmd, selective = false) => new Promise((resolve, reject) => {
+module.exports = (client, msg, cmd, args, selective = false) => new Promise((resolve, reject) => {
   const mps = [true];
   let i = 1;
   let usage;
