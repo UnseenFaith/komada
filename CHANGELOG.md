@@ -7,11 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Added
 - New Beta Configuration (Needs heavy testing)
-- New Argument Prompting for Commands 
+- New Argument Prompting for Commands
 
 ### Changed
 - Confs.js uses new configuration system now
 - Configuration now split into smaller parts as requested.
+
+### Fixed
+- loadCommands no longer counts/loads "Ghost" commands.
 
 ### Removed
 - Old Configuration System
