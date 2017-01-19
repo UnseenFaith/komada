@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Added
 - New Beta Configuration (Needs heavy testing)
+- New Argument Prompting for Commands 
 
 ### Changed
 - Confs.js uses new configuration system now
