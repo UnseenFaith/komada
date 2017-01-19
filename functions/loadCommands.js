@@ -51,10 +51,17 @@ module.exports = (client) => {
   client.commands.clear();
   client.aliases.clear();
   const count = [0, 0];
-  loadCommands(client, client.coreBaseDir, count).then((counts) => {
-    loadCommands(client, client.clientBaseDir, counts).then((countss) => {
-      const [c, a] = countss;
-      client.funcs.log(`Loaded ${c} commands, with ${a} aliases.`);
+  if (client.coreBaseDir !== client.clientBaseDir) {
+    loadCommands(client, client.coreBaseDir, count).then((counts) => {
+      loadCommands(client, client.clientBaseDir, counts).then((countss) => {
+        const [c, a] = countss;
+        client.funcs.log(`Loaded ${c} commands, with ${a} aliases.`);
+      });
     });
-  });
+  } else {
+    loadCommands(client, client.coreBaseDir, count).then((counts) => {
+      const [c, a] = counts;
+      client.funcs.log(`Loaded ${c} commands with ${a} aliases.`);
+    });
+  }
 };
