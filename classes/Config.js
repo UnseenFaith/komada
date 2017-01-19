@@ -1,224 +1,15 @@
 /* eslint-disable no-restricted-syntax, no-underscore-dangle, no-unused-vars */
 const fs = require("fs-extra-promise");
 const path = require("path");
+const ArrayConfig = require("./Configuration Types/Array.js");
+const BooleanConfig = require("./Configuration Types/Boolean.js");
+const NumberConfig = require("./Configuration Types/Number.js");
+const StringConfig = require("./Configuration Types/String.js");
 
 const guildConfs = new Map();
 let dataDir = "";
 const defaultFile = "default.json";
 let defaultConf = {};
-
-/** The starting point for creating a String configuration key. */
-class StringConfig {
-  /**
-   * @param {Config} conf The guild configuration obtained from the guildConfs map.
-   * @param {Object} data The data you want to append to this String configuration key.
-   * @returns {StringConfig}
-   */
-  constructor(conf, data) {
-    if (typeof data !== "string") this.data = "";
-    else this.data = data;
-    this.type = "String";
-    if (data.possibles) this.possibles = data.possibles;
-    else this.possibles = [];
-    Object.defineProperty(this, "_id", { value: conf._id });
-    return this;
-  }
-
-  /**
-   * Sets the value of a string configurations possibles. This takes into account the list of acceptable answers from the possibles array.
-   * @param {string} value The value you want to set this key to.
-   * @returns {StringConfig}
-   */
-  set(value) {
-    if (!value) return "Please supply a value to set.";
-    if (this.possibles.length !== 0 && !this.possibles.includes(value)) return `That is not a valid option. Valid options: ${this.possibles.join(", ")}`;
-    this.data = value.toString();
-    fs.outputJSONAsync(path.resolve(`${dataDir}${path.sep}${this._id}.json`), guildConfs.get(this._id));
-    return this;
-  }
-
-  /**
-   * Adds a value(s) to list of acceptable answers for this key. Accepts one item or an array of items.
-   * @param {string|array} value The value(s) you want to add to this key.
-   * @returns {StringConfig}
-   */
-  add(value) {
-    if (!value) return "Please supply a value to add to the possibles array.";
-    if (value instanceof Array) {
-      value.forEach((val) => {
-        if (this.possibles.includes(val)) return `The value ${val} is already in ${this.possibles}.`;
-        return this.possibles.push(val);
-      });
-      fs.outputJSONAsync(path.resolve(`${dataDir}${path.sep}${this._id}.json`), guildConfs.get(this._id));
-      return this;
-    }
-    if (this.possibles.includes(value)) return `The value ${value} is already in ${this.possibles}.`;
-    this.possibles.push(value);
-    fs.outputJSONAsync(path.resolve(`${dataDir}${path.sep}${this._id}.json`), guildConfs.get(this._id));
-    return this;
-  }
-
-  /**
-   * Deletes a value(s) from the string configurations possibles. Accepts one item or an array of items.
-   * @param {string|array} value The value(s) you want to delete from this key.
-   * @returns {StringConfig}
-   */
-  del(value) {
-    if (!value) return "Please supply a value to add to the possibles array";
-    if (value instanceof Array) {
-      value.forEach((val) => {
-        if (!this.possibles.includes(val)) return `The value ${value} is not in ${this.possibles}.`;
-        return this.possibles.splice(this.possibles.indexOf(val), 1);
-      });
-      fs.outputJSONAsync(path.resolve(`${dataDir}${path.sep}${this._id}.json`), guildConfs.get(this._id));
-      return this;
-    }
-    if (!this.possibles.includes(value)) return `The value ${value} is not in ${this.possibles}.`;
-    this.possibles.splice(this.possibles.indexOf(value), 1);
-    fs.outputJSONAsync(path.resolve(`${dataDir}${path.sep}${this._id}.json`), guildConfs.get(this._id));
-    return this;
-  }
-}
-
-/** The starting point for creating an Array Configuration key. */
-class ArrayConfig {
-  /**
-   * @param {Config} conf The guild configuration obtained from the guildConfs map.
-   * @param {object} data The data you want to append to this Array configuration key.
-   * @returns {ArrayConfig}
-   */
-  constructor(conf, data) {
-    if (!(data instanceof Array)) this.data = [];
-    else this.data = data;
-    this.type = "Array";
-    Object.defineProperty(this, "_id", { value: conf._id });
-    return this;
-  }
-
-  /**
-   * Adds a value(s) to the array. Accepts a single value or an array of values.
-   * @param {string|array} value The value(s) to add to the array.
-   * @returns {ArrayConfig}
-   */
-  add(value) {
-    if (!value) return "Please supply a value to add to the array.";
-    if (value instanceof Array) {
-      value.forEach((val) => {
-        if (!this.data.includes(val)) return "That value is not in the array.";
-        return this.data.splice(this.data.indexOf(value), 1);
-      });
-      fs.outputJSONAsync(path.resolve(`${dataDir}${path.sep}${this._id}.json`), guildConfs.get(this._id));
-      return this;
-    }
-    if (this.data.includes(value)) return "That value is already in the array.";
-    this.data.push(value);
-    fs.outputJSONAsync(path.resolve(`${dataDir}${path.sep}${this._id}.json`), guildConfs.get(this._id));
-    return this;
-  }
-
-  /**
-   * Deletes a value(s) from the array. Accepts a single value or an array of values.
-   * @param {string|array} value The value(s) to delete from the array.
-   * @returns {ArrayConfig}
-   */
-  del(value) {
-    if (!value) return "Please supply a value to delete from the array";
-    if (value instanceof Array) {
-      value.forEach((val) => {
-        if (!this.data.includes(val)) return "That value is not in the array.";
-        return this.data.splice(this.data.indexOf(value), 1);
-      });
-      fs.outputJSONAsync(path.resolve(`${dataDir}${path.sep}${this._id}.json`), guildConfs.get(this._id));
-      return this;
-    }
-    if (!this.data.includes(value)) return "That value is not in the array.";
-    this.data.splice(this.data.indexOf(value), 1);
-    fs.outputJSONAsync(path.resolve(`${dataDir}${path.sep}${this._id}.json`), guildConfs.get(this._id));
-    return this;
-  }
-}
-
-/** The starting point for creating a Boolean configuration key. */
-class BooleanConfig {
-  /**
-   * @param {Config} conf A guilds configuration obtained from the guildConfs map.
-   * @param {object} data The data you want to append to this boolean key.
-   * @returns {BooleanConfig}
-   */
-  constructor(conf, data) {
-    if (typeof data !== "boolean") this.data = false;
-    else this.data = data;
-    this.type = "Boolean";
-    Object.defineProperty(this, "_id", { value: conf._id });
-    return this;
-  }
-
-  /**
-   * Toggles a boolean statement for the boolean key.
-   * @returns {BooleanConfig}
-   */
-  toggle() {
-    if (this.data === true) this.data = false;
-    else this.data = true;
-    fs.outputJSONAsync(path.resolve(`${dataDir}${path.sep}${this._id}.json`), guildConfs.get(this._id));
-    return this;
-  }
-}
-
-/** The starting point for creating a Number configuration key. */
-class NumberConfig {
-  /**
-   * @param {Config} conf A guilds configuration obtained from the guildConfs map.
-   * @param {object} data The data you want to append to this number key.
-   * @returns {NumberConfig}
-   */
-  constructor(conf, data) {
-    if (typeof data !== "number") this.data = 0;
-    else this.data = data;
-    if (data.min) this.min = data.min;
-    if (data.max) this.max = data.max;
-    this.type = "Number";
-    Object.defineProperty(this, "_id", { value: conf._id });
-    return this;
-  }
-
-  /**
-   * Sets the value for a number key, according to the minimum and maximum values if they apply.
-   * @param {number} value The value you want to set the key as.
-   * @returns {NumberConfig}
-   */
-  set(value) {
-    if (!value) return `Error, value is ${value}. Please supply a value to set.`;
-    if (this.min && parseInt(value) < this.min) return `Error while setting the value. ${value} is less than ${this.min}`;
-    if (this.max && parseInt(value) > this.max) return `Error while setting the value. ${value} is more than ${this.max}`;
-    this.data = value;
-    fs.outputJSONAsync(path.resolve(`${dataDir}${path.sep}${this._id}.json`), guildConfs.get(this._id));
-    return this;
-  }
-
-  /**
-   * Sets the minimum value a number key can be.
-   * @param {number} value The value you want to set the minimum as.
-   * @returns {NumberConfig}
-   */
-  setMin(value) {
-    this.min = value;
-    fs.outputJSONAsync(path.resolve(`${dataDir}${path.sep}${this._id}.json`), guildConfs.get(this._id));
-    return this;
-  }
-
-  /**
-   * Sets the maximum value a number key can bey.
-   * @param {number} value The value you want to set the maximum as.
-   * @returns {NumberConfig}
-   */
-  setMax(value) {
-    this.max = value;
-    fs.outputJSONAsync(path.resolve(`${dataDir}${path.sep}${this._id}.json`), guildConfs.get(this._id));
-    return this;
-  }
-
-}
 
 /**
  * The starting point for creating a Guild configuration
@@ -278,7 +69,6 @@ class Config {
     }
     return this;
   }
-
 
   /**
    * Allows you to add a key to a guild configuration. Note: This should never be called
@@ -596,3 +386,4 @@ class Config {
 
 module.exports = Config;
 module.exports.guildConfs = guildConfs;
+module.exports.dataDir = dataDir;
