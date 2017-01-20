@@ -261,9 +261,10 @@ exports.command = (client, dir, commandName) => new Promise((resolve, reject) =>
                 .catch((e) => {
                   reject(e);
                 });
+          resolve(`Succesfully loaded a new command called ${commandName}`);
         });
       });
-    resolve(`Succesully loaded a new command called ${commandName}`);
+    reject(`Could not locate a new **${command}** in ${dir}`);
   } else {
     client.funcs.loadSingleCommand(client, command, true)
           .then(() => {

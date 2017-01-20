@@ -144,17 +144,21 @@ class Config {
    * //Example of what this returns
    * { prefix: '--', disabledCommands: [], modRole: 'Mods', adminRole: 'Devs', lang: 'en' }
    */
-  static get(guild) {
-    const conf = {};
-    if (guild && guildConfs.has(guild.id)) {
-      const guildConf = guildConfs.get(guild.id);
-      for (const key in guildConf) {
-        if (guildConf[key]) conf[key] = guildConf[key].data;
-        else conf[key] = defaultConf[key].data;
-      }
-    }
-    return conf;
-  }
+   static get(guild) {
+     const conf = {};
+     if (guild && guildConfs.has(guild.id)) {
+       const guildConf = guildConfs.get(guild.id);
+       for (const key in guildConf) {
+         if (guildConf[key]) conf[key] = guildConf[key].data;
+         else conf[key] = defaultConf[key].data;
+       }
+     } else {
+       for (const key in defaultConf) {
+         conf[key] = defaultConf[key].data;
+       }
+     }
+     return conf;
+   }
 
   /**
    * Set the default value for a key in the default configuration.

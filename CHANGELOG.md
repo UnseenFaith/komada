@@ -7,10 +7,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Added
 - New Beta Configuration (Needs heavy testing)
+- New Argument Prompting for Commands
 
 ### Changed
 - Confs.js uses new configuration system now
 - Configuration now split into smaller parts as requested.
+
+### Fixed
+- loadCommands no longer counts/loads "Ghost" commands.
+- DMs throwing errors with new Config System && permLevel
+- Fixed Reload not erroring on new commands that aren't found
 
 ### Removed
 - Old Configuration System
