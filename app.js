@@ -70,7 +70,7 @@ exports.start = (config) => {
     } else {
       thisPrefix = conf.prefix;
     }
-    if (msg.content.startsWith(thisPrefix) && client.config.prefixMention && !client.config.prefixMention.test(msg.content)) return;
+    if (!msg.content.startsWith(thisPrefix) && client.config.prefixMention && !client.config.prefixMention.test(msg.content)) return;
     let prefixLength = thisPrefix.length;
     if (client.config.prefixMention && client.config.prefixMention.test(msg.content)) prefixLength = client.config.prefixMention.exec(msg.content)[0].length + 1;
     const command = msg.content.slice(prefixLength).split(" ")[0].toLowerCase();

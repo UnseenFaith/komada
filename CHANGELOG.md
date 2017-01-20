@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - DMs throwing errors with new Config System && permLevel
 - Fixed Reload not erroring on new commands that aren't found
 - Fixed Bug on Selfbot mentions introduced with the new Argument Prompts
+- Fixed Bug on Help not showing all commands with new Argument System
 
 ### Removed
 - Old Configuration System
