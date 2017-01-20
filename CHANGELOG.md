@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - loadCommands no longer counts/loads "Ghost" commands.
 - DMs throwing errors with new Config System && permLevel
 - Fixed Reload not erroring on new commands that aren't found
+- Fixed Bug on Selfbot mentions introduced with the new Argument Prompts
 
 ### Removed
 - Old Configuration System
