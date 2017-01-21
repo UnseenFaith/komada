@@ -261,14 +261,14 @@ exports.command = (client, dir, commandName) => new Promise((resolve, reject) =>
                 .catch((e) => {
                   reject(e);
                 });
-          resolve(`Succesully loaded a new command called ${commandName}`);
+          resolve(`Successfully loaded a new command called ${commandName}`);
         });
         reject(`Couldn't find a new command called ${commandName}`);
       });
   } else {
     client.funcs.loadSingleCommand(client, command, true)
           .then(() => {
-            resolve(`Succesfully reloaded the command ${commandName}`);
+            resolve(`Successfully reloaded the command ${commandName}`);
           })
           .catch((e) => {
             reject(e);
