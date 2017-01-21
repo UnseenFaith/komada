@@ -12,17 +12,19 @@ exports.run = (client, msg, [cmd]) => {
           helpMessage.push("```\n\u200b");
         }
         if (!client.config.selfbot) {
-        	msg.author.sendMessage(helpMessage, { split: { char: "\u200b" } }).catch((e) => { console.error(e); });
-        	msg.reply('Commands have been sent to your DMs.');
-				} else {msg.channel.sendMessage(helpMessage, { split: { char: "\u200b" } })
-        .catch((e) => { console.error(e); })};
+          msg.author.sendMessage(helpMessage, { split: { char: "\u200b" } }).catch((e) => { console.error(e); });
+          msg.reply("Commands have been sent to your DMs.");
+        } else {
+          msg.channel.sendMessage(helpMessage, { split: { char: "\u200b" } })
+        .catch((e) => { console.error(e); });
+        }
       });
   } else if (client.commands.has(cmd)) {
     cmd = client.commands.get(cmd);
     if (!client.config.selfbot) {
-        msg.author.sendCode("asciidoc", `= ${cmd.help.name} = \n${cmd.help.description}\nusage :: ${client.funcs.fullUsage(client, cmd)}`);
+      msg.author.sendCode("asciidoc", `= ${cmd.help.name} = \n${cmd.help.description}\nusage :: ${client.funcs.fullUsage(client, cmd)}`);
     } else {
-        msg.channel.sendCode("asciidoc", `= ${cmd.help.name} = \n${cmd.help.description}\nusage :: ${client.funcs.fullUsage(client, cmd)}`);
+      msg.channel.sendCode("asciidoc", `= ${cmd.help.name} = \n${cmd.help.description}\nusage :: ${client.funcs.fullUsage(client, cmd)}`);
     }
   }
 };
