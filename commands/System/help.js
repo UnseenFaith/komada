@@ -45,7 +45,7 @@ const buildHelp = (client, msg) => new Promise((resolve) => {
 
   client.commands.forEach((command) => {
     mps.push(new Promise((res) => {
-      client.funcs.runCommandInhibitors(client, msg, command, true)
+      client.funcs.runCommandInhibitors(client, msg, command, [], true)
           .then(() => {
             const cat = command.help.category;
             const subcat = command.help.subCategory;
