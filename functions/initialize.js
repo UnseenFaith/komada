@@ -5,11 +5,11 @@ module.exports = (client) => {
   client.providers.forEach((prov) => {
     if (prov.init) prov.init(client);
   });
-  client.configuration.init(client);
-  client.inhibitors.forEach((inhib) => {
+  client.configuration.initialize(client);
+  client.commandInhibitors.forEach((inhib) => {
     if (inhib.init) inhib.init(client);
   });
-  client.monitors.forEach((mon) => {
+  client.messageMonitors.forEach((mon) => {
     if (mon.init) mon.init(client);
   });
   client.commands.forEach((cmd) => {
