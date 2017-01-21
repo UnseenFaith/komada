@@ -57,6 +57,9 @@ exports.start = async (config) => {
     msg.guildConf = conf;
     client.i18n.use(conf.lang);
     await client.funcs.runMessageMonitors(client, msg);
+    if (client.config.selfbot) {
+      if (msg.author.id !== client.user.id) return;
+    }
     let thisPrefix;
     if (conf.prefix instanceof Array) {
       conf.prefix.forEach((prefix) => {
