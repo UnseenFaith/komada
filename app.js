@@ -52,7 +52,7 @@ exports.start = async (config) => {
 
   client.on("error", e => client.funcs.log(e, "error"));
   client.on("warn", w => client.funcs.log(w, "warning"));
-  // client.on("disconnect", e => client.funcs.log(e, "error"));
+  client.on("disconnect", e => client.funcs.log(e, "error"));
 
   client.on("message", async (msg) => {
     if (msg.author.bot) return;
