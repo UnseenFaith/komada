@@ -20,6 +20,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Fixed Reload not erroring on new commands that aren't found
 - Fixed Bug on Selfbot mentions introduced with the new Argument Prompts
 - Fixed Bug on Help not showing all commands with new Argument System
+- Fixed another bug introduced with the new Argument System where Permissions weren't finalized before Prompts
+- Fixed Bug within reload.js that prevented new commands from being loaded
 
 ### Removed
 - Old Configuration System

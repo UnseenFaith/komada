@@ -255,20 +255,20 @@ exports.command = (client, dir, commandName) => new Promise((resolve, reject) =>
   if (!command) {
     client.funcs.getFileListing(client, client.coreBaseDir, "commands")
       .then((files) => {
-        const newCommands = files.filter(f => f.name === command);
+        const newCommands = files.filter(f => f.name === commandName);
         newCommands.forEach((file) => {
-          client.funcs.loadSingleCommand(client, command, false, `${file.path}${path.sep}${file.base}`)
+          client.funcs.loadSingleCommand(client, commandName, false, `${file.path}${path.sep}${file.base}`)
                 .catch((e) => {
                   reject(e);
                 });
-          resolve(`Succesfully loaded a new command called ${commandName}`);
+          resolve(`Successfully loaded a new command called ${commandName}`);
         });
+        reject(`Couldn't find a new command called ${commandName}`);
       });
-    reject(`Could not locate a new **${command}** in ${dir}`);
   } else {
     client.funcs.loadSingleCommand(client, command, true)
           .then(() => {
-            resolve(`Succesfully reloaded the command ${commandName}`);
+            resolve(`Successfully reloaded the command ${commandName}`);
           })
           .catch((e) => {
             reject(e);
