@@ -100,7 +100,7 @@ exports.start = async (config) => {
       }
     });
     client.funcs.log(commandLog);
-    if (params) cmd.run(client, msg, params);
+    if (params || cmd.help.usage.length === 0) cmd.run(client, msg, params);
   });
 
   client.login(client.config.botToken);
