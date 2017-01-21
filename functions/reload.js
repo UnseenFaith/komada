@@ -250,12 +250,12 @@ exports.command = (client, dir, commandName) => new Promise((resolve, reject) =>
   if (client.commands.has(commandName)) {
     command = commandName;
   } else if (client.aliases.has(commandName)) {
-    command = client.aliases.get(commandName);
+    command = client.aliases.get(commandName).help.name;
   }
   if (!command) {
     client.funcs.getFileListing(client, client.coreBaseDir, "commands")
       .then((files) => {
-        const newCommands = files.filter(f => f.name === command);
+        const newCommands = files.filter(f => f.name === commandName);
         newCommands.forEach((file) => {
           client.funcs.loadSingleCommand(client, command, false, `${file.path}${path.sep}${file.base}`)
                 .catch((e) => {
