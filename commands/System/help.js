@@ -12,7 +12,7 @@ exports.run = (client, msg, [cmd]) => {
           helpMessage.push("```\n\u200b");
         }
         msg.author.sendMessage(helpMessage, { split: { char: "\u200b" } }).catch((e) => { console.error(e); });
-        msg.reply(' commands have been sent to your DMs.');
+        msg.reply('Commands have been sent to your DMs.');
       });
   } else if (client.commands.has(cmd)) {
     cmd = client.commands.get(cmd);
