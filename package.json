@@ -1,6 +1,6 @@
 {
   "name": "komada",
-  "version": "0.13.5",
+  "version": "0.14.0",
   "author": "Evelyne Lachance",
   "description": "Komada: Croatian for 'pieces', is a modular bot system including reloading modules and easy to use custom commands.",
   "main": "app.js",
@@ -27,7 +27,7 @@
     "node-i18n": "github:eslachance/node-i18n"
   },
   "engines": {
-    "node": ">=6.0.0"
+    "node": ">=7.0.0"
   },
   "devDependencies": {
     "eslint": "^3.10.2",

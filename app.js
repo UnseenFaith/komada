@@ -5,7 +5,7 @@ const Config = require("./classes/Config.js");
 
 const clk = new chalk.constructor({ enabled: true });
 
-exports.start = (config) => {
+exports.start = async (config) => {
   const client = new Discord.Client(config.clientOptions);
 
   client.config = config;
@@ -18,7 +18,7 @@ exports.start = (config) => {
   client.aliases = new Discord.Collection();
   client.commandInhibitors = new Discord.Collection();
   client.messageMonitors = new Discord.Collection();
-  client.dataProviders = new Discord.Collection();
+  client.providers = new Discord.Collection();
 
   // Extend Client with Native Discord.js Functions for use in our pieces.
   client.methods = {};
@@ -33,34 +33,30 @@ exports.start = (config) => {
   client.configuration = Config;
 
   // Load core functions, then everything else
-  loadFunctions(client).then(() => {
-    client.funcs.loadDataProviders(client);
-    client.funcs.loadCommands(client);
-    client.funcs.loadCommandInhibitors(client);
-    client.funcs.loadMessageMonitors(client);
-    client.funcs.loadEvents(client);
-    client.i18n = client.funcs.loadLocalizations;
-    client.i18n.init(client);
-  });
+  await loadFunctions(client);
+  client.funcs.loadProviders(client);
+  client.funcs.loadCommands(client);
+  client.funcs.loadCommandInhibitors(client);
+  client.funcs.loadMessageMonitors(client);
+  client.funcs.loadEvents(client);
+  client.i18n = client.funcs.loadLocalizations;
+  client.i18n.init(client);
 
   client.once("ready", () => {
     client.config.prefixMention = new RegExp(`^<@!?${client.user.id}>`);
-    Config.initialize(client);
-    for (const func in client.funcs) {
-      if (client.funcs[func].init) client.funcs[func].init(client);
-    }
+    client.funcs.initialize(client);
   });
 
   client.on("error", e => client.funcs.log(e, "error"));
   client.on("warn", w => client.funcs.log(w, "warning"));
   client.on("disconnect", e => client.funcs.log(e, "error"));
 
-  client.on("message", (msg) => {
+  client.on("message", async (msg) => {
     if (msg.author.bot) return;
     const conf = Config.get(msg.guild);
     msg.guildConf = conf;
     client.i18n.use(conf.lang);
-    client.funcs.runMessageMonitors(client, msg).catch(reason => msg.channel.sendMessage(reason).catch(console.error));
+    await client.funcs.runMessageMonitors(client, msg);
     let thisPrefix;
     if (conf.prefix instanceof Array) {
       conf.prefix.forEach((prefix) => {
@@ -93,17 +89,15 @@ exports.start = (config) => {
       cmd = client.commands.get(client.aliases.get(command));
     }
     if (!cmd) return;
-    client.funcs.runCommandInhibitors(client, msg, cmd)
-    .then((params) => {
-      client.funcs.log(commandLog);
-      cmd.run(client, msg, params);
-    })
+    const params = await client.funcs.runCommandInhibitors(client, msg, cmd)
     .catch((reason) => {
       if (reason) {
         if (reason.stack) client.funcs.log(reason.stack, "error");
         msg.channel.sendCode("", reason).catch(console.error);
       }
     });
+    client.funcs.log(commandLog);
+    if (params || cmd.help.usage.length === 0) cmd.run(client, msg, params);
   });
 
   client.login(client.config.botToken);

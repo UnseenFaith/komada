@@ -12,7 +12,7 @@
 • Users      :: ${client.users.size.toLocaleString()}
 • Servers    :: ${client.guilds.size.toLocaleString()}
 • Channels   :: ${client.channels.size.toLocaleString()}
-• Komada     :: ${komada.version}
+• Komada     :: v${komada.version}
 • Discord.js :: v${Discord.version}`);
   };
 

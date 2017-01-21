@@ -1,14 +1,7 @@
-module.exports = (client, msg) => new Promise((resolve, reject) => {
-  const mps = [true];
+module.exports = (client, msg) => {
   client.messageMonitors.forEach((mProc) => {
     if (mProc.conf.enabled) {
-      mps.push(mProc.run(client, msg));
+      mProc.run(client, msg);
     }
   });
-  Promise.all(mps)
-      .then((value) => {
-        resolve(value);
-      }, (reason) => {
-        reject(reason);
-      });
-});
+};
