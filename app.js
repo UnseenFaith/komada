@@ -44,10 +44,7 @@ exports.start = async (config) => {
 
   client.once("ready", () => {
     client.config.prefixMention = new RegExp(`^<@!?${client.user.id}>`);
-    Config.initialize(client);
-    for (const func in client.funcs) {
-      if (client.funcs[func].init) client.funcs[func].init(client);
-    }
+    client.funcs.initialize(client);
   });
 
   client.on("error", e => client.funcs.log(e, "error"));
