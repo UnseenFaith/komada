@@ -1,8 +1,6 @@
-exports.run = (client, msg) => {
-  msg.channel.sendMessage("Ping?")
-    .then((message) => {
-      message.edit(`Pong! (took: ${message.createdTimestamp - msg.createdTimestamp}ms)`);
-    });
+exports.run = async (client, msg) => {
+  const message = await msg.channel.sendMessage("Ping?").catch(err => client.funcs.log(err, "error"));
+  message.edit(`Pong! (took: ${message.createdTimestamp - msg.createdTimestamp}ms)`);
 };
 
 exports.conf = {

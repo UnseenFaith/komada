@@ -8,7 +8,7 @@ module.exports = (client, baseDir, type) => new Promise((resolve, reject) => {
     fs.walk(dir)
         .on("data", (item) => {
           const fileinfo = path.parse(item.path);
-          if (!fileinfo.ext) return;
+          if (!fileinfo.ext || fileinfo.ext !== ".js") return;
           files.push({
             path: fileinfo.dir,
             name: fileinfo.name,
@@ -27,19 +27,7 @@ module.exports = (client, baseDir, type) => new Promise((resolve, reject) => {
           });
           next();
         });
-  } catch (e) {
-    if (e.code === "MODULE_NOT_FOUND") {
-      const module = /'[^']+'/g.exec(e.toString());
-      client.funcs.installNPM(module[0].slice(1, -1))
-          .then(() => {
-            client.funcs.loadCommands(client);
-          })
-          .catch((err) => {
-            console.error(err);
-            process.exit();
-          });
-    } else {
-      reject(e);
-    }
+  } catch (err) {
+    reject(err);
   }
 });

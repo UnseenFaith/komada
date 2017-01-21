@@ -45,7 +45,6 @@ exports.run = (client, msg, cmd, args = undefined) => new Promise((resolve, reje
     } else if (currentUsage.possibles.length === 1) {
       switch (currentUsage.possibles[0].type) {
         case "literal":
-          console.log(args[i]);
           if (args[i].toLowerCase() === currentUsage.possibles[0].name.toLowerCase()) {
             args[i] = args[i].toLowerCase();
             validateArgs(++i);

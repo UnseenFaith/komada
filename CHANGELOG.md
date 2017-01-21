@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Confs.js uses new configuration system now
 - Configuration now split into smaller parts as requested.
 - Help command is now a Direct Message.
+- Async/Await for all pieces && app.js
+- dataProviders renamed to Providers
 
 ### Fixed
 - loadCommands no longer counts/loads "Ghost" commands.
