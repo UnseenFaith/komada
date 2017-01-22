@@ -22,11 +22,23 @@ class Config {
    */
   constructor(client, guildID, config = {}) {
     /**
+     * The client that created this configuration
+     * @type {Client}
+     * @readonly
+     */
+    Object.defineProperty(this, "_client", { value: client });
+    /**
      * The guild to create the configuration for.
      * @type {GuildID}
      * @readonly
      */
     Object.defineProperty(this, "_id", { value: guildID });
+    /**
+     * The location where we will be storing this data.
+     * @type {String}
+     * @readonly
+     */
+    Object.defineProperty(this, "_dataDir", { value: dataDir });
     /**
      * The default prefix to use for the bot if one is not in the configuration.
      * @type {String}
@@ -144,21 +156,21 @@ class Config {
    * //Example of what this returns
    * { prefix: '--', disabledCommands: [], modRole: 'Mods', adminRole: 'Devs', lang: 'en' }
    */
-   static get(guild) {
-     const conf = {};
-     if (guild && guildConfs.has(guild.id)) {
-       const guildConf = guildConfs.get(guild.id);
-       for (const key in guildConf) {
-         if (guildConf[key]) conf[key] = guildConf[key].data;
-         else conf[key] = defaultConf[key].data;
-       }
-     } else {
-       for (const key in defaultConf) {
-         conf[key] = defaultConf[key].data;
-       }
-     }
-     return conf;
-   }
+  static get(guild) {
+    const conf = {};
+    if (guild && guildConfs.has(guild.id)) {
+      const guildConf = guildConfs.get(guild.id);
+      for (const key in guildConf) {
+        if (guildConf[key]) conf[key] = guildConf[key].data;
+        else conf[key] = defaultConf[key].data;
+      }
+    } else {
+      for (const key in defaultConf) {
+        conf[key] = defaultConf[key].data;
+      }
+    }
+    return conf;
+  }
 
   /**
    * Set the default value for a key in the default configuration.
@@ -390,4 +402,4 @@ class Config {
 
 module.exports = Config;
 module.exports.guildConfs = guildConfs;
-module.exports.dataDir = dataDir;
+module.exports.defaultConf = defaultConf;

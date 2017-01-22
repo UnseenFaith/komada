@@ -34,17 +34,18 @@ exports.start = async (config) => {
 
   // Load core functions, then everything else
   await loadFunctions(client);
-  client.funcs.loadProviders(client);
-  client.funcs.loadCommands(client);
-  client.funcs.loadCommandInhibitors(client);
-  client.funcs.loadMessageMonitors(client);
-  client.funcs.loadEvents(client);
+  await client.funcs.loadProviders(client);
+  await client.funcs.loadCommands(client);
+  await client.funcs.loadCommandInhibitors(client);
+  await client.funcs.loadMessageMonitors(client);
+  await client.funcs.loadEvents(client);
   client.i18n = client.funcs.loadLocalizations;
   client.i18n.init(client);
 
-  client.once("ready", () => {
+  client.once("ready", async () => {
     client.config.prefixMention = new RegExp(`^<@!?${client.user.id}>`);
-    client.funcs.initialize(client);
+    await client.funcs.initialize(client);
+    client.destroy = () => "You cannot use this within Komada, use process.exit() instead.";
   });
 
   client.on("error", e => client.funcs.log(e, "error"));
@@ -57,6 +58,9 @@ exports.start = async (config) => {
     msg.guildConf = conf;
     client.i18n.use(conf.lang);
     await client.funcs.runMessageMonitors(client, msg);
+    if (client.config.selfbot) {
+      if (msg.author.id !== client.user.id) return;
+    }
     let thisPrefix;
     if (conf.prefix instanceof Array) {
       conf.prefix.forEach((prefix) => {

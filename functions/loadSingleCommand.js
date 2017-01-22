@@ -19,9 +19,6 @@ module.exports = (client, command, reload = false, loadPath = null) => new Promi
       });
       delete require.cache[require.resolve(loadPath)];
       cmd = require(loadPath);
-      if (cmd.init) {
-        cmd.init(client);
-      }
     } catch (e) {
       reject(`Could not load existing command data: ${e.stack}`);
     }

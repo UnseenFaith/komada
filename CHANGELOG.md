@@ -8,16 +8,24 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - New Beta Configuration (Needs heavy testing)
 - New Argument Prompting for Commands
-- New Initialize Function to aleviate undefined errors
+- New Initialize Function to alleviate undefined errors
 
 ### Changed
+- Old Configuration system now points to the new configuration system, to ease the trouble of updating to newer versions of Komada
+- Pieces now have  specific order they load in. (Functions, Providers, Commands, Inhibitors, Monitors, Events)
 - Confs.js uses new configuration system now
 - Configuration now split into smaller parts as requested.
 - Help command is now a Direct Message.
 - Async/Await for all pieces && app.js
 - dataProviders renamed to Providers
+- New Download Command
 
 ### Fixed
+- Fixed Typo in disable
+- Fixed Help Command sending extra message when DMed
+- New Configuration system fixed and outputs files correctly now.
+- No longer able to kill komada with Client.destroy()
+- All Pieces should now initialize in the correct order.
 - loadCommands no longer counts/loads "Ghost" commands.
 - DMs throwing errors with new Config System && permLevel
 - Fixed Reload not erroring on new commands that aren't found
@@ -25,9 +33,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Fixed Bug on Help not showing all commands with new Argument System
 - Fixed another bug introduced with the new Argument System where Permissions weren't finalized before Prompts
 - Fixed Bug within reload.js that prevented new commands from being loaded
+- More Selfbot Bugs Fixed
+- More Reload function fixes for commands
 
 ### Removed
 - Old Configuration System
+- Selfbot Inhibitor
 
 ## [0.12.4] - 2017-01-13
 ### Added
