@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - New Beta Configuration (Needs heavy testing)
 - New Argument Prompting for Commands
-- New Initialize Function to aleviate undefined errors
+- New Initialize Function to alleviate undefined errors
 
 ### Changed
 - Pieces now have  specific order they load in. (Functions, Providers, Commands, Inhibitors, Monitors, Events)
