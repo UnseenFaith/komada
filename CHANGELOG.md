@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Help command is now a Direct Message.
 - Async/Await for all pieces && app.js
 - dataProviders renamed to Providers
+- New Download Command
 
 ### Fixed
 - loadCommands no longer counts/loads "Ghost" commands.
@@ -25,9 +26,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Fixed Bug on Help not showing all commands with new Argument System
 - Fixed another bug introduced with the new Argument System where Permissions weren't finalized before Prompts
 - Fixed Bug within reload.js that prevented new commands from being loaded
+- More Selfbot Bugs Fixed
+- More Reload function fixes for commands
 
 ### Removed
 - Old Configuration System
+- Selfbot Inhibitor
 
 ## [0.12.4] - 2017-01-13
 ### Added
