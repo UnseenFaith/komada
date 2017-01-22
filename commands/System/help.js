@@ -13,7 +13,9 @@ exports.run = (client, msg, [cmd]) => {
         }
         if (!client.config.selfbot) {
           msg.author.sendMessage(helpMessage, { split: { char: "\u200b" } }).catch((e) => { console.error(e); });
-          msg.reply("Commands have been sent to your DMs.");
+          if (msg.channel.type.toLowerCase() !== "dm") {
+            msg.reply("Commands have been sent to your DMs.");
+          }
         } else {
           msg.channel.sendMessage(helpMessage, { split: { char: "\u200b" } })
         .catch((e) => { console.error(e); });

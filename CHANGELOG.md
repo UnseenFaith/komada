@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - New Download Command
 
 ### Fixed
+- Fixed Help Command sending extra message when DMed
 - New Configuration system fixed and outputs files correctly now.
 - No longer able to kill komada with Client.destroy()
 - All Pieces should now initialize in the correct order.
