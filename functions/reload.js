@@ -161,16 +161,16 @@ exports.monitor = (client, dir, monitName) => new Promise(async (resolve, reject
 });
 
 exports.provider = (client, dir, providerName) => new Promise(async (resolve, reject) => {
-  const files = await client.funcs.getFileListing(client, dir, "dataProviders").catch(err => client.funcs.log(err, "error"));
-  if (client.dataProviders.has(providerName)) {
+  const files = await client.funcs.getFileListing(client, dir, "providers").catch(err => client.funcs.log(err, "error"));
+  if (client.providers.has(providerName)) {
     const oldProvider = files.filter(f => f.name === providerName);
     if (oldProvider[0]) {
       try {
         oldProvider.forEach((file) => {
-          client.dataProviders.delete(file.name);
+          client.providers.delete(file.name);
           delete require.cache[require.resolve(`${file.path}${path.sep}${file.base}`)];
           const props = require(`${file.path}${path.sep}${file.base}`);
-          client.dataProviders.set(file.name, props);
+          client.providers.set(file.name, props);
           if (props.init) {
             props.init(client);
           }
@@ -189,7 +189,7 @@ exports.provider = (client, dir, providerName) => new Promise(async (resolve, re
       try {
         newProvider.forEach((file) => {
           const props = require(`${file.path}${path.sep}${file.base}`);
-          client.dataProviders.set(file.name, props);
+          client.providers.set(file.name, props);
           if (props.init) {
             props.init(client);
           }
@@ -248,13 +248,16 @@ exports.command = (client, dir, commandName) => new Promise(async (resolve, reje
     command = client.aliases.get(commandName);
   }
   if (!command) {
-    const files = await client.funcs.getFileListing(client, client.coreBaseDir, "commands").catch(err => client.funcs.log(err, "error"));
+    const files = await client.funcs.getFileListing(client, dir, "commands").catch(err => client.funcs.log(err, "error"));
     const newCommands = files.filter(f => f.name === commandName);
-    newCommands.forEach(async (file) => {
-      await client.funcs.loadSingleCommand(client, commandName, false, `${file.path}${path.sep}${file.base}`).catch(e => reject(e));
-      resolve(`Successfully loaded a new command called ${commandName}`);
-    });
-    reject(`Couldn't find a new command called ${commandName}`);
+    if (newCommands[0]) {
+      newCommands.forEach(async (file) => {
+        await client.funcs.loadSingleCommand(client, commandName, false, `${file.path}${path.sep}${file.base}`).catch(e => reject(e));
+        resolve(`Successfully loaded a new command called ${commandName}`);
+      });
+    } else {
+      reject(`Couldn't find a new command called ${commandName}`);
+    }
   } else {
     await client.funcs.loadSingleCommand(client, command, true).catch(e => reject(e));
     resolve(`Successfully reloaded the command ${commandName}`);
