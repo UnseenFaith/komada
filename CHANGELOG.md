@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - New Initialize Function to aleviate undefined errors
 
 ### Changed
+- Pieces now have  specific order they load in. (Functions, Providers, Commands, Inhibitors, Monitors, Events)
 - Confs.js uses new configuration system now
 - Configuration now split into smaller parts as requested.
 - Help command is now a Direct Message.
@@ -19,6 +20,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - New Download Command
 
 ### Fixed
+- All Pieces should now initialize in the correct order.
 - loadCommands no longer counts/loads "Ghost" commands.
 - DMs throwing errors with new Config System && permLevel
 - Fixed Reload not erroring on new commands that aren't found

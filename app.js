@@ -34,17 +34,17 @@ exports.start = async (config) => {
 
   // Load core functions, then everything else
   await loadFunctions(client);
-  client.funcs.loadProviders(client);
-  client.funcs.loadCommands(client);
-  client.funcs.loadCommandInhibitors(client);
-  client.funcs.loadMessageMonitors(client);
-  client.funcs.loadEvents(client);
+  await client.funcs.loadProviders(client);
+  await client.funcs.loadCommands(client);
+  await client.funcs.loadCommandInhibitors(client);
+  await client.funcs.loadMessageMonitors(client);
+  await client.funcs.loadEvents(client);
   client.i18n = client.funcs.loadLocalizations;
   client.i18n.init(client);
 
-  client.once("ready", () => {
+  client.once("ready", async () => {
     client.config.prefixMention = new RegExp(`^<@!?${client.user.id}>`);
-    client.funcs.initialize(client);
+    await client.funcs.initialize(client);
   });
 
   client.on("error", e => client.funcs.log(e, "error"));

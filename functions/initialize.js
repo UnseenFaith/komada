@@ -1,18 +1,18 @@
-module.exports = (client) => {
-  for (const func in client.funcs) {
-    if (client.funcs[func].init) client.funcs[func].init(client);
-  }
-  client.providers.forEach((prov) => {
-    if (prov.init) prov.init(client);
+module.exports = async (client) => {
+  Object.keys(client.funcs).forEach(async (func) => {
+    if (client.funcs[func].init) await client.funcs[func].init(client);
   });
-  client.configuration.initialize(client);
-  client.commandInhibitors.forEach((inhib) => {
-    if (inhib.init) inhib.init(client);
+  client.providers.forEach(async (prov) => {
+    if (prov.init) await prov.init(client);
   });
-  client.messageMonitors.forEach((mon) => {
-    if (mon.init) mon.init(client);
+  await client.configuration.initialize(client);
+  client.commandInhibitors.forEach(async (inhib) => {
+    if (inhib.init) await inhib.init(client);
   });
-  client.commands.forEach((cmd) => {
-    if (cmd.init) cmd.init(client);
+  client.messageMonitors.forEach(async (mon) => {
+    if (mon.init) await mon.init(client);
+  });
+  client.commands.forEach(async (cmd) => {
+    if (cmd.init) await cmd.init(client);
   });
 };
