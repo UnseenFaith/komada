@@ -45,6 +45,7 @@ exports.start = async (config) => {
   client.once("ready", async () => {
     client.config.prefixMention = new RegExp(`^<@!?${client.user.id}>`);
     await client.funcs.initialize(client);
+    client.destroy = () => "You cannot use this within Komada, use process.exit() instead.";
   });
 
   client.on("error", e => client.funcs.log(e, "error"));
