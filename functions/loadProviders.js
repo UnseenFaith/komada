@@ -7,9 +7,8 @@ const loadProviders = (client, baseDir) => new Promise(async (resolve, reject) =
   const files = await client.funcs.getFileListing(client, baseDir, "providers").catch(err => client.funcs.log(err, "error"));
   try {
     files.forEach((f) => {
-      const file = f.split(".");
-      const props = require(`${dir}/${f}`);
-      client.providers.set(file[0], props);
+      const props = require(`${f.path}/${f.base}`);
+      client.providers.set(f.name, props);
     });
     resolve();
   } catch (e) {
