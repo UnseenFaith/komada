@@ -181,7 +181,7 @@ exports.provider = (client, dir, providerName) => new Promise(async (resolve, re
       }
       resolve(`Successfully reloaded the provider ${providerName}.`);
     } else {
-      reject(`The provider **${providerName}** does not seem to reside in ${dir}dataProviders`);
+      reject(`The provider **${providerName}** does not seem to reside in ${dir}providers`);
     }
   } else {
     const newProvider = files.filter(f => f.name === providerName);

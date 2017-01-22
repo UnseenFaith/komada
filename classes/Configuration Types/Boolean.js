@@ -2,8 +2,6 @@
 
 const fs = require("fs-extra-promise");
 const path = require("path");
-const dataDir = require("../Config.js").dataDir;
-const guildConfs = require("../Config.js").guildConfs;
 
 /** The starting point for creating a Boolean configuration key. */
 class BooleanConfig {
@@ -17,6 +15,8 @@ class BooleanConfig {
     else this.data = data;
     this.type = "Boolean";
     Object.defineProperty(this, "_id", { value: conf._id });
+    Object.defineProperty(this, "_dataDir", { value: conf._dataDir });
+    Object.defineProperty(this, "_client", { value: conf._client });
     return this;
   }
 
@@ -27,7 +27,7 @@ class BooleanConfig {
   toggle() {
     if (this.data === true) this.data = false;
     else this.data = true;
-    fs.outputJSONAsync(path.resolve(`${dataDir}${path.sep}${this._id}.json`), guildConfs.get(this._id));
+    fs.outputJSONAsync(path.resolve(`${this._dataDir}${path.sep}${this._id}.json`), this._client.guildConfs.get(this._id));
     return this;
   }
 }

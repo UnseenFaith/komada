@@ -2,8 +2,6 @@
 
 const fs = require("fs-extra-promise");
 const path = require("path");
-const dataDir = require("../Config.js").dataDir;
-const guildConfs = require("../Config.js").guildConfs;
 
 /** The starting point for creating an Array Configuration key. */
 class ArrayConfig {
@@ -17,6 +15,8 @@ class ArrayConfig {
     else this.data = data;
     this.type = "Array";
     Object.defineProperty(this, "_id", { value: conf._id });
+    Object.defineProperty(this, "_dataDir", { value: conf._dataDir });
+    Object.defineProperty(this, "_client", { value: conf._client });
     return this;
   }
 
@@ -32,12 +32,12 @@ class ArrayConfig {
         if (!this.data.includes(val)) return "That value is not in the array.";
         return this.data.splice(this.data.indexOf(value), 1);
       });
-      fs.outputJSONAsync(path.resolve(`${dataDir}${path.sep}${this._id}.json`), guildConfs.get(this._id));
+      fs.outputJSONAsync(path.resolve(`${this._dataDir}${path.sep}${this._id}.json`), this._client.guildConfs.get(this._id));
       return this;
     }
     if (this.data.includes(value)) return "That value is already in the array.";
     this.data.push(value);
-    fs.outputJSONAsync(path.resolve(`${dataDir}${path.sep}${this._id}.json`), guildConfs.get(this._id));
+    fs.outputJSONAsync(path.resolve(`${this._dataDir}${path.sep}${this._id}.json`), this._client.guildConfs.get(this._id));
     return this;
   }
 
@@ -53,12 +53,12 @@ class ArrayConfig {
         if (!this.data.includes(val)) return "That value is not in the array.";
         return this.data.splice(this.data.indexOf(value), 1);
       });
-      fs.outputJSONAsync(path.resolve(`${dataDir}${path.sep}${this._id}.json`), guildConfs.get(this._id));
+      fs.outputJSONAsync(path.resolve(`${this._dataDir}${path.sep}${this._id}.json`), this._client.guildConfs.get(this._id));
       return this;
     }
     if (!this.data.includes(value)) return "That value is not in the array.";
     this.data.splice(this.data.indexOf(value), 1);
-    fs.outputJSONAsync(path.resolve(`${dataDir}${path.sep}${this._id}.json`), guildConfs.get(this._id));
+    fs.outputJSONAsync(path.resolve(`${this._dataDir}${path.sep}${this._id}.json`), this._client.guildConfs.get(this._id));
     return this;
   }
 }

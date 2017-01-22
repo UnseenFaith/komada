@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - New Initialize Function to alleviate undefined errors
 
 ### Changed
+- Old Configuration system now points to the new configuration system, to ease the trouble of updating to newer versions of Komada
 - Pieces now have  specific order they load in. (Functions, Providers, Commands, Inhibitors, Monitors, Events)
 - Confs.js uses new configuration system now
 - Configuration now split into smaller parts as requested.
@@ -20,6 +21,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - New Download Command
 
 ### Fixed
+- New Configuration system fixed and outputs files correctly now.
 - No longer able to kill komada with Client.destroy()
 - All Pieces should now initialize in the correct order.
 - loadCommands no longer counts/loads "Ghost" commands.
