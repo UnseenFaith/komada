@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - New Download Command
 
 ### Fixed
+- No longer able to kill komada with Client.destroy()
 - All Pieces should now initialize in the correct order.
 - loadCommands no longer counts/loads "Ghost" commands.
 - DMs throwing errors with new Config System && permLevel
