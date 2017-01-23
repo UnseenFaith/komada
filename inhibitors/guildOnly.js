@@ -1,7 +1,7 @@
 exports.conf = {
   enabled: true,
   spamProtection: false,
-  priority: 8
+  priority: 8,
 };
 
 exports.run = (client, msg, cmd) => new Promise((resolve, reject) => {
