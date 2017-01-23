@@ -94,6 +94,7 @@ exports.start = async (config) => {
     }
     if (!cmd) return;
     client.funcs.runCommandInhibitors(client, msg, cmd).then((params) => {
+      console.log(params);
       client.funcs.log(commandLog);
       cmd.run(client, msg, params);
     })

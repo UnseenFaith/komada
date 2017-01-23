@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - New Download Command
 
 ### Fixed
+- Bunch of fixes for Inhibitors/Commands
 - Fixed Typo in disable
 - Fixed Help Command sending extra message when DMed
 - New Configuration system fixed and outputs files correctly now.
