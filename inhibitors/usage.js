@@ -3,6 +3,7 @@ const url = require("url");
 exports.conf = {
   enabled: true,
   spamProtection: true,
+  priority: 5,
 };
 
 exports.run = (client, msg, cmd, args = undefined) => new Promise((resolve, reject) => {
