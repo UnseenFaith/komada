@@ -7,7 +7,7 @@ const loadMessageMonitors = (client, baseDir) => new Promise(async (resolve, rej
   const files = await client.funcs.getFileListing(client, baseDir, "monitors").catch(err => client.funcs.log(err, "error"));
   try {
     files.forEach((f) => {
-      const props = require(`${f.path}/${f.base}`);
+      const props = require(`${f.path}${path.sep}${f.base}`);
       client.messageMonitors.set(f.name, props);
     });
     resolve();

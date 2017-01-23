@@ -93,15 +93,17 @@ exports.start = async (config) => {
       cmd = client.commands.get(client.aliases.get(command));
     }
     if (!cmd) return;
-    const params = await client.funcs.runCommandInhibitors(client, msg, cmd)
+    client.funcs.runCommandInhibitors(client, msg, cmd).then((params) => {
+      console.log(params);
+      client.funcs.log(commandLog);
+      cmd.run(client, msg, params);
+    })
     .catch((reason) => {
       if (reason) {
         if (reason.stack) client.funcs.log(reason.stack, "error");
         msg.channel.sendCode("", reason).catch(console.error);
       }
     });
-    client.funcs.log(commandLog);
-    if (params || cmd.help.usage.length === 0) cmd.run(client, msg, params);
   });
 
   client.login(client.config.botToken);

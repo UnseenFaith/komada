@@ -10,7 +10,7 @@ const loadFunctions = (client, baseDir) => new Promise(async (resolve, reject) =
     files.forEach((f) => {
       const file = f.split(".");
       if (file[0] === "loadFunctions") return;
-      client.funcs[file[0]] = require(`${dir}/${f}`);
+      client.funcs[file[0]] = require(`${dir}${path.sep}${f}`);
     });
     resolve();
   } catch (e) {

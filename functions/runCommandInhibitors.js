@@ -1,15 +1,17 @@
-module.exports = (client, msg, cmd) => new Promise((resolve, reject) => {
+module.exports = (client, msg, cmd, args, selective = false) => new Promise((resolve, reject) => {
   let usage;
   const priority = client.commandInhibitors.array();
   const sorted = priority.sort((a, b) => a.conf.priority > b.conf.priority);
   sorted.forEach((inhib) => {
-    inhib.run(client, msg, cmd)
+    if (!cmd.conf.spamProtection && !selective) {
+      inhib.run(client, msg, cmd, args)
       .then((value) => {
         if (value) usage = value;
       })
       .catch((error) => {
         reject(error);
       });
+    }
   });
-  resolve(usage);
+  setTimeout(() => { resolve(usage); }, 1);
 });

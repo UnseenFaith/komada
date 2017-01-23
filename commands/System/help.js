@@ -58,11 +58,14 @@ const buildHelp = (client, msg) => new Promise((resolve) => {
     mps.push(new Promise((res) => {
       client.funcs.runCommandInhibitors(client, msg, command, [], true)
           .then(() => {
-            const cat = command.help.category;
-            const subcat = command.help.subCategory;
-            if (!help.hasOwnProperty(cat)) help[cat] = {};
-            if (!help[cat].hasOwnProperty(subcat)) help[cat][subcat] = [];
-            help[cat][subcat].push(`${msg.guildConf.prefix}${command.help.name}${" ".repeat(longest - command.help.name.length)} :: ${command.help.description}`);
+            if (command.conf.permLevel <= msg.author.permLevel) {
+              const cat = command.help.category;
+              const subcat = command.help.subCategory;
+              if (!help.hasOwnProperty(cat)) help[cat] = {};
+              if (!help[cat].hasOwnProperty(subcat)) help[cat][subcat] = [];
+              help[cat][subcat].push(`${msg.guildConf.prefix}${command.help.name}${" ".repeat(longest - command.help.name.length)} :: ${command.help.description}`);
+              res();
+            }
             res();
           })
           .catch(() => {
