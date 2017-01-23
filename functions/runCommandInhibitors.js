@@ -4,7 +4,7 @@ module.exports = (client, msg, cmd, args, selective = false) => new Promise((res
   const sorted = priority.sort((a, b) => a.conf.priority > b.conf.priority);
   sorted.forEach((inhib) => {
     if (!cmd.conf.spamProtection && !selective) {
-    inhib.run(client, msg, cmd, args)
+      inhib.run(client, msg, cmd, args)
       .then((value) => {
         if (value) usage = value;
       })
