@@ -11,7 +11,7 @@ const loadEvents = (client, baseDir, counts) => new Promise(async (resolve) => {
   let files = await client.funcs.getFileListing(client, baseDir, "events").catch(err => client.funcs.log(err, "error"));
   files = files.filter(f => events.includes(f.name));
   files.forEach((f) => {
-    client.on(f.name, (...args) => require(`${dir}/${f}`).run(client, ...args));
+    client.on(f.name, (...args) => require(`${f.path}${path.sep}${f.name}`).run(client, ...args));
     counts++;
   });
   resolve(counts);
