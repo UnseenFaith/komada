@@ -58,7 +58,7 @@ const buildHelp = (client, msg) => new Promise((resolve) => {
     mps.push(new Promise((res) => {
       client.funcs.runCommandInhibitors(client, msg, command, [], true)
           .then(() => {
-            if (command.conf.permLevel <= msg.member.permLevel) {
+            if (command.conf.permLevel <= msg.author.permLevel) {
               const cat = command.help.category;
               const subcat = command.help.subCategory;
               if (!help.hasOwnProperty(cat)) help[cat] = {};
