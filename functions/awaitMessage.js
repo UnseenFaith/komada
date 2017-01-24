@@ -12,12 +12,13 @@ module.exports = async (client, msg, cmd, args, error) => {
   message.delete();
   if (param.first().content.toLowerCase() === "abort") return "Aborted";
   args.push(param.first().content);
-  const params = client.funcs.runCommandInhibitors(client, msg, cmd, args)
+  client.funcs.runCommandInhibitors(client, msg, cmd, args)
+  .then(params => cmd.run(client, msg, params))
   .catch((reason) => {
     if (reason) {
+      if (reason instanceof Promise) return;
       if (reason.stack) client.funcs.log(reason.stack, "error");
       msg.channel.sendCode("", reason).catch(console.error);
     }
   });
-  return cmd.run(client, msg, params);
 };
