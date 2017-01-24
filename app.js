@@ -1,5 +1,7 @@
 const Discord = require("discord.js");
 const chalk = require("chalk");
+const path = require("path");
+
 const loadFunctions = require("./functions/loadFunctions.js");
 const Config = require("./classes/Config.js");
 
@@ -27,8 +29,8 @@ exports.start = async (config) => {
   client.methods.MessageCollector = Discord.MessageCollector;
   client.methods.Webhook = Discord.WebhookClient;
 
-  client.coreBaseDir = `${__dirname}/`;
-  client.clientBaseDir = `${process.cwd()}/`;
+  client.coreBaseDir = `${__dirname}${path.sep}`;
+  client.clientBaseDir = `${process.cwd()}${path.sep}`;
   client.guildConfs = Config.guildConfs;
   client.configuration = Config;
 

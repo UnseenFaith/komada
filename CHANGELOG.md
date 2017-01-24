@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - New Initialize Function to alleviate undefined errors
 
 ### Changed
+- Stats command now uses `<Collection>.reduce` to correctly determine User Count when fetchAllMembers is false
 - Changed info to no longer mention Evie because she said she was tired of it.. kek
 - New runCommandInhibitors should be much faster and prioritizes inhibitors via a prioritiy configuration setting.
 - Old Configuration system now points to the new configuration system, to ease the trouble of updating to newer versions of Komada
