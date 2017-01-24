@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - New Download Command
 
 ### Fixed
+- Inhibitors now running in the correct order
 - Fixed Prompts sending an extra message.
 - Help command back to msg.author...
 - Help command is now working. `msg.author.permlvl => msg.member.permlvl`.
