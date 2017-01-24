@@ -10,14 +10,16 @@ module.exports = async (client, msg, cmd, args, error) => {
   const message = await msg.channel.sendMessage(`<@!${msg.member.id}> | **${error}** | You have **30** seconds to respond to this prompt with a valid argument. Type **"ABORT"** to abort this prompt.`).catch(err => client.funcs.log(err, "error"));
   const param = await msg.channel.awaitMessages(response => response.member.id === msg.author.id && response.id !== message.id, options).catch(err => client.funcs.log(err, "error"));
   message.delete();
+  if (!param) return "Aborted";
   if (param.first().content.toLowerCase() === "abort") return "Aborted";
   args.push(param.first().content);
-  const params = client.funcs.runCommandInhibitors(client, msg, cmd, args)
+  client.funcs.runCommandInhibitors(client, msg, cmd, args)
+  .then(params => cmd.run(client, msg, params))
   .catch((reason) => {
     if (reason) {
+      if (reason instanceof Promise) return;
       if (reason.stack) client.funcs.log(reason.stack, "error");
       msg.channel.sendCode("", reason).catch(console.error);
     }
   });
-  return cmd.run(client, msg, params);
 };

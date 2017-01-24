@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - New Initialize Function to alleviate undefined errors
 
 ### Changed
+- Inhibitors now use .some() to determine if more inhibitors should be ran.
 - Stats command now uses `<Collection>.reduce` to correctly determine User Count when fetchAllMembers is false
 - Changed info to no longer mention Evie because she said she was tired of it.. kek
 - New runCommandInhibitors should be much faster and prioritizes inhibitors via a prioritiy configuration setting.
@@ -24,6 +25,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - New Download Command
 
 ### Fixed
+- Inhibitors now running in the correct order
+- Fixed Prompts sending an extra message.
+- Help command back to msg.author...
 - Help command is now working. `msg.author.permlvl => msg.member.permlvl`.
 - Bunch of fixes for Inhibitors/Commands
 - Fixed Typo in disable
