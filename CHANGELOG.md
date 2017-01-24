@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - New Beta Configuration (Needs heavy testing)
 - New Argument Prompting for Commands
 - New Initialize Function to alleviate undefined errors
+- cmd.rejected / true-false statement to prevent multiple rejections
 
 ### Changed
 - Stats command now uses `<Collection>.reduce` to correctly determine User Count when fetchAllMembers is false

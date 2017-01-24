@@ -9,6 +9,7 @@ module.exports = (client, msg, cmd, args, selective = false) => new Promise((res
         if (value) usage = value;
       })
       .catch((error) => {
+        cmd.rejected = true;
         reject(error);
       });
     }
