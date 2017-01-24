@@ -101,6 +101,7 @@ exports.start = async (config) => {
     })
     .catch((reason) => {
       if (reason) {
+        if (reason instanceof Promise) return;
         if (reason.stack) client.funcs.log(reason.stack, "error");
         msg.channel.sendCode("", reason).catch(console.error);
       }
