@@ -9,9 +9,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - New Beta Configuration (Needs heavy testing)
 - New Argument Prompting for Commands
 - New Initialize Function to alleviate undefined errors
-- cmd.rejected / true-false statement to prevent multiple rejections
 
 ### Changed
+- Inhibitors now use .some() to determine if more inhibitors should be ran.
 - Stats command now uses `<Collection>.reduce` to correctly determine User Count when fetchAllMembers is false
 - Changed info to no longer mention Evie because she said she was tired of it.. kek
 - New runCommandInhibitors should be much faster and prioritizes inhibitors via a prioritiy configuration setting.
