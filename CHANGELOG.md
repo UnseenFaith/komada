@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - New Download Command
 
 ### Fixed
+- Events.... now should be fixed
 - Inhibitors now running in the correct order
 - Fixed Prompts sending an extra message.
 - Help command back to msg.author...
