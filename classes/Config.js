@@ -39,31 +39,6 @@ class Config {
      * @readonly
      */
     Object.defineProperty(this, "_dataDir", { value: dataDir });
-    /**
-     * The default prefix to use for the bot if one is not in the configuration.
-     * @type {String}
-     */
-    this.prefix = new StringConfig(this, client.config.prefix);
-    /**
-     * The array of disabled commands that are unable to be used in a guild.
-     * @type {Array}
-     */
-    this.disabledCommands = new ArrayConfig(this, []);
-    /**
-     * The default role name to look for when assigning mod level permissions.
-     * @type {String}
-     */
-    this.modRole = new StringConfig(this, "Mods");
-    /**
-     * The default role name to look for when assigning admin level permissions.
-     * @type {String}
-     */
-    this.adminRole = new StringConfig(this, "Devs");
-    /**
-     * The default language to use for the bot.
-     * @type {String}
-     */
-    this.lang = new StringConfig(this, "en");
     if (typeof config === "object") {
       for (const prop in config) {
         if (config[prop].type === "String") {
@@ -370,7 +345,7 @@ class Config {
    * @returns {null}
    * @static
    */
-  static initialize(client) {
+  static async initialize(client) {
     defaultConf = {
       prefix: { type: "String", data: client.config.prefix },
       disabledCommands: { type: "Array", data: [] },
@@ -379,24 +354,18 @@ class Config {
       lang: { type: "String", data: "en" },
     };
     dataDir = path.resolve(`${client.clientBaseDir}${path.sep}bwd${path.sep}conf`);
-    fs.ensureFileAsync(`${dataDir}${path.sep}${defaultFile}`)
-    .then(() => {
-      fs.readJSONAsync(path.resolve(`${dataDir}${path.sep}${defaultFile}`))
-        .then((conf) => {
-          defaultConf = conf;
-        }).catch(() => {
-          fs.outputJSONAsync(`${dataDir}${path.sep}${defaultFile}`, defaultConf);
-        });
-      client.guilds.forEach((guild) => {
-        fs.readJSONAsync(path.resolve(`${dataDir}${path.sep}${guild.id}.json`))
-        .then((thisConf) => {
-          guildConfs.set(guild.id, new Config(client, guild.id, thisConf));
-        }).catch(() => {
-          guildConfs.set(guild.id, new Config(client, guild.id));
-        });
+    await fs.ensureFileAsync(`${dataDir}${path.sep}${defaultFile}`).catch(err => client.funcs.log(err, "error"));
+    const conf = await fs.readJSONAsync(path.resolve(`${dataDir}${path.sep}${defaultFile}`)).catch(() => fs.outputJSONAsync(`${dataDir}${path.sep}${defaultFile}`));
+    if (conf) defaultConf = conf;
+    client.guilds.forEach((guild) => {
+      fs.readJSONAsync(path.resolve(`${dataDir}${path.sep}${guild.id}.json`))
+      .then((thisConf) => {
+        guildConfs.set(guild.id, new Config(client, guild.id, thisConf));
+      }).catch(() => {
+        guildConfs.set(guild.id, new Config(client, guild.id, defaultConf));
       });
-      return null;
     });
+    return null;
   }
 }
 

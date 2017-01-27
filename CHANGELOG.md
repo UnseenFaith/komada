@@ -25,6 +25,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - New Download Command
 
 ### Fixed
+- Fixed Default configuration not being read before guild configurations are created
+- Inhibitors now are correctly 'disabled' when set to be.
 - Events.... now should be fixed
 - Inhibitors now running in the correct order
 - Fixed Prompts sending an extra message.
