@@ -3,7 +3,7 @@ module.exports = (client, msg, cmd, args, selective = false) => new Promise((res
   const priority = client.commandInhibitors.array();
   const sorted = priority.sort((a, b) => a.conf.priority < b.conf.priority);
   sorted.some((inhib) => { // eslint-disable-line
-    if (!inhib.conf.spamProtection && !selective && inhib.conf.enabled) {
+    if (!inhib.conf.spamProtection && (!selective && inhib.conf.enabled)) {
       inhib.run(client, msg, cmd, args)
       .then((value) => {
         if (value) usage = value;
