@@ -2,9 +2,9 @@ module.exports = (client, msg, cmd, args, selective = false) => new Promise((res
   let usage;
   const priority = client.commandInhibitors.array();
   const sorted = priority.sort((a, b) => a.conf.priority < b.conf.priority);
-  sorted.some((inhib) => { // eslint-disable-line
+  sorted.some(async (inhib) => { // eslint-disable-line
     if (!selective && inhib.conf.enabled) {
-      inhib.run(client, msg, cmd, args)
+      await inhib.run(client, msg, cmd, args)
       .then((value) => {
         if (value) usage = value;
       })
