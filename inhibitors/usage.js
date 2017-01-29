@@ -55,9 +55,9 @@ exports.run = (client, msg, cmd, args = undefined) => new Promise((resolve, reje
           } else {
             if (client.config.cmdPrompt) {
               args.shift();
-              return reject(client.funcs.awaitMessage(client, msg, cmd, args, `Your option did not litterally match the only possibility: (${currentUsage.possibles.map(p => p.name).join(", ")}).. This is likely caused by a mistake in the usage string.`));
+              return reject(client.funcs.awaitMessage(client, msg, cmd, args, `Your option did not literally match the only possibility: (${currentUsage.possibles.map(p => p.name).join(", ")}).. This is likely caused by a mistake in the usage string.`));
             }
-            return reject(`Your option did not litterally match the only possibility: (${currentUsage.possibles.map(p => p.name).join(", ")}).. This is likely caused by a mistake in the usage string.`);
+            return reject(`Your option did not literally match the only possibility: (${currentUsage.possibles.map(p => p.name).join(", ")}).. This is likely caused by a mistake in the usage string.`);
           }
           break;
         case "msg":
