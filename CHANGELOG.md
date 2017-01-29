@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Added
+- New Core Command "Transfer"
 - New extended help feature added.
 - New Beta Configuration (Needs heavy testing)
 - New Argument Prompting for Commands
