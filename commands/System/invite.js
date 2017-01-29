@@ -15,7 +15,7 @@ exports.help = {
 
 exports.conf = {
   enabled: true,
-  guildOnly: true,
+  runIn: ["text"],
   aliases: [],
   permLevel: 0,
   botPerms: [],

@@ -5,9 +5,9 @@ exports.conf = {
 };
 
 exports.run = (client, msg, cmd) => new Promise((resolve, reject) => {
-  if (msg.guild || !cmd.conf.guildOnly) {
+  if (cmd.conf.runIn.includes(msg.channel.type)) {
     resolve();
   } else {
-    reject("This command is only available in a guild.");
+    reject(`This command is only avaliable in ${cmd.conf.runIn.join(" ")} channels`);
   }
 });

@@ -6,12 +6,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Added
+- New Core Command "Transfer"
 - New extended help feature added.
 - New Beta Configuration (Needs heavy testing)
 - New Argument Prompting for Commands
 - New Initialize Function to alleviate undefined errors
 
 ### Changed
+- guildOnly Inhibitor is now a `runIn` Inhibitor.
 - Inhibitors now use .some() to determine if more inhibitors should be ran.
 - Stats command now uses `<Collection>.reduce` to correctly determine User Count when fetchAllMembers is false
 - Changed info to no longer mention Evie because she said she was tired of it.. kek
