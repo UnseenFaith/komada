@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Added
+- New extended help feature added.
 - New Beta Configuration (Needs heavy testing)
 - New Argument Prompting for Commands
 - New Initialize Function to alleviate undefined errors
@@ -25,6 +26,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - New Download Command
 
 ### Fixed
+- Inhibitors now await
+- Usage typos fixed
 - LoadFunctions now calls itself when installing a new dependency in a client function
 - Fixed Default configuration not being read before guild configurations are created
 - Inhibitors now are correctly 'disabled' when set to be.
