@@ -46,7 +46,7 @@ exports.run = async (client, msg, [type, name]) => {
 
 exports.conf = {
   enabled: true,
-  guildOnly: false,
+  runIn: ["text", "dm", "group"],
   aliases: ["r", "load"],
   permLevel: 10,
   botPerms: [],

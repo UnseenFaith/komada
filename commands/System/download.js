@@ -244,7 +244,7 @@ ${modules}
 
 exports.conf = {
   enabled: true,
-  guildOnly: true,
+  runIn: ["text"],
   aliases: [],
   permLevel: 5,
   botPerms: [],
