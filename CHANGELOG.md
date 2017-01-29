@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - New Download Command
 
 ### Fixed
+- LoadFunctions now calls itself when installing a new dependency in a client function
 - Fixed Default configuration not being read before guild configurations are created
 - Inhibitors now are correctly 'disabled' when set to be.
 - Events.... now should be fixed

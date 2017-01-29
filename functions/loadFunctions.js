@@ -21,7 +21,7 @@ const loadFunctions = (client, baseDir) => new Promise(async (resolve, reject) =
         console.error(error);
         process.exit();
       });
-      client.funcs.loadFunctions(client);
+      loadFunctions(client);
     } else {
       reject(e);
     }
