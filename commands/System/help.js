@@ -24,7 +24,7 @@ exports.run = (client, msg, [cmd]) => {
   } else if (client.commands.has(cmd)) {
     cmd = client.commands.get(cmd);
     if (!client.config.selfbot) {
-      msg.author.sendCode("asciidoc", `= ${cmd.help.name} = \n${cmd.help.description}\nusage :: ${client.funcs.fullUsage(client, cmd)}Extended Help ::\n${cmd.help.extendedHelp ? cmd.help.extendedHelp : "No extended help available."}`);
+      msg.author.sendCode("asciidoc", `= ${cmd.help.name} = \n${cmd.help.description}\nusage :: ${client.funcs.fullUsage(client, cmd)}\nExtended Help ::\n${cmd.help.extendedHelp ? cmd.help.extendedHelp : "No extended help available."}`);
     } else {
       msg.channel.sendCode("asciidoc", `= ${cmd.help.name} = \n${cmd.help.description}\nusage :: ${client.funcs.fullUsage(client, cmd)}\nExtended Help ::\n${cmd.help.extendedHelp ? cmd.help.extendedHelp : "No extended help available."}`);
     }
