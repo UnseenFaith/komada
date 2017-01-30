@@ -345,7 +345,7 @@ class Config {
    * @returns {null}
    * @static
    */
-  static async initialize(client) {
+  static initialize(client) {
     defaultConf = {
       prefix: { type: "String", data: client.config.prefix },
       disabledCommands: { type: "Array", data: [] },
@@ -354,9 +354,12 @@ class Config {
       lang: { type: "String", data: "en" },
     };
     dataDir = path.resolve(`${client.clientBaseDir}${path.sep}bwd${path.sep}conf`);
-    await fs.ensureFileAsync(`${dataDir}${path.sep}${defaultFile}`).catch(err => client.funcs.log(err, "error"));
-    const conf = await fs.readJSONAsync(path.resolve(`${dataDir}${path.sep}${defaultFile}`)).catch(() => fs.outputJSONAsync(`${dataDir}${path.sep}${defaultFile}`));
-    if (conf) defaultConf = conf;
+    fs.ensureFileAsync(`${dataDir}${path.sep}${defaultFile}`).catch(err => client.funcs.log(err, "error"));
+    fs.readJSONAsync(path.resolve(`${dataDir}${path.sep}${defaultFile}`))
+    .then((conf) => {
+      if (conf) defaultConf = conf;
+    })
+    .catch(() => fs.outputJSONAsync(`${dataDir}${path.sep}${defaultFile}`));
     client.guilds.forEach((guild) => {
       fs.readJSONAsync(path.resolve(`${dataDir}${path.sep}${guild.id}.json`))
       .then((thisConf) => {
