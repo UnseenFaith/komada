@@ -19,9 +19,12 @@ module.exports = async (client, msg, cmd, args, error) => {
     cmd.run(client, msg, params);
   } catch (err) {
     if (err) {
-      if (err.code === 1 && client.config.cmdPrompt) return client.funcs.awaitMessage(client, msg, cmd, args, err.message);
-      if (err.stack) client.emit("error", err.stack);
-      msg.channel.sendCode("JSON", error.message).catch(errs => client.emit("error", errs));
+      if (err.code === 1 && client.config.cmdPrompt) {
+        client.funcs.awaitMessage(client, msg, cmd, args, err.message);
+      } else {
+        if (err.stack) client.emit("error", err.stack);
+        msg.channel.sendCode("JSON", (err.message || error)).catch(errs => client.emit("error", client.funcs.newError(errs)));
+      }
     }
   }
 };
