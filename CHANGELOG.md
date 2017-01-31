@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Added
+- All Bad Requests/Forbiddens.. etc, now properly give a human readable error in console or chat, depending on the error.
 - New Error Creator
 - New CommandHandler (Removed it from message event)
 - New Core Command "Transfer"

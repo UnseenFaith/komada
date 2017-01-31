@@ -77,5 +77,5 @@ exports.start = async (config) => {
 
 process.on("unhandledRejection", (err) => {
   if (!err) return;
-  console.error(`Uncaught Promise Error: \n${err.stack}`);
+  console.error(`Uncaught Promise Error: \n${client.funcs.newError(err, 999)}`);
 });
