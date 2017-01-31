@@ -10,10 +10,10 @@ module.exports = (data, type = "log") => {
       console.log(`${clk.bgMagenta(`[${moment().format("YYYY-MM-DD HH:mm:ss")}]`)} ${inspect(data)}`);
       break;
     case "warn":
-      console.warn(`${clk.black.bgYellow(`[${moment().format("YYYY-MM-DD HH:mm:ss")}]`)} ${inspect(data, { depth: 5 })}`);
+      console.warn(`${clk.black.bgYellow(`[${moment().format("YYYY-MM-DD HH:mm:ss")}]`)} ${inspect(data, { depth: 2 })}`);
       break;
     case "error":
-      console.error(`${clk.bgRed(`[${moment().format("YYYY-MM-DD HH:mm:ss")}]`)} ${inspect(data, { depth: 5 })}`);
+      console.error(`${clk.bgRed(`[${moment().format("YYYY-MM-DD HH:mm:ss")}]`)} ${inspect(data, { depth: 2 })}`);
       break;
     case "log":
       console.log(`${clk.bgBlue(`[${moment().format("YYYY-MM-DD HH:mm:ss")}]`)} ${inspect(data, { depth: 0 })}`);
