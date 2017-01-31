@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - New Download Command
 
 ### Fixed
+- Empty Message errors
 - CmdPrompts should now be fixed completely
 - Inhibitors now await
 - Usage typos fixed
