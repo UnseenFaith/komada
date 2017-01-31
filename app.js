@@ -4,9 +4,11 @@ const path = require("path");
 const loadFunctions = require("./functions/loadFunctions.js");
 const Config = require("./classes/Config.js");
 
+let client;
+
 exports.start = async (config) => {
   if (typeof config !== "object") throw new TypeError("Configuration for Komada must be an object.");
-  const client = new Discord.Client(config.clientOptions);
+  client = new Discord.Client(config.clientOptions);
 
   client.config = config;
 
@@ -64,7 +66,7 @@ exports.start = async (config) => {
       cmd.run(client, msg, params);
     } catch (error) {
       if (error) {
-        if (error.code === 1 && client.config.cmdPrompt) client.funcs.awaitMessage(client, msg, cmd, [], error.message)
+        if (error.code === 1 && client.config.cmdPrompt) client.funcs.awaitMessage(client, msg, cmd, [], error.message);
         if (error.stack) client.emit("error", error.stack);
         msg.channel.sendCode("JSON", error.message).catch(err => client.emit("error", err));
       }
