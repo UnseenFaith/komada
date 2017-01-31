@@ -4,7 +4,7 @@ const path = require("path");
 const loadCommandInhibitors = (client, baseDir) => new Promise(async (resolve, reject) => {
   const dir = path.resolve(`${baseDir}./inhibitors/`);
   await fs.ensureDirAsync(dir);
-  const files = await client.funcs.getFileListing(client, baseDir, "inhibitors").catch(err => client.funcs.log(err, "error"));
+  const files = await client.funcs.getFileListing(client, baseDir, "inhibitors").catch(err => client.emit("error", client.funcs.newError(err)));
   try {
     files.forEach((f) => {
       const props = require(`${f.path}${path.sep}${f.base}`);
@@ -28,9 +28,9 @@ const loadCommandInhibitors = (client, baseDir) => new Promise(async (resolve, r
 
 module.exports = async (client) => {
   client.commandInhibitors.clear();
-  await loadCommandInhibitors(client, client.coreBaseDir).catch(err => client.funcs.log(err, "error"));
+  await loadCommandInhibitors(client, client.coreBaseDir).catch(err => client.emit("error", client.funcs.newError(err)));
   if (client.coreBaseDir !== client.clientBaseDir) {
-    await loadCommandInhibitors(client, client.clientBaseDir).catch(err => client.funcs.log(err, "error"));
+    await loadCommandInhibitors(client, client.clientBaseDir).catch(err => client.emit("error", client.funcs.newError(err)));
   }
   client.funcs.log(`Loaded ${client.commandInhibitors.size} command inhibitors.`);
 };

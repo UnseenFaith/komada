@@ -5,6 +5,7 @@ exports.conf = {
 };
 
 exports.run = (client, msg, cmd) => new Promise((resolve, reject) => {
+  if (!cmd.conf.runIn) resolve();
   if (cmd.conf.runIn.includes(msg.channel.type)) {
     resolve();
   } else {

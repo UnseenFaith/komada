@@ -3,8 +3,8 @@ const path = require("path");
 
 const loadProviders = (client, baseDir) => new Promise(async (resolve, reject) => {
   const dir = path.resolve(`${baseDir}./providers/`);
-  await fs.ensureDirAsync(dir).catch(err => client.funcs.log(err, "error"));
-  const files = await client.funcs.getFileListing(client, baseDir, "providers").catch(err => client.funcs.log(err, "error"));
+  await fs.ensureDirAsync(dir).catch(err => client.emit("error", client.funcs.newError(err)));
+  const files = await client.funcs.getFileListing(client, baseDir, "providers").catch(err => client.emit("error", client.funcs.newError(err)));
   try {
     files.forEach((f) => {
       const props = require(`${f.path}${path.sep}${f.base}`);
@@ -27,9 +27,9 @@ const loadProviders = (client, baseDir) => new Promise(async (resolve, reject) =
 
 module.exports = async (client) => {
   client.providers.clear();
-  await loadProviders(client, client.coreBaseDir).catch(err => client.funcs.log(err, "error"));
+  await loadProviders(client, client.coreBaseDir).catch(err => client.emit("error", client.funcs.newError(err)));
   if (client.coreBaseDir !== client.clientBaseDir) {
-    await loadProviders(client, client.clientBaseDir).catch(err => client.funcs.log(err, "error"));
+    await loadProviders(client, client.clientBaseDir).catch(err => client.emit("error", client.funcs.newError(err)));
   }
   client.funcs.log(`Loaded ${client.providers.size} providers.`);
 };

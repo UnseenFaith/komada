@@ -3,8 +3,8 @@ const path = require("path");
 
 const loadMessageMonitors = (client, baseDir) => new Promise(async (resolve, reject) => {
   const dir = path.resolve(`${baseDir}./monitors/`);
-  await fs.ensureDirAsync(dir).catch(err => client.funcs.log(err, "error"));
-  const files = await client.funcs.getFileListing(client, baseDir, "monitors").catch(err => client.funcs.log(err, "error"));
+  await fs.ensureDirAsync(dir).catch(err => client.emit("error", client.funcs.newError(err)));
+  const files = await client.funcs.getFileListing(client, baseDir, "monitors").catch(err => client.emit("error", client.funcs.newError(err)));
   try {
     files.forEach((f) => {
       const props = require(`${f.path}${path.sep}${f.base}`);
@@ -28,9 +28,9 @@ const loadMessageMonitors = (client, baseDir) => new Promise(async (resolve, rej
 
 module.exports = async (client) => {
   client.messageMonitors.clear();
-  await loadMessageMonitors(client, client.coreBaseDir).catch(err => client.funcs.log(err, "error"));
+  await loadMessageMonitors(client, client.coreBaseDir).catch(err => client.emit("error", client.funcs.newError(err)));
   if (client.coreBaseDir !== client.clientBaseDir) {
-    await loadMessageMonitors(client, client.clientBaseDir).catch(err => client.funcs.log(err, "error"));
+    await loadMessageMonitors(client, client.clientBaseDir).catch(err => client.emit("error", client.funcs.newError(err)));
   }
   client.funcs.log(`Loaded ${client.messageMonitors.size} command monitors.`);
 };

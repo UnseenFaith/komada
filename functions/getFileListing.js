@@ -17,7 +17,6 @@ module.exports = (client, baseDir, type) => new Promise((resolve, reject) => {
           });
         })
         .on("end", () => {
-          // client.funcs.log(`Modules: ${categories.join(",")}`);
           resolve(files);
         })
         .on("errors", (root, nodeStatsArray, next) => {
