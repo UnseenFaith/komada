@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Added
+- All Bad Requests/Forbiddens.. etc, now properly give a human readable error in console or chat, depending on the error.
+- New Error Creator
+- New CommandHandler (Removed it from message event)
 - New Core Command "Transfer"
 - New extended help feature added.
 - New Beta Configuration (Needs heavy testing)
@@ -13,6 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - New Initialize Function to alleviate undefined errors
 
 ### Changed
+- Many Files to use the new Error creator
 - guildOnly Inhibitor is now a `runIn` Inhibitor.
 - Inhibitors now use .some() to determine if more inhibitors should be ran.
 - Stats command now uses `<Collection>.reduce` to correctly determine User Count when fetchAllMembers is false
@@ -28,6 +32,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - New Download Command
 
 ### Fixed
+- CmdPrompts should now be fixed completely
 - Inhibitors now await
 - Usage typos fixed
 - LoadFunctions now calls itself when installing a new dependency in a client function

@@ -1,19 +1,18 @@
 const Discord = require("discord.js");
-const chalk = require("chalk");
 const path = require("path");
 
 const loadFunctions = require("./functions/loadFunctions.js");
 const Config = require("./classes/Config.js");
 
-const clk = new chalk.constructor({ enabled: true });
+let client;
 
 exports.start = async (config) => {
-  const client = new Discord.Client(config.clientOptions);
+  if (typeof config !== "object") throw new TypeError("Configuration for Komada must be an object.");
+  client = new Discord.Client(config.clientOptions);
 
   client.config = config;
 
   // Extend client
-  client.config.init = [];
   client.funcs = {};
   client.helpStructure = new Map();
   client.commands = new Discord.Collection();
@@ -56,56 +55,22 @@ exports.start = async (config) => {
 
   client.on("message", async (msg) => {
     if (msg.author.bot) return;
-    const conf = Config.get(msg.guild);
-    msg.guildConf = conf;
-    client.i18n.use(conf.lang);
+    msg.guildConf = Config.get(msg.guild);
+    client.i18n.use(msg.guildConf.lang);
     await client.funcs.runMessageMonitors(client, msg);
-    if (client.config.selfbot) {
-      if (msg.author.id !== client.user.id) return;
-    }
-    let thisPrefix;
-    if (conf.prefix instanceof Array) {
-      conf.prefix.forEach((prefix) => {
-        if (msg.content.startsWith(prefix)) thisPrefix = prefix;
-        else thisPrefix = prefix[0];
-      });
-    } else {
-      thisPrefix = conf.prefix;
-    }
-    if (!msg.content.startsWith(thisPrefix) && client.config.prefixMention && !client.config.prefixMention.test(msg.content)) return;
-    let prefixLength = thisPrefix.length;
-    if (client.config.prefixMention && client.config.prefixMention.test(msg.content)) prefixLength = client.config.prefixMention.exec(msg.content)[0].length + 1;
-    const command = msg.content.slice(prefixLength).split(" ")[0].toLowerCase();
-    const suffix = msg.content.slice(prefixLength).split(" ").slice(1).join(" ");
-    let commandLog;
-    switch (msg.channel.type) {
-      case "dm":
-        commandLog = `${clk.black.bgYellow(`${msg.author.username}<@${msg.author.id}>`)} : ${clk.bold(command)}('${suffix}') => ${clk.bgMagenta("[Direct Messages]")}`;
-        break;
-      case "group": // works for selfbots only
-        commandLog = `${clk.black.bgYellow(`${msg.author.username}<@${msg.author.id}>`)} : ${clk.bold(command)}('${suffix}') => ${clk.bgCyan(`${msg.channel.owner.username}[${msg.channel.owner.id}] in [GroupDM]`)}`;
-        break;
-      default: // text channels
-        commandLog = `${clk.black.bgYellow(`${msg.author.username}<@${msg.author.id}>`)} : ${clk.bold(command)}('${suffix}') => ${clk.bgGreen(`${msg.guild.name}[${msg.guild.id}]`)}`;
-    }
-    let cmd;
-    if (client.commands.has(command)) {
-      cmd = client.commands.get(command);
-    } else if (client.aliases.has(command)) {
-      cmd = client.commands.get(client.aliases.get(command));
-    }
+    if (client.config.selfbot && msg.author.id !== client.user.id) return;
+    const cmd = client.funcs.commandHandler(client, msg);
     if (!cmd) return;
-    client.funcs.runCommandInhibitors(client, msg, cmd).then((params) => {
-      client.funcs.log(commandLog);
+    try {
+      const params = await client.funcs.runCommandInhibitors(client, msg, cmd);
       cmd.run(client, msg, params);
-    })
-    .catch((reason) => {
-      if (reason) {
-        if (reason instanceof Promise) return;
-        if (reason.stack) client.funcs.log(reason.stack, "error");
-        msg.channel.sendCode("", reason).catch(console.error);
+    } catch (error) {
+      if (error) {
+        if (error.code === 1 && client.config.cmdPrompt) client.funcs.awaitMessage(client, msg, cmd, [], error.message);
+        if (error.stack) client.emit("error", error.stack);
+        msg.channel.sendCode("JSON", error.message).catch(err => client.emit("error", err));
       }
-    });
+    }
   });
 
   client.login(client.config.botToken);
@@ -114,5 +79,5 @@ exports.start = async (config) => {
 
 process.on("unhandledRejection", (err) => {
   if (!err) return;
-  console.error(`Uncaught Promise Error: \n${err.stack}`);
+  console.error(`Uncaught Promise Error: \n${client.funcs.newError(err, 999)}`);
 });

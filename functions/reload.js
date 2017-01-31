@@ -1,7 +1,7 @@
 const path = require("path");
 /* eslint-disable import/no-dynamic-require, global-require */
 exports.function = (client, dir, funcName) => new Promise(async (resolve, reject) => {
-  const files = await client.funcs.getFileListing(client, dir, "functions").catch(err => client.funcs.log(err, "error"));
+  const files = await client.funcs.getFileListing(client, dir, "functions").catch(err => client.emit("error", client.funcs.newError(err)));
   if (client.funcs.hasOwnProperty(funcName)) {
     const oldFunction = files.filter(f => f.name === funcName);
     if (oldFunction[0]) {
@@ -53,7 +53,7 @@ exports.function = (client, dir, funcName) => new Promise(async (resolve, reject
 });
 
 exports.inhibitor = (client, dir, inhibName) => new Promise(async (resolve, reject) => {
-  const files = await client.funcs.getFileListing(client, dir, "inhibitors").catch(err => client.funcs.log(err, "error"));
+  const files = await client.funcs.getFileListing(client, dir, "inhibitors").catch(err => client.emit("error", client.funcs.newError(err)));
   if (client.commandInhibitors.has(inhibName)) {
     const oldInhibitor = files.filter(f => f.name === inhibName);
     if (oldInhibitor[0]) {
@@ -107,7 +107,7 @@ exports.inhibitor = (client, dir, inhibName) => new Promise(async (resolve, reje
 });
 
 exports.monitor = (client, dir, monitName) => new Promise(async (resolve, reject) => {
-  const files = await client.funcs.getFileListing(client, dir, "monitors").catch(err => client.funcs.log(err, "error"));
+  const files = await client.funcs.getFileListing(client, dir, "monitors").catch(err => client.emit("error", client.funcs.newError(err)));
   if (client.messageMonitors.has(monitName)) {
     const oldMonitor = files.filter(f => f.name === monitName);
     if (oldMonitor[0]) {
@@ -161,7 +161,7 @@ exports.monitor = (client, dir, monitName) => new Promise(async (resolve, reject
 });
 
 exports.provider = (client, dir, providerName) => new Promise(async (resolve, reject) => {
-  const files = await client.funcs.getFileListing(client, dir, "providers").catch(err => client.funcs.log(err, "error"));
+  const files = await client.funcs.getFileListing(client, dir, "providers").catch(err => client.emit("error", client.funcs.newError(err)));
   if (client.providers.has(providerName)) {
     const oldProvider = files.filter(f => f.name === providerName);
     if (oldProvider[0]) {
@@ -215,7 +215,7 @@ exports.provider = (client, dir, providerName) => new Promise(async (resolve, re
 });
 
 exports.event = (client, eventName) => new Promise(async (resolve, reject) => {
-  const files = await client.funcs.getFileListing(client, client.clientBaseDir, "events").catch(err => client.funcs.log(err, "error"));
+  const files = await client.funcs.getFileListing(client, client.clientBaseDir, "events").catch(err => client.emit("error", client.funcs.newError(err)));
   const oldEvent = files.filter(f => f.name === eventName);
   if (oldEvent[0] && oldEvent[0].name === eventName) {
     let listener;
@@ -248,7 +248,7 @@ exports.command = (client, dir, commandName) => new Promise(async (resolve, reje
     command = client.aliases.get(commandName);
   }
   if (!command) {
-    const files = await client.funcs.getFileListing(client, dir, "commands").catch(err => client.funcs.log(err, "error"));
+    const files = await client.funcs.getFileListing(client, dir, "commands").catch(err => client.emit("error", client.funcs.newError(err)));
     const newCommands = files.filter(f => f.name === commandName);
     if (newCommands[0]) {
       newCommands.forEach(async (file) => {

@@ -4,7 +4,7 @@ module.exports = (client, user, guild) => new Promise(async (resolve, reject) =>
     const guildConf = client.configuration.get(guild);
     try {
       const modRole = guild.roles.find("name", guildConf.modRole);
-      const member = await guild.fetchMember(user).catch(err => client.funcs.log(err, "error"));
+      const member = await guild.fetchMember(user).catch(err => client.emit("error", client.funcs.newError(err)));
       if (modRole && member.roles.has(modRole.id)) {
         permlvl = 2;
       }

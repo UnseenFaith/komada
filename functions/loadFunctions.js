@@ -3,8 +3,8 @@ const path = require("path");
 
 const loadFunctions = (client, baseDir) => new Promise(async (resolve, reject) => {
   const dir = path.resolve(`${baseDir}./functions/`);
-  await fs.ensureDirAsync(dir).catch(err => console.error(err));
-  let files = await fs.readdirAsync(dir).catch(err => console.err(err));
+  await fs.ensureDirAsync(dir).catch(err => client.emit("error", client.funcs.newError(err)));
+  let files = await fs.readdirAsync(dir).catch(err => client.emit("error", client.funcs.newError(err)));
   files = files.filter(f => f.slice(-3) === ".js");
   try {
     files.forEach((f) => {
