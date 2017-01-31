@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - New Initialize Function to alleviate undefined errors
 
 ### Changed
+- Reverted Log function for the time being.
 - Many Files to use the new Error creator
 - guildOnly Inhibitor is now a `runIn` Inhibitor.
 - Inhibitors now use .some() to determine if more inhibitors should be ran.
@@ -33,7 +34,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - Empty Message errors
-- CmdPrompts should now be fixed completely
+- CmdPrompts should now be fixed completely (as of 0.16.2)
 - Inhibitors now await
 - Usage typos fixed
 - LoadFunctions now calls itself when installing a new dependency in a client function
