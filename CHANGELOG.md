@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - msg.author.permLevel is now available immediately on a message, instead of after inhibitors run correctly.
 - Usage Inhibitor is now a function instead, which will help issues with racing and prompts.
 - All Inhibitors now return values instead of using promises to resolve or reject. (Change will be reflected on Documentation soon)
+- Reverted Log function for the time being.
 - Many Files to use the new Error creator
 - guildOnly Inhibitor is now a `runIn` Inhibitor.
 - Inhibitors now use .some() to determine if more inhibitors should be ran.

@@ -65,9 +65,12 @@ exports.start = async (config) => {
       cmd.run(client, msg, params);
     } catch (error) {
       if (error) {
-        if (error.code === 1 && client.config.cmdPrompt) client.funcs.awaitMessage(client, msg, cmd, [], error.message);
-        if (error.stack) client.emit("error", error.stack);
-        msg.channel.sendCode("JSON", (error.message || error)).catch(err => client.emit("error", err));
+        if (error.code === 1 && client.config.cmdPrompt) {
+          client.funcs.awaitMessage(client, msg, cmd, [], error.message);
+        } else {
+          if (error.stack) client.emit("error", error.stack);
+          msg.channel.sendCode("JSON", (error.message || error)).catch(err => client.emit("error", err));
+        }
       }
     }
   });
