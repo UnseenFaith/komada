@@ -4,11 +4,9 @@ const path = require("path");
 const loadFunctions = require("./functions/loadFunctions.js");
 const Config = require("./classes/Config.js");
 
-let client;
-
 exports.start = async (config) => {
   if (typeof config !== "object") throw new TypeError("Configuration for Komada must be an object.");
-  client = new Discord.Client(config.clientOptions);
+  const client = new Discord.Client(config.clientOptions);
 
   client.config = config;
 
@@ -55,6 +53,7 @@ exports.start = async (config) => {
 
   client.on("message", async (msg) => {
     if (msg.author.bot) return;
+    msg.author.permLevel = await client.funcs.permissionLevels(client, msg.author, msg.guild);
     msg.guildConf = Config.get(msg.guild);
     client.i18n.use(msg.guildConf.lang);
     await client.funcs.runMessageMonitors(client, msg);
@@ -79,5 +78,5 @@ exports.start = async (config) => {
 
 process.on("unhandledRejection", (err) => {
   if (!err) return;
-  console.error(`Uncaught Promise Error: \n${client.funcs.newError(err, 999)}`);
+  console.error(`Uncaught Promise Error: \n${err}`);
 });

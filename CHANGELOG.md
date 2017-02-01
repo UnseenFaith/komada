@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Added
-- All Bad Requests/Forbiddens.. etc, now properly give a human readable error in console or chat, depending on the error.
+- All Bad Requests/Forbiddens.. etc, now properly give a human readable error in console or chat, depending on the error. (Not as of (0.17.0).. must be fixed) ***
 - New Error Creator
 - New CommandHandler (Removed it from message event)
 - New Core Command "Transfer"
@@ -14,8 +14,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - New Beta Configuration (Needs heavy testing)
 - New Argument Prompting for Commands
 - New Initialize Function to alleviate undefined errors
+- New Download Command
 
 ### Changed
+- newError changed to send arguments to awaitMessage when errors are from usage
+- awaitMessage changed to work perfectly with the new system
+- msg.author.permLevel is now available immediately on a message, instead of after inhibitors run correctly.
+- Usage Inhibitor is now a function instead, which will help issues with racing and prompts.
+- All Inhibitors now return values instead of using promises to resolve or reject. (Change will be reflected on Documentation soon)
 - Many Files to use the new Error creator
 - guildOnly Inhibitor is now a `runIn` Inhibitor.
 - Inhibitors now use .some() to determine if more inhibitors should be ran.
@@ -29,11 +35,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Help command is now a Direct Message.
 - Async/Await for all pieces && app.js
 - dataProviders renamed to Providers
-- New Download Command
 
 ### Fixed
+- Unchanged Package.json links to the repository
+- App.js uncaughtWarnings reverted (for now)
+- Download.js Fix && Reload.js typo fix.
+- Inhibitors now run one by one until one of them fails or all succeed. Fixes race conditions permanently.
 - Empty Message errors
-- CmdPrompts should now be fixed completely
+- CmdPrompts should now be fixed completely (as of 0.17.0)
 - Inhibitors now await
 - Usage typos fixed
 - LoadFunctions now calls itself when installing a new dependency in a client function

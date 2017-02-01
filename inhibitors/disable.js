@@ -4,10 +4,10 @@ exports.conf = {
   priority: 9,
 };
 
-exports.run = (client, msg, cmd) => new Promise((resolve, reject) => {
+exports.run = (client, msg, cmd) => {
   if (cmd.conf.enabled && !msg.guildConf.disabledCommands.includes(cmd.help.name)) {
-    resolve();
+    return false;
   } else {
-    reject("This command is currently disabled");
+    return "This command is currently disabled";
   }
-});
+};

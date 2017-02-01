@@ -4,7 +4,7 @@ exports.conf = {
   priority: 7,
 };
 
-exports.run = (client, msg, cmd) => new Promise((resolve, reject) => {
+exports.run = (client, msg, cmd) => {
   let missing = [];
   if (msg.channel.type === "text") {
     missing = msg.channel.permissionsFor(client.user).missingPermissions(cmd.conf.botPerms);
@@ -15,8 +15,8 @@ exports.run = (client, msg, cmd) => new Promise((resolve, reject) => {
     });
   }
   if (missing.length > 0) {
-    reject(`Insufficient permissions, missing: **${client.funcs.toTitleCase(missing.join(", ").split("_").join(" "))}**`);
+    return `Insufficient permissions, missing: **${client.funcs.toTitleCase(missing.join(", ").split("_").join(" "))}**`;
   } else {
-    resolve();
+    return false;
   }
-});
+};

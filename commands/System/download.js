@@ -10,7 +10,7 @@ exports.run = (client, msg, [link, piece, folder = "Downloaded"]) => {
   let newURL;
   if (!proposedURL.protocol && !proposedURL.hostname) {
     if (!piece) return msg.channel.sendMessage(`<@!${msg.author.id}> | You provided an invalid url, and no piece name to look up in the Pieces repository.`);
-    if (link === "command") {
+    if (link === "commands") {
       piece = piece.split("/");
       if (piece.length < 0 || piece.length > 2) return msg.channel.sendMessage(`<@!${msg.author.id}> | You provided an invalid or no subfolder for a command. Please provide a valid folder name from the Pieces Repo. Example: Misc/test`);
       newURL = `${piecesURL}${link}/${piece.join("/")}.js`;
