@@ -4,12 +4,7 @@ exports.conf = {
   priority: 10,
 };
 
-exports.run = (client, msg, cmd) => new Promise(async (resolve, reject) => {
-  const permlvl = await client.funcs.permissionLevel(client, msg.author, msg.guild).catch(err => client.funcs.log(err, "error"));
-  msg.author.permLevel = permlvl;
-  if (permlvl >= cmd.conf.permLevel) {
-    resolve();
-  } else {
-    reject("You do not have permission to use this command.");
-  }
-});
+exports.run = (client, msg, cmd) => {
+  if (msg.author.permLevel >= cmd.conf.permLevel) return false;
+  return "You do not have permission to use this command.";
+};

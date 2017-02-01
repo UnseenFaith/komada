@@ -7,7 +7,7 @@ const path = require("path");
 class ArrayConfig {
   /**
    * @param {Config} conf The guild configuration obtained from the guildConfs map.
-   * @param {object} data The data you want to append to this Array configuration key.
+   * @param {Object} data The data you want to append to this Array configuration key.
    * @returns {ArrayConfig}
    */
   constructor(conf, data) {
@@ -22,7 +22,7 @@ class ArrayConfig {
 
   /**
    * Adds a value(s) to the array. Accepts a single value or an array of values.
-   * @param {string|array} value The value(s) to add to the array.
+   * @param {String|Array} value The value(s) to add to the array.
    * @returns {ArrayConfig}
    */
   add(value) {
@@ -43,7 +43,7 @@ class ArrayConfig {
 
   /**
    * Deletes a value(s) from the array. Accepts a single value or an array of values.
-   * @param {string|array} value The value(s) to delete from the array.
+   * @param {String|Array} value The value(s) to delete from the array.
    * @returns {ArrayConfig}
    */
   del(value) {

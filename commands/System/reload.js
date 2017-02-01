@@ -10,7 +10,7 @@ exports.run = async (client, msg, [type, name]) => {
     case "inhibitor":
       m = await msg.channel.sendMessage(`Attempting to reload inhibitor ${name}`).catch(err => client.funcs.log(err, "error"));
       message = await client.funcs.reload.inhibitor(client, client.clientBaseDir, name).catch(response => m.edit(`:x: ${response}`));
-      m.edit(`:white_check_mark ${message}`);
+      m.edit(`:white_check_mark: ${message}`);
       break;
     case "monitor":
       m = await msg.channel.sendMessage(`Attempting to reload monitor ${name}`).catch(err => client.funcs.log(err, "error"));

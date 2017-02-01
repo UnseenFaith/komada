@@ -4,11 +4,8 @@ exports.conf = {
   priority: 8,
 };
 
-exports.run = (client, msg, cmd) => new Promise((resolve, reject) => {
-  if (!cmd.conf.runIn) resolve();
-  if (cmd.conf.runIn.includes(msg.channel.type)) {
-    resolve();
-  } else {
-    reject(`This command is only avaliable in ${cmd.conf.runIn.join(" ")} channels`);
-  }
-});
+exports.run = (client, msg, cmd) => {
+  if (!cmd.conf.runIn) return false;
+  if (cmd.conf.runIn.includes(msg.channel.type)) return false;
+  return `This command is only avaliable in ${cmd.conf.runIn.join(" ")} channels`;
+};

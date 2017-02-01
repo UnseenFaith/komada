@@ -8,7 +8,7 @@ const path = require("path");
 class NumberConfig {
   /**
    * @param {Config} conf A guilds configuration obtained from the guildConfs map.
-   * @param {object} data The data you want to append to this number key.
+   * @param {Object} data The data you want to append to this number key.
    * @returns {NumberConfig}
    */
   constructor(conf, data) {
@@ -25,7 +25,7 @@ class NumberConfig {
 
   /**
    * Sets the value for a number key, according to the minimum and maximum values if they apply.
-   * @param {number} value The value you want to set the key as.
+   * @param {Number} value The value you want to set the key as.
    * @returns {NumberConfig}
    */
   set(value) {
@@ -39,7 +39,7 @@ class NumberConfig {
 
   /**
    * Sets the minimum value a number key can be.
-   * @param {number} value The value you want to set the minimum as.
+   * @param {Number} value The value you want to set the minimum as.
    * @returns {NumberConfig}
    */
   setMin(value) {
@@ -50,7 +50,7 @@ class NumberConfig {
 
   /**
    * Sets the maximum value a number key can bey.
-   * @param {number} value The value you want to set the maximum as.
+   * @param {Number} value The value you want to set the maximum as.
    * @returns {NumberConfig}
    */
   setMax(value) {

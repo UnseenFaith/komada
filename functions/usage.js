@@ -36,11 +36,13 @@ exports.run = (client, msg, cmd, args = undefined) => new Promise((resolve, reje
     }
     if (currentUsage.type === "optional" && (args[i] === undefined || args[i] === "")) { // Handle if args length < required usage length
       if (usage.slice(i).some(u => u.type === "required")) {
-        return reject(client.funcs.newError("Missing one or more required arguments after end of input.", 1));
+        args.shift();
+        return reject(client.funcs.newError("Missing one or more required arguments after end of input.", 1, args));
       }
       return resolve(args);
     } else if (currentUsage.type === "required" && args[i] === undefined) {
-      return reject(client.funcs.newError(currentUsage.possibles.length === 1 ? `${currentUsage.possibles[0].name} is a required argument.` : `Missing a required option: (${currentUsage.possibles.map(p => p.name).join(", ")})`, 1));
+      args.shift();
+      return reject(client.funcs.newError(currentUsage.possibles.length === 1 ? `${currentUsage.possibles[0].name} is a required argument.` : `Missing a required option: (${currentUsage.possibles.map(p => p.name).join(", ")})`, 1, args));
     } else if (currentUsage.possibles.length === 1) {
       switch (currentUsage.possibles[0].type) {
         case "literal":
@@ -51,7 +53,8 @@ exports.run = (client, msg, cmd, args = undefined) => new Promise((resolve, reje
             args.splice(i, 0, undefined);
             validateArgs(++i);
           } else {
-            return reject(client.funcs.newError(`Your option did not literally match the only possibility: (${currentUsage.possibles.map(p => p.name).join(", ")}).. This is likely caused by a mistake in the usage string.`, 1));
+            args.shift();
+            return reject(client.funcs.newError(`Your option did not literally match the only possibility: (${currentUsage.possibles.map(p => p.name).join(", ")}).. This is likely caused by a mistake in the usage string.`, 1, args));
           }
           break;
         case "msg":
@@ -68,7 +71,8 @@ exports.run = (client, msg, cmd, args = undefined) => new Promise((resolve, reje
                   args.splice(i, 0, undefined);
                   validateArgs(++i);
                 } else {
-                  return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be a valid message id.`, 1));
+                  args.shift();
+                  return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be a valid message id.`, 1, args));
                 }
               });
             } else {
@@ -82,7 +86,8 @@ exports.run = (client, msg, cmd, args = undefined) => new Promise((resolve, reje
                       args.splice(i, 0, undefined);
                       validateArgs(++i);
                     } else {
-                      return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be a valid message id.`, 1));
+                      args.shift();
+                      return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be a valid message id.`, 1, args));
                     }
                   });
             }
@@ -90,7 +95,8 @@ exports.run = (client, msg, cmd, args = undefined) => new Promise((resolve, reje
             args.splice(i, 0, undefined);
             validateArgs(++i);
           } else {
-            return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be a valid message id.`, 1));
+            args.shift();
+            return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be a valid message id.`, 1, args));
           }
           break;
         case "user":
@@ -102,7 +108,8 @@ exports.run = (client, msg, cmd, args = undefined) => new Promise((resolve, reje
             args.splice(i, 0, undefined);
             validateArgs(++i);
           } else {
-            return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be a mention or valid user id.`, 1));
+            args.shift();
+            return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be a mention or valid user id.`, 1, args));
           }
           break;
         case "boolean":
@@ -117,7 +124,8 @@ exports.run = (client, msg, cmd, args = undefined) => new Promise((resolve, reje
             args.splice(i, 0, undefined);
             validateArgs(++i);
           } else {
-            return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be true or false.`, 1));
+            args.shift();
+            return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be true or false.`, 1, args));
           }
           break;
         case "member":
@@ -128,7 +136,8 @@ exports.run = (client, msg, cmd, args = undefined) => new Promise((resolve, reje
             args.splice(i, 0, undefined);
             validateArgs(++i);
           } else {
-            return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be a mention or valid user id.`, 1));
+            args.shift();
+            return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be a mention or valid user id.`, 1, args));
           }
           break;
         case "channel":
@@ -139,7 +148,8 @@ exports.run = (client, msg, cmd, args = undefined) => new Promise((resolve, reje
             args.splice(i, 0, undefined);
             validateArgs(++i);
           } else {
-            return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be a channel tag or valid channel id.`, 1));
+            args.shift();
+            return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be a channel tag or valid channel id.`, 1, args));
           }
           break;
         case "guild":
@@ -150,7 +160,8 @@ exports.run = (client, msg, cmd, args = undefined) => new Promise((resolve, reje
             args.splice(i, 0, undefined);
             validateArgs(++i);
           } else {
-            return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be a valid guild id.`, 1));
+            args.shift();
+            return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be a valid guild id.`, 1, args));
           }
           break;
         case "role":
@@ -161,7 +172,8 @@ exports.run = (client, msg, cmd, args = undefined) => new Promise((resolve, reje
             args.splice(i, 0, undefined);
             validateArgs(++i);
           } else {
-            return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be a role mention or role id.`, 1));
+            args.shift();
+            return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be a role mention or role id.`, 1, args));
           }
           break;
         case "str":
@@ -172,9 +184,11 @@ exports.run = (client, msg, cmd, args = undefined) => new Promise((resolve, reje
                 args.splice(i, 0, undefined);
                 validateArgs(++i);
               } else if (currentUsage.possibles[0].min === currentUsage.possibles[0].max) {
-                return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be exactly ${currentUsage.possibles[0].min} characters.`, 1));
+                args.shift();
+                return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be exactly ${currentUsage.possibles[0].min} characters.`, 1, args));
               } else {
-                return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be between ${currentUsage.possibles[0].min} and ${currentUsage.possibles[0].max} characters.`, 1));
+                args.shift();
+                return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be between ${currentUsage.possibles[0].min} and ${currentUsage.possibles[0].max} characters.`, 1, args));
               }
             } else {
               validateArgs(++i);
@@ -185,7 +199,8 @@ exports.run = (client, msg, cmd, args = undefined) => new Promise((resolve, reje
                 args.splice(i, 0, undefined);
                 validateArgs(++i);
               } else {
-                return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be longer than ${currentUsage.possibles[0].min} characters.`, 1));
+                args.shift();
+                return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be longer than ${currentUsage.possibles[0].min} characters.`, 1, args));
               }
             } else {
               validateArgs(++i);
@@ -196,7 +211,8 @@ exports.run = (client, msg, cmd, args = undefined) => new Promise((resolve, reje
                 args.splice(i, 0, undefined);
                 validateArgs(++i);
               } else {
-                return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be shorter than ${currentUsage.possibles[0].max} characters.`, 1));
+                args.shift();
+                return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be shorter than ${currentUsage.possibles[0].max} characters.`, 1, args));
               }
             } else {
               validateArgs(++i);
@@ -212,7 +228,8 @@ exports.run = (client, msg, cmd, args = undefined) => new Promise((resolve, reje
               args.splice(i, 0, undefined);
               validateArgs(++i);
             } else {
-              return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be an integer.`, 1));
+              args.shift();
+              return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be an integer.`, 1, args));
             }
           } else if (currentUsage.possibles[0].min && currentUsage.possibles[0].max) {
             args[i] = parseInt(args[i]);
@@ -222,13 +239,15 @@ exports.run = (client, msg, cmd, args = undefined) => new Promise((resolve, reje
                   args.splice(i, 0, undefined);
                   validateArgs(++i);
                 } else {
-                  return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be exactly ${currentUsage.possibles[0].min}... So why didn't the dev use a literal?`, 1));
+                  args.shift();
+                  return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be exactly ${currentUsage.possibles[0].min}... So why didn't the dev use a literal?`, 1, args));
                 }
               } else if (currentUsage.type === "optional" && !repeat) {
                 args.splice(i, 0, undefined);
                 validateArgs(++i);
               } else {
-                return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be between ${currentUsage.possibles[0].min} and ${currentUsage.possibles[0].max}.`, 1));
+                args.shift();
+                return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be between ${currentUsage.possibles[0].min} and ${currentUsage.possibles[0].max}.`, 1, args));
               }
             } else {
               validateArgs(++i);
@@ -240,7 +259,8 @@ exports.run = (client, msg, cmd, args = undefined) => new Promise((resolve, reje
                 args.splice(i, 0, undefined);
                 validateArgs(++i);
               } else {
-                return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be greater than ${currentUsage.possibles[0].min}.`, 1));
+                args.shift();
+                return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be greater than ${currentUsage.possibles[0].min}.`, 1, args));
               }
             } else {
               validateArgs(++i);
@@ -252,7 +272,8 @@ exports.run = (client, msg, cmd, args = undefined) => new Promise((resolve, reje
                 args.splice(i, 0, undefined);
                 validateArgs(++i);
               } else {
-                return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be less than ${currentUsage.possibles[0].max}.`, 1));
+                args.shift();
+                return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be less than ${currentUsage.possibles[0].max}.`, 1, args));
               }
             } else {
               validateArgs(++i);
@@ -270,7 +291,8 @@ exports.run = (client, msg, cmd, args = undefined) => new Promise((resolve, reje
               args.splice(i, 0, undefined);
               validateArgs(++i);
             } else {
-              return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be a valid number.`, 1));
+              args.shift();
+              return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be a valid number.`, 1, args));
             }
           } else if (currentUsage.possibles[0].min && currentUsage.possibles[0].max) {
             args[i] = parseFloat(args[i]);
@@ -280,13 +302,15 @@ exports.run = (client, msg, cmd, args = undefined) => new Promise((resolve, reje
                   args.splice(i, 0, undefined);
                   validateArgs(++i);
                 } else {
-                  return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be exactly ${currentUsage.possibles[0].min}... So why didn't the dev use a literal?`, 1));
+                  args.shift();
+                  return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be exactly ${currentUsage.possibles[0].min}... So why didn't the dev use a literal?`, 1, args));
                 }
               } else if (currentUsage.type === "optional" && !repeat) {
                 args.splice(i, 0, undefined);
                 validateArgs(++i);
               } else {
-                return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be between ${currentUsage.possibles[0].min} and ${currentUsage.possibles[0].max}.`, 1));
+                args.shift();
+                return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be between ${currentUsage.possibles[0].min} and ${currentUsage.possibles[0].max}.`, 1, args));
               }
             } else {
               validateArgs(++i);
@@ -298,7 +322,8 @@ exports.run = (client, msg, cmd, args = undefined) => new Promise((resolve, reje
                 args.splice(i, 0, undefined);
                 validateArgs(++i);
               } else {
-                return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be greater than ${currentUsage.possibles[0].min}.`, 1));
+                args.shift();
+                return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be greater than ${currentUsage.possibles[0].min}.`, 1, args));
               }
             } else {
               validateArgs(++i);
@@ -310,7 +335,8 @@ exports.run = (client, msg, cmd, args = undefined) => new Promise((resolve, reje
                 args.splice(i, 0, undefined);
                 validateArgs(++i);
               } else {
-                return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be less than ${currentUsage.possibles[0].max}.`, 1));
+                args.shift();
+                return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be less than ${currentUsage.possibles[0].max}.`, 1, args));
               }
             } else {
               validateArgs(++i);
@@ -327,7 +353,8 @@ exports.run = (client, msg, cmd, args = undefined) => new Promise((resolve, reje
               args.splice(i, 0, undefined);
               validateArgs(++i);
             } else {
-              return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be a valid url.`, 1));
+              args.shift();
+              return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be a valid url.`, 1, args));
             }
           } else {
             validateArgs(++i);
@@ -349,7 +376,7 @@ exports.run = (client, msg, cmd, args = undefined) => new Promise((resolve, reje
             args.splice(i, 0, undefined);
             validateArgs(++i);
           } else {
-            reject(client.funcs.newError(`Your option didn't match any of the possibilities: (${currentUsage.possibles.map(possibles => possibles.name).join(", ")})`, 1));
+            reject(client.funcs.newError(`Your option didn't match any of the possibilities: (${currentUsage.possibles.map(possibles => possibles.name).join(", ")})`, 1, args));
           }
           return;
         }

@@ -4,10 +4,10 @@ exports.conf = {
   priority: 6,
 };
 
-exports.run = (client, msg, cmd) => new Promise((resolve, reject) => {
-  if (!cmd.conf.requiredFuncs) resolve();
+exports.run = (client, msg, cmd) => {
+  if (!cmd.conf.requiredFuncs) return false;
   cmd.conf.requiredFuncs.forEach((func) => {
-    if (!client.funcs.hasOwnProperty(func)) reject(`The client is missing **${func}**, and cannot run.`);
+    if (!client.funcs.hasOwnProperty(func)) return `The client is missing **${func}**, and cannot run.`;
   });
-  resolve();
-});
+  return false;
+};

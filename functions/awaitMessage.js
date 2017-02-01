@@ -5,7 +5,6 @@ const options = {
 };
 
 module.exports = async (client, msg, cmd, args, error) => {
-  args.shift();
   const permLvl = await client.funcs.permissionLevel(client, msg.author, msg.guild).catch(err => client.emit("error", client.funcs.newError(err)));
   if (cmd.conf.permLevel > permLvl) return msg.channel.sendCode("", "You do not have enough permission to use this command.").catch(err => client.emit("error", client.funcs.newError(err)));
   const message = await msg.channel.sendMessage(`<@!${msg.member.id}> | **${error}** | You have **30** seconds to respond to this prompt with a valid argument. Type **"ABORT"** to abort this prompt.`).catch(err => client.emit("error", client.funcs.newError(err)));
@@ -15,15 +14,12 @@ module.exports = async (client, msg, cmd, args, error) => {
   if (param.first().content.toLowerCase() === "abort") return "Aborted";
   args.push(param.first().content);
   try {
-    const params = await client.funcs.runCommandInhibitors(client, msg, cmd, args);
+    const params = await client.funcs.usage.run(client, msg, cmd, args);
     cmd.run(client, msg, params);
   } catch (err) {
     if (err) {
       if (err.code === 1 && client.config.cmdPrompt) {
-        client.funcs.awaitMessage(client, msg, cmd, args, err.message);
-      } else {
-        if (err.stack) client.emit("error", err.stack);
-        msg.channel.sendCode("JSON", (err.message || error)).catch(errs => client.emit("error", client.funcs.newError(errs)));
+        client.funcs.awaitMessage(client, msg, cmd, err.args, err.message);
       }
     }
   }
