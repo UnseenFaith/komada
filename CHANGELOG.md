@@ -38,6 +38,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - dataProviders renamed to Providers
 
 ### Fixed
+- Fixed Usage not working properly with selective
+- permissionLevels -> permissionLevel
 - Unchanged Package.json links to the repository
 - App.js uncaughtWarnings reverted (for now)
 - Download.js Fix && Reload.js typo fix.
