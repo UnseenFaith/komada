@@ -14,9 +14,6 @@ exports.run = (client, msg, cmd) => {
       if (!impliedPermissions[perm]) missing.push(perm);
     });
   }
-  if (missing.length > 0) {
-    return `Insufficient permissions, missing: **${client.funcs.toTitleCase(missing.join(", ").split("_").join(" "))}**`;
-  } else {
-    return false;
-  }
+  if (missing.length > 0) return `Insufficient permissions, missing: **${client.funcs.toTitleCase(missing.join(", ").split("_").join(" "))}**`;
+  return false;
 };

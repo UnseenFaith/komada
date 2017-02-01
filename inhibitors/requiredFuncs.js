@@ -10,4 +10,4 @@ exports.run = (client, msg, cmd) => {
     if (!client.funcs.hasOwnProperty(func)) return `The client is missing **${func}**, and cannot run.`;
   });
   return false;
-}
+};

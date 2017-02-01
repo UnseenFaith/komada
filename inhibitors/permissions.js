@@ -5,9 +5,6 @@ exports.conf = {
 };
 
 exports.run = (client, msg, cmd) => {
-    if (msg.author.permLevel >= cmd.conf.permLevel) {
-      return false;
-    } else {
-      return "You do not have permission to use this command.";
-    }
+  if (msg.author.permLevel >= cmd.conf.permLevel) return false;
+  return "You do not have permission to use this command.";
 };
