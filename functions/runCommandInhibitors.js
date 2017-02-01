@@ -8,7 +8,7 @@ module.exports = (client, msg, cmd, selective = false) => new Promise(async (res
     return false;
   });
   if (usage) return reject(usage);
-  if (selective) {
+  if (!selective || !client.funcs.usage.conf.spamProtection) {
     try {
       usage = await client.funcs.usage.run(client, msg, cmd);
     } catch (err) {

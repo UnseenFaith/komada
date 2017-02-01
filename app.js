@@ -53,7 +53,7 @@ exports.start = async (config) => {
 
   client.on("message", async (msg) => {
     if (msg.author.bot) return;
-    msg.author.permLevel = await client.funcs.permissionLevels(client, msg.author, msg.guild);
+    msg.author.permLevel = await client.funcs.permissionLevel(client, msg.author, msg.guild);
     msg.guildConf = Config.get(msg.guild);
     client.i18n.use(msg.guildConf.lang);
     await client.funcs.runMessageMonitors(client, msg);
@@ -81,5 +81,5 @@ exports.start = async (config) => {
 
 process.on("unhandledRejection", (err) => {
   if (!err) return;
-  console.error(`Uncaught Promise Error: \n${err}`);
+  console.error(`Uncaught Promise Error: \n${err.stack || err}`);
 });
