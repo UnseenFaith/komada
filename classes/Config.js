@@ -58,8 +58,7 @@ class Config {
   }
 
   /**
-   * Allows you to add a key to a guild configuration. Note: This should never be called
-   * directly as it could cause unwanted side effects.
+   * Allows you to add a key to a guild configuration. Note: This should never be called directly as it could cause unwanted side effects.
    * @param {String} key The key to add to the configuration.
    * @param {String|Array|Number|Boolean} defaultValue The value for the key.
    * @param {String} type The type of key you want to add.
@@ -82,8 +81,7 @@ class Config {
   }
 
   /**
-   * Deletes a key from the respected guild configuration.
-   * This should never be called directly.
+   * Deletes a key from the respected guild configuration. This should never be called directly.
    * @param {String} key The key to delete from the configuration
    * @returns {null}
    */
@@ -310,8 +308,7 @@ class Config {
   }
 
   /**
-   * Inserts a guild into the guildConfs map and deletes the configuration JSON.
-   * This should never be called by anyone, this is purely for the guildCreate event.
+   * Inserts a guild into the guildConfs map and deletes the configuration JSON. This should never be called by anyone, this is purely for the guildCreate event.
    * @param {Client} client The Discord.js Client
    * @param {Guild} guild The Guild being inserted into the map.
    * @returns {String}
@@ -325,8 +322,7 @@ class Config {
   }
 
   /**
-   * Removes a guild from the guildConfs map and deletes the configuration JSON.
-   * This should never be called by anyone, this is purely for the guildDelete event.
+   * Removes a guild from the guildConfs map and deletes the configuration JSON. This should never be called by anyone, this is purely for the guildDelete event.
    * @param {Guild} guild The guild being removed from the map.
    * @returns {String}
    * @static
@@ -339,8 +335,7 @@ class Config {
   }
 
   /**
-   * The motherboard of our Configuration system.
-   * There's no reason to ever call this as it's called internally upon startup.
+   * The motherboard of our Configuration system. There's no reason to ever call this as it's called internally upon startup.
    * @param {Client} client The Discord.js Client
    * @returns {null}
    * @static
