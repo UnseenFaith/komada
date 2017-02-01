@@ -60,9 +60,9 @@ class Config {
   /**
    * Allows you to add a key to a guild configuration. Note: This should never be called
    * directly as it could cause unwanted side effects.
-   * @param {string} key The key to add to the configuration.
-   * @param {string|array|number|boolean} defaultValue The value for the key.
-   * @param {string} type The type of key you want to add.
+   * @param {String} key The key to add to the configuration.
+   * @param {String|Array|Number|Boolean} defaultValue The value for the key.
+   * @param {String} type The type of key you want to add.
    * @returns {Config}
    */
   addKey(key, defaultValue, type) {
@@ -84,7 +84,7 @@ class Config {
   /**
    * Deletes a key from the respected guild configuration.
    * This should never be called directly.
-   * @param {string} key The key to delete from the configuration
+   * @param {String} key The key to delete from the configuration
    * @returns {null}
    */
   delKey(key) {
@@ -95,7 +95,7 @@ class Config {
 
   /**
    * Resets a key for the respected guild configuration.
-   * @param {string} key The key to reset in the configuration.
+   * @param {String} key The key to reset in the configuration.
    * @returns {Config<Key>}
    */
   reset(key) {
@@ -114,8 +114,8 @@ class Config {
 
   /**
    * Checks the guild configuration for a key
-   * @param {string} key The key to check the guild configuration for.
-   * @returns {boolean}
+   * @param {String} key The key to check the guild configuration for.
+   * @returns {Boolean}
    */
   has(key) {
     if (!key) return "Please supply a key.";
@@ -125,7 +125,7 @@ class Config {
   /**
    * Simplifies the guild configuration for use in commands and modules.
    * @param {Guild} guild The guild to get a configuration for.
-   * @returns {object}
+   * @returns {Object}
    * @static
    * @example
    * //Example of what this returns
@@ -149,9 +149,9 @@ class Config {
 
   /**
    * Set the default value for a key in the default configuration.
-   * @param {string} key The key for which you want to change.
-   * @param {array|boolean|number|string} defaultValue The value you want to set as the default.
-   * @returns {object} Returns the new default configuration for the key.
+   * @param {String} key The key for which you want to change.
+   * @param {Array|Boolean|Number|String} defaultValue The value you want to set as the default.
+   * @returns {Object} Returns the new default configuration for the key.
    * @static
    */
   static set(key, defaultValue) {
@@ -167,9 +167,9 @@ class Config {
 
   /**
    * Sets the default minimum value for a Number key
-   * @param {string} key The Number key for which you want to set the minimum value for.
-   * @param {number} defaultMinValue The value you want to set as the "minimum" value.
-   * @returns {object} Returns the new default configuration for the key.
+   * @param {String} key The Number key for which you want to set the minimum value for.
+   * @param {Number} defaultMinValue The value you want to set as the "minimum" value.
+   * @returns {Object} Returns the new default configuration for the key.
    * @static
    */
   static setMin(key, defaultMinValue) {
@@ -182,9 +182,9 @@ class Config {
 
   /**
    * Sets the default maximum value for a Number key
-   * @param {string} key The Number key for which you want to set the maximum value for.
-   * @param {number} defaultMaxValue The value you want to set as the "maximum" value.
-   * @returns {object} Returns the new default configuration for the key.
+   * @param {String} key The Number key for which you want to set the maximum value for.
+   * @param {Number} defaultMaxValue The value you want to set as the "maximum" value.
+   * @returns {Object} Returns the new default configuration for the key.
    * @static
    */
   static setMax(key, defaultMaxValue) {
@@ -197,9 +197,9 @@ class Config {
 
   /**
    * Adds a value to the data array for an Array key.
-   * @param {string} key The Array key for which you want to add value(s) for.
-   * @param {string} defaultValue The value for which you want to add to the array.
-   * @returns {object} Returns the new default configuration for the key.
+   * @param {String} key The Array key for which you want to add value(s) for.
+   * @param {String} defaultValue The value for which you want to add to the array.
+   * @returns {Object} Returns the new default configuration for the key.
    * @static
    */
   static add(key, defaultValue) {
@@ -213,9 +213,9 @@ class Config {
 
   /**
    * Deletes a value from the data array for an Array key.
-   * @param {string} key The array key for which you want to delete value(s) from.
-   * @param {string} defaultValue The value for which you want to remove from the array.
-   * @returns {object} Returns the new default configuration for the key.
+   * @param {String} key The array key for which you want to delete value(s) from.
+   * @param {String} defaultValue The value for which you want to remove from the array.
+   * @returns {Object} Returns the new default configuration for the key.
    * @static
    */
   static del(key, defaultValue) {
@@ -229,8 +229,8 @@ class Config {
 
   /**
    * Toggles the true/false statement for a Boolean key
-   * @param {string} key The boolean key for which you want to toggle the statement for.
-   * @returns {objct} Returns the new default configuration for the key.
+   * @param {String} key The boolean key for which you want to toggle the statement for.
+   * @returns {Object} Returns the new default configuration for the key.
    * @static
    */
   static toggle(key) {
@@ -245,7 +245,7 @@ class Config {
   /**
    * Checks if the guildConfs Map has the specified guild.
    * @param {Guild} guild The guild to check the Map for.
-   * @returns {boolean}
+   * @returns {Boolean}
    * @static
    */
   static has(guild) {
@@ -255,8 +255,8 @@ class Config {
 
   /**
   * Checks if the default configuration has a specified key.
-  * @param {string} key The key for which to check the default configuration for.
-  * @returns {boolean}
+  * @param {String} key The key for which to check the default configuration for.
+  * @returns {Boolean}
   * @static
   */
   static hasKey(key) {
@@ -266,10 +266,10 @@ class Config {
 
   /**
    * Adds a key to the default configuration, and every guilds configuration.
-   * @param {string} key The key for which to add to the default and all guild configurations.
-   * @param {string|number|boolean|array} defaultValue The value for which you want to set as the default value.
-   * @param {string} [type] The type of key this will be. This can currently be Strings, Numbers, Arrays, or Booleans.
-   * @returns {object} Returns the entire default configuration
+   * @param {String} key The key for which to add to the default and all guild configurations.
+   * @param {String|Number|Boolean|Array} defaultValue The value for which you want to set as the default value.
+   * @param {String} [type] The type of key this will be. This can currently be Strings, Numbers, Arrays, or Booleans.
+   * @returns {Object} Returns the entire default configuration
    * @static
    */
   static addKey(key, defaultValue, type = defaultValue.constructor.name) {
@@ -291,8 +291,8 @@ class Config {
 
   /**
    * Deletes a key from the default configuration, and every guilds configuration.
-   * @param {string} key The key for which to add to the default and all guild configurations.
-   * @returns The new default configuration
+   * @param {String} key The key for which to add to the default and all guild configurations.
+   * @returns {Object} Returns the new default configuration
    * @static
    */
   static delKey(key) {

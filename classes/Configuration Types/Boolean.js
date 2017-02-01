@@ -7,7 +7,7 @@ const path = require("path");
 class BooleanConfig {
   /**
    * @param {Config} conf A guilds configuration obtained from the guildConfs map.
-   * @param {object} data The data you want to append to this boolean key.
+   * @param {Object} data The data you want to append to this boolean key.
    * @returns {BooleanConfig}
    */
   constructor(conf, data) {
