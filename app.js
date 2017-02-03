@@ -52,27 +52,13 @@ exports.start = async (config) => {
   client.on("disconnect", e => client.funcs.log(e, "error"));
 
   client.on("message", async (msg) => {
-    if (msg.author.bot) return;
+    await client.funcs.runMessageMonitors(client, msg);
     msg.author.permLevel = await client.funcs.permissionLevel(client, msg.author, msg.guild);
     msg.guildConf = Config.get(msg.guild);
     client.i18n.use(msg.guildConf.lang);
-    await client.funcs.runMessageMonitors(client, msg);
-    if (client.config.selfbot && msg.author.id !== client.user.id) return;
-    const cmd = client.funcs.commandHandler(client, msg);
-    if (!cmd) return;
-    try {
-      const params = await client.funcs.runCommandInhibitors(client, msg, cmd);
-      cmd.run(client, msg, params);
-    } catch (error) {
-      if (error) {
-        if (error.code === 1 && client.config.cmdPrompt) {
-          client.funcs.awaitMessage(client, msg, cmd, [], error.message);
-        } else {
-          if (error.stack) client.emit("error", error.stack);
-          msg.channel.sendCode("JSON", (error.message || error)).catch(err => client.emit("error", err));
-        }
-      }
-    }
+    if (!client.funcs.handleMessage(client, msg)) return;
+    const command = client.funcs.parseCommand(client, msg);
+    client.funcs.handleCommand(client, msg, command);
   });
 
   client.login(client.config.botToken);
