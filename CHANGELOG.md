@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Added
+- Added a bunch of unusable configuration options that'll make their debut soon.
 - All Bad Requests/Forbiddens.. etc, now properly give a human readable error in console or chat, depending on the error. (Not as of (0.17.0).. must be fixed) ***
 - New Error Creator
 - New CommandHandler (Removed it from message event)
@@ -19,6 +20,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 - All pieces now initialize upon being loaded, in order.
 - Changed Emojis to unicode variants in Reload.js
+- Broke down App.js Message Event into several smaller, changeable parts.
 - newError changed to send arguments to awaitMessage when errors are from usage
 - awaitMessage changed to work perfectly with the new system
 - msg.author.permLevel is now available immediately on a message, instead of after inhibitors run correctly.
@@ -41,6 +43,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - Fixed Reloading Events not loading new events correctly.
+- Fixed Typo in transfer command
 - Fixed Usage not working properly with selective
 - permissionLevels -> permissionLevel
 - Unchanged Package.json links to the repository
