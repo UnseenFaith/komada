@@ -8,7 +8,6 @@ const loadProviders = (client, baseDir) => new Promise(async (resolve, reject) =
   try {
     files.forEach((f) => {
       const props = require(`${f.path}${path.sep}${f.base}`);
-      if (props.init) props.init(client);
       client.providers.set(f.name, props);
     });
     resolve();
