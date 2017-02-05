@@ -11,6 +11,7 @@ const loadFunctions = (client, baseDir) => new Promise(async (resolve, reject) =
       const file = f.split(".");
       if (file[0] === "loadFunctions") return;
       client.funcs[file[0]] = require(`${dir}${path.sep}${f}`);
+      if (client.funcs[file[0]].init) client.funcs[file[0]].init(client);
     });
     resolve();
   } catch (e) {
