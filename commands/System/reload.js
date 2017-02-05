@@ -3,40 +3,64 @@ exports.run = async (client, msg, [type, name]) => {
   let message;
   switch (type) {
     case "function":
-      m = await msg.channel.sendMessage(`Attemping to reload function ${name}`).catch(err => client.funcs.log(err, "error"));
-      message = await client.funcs.reload.function(client, client.clientBaseDir, name).catch(response => m.edit(`:x: ${response}`));
-      m.edit(`:white_check_mark: ${message}`);
+      try {
+        m = await msg.channel.sendMessage(`Attempting to reload function ${name}`);
+        message = await client.funcs.reload.function(client, client.clientBaseDir, name);
+        m.edit(`✅ ${message}`);
+      } catch (err) {
+        m.edit(`❌ ${err}`);
+      }
       break;
     case "inhibitor":
-      m = await msg.channel.sendMessage(`Attempting to reload inhibitor ${name}`).catch(err => client.funcs.log(err, "error"));
-      message = await client.funcs.reload.inhibitor(client, client.clientBaseDir, name).catch(response => m.edit(`:x: ${response}`));
-      m.edit(`:white_check_mark: ${message}`);
+      try {
+        m = await msg.channel.sendMessage(`Attempting to reload inhibitor ${name}`);
+        message = await client.funcs.reload.inhibitor(client, client.clientBaseDir, name);
+        m.edit(`✅ ${message}`);
+      } catch (err) {
+        m.edit(`❌ ${err}`);
+      }
       break;
     case "monitor":
-      m = await msg.channel.sendMessage(`Attempting to reload monitor ${name}`).catch(err => client.funcs.log(err, "error"));
-      message = await client.funcs.reload.monitor(client, client.clientBaseDir, name).catch(response => m.edit(`:x: ${response}`));
-      m.edit(`:white_check_mark: ${message}`);
+      try {
+        m = await msg.channel.sendMessage(`Attempting to reload monitor ${name}`);
+        message = await client.funcs.reload.monitor(client, client.clientBaseDir, name);
+        m.edit(`✅ ${message}`);
+      } catch (err) {
+        m.edit(`❌ ${err}`);
+      }
       break;
     case "provider":
-      m = await msg.channel.sendMessage(`Attempting to reload provider ${name}`).catch(err => client.funcs.log(err, "error"));
-      message = await client.funcs.reload.provider(client, client.clientBaseDir, name).catch(response => m.edit(`:x: ${response}`));
-      m.edit(`:white_check_mark: ${message}`);
+      try {
+        m = await msg.channel.sendMessage(`Attempting to reload provider ${name}`);
+        message = await client.funcs.reload.provider(client, client.clientBaseDir, name);
+        m.edit(`✅ ${message}`);
+      } catch (err) {
+        m.edit(`❌ ${err}`);
+      }
       break;
     case "event":
-      m = await msg.channel.sendMessage(`Attempting to reload event ${name}`).catch(err => client.funcs.log(err, "error"));
-      message = await client.funcs.reload.event(client, name).catch(response => m.edit(`:x: ${response}`));
-      m.edit(`:white_check_mark: ${message}`);
+      try {
+        m = await msg.channel.sendMessage(`Attempting to reload event ${name}`);
+        message = await client.funcs.reload.event(client, name);
+        m.edit(`✅ ${message}`);
+      } catch (err) {
+        m.edit(`❌ ${err}`);
+      }
       break;
     case "command":
       switch (name) {
         case "all":
           await client.funcs.loadCommands(client);
-          msg.channel.sendMessage(":white_check_mark: Reloaded all commands.");
+          msg.channel.sendMessage("✅ Reloaded all commands.");
           break;
         default:
-          m = await msg.channel.sendMessage(`Attempting to reload command ${name}`).catch(err => client.funcs.log(err, "error"));
-          message = await client.funcs.reload.command(client, client.clientBaseDir, name).catch(response => m.edit(`:x: ${response}`));
-          m.edit(`:white_check_mark: ${message}`);
+          try {
+            m = await msg.channel.sendMessage(`Attempting to reload command ${name}`);
+            message = await client.funcs.reload.command(client, client.clientBaseDir, name);
+            m.edit(`✅ ${message}`);
+          } catch (err) {
+            m.edit(`❌ ${err}`);
+          }
           break;
       }
       break;
