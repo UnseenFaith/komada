@@ -2,9 +2,6 @@ module.exports = async (client) => {
   Object.keys(client.funcs).forEach(async (func) => {
     if (client.funcs[func].init) await client.funcs[func].init(client);
   });
-  client.providers.forEach(async (prov) => {
-    if (prov.init) await prov.init(client);
-  });
   await client.configuration.initialize(client);
   client.commandInhibitors.forEach(async (inhib) => {
     if (inhib.init) await inhib.init(client);

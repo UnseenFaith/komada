@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - New Download Command
 
 ### Changed
+- Providers will init on load instead of on the initialise function. (Commands were init-ing before Providers)
 - Broke down App.js Message Event into several smaller, changeable parts.
 - newError changed to send arguments to awaitMessage when errors are from usage
 - awaitMessage changed to work perfectly with the new system
