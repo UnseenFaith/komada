@@ -14,12 +14,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - New extended help feature added.
 - New Beta Configuration (Needs heavy testing)
 - New Argument Prompting for Commands
-- ~~New Initialize Function to alleviate undefined errors~~ Reverted in #139
+- New Initialize Function to alleviate undefined errors
 - New Download Command
 
 ### Changed
-- All pieces now initialize upon being loaded, in order.
-- Changed Emojis to unicode variants in Reload.js
 - Broke down App.js Message Event into several smaller, changeable parts.
 - newError changed to send arguments to awaitMessage when errors are from usage
 - awaitMessage changed to work perfectly with the new system
@@ -42,7 +40,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - dataProviders renamed to Providers
 
 ### Fixed
-- Fixed Reloading Events not loading new events correctly.
 - Fixed Typo in transfer command
 - Fixed Usage not working properly with selective
 - permissionLevels -> permissionLevel
@@ -79,7 +76,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - More Reload function fixes for commands
 
 ### Removed
-- Old initialize system (Was borked)
 - Old Configuration System
 - Selfbot Inhibitor
 

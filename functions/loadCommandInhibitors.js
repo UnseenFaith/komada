@@ -8,7 +8,6 @@ const loadCommandInhibitors = (client, baseDir) => new Promise(async (resolve, r
   try {
     files.forEach((f) => {
       const props = require(`${f.path}${path.sep}${f.base}`);
-      if (props.init) props.init(client);
       client.commandInhibitors.set(f.name, props);
     });
     resolve();
