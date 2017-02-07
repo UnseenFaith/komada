@@ -31,19 +31,17 @@ exports.start = async (config) => {
   client.guildConfs = Config.guildConfs;
   client.configuration = Config;
 
-  // Load core functions, then everything else
-  await loadFunctions(client);
-  await client.funcs.loadProviders(client);
-  await client.funcs.loadCommands(client);
-  await client.funcs.loadCommandInhibitors(client);
-  await client.funcs.loadMessageMonitors(client);
-  await client.funcs.loadEvents(client);
-  client.i18n = client.funcs.loadLocalizations;
-  client.i18n.init(client);
-
   client.once("ready", async () => {
     client.config.prefixMention = new RegExp(`^<@!?${client.user.id}>`);
     client.configuration.initialize(client);
+    await loadFunctions(client);
+    await client.funcs.loadProviders(client);
+    await client.funcs.loadCommands(client);
+    await client.funcs.loadCommandInhibitors(client);
+    await client.funcs.loadMessageMonitors(client);
+    await client.funcs.loadEvents(client);
+    client.i18n = client.funcs.loadLocalizations;
+    client.i18n.init(client);
     client.destroy = () => "You cannot use this within Komada, use process.exit() instead.";
   });
 

@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - New Download Command
 
 ### Changed
-- All pieces now initialize upon being loaded, in order.
+- ~~All pieces now initialize upon being loaded, in order.~~ ~~Reverted in 0.17.3~~ Reimplemented in 0.17.4 within `client.on("ready")`
 - Changed Emojis to unicode variants in Reload.js
 - Broke down App.js Message Event into several smaller, changeable parts.
 - newError changed to send arguments to awaitMessage when errors are from usage
