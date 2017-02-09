@@ -81,7 +81,7 @@ module.exports = (command) => {
         throw new Error(`at char #${i + 1} '<': you might not open a tag inside another tag.`);
       }
       if (current) {
-        throw new Error(`from char #${(i + 1) - current.length} to #${i + 1} '${current}': there cannott be a literal outside a tag`);
+        throw new Error(`from char #${(i + 1) - current.length} to #${i + 1} '${current}': there cannot be a literal outside a tag`);
       }
       opened++;
       openReq = true;
@@ -117,7 +117,7 @@ module.exports = (command) => {
       opened--;
       if (current === "...") {
         if (tags.length < 1) {
-          throw new Error(`from char #${i - 3} to #${i} '[...]': there cannot be a loop at teh begining`);
+          throw new Error(`from char #${i - 3} to #${i} '[...]': there cannot be a loop at the begining`);
         }
         tags.push({ type: "repeat" });
         last = true;
