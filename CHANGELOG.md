@@ -44,6 +44,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - dataProviders renamed to Providers
 
 ### Fixed
+- Fixed Default Conf initialize. (No longer outputs undefined)
 - Fixed invalid regex for prefixes in parseCommand
 - Fixed validateData Booleans.
 - Fixed Reloading Events not loading new events correctly.
