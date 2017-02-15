@@ -6,7 +6,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "test": "eslint commands functions inhibitors events monitors app.js",
+    "test": "eslint commands functions inhibitors events monitors utils app.js",
     "lint": "npm run test -- --fix"
   },
   "repository": {

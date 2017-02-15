@@ -17,7 +17,7 @@ exports.getPrefix = (client, msg) => {
   if (client.config.prefixMention.test(msg.content)) {
     return client.config.prefixMention;
   }
-  const prefix = msg.guildConf.prefix;
+  let prefix = msg.guildConf.prefix;
   const escape = client.funcs.regExpEsc;
   if (prefix instanceof Array) {
     prefix.forEach((pref) => {

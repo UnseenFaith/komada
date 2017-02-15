@@ -36,7 +36,7 @@ exports.start = async (config) => {
   client.clientBaseDir = `${process.cwd()}${path.sep}`;
   client.guildConfs = Config.guildConfs;
   client.configuration = Config;
-  
+
   await loadFunctions(client);
   await loadEvents(client);
 
