@@ -3,7 +3,7 @@ const path = require("path");
 
 const loadFunctions = require("./utils/loadFunctions.js");
 const loadEvents = require("./utils/loadEvents.js");
-const loadProviders = require("./utils/loadEvents.js");
+const loadProviders = require("./utils/loadProviders.js");
 const loadCommands = require("./utils/loadCommands.js");
 const loadCommandInhibitors = require("./utils/loadCommandInhibitors.js");
 const loadMessageMonitors = require("./utils/loadMessageMonitors.js");
