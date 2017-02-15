@@ -2,6 +2,12 @@ const Discord = require("discord.js");
 const path = require("path");
 
 const loadFunctions = require("./utils/loadFunctions.js");
+const loadEvents = require("./utils/loadEvents.js");
+const loadProviders = require("./utils/loadEvents.js");
+const loadCommands = require("./utils/loadCommands.js");
+const loadCommandInhibitors = require("./utils/loadCommandInhibitors.js");
+const loadMessageMonitors = require("./utils/loadMessageMonitors.js");
+
 const Config = require("./classes/Config.js");
 
 exports.start = async (config) => {
@@ -30,16 +36,17 @@ exports.start = async (config) => {
   client.clientBaseDir = `${process.cwd()}${path.sep}`;
   client.guildConfs = Config.guildConfs;
   client.configuration = Config;
+  
+  await loadFunctions(client);
+  await loadEvents(client);
 
   client.once("ready", async () => {
     client.config.prefixMention = new RegExp(`^<@!?${client.user.id}>`);
     client.configuration.initialize(client);
-    await loadFunctions(client);
-    await client.funcs.loadProviders(client);
-    await client.funcs.loadCommands(client);
-    await client.funcs.loadCommandInhibitors(client);
-    await client.funcs.loadMessageMonitors(client);
-    await client.funcs.loadEvents(client);
+    await loadProviders(client);
+    await loadCommands(client);
+    await loadCommandInhibitors(client);
+    await loadMessageMonitors(client);
     client.i18n = client.funcs.loadLocalizations;
     client.i18n.init(client);
     client.destroy = () => "You cannot use this within Komada, use process.exit() instead.";
