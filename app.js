@@ -42,11 +42,12 @@ exports.start = async (config) => {
 
   client.once("ready", async () => {
     client.config.prefixMention = new RegExp(`^<@!?${client.user.id}>`);
-    client.configuration.initialize(client);
+    await client.configuration.initialize(client);
     await loadProviders(client);
     await loadCommands(client);
     await loadCommandInhibitors(client);
     await loadMessageMonitors(client);
+    await client.funcs.initialize(client);
     client.i18n = client.funcs.loadLocalizations;
     client.i18n.init(client);
     client.destroy = () => "You cannot use this within Komada, use process.exit() instead.";
