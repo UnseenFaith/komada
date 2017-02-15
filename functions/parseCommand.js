@@ -18,6 +18,7 @@ exports.getPrefix = (client, msg) => {
     return client.config.prefixMention;
   }
   const prefix = msg.guildConf.prefix;
+  const escape = client.funcs.regExpEsc;
   if (prefix instanceof Array) {
     prefix.forEach((pref) => {
       if (msg.content.startsWith(pref)) prefix = pref;
@@ -25,6 +26,6 @@ exports.getPrefix = (client, msg) => {
     });
     return prefix;
   }
-  if (prefix && msg.content.startsWith(prefix)) return new RegExp(`^${prefix}`); // eslint-disable-line
+  if (prefix && msg.content.startsWith(prefix)) return new RegExp(`^${escape(prefix)}`); // eslint-disable-line
   return false;
 };

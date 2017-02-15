@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Added
+- Added regExpEscape function.
 - Added a bunch of unusable configuration options that'll make their debut soon.
 - All Bad Requests/Forbiddens.. etc, now properly give a human readable error in console or chat, depending on the error. (Not as of (0.17.0).. must be fixed) ***
 - New Error Creator
