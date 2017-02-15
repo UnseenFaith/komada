@@ -25,6 +25,6 @@ exports.getPrefix = (client, msg) => {
     });
     return prefix;
   }
-  if (prefix && msg.content.startsWith(prefix)) return new RegExp(`^${prefix}/`); // eslint-disable-line
+  if (prefix && msg.content.startsWith(prefix)) return new RegExp(`^${prefix}`); // eslint-disable-line
   return false;
 };
