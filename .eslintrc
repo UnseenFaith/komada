@@ -14,7 +14,6 @@
     "no-shadow": "warn",
     "no-plusplus": "off",
     "radix": ["error", "as-needed"],
-    "max-len": "warn",
     "import/no-extraneous-dependencies": "off",
     "import/no-unresolved": "off",
     "import/no-dynamic-require": "warn",

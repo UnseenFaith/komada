@@ -1,7 +1,7 @@
 const Discord = require("discord.js");
 const path = require("path");
 
-const loadFunctions = require("./functions/loadFunctions.js");
+const loadFunctions = require("./utils/loadFunctions.js");
 const Config = require("./classes/Config.js");
 
 exports.start = async (config) => {
