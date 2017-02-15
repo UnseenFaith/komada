@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - New Download Command
 
 ### Changed
+- loading Functions are removed from Functions folder and moved to a Utils folder. (This folder will be there for future features as well.)
 - ~~All pieces now initialize upon being loaded, in order.~~ ~~Reverted in 0.17.3~~ Reimplemented in 0.17.4 within `client.on("ready")`
 - Changed Emojis to unicode variants in Reload.js
 - Broke down App.js Message Event into several smaller, changeable parts.
@@ -42,6 +43,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - dataProviders renamed to Providers
 
 ### Fixed
+- Fixed invalid regex for prefixes in parseCommand
 - Fixed validateData Booleans.
 - Fixed Reloading Events not loading new events correctly.
 - Fixed Typo in transfer command

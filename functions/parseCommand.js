@@ -19,12 +19,12 @@ exports.getPrefix = (client, msg) => {
   }
   const prefix = msg.guildConf.prefix;
   if (prefix instanceof Array) {
-    prefix.forEach((prefix) => {
-      if (msg.content.startsWith(prefix)) prefix = RegExp(`^${prefix}`);
-      else prefix = false;
+    prefix.forEach((pref) => {
+      if (msg.content.startsWith(pref)) prefix = pref;
+      else pref = false;
     });
     return prefix;
   }
-  if (msg.content.startsWith(prefix)) return new RegExp(`^${prefix}`); // eslint-disable-line
+  if (prefix && msg.content.startsWith(prefix)) return new RegExp(`^${prefix}/`); // eslint-disable-line
   return false;
 };
