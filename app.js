@@ -50,6 +50,7 @@ exports.start = async (config) => {
     client.i18n = client.funcs.loadLocalizations;
     client.i18n.init(client);
     client.destroy = () => "You cannot use this within Komada, use process.exit() instead.";
+    client.ready = true;
   });
 
   client.on("error", e => client.funcs.log(e, "error"));
@@ -57,6 +58,7 @@ exports.start = async (config) => {
   client.on("disconnect", e => client.funcs.log(e, "error"));
 
   client.on("message", async (msg) => {
+    if (!client.ready) return;
     await client.funcs.runMessageMonitors(client, msg);
     msg.author.permLevel = await client.funcs.permissionLevel(client, msg.author, msg.guild);
     msg.guildConf = Config.get(msg.guild);
