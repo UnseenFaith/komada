@@ -33,7 +33,7 @@ exports.start = async (config) => {
   client.methods.Webhook = Discord.WebhookClient;
 
   client.coreBaseDir = `${__dirname}${path.sep}`;
-  client.clientBaseDir = `${process.cwd()}${path.sep}`;
+  client.clientBaseDir = `${process.env.clientDir || process.cwd()}${path.sep}`;
   client.guildConfs = Config.guildConfs;
   client.configuration = Config;
 
