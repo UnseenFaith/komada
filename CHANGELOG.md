@@ -85,6 +85,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - More Reload function fixes for commands
 
 ### Removed
+- client.email redaction from the clean function.
 - Old initialize system (Was borked)
 - Old Configuration System
 - Selfbot Inhibitor
