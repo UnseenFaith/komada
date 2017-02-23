@@ -42,6 +42,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - dataProviders renamed to Providers
 
 ### Fixed
+- Fixed typo in validateData function
 - Fixed validateData Booleans.
 - Fixed Reloading Events not loading new events correctly.
 - Fixed Typo in transfer command
