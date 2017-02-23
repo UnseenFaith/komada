@@ -17,14 +17,15 @@ exports.getPrefix = (client, msg) => {
   if (client.config.prefixMention.test(msg.content)) {
     return client.config.prefixMention;
   }
-  const prefix = msg.guildConf.prefix;
+  let prefix = msg.guildConf.prefix;
+  const escape = client.funcs.regExpEsc;
   if (prefix instanceof Array) {
-    prefix.forEach((prefix) => {
-      if (msg.content.startsWith(prefix)) prefix = RegExp(`^${prefix}`);
-      else prefix = false;
+    prefix.forEach((pref) => {
+      if (msg.content.startsWith(pref)) prefix = pref;
+      else pref = false;
     });
     return prefix;
   }
-  if (msg.content.startsWith(prefix)) return new RegExp(`^${prefix}`); // eslint-disable-line
+  if (prefix && msg.content.startsWith(prefix)) return new RegExp(`^${escape(prefix)}`); // eslint-disable-line
   return false;
 };

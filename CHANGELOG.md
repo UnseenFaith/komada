@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Added
+- Added Environmental Variable support for clientDir.
+- Added regExpEscape function.
 - Added a bunch of unusable configuration options that'll make their debut soon.
 - All Bad Requests/Forbiddens.. etc, now properly give a human readable error in console or chat, depending on the error. (Not as of (0.17.0).. must be fixed) ***
 - New Error Creator
@@ -18,6 +20,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - New Download Command
 
 ### Changed
+- loading Functions are removed from Functions folder and moved to a Utils folder. (This folder will be there for future features as well.)
 - ~~All pieces now initialize upon being loaded, in order.~~ ~~Reverted in 0.17.3~~ Reimplemented in 0.17.4 within `client.on("ready")`
 - Changed Emojis to unicode variants in Reload.js
 - Broke down App.js Message Event into several smaller, changeable parts.
@@ -43,6 +46,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - Fixed typo in validateData function
+- Fixed Default Conf initialize. (No longer outputs undefined)
+- Fixed invalid regex for prefixes in parseCommand
 - Fixed validateData Booleans.
 - Fixed Reloading Events not loading new events correctly.
 - Fixed Typo in transfer command
@@ -81,6 +86,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - More Reload function fixes for commands
 
 ### Removed
+- client.email redaction from the clean function.
 - Old initialize system (Was borked)
 - Old Configuration System
 - Selfbot Inhibitor
