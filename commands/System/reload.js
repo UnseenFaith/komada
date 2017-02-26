@@ -50,7 +50,7 @@ exports.run = async (client, msg, [type, name]) => {
     case "command":
       switch (name) {
         case "all":
-          await client.funcs.loadCommands(client);
+          await require(`${client.coreBaseDir}utils/loadCommands.js`)(client);
           msg.channel.sendMessage("✅ Reloaded all commands.");
           break;
         default:
