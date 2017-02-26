@@ -31,6 +31,7 @@ module.exports = (client, command, reload = false, loadPath = null) => new Promi
       if (cmd.conf.selfbot && !client.config.selfbot) {
         return reject(`The command \`${cmd.help.name}\` is only usable in selfbots!`);
       }
+      delete require.cache[require.resolve(loadPath)]
       if (cmd.init) cmd.init(client);
       let pathParts = loadPath.split(path.sep);
       pathParts = pathParts.slice(pathParts.indexOf("commands") + 1);
