@@ -46,6 +46,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - Fixed command reload all. underlying bug since 0.15.x days.
+- Fixed typo in validateData function
 - Fixed Default Conf initialize. (No longer outputs undefined)
 - Fixed invalid regex for prefixes in parseCommand
 - Fixed validateData Booleans.
