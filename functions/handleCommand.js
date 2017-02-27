@@ -2,7 +2,8 @@ module.exports = async (client, msg, command, args = undefined) => {
   const validCommand = this.getCommand(client, command);
   if (!validCommand) return;
   const response = this.runInhibitors(client, msg, validCommand);
-  if (response) return msg.reply(response);
+  if (response && typeof response === "boolean") return;
+  else if (response) return msg.reply(response);
   try {
     const params = await client.funcs.usage.run(client, msg, validCommand, args);
     validCommand.run(client, msg, params);
