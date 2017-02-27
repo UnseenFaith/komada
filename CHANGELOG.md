@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Added
+- Added support for silent inhibitors (if `return true`, it won't send a reply).
 - Added Environmental Variable support for clientDir.
 - Added regExpEscape function.
 - Added a bunch of unusable configuration options that'll make their debut soon.
