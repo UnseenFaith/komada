@@ -31,6 +31,8 @@ exports.start = async (config) => {
   client.methods.Embed = Discord.RichEmbed;
   client.methods.MessageCollector = Discord.MessageCollector;
   client.methods.Webhook = Discord.WebhookClient;
+  client.methods.escapeMarkdown = Discord.escapeMarkdown;
+  client.methods.splitMessage = Discord.splitMessage;
 
   client.coreBaseDir = `${__dirname}${path.sep}`;
   client.clientBaseDir = `${process.env.clientDir || process.cwd()}${path.sep}`;
