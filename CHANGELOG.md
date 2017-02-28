@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - New Download Command
 
 ### Changed
+- Split Eval in to multiple messages if it doesn't fit in one.
 - loading Functions are removed from Functions folder and moved to a Utils folder. (This folder will be there for future features as well.)
 - ~~All pieces now initialize upon being loaded, in order.~~ ~~Reverted in 0.17.3~~ Reimplemented in 0.17.4 within `client.on("ready")`
 - Changed Emojis to unicode variants in Reload.js
