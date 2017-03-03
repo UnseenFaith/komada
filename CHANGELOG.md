@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Added
+- Sentry Integration for Error Tracking purposes direct to Komada Devs,
 - Added the new utils from `Discord.js#master`: escapeMarkdown and splitMessage are now in `client.methods`.
 - Added support for silent inhibitors (if `return true`, it won't send a reply).
 - Added Environmental Variable support for clientDir.
