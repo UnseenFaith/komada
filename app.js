@@ -76,7 +76,7 @@ exports.start = async (config) => {
   client.login(client.config.botToken);
   return client;
 });
-});
+};
 process.on("unhandledRejection", (err) => {
   if (!err) return;
   console.error(`Uncaught Promise Error: \n${err.stack || err}`);
