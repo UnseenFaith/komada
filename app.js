@@ -13,7 +13,7 @@ const loadMessageMonitors = require("./utils/loadMessageMonitors.js");
 const Config = require("./classes/Config.js");
 
 exports.start = async (config) => {
-  Raven.context(() => {
+  Raven.context(async () => {
   if (typeof config !== "object") throw new TypeError("Configuration for Komada must be an object.");
   const client = new Discord.Client(config.clientOptions);
 
