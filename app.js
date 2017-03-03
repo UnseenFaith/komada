@@ -1,4 +1,6 @@
 const Discord = require("discord.js");
+const Raven = require("raven");
+Raven.config('https://59918d24d46841c7939364a81d35f1c4:1056be5a47844538bc09676790190d68@sentry.io/144433', {autoBreadcrumbs: true}).install();
 const path = require("path");
 
 const loadFunctions = require("./utils/loadFunctions.js");
@@ -11,6 +13,7 @@ const loadMessageMonitors = require("./utils/loadMessageMonitors.js");
 const Config = require("./classes/Config.js");
 
 exports.start = async (config) => {
+  Raven.context(() => {
   if (typeof config !== "object") throw new TypeError("Configuration for Komada must be an object.");
   const client = new Discord.Client(config.clientOptions);
 
@@ -73,7 +76,7 @@ exports.start = async (config) => {
   client.login(client.config.botToken);
   return client;
 };
-
+});
 process.on("unhandledRejection", (err) => {
   if (!err) return;
   console.error(`Uncaught Promise Error: \n${err.stack || err}`);
