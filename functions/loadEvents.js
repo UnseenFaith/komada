@@ -5,38 +5,24 @@ let events = require("discord.js/src/util/Constants.js").Events;
 
 events = Object.keys(events).map(k => events[k]);
 
-const loadEvents = (client, baseDir, count) => new Promise((resolve, reject) => {
+const loadEvents = (client, baseDir, counts) => new Promise(async (resolve) => {
   const dir = path.resolve(`${baseDir}./events/`);
-  fs.ensureDirAsync(dir)
-  .then(() => {
-    fs.readdirAsync(dir)
-    .then((files) => {
-      let e = count;
-      files = files.filter((f) => {
-        const name = f.split(".")[0];
-        return events.includes(name);
-      });
-      files.forEach((f) => {
-        const name = f.split(".")[0];
-        client.on(name, (...args) => require(`${dir}/${f}`).run(client, ...args));
-        e++;
-      });
-      resolve(e);
-    }).catch(err => reject(err));
-  }).catch(err => reject(err));
+  await fs.ensureDirAsync(dir).catch(err => client.emit("error", client.funcs.newError(err)));
+  let files = await client.funcs.getFileListing(client, baseDir, "events").catch(err => client.emit("error", client.funcs.newError(err)));
+  files = files.filter(f => events.includes(f.name));
+  files.forEach((f) => {
+    client.on(f.name, (...args) => require(`${f.path}${path.sep}${f.base}`).run(client, ...args));
+    counts++;
+  });
+  resolve(counts);
 });
 
-module.exports = (client) => {
-  const count = 0;
+
+module.exports = async (client) => {
+  let counts = 0;
+  counts = await loadEvents(client, client.coreBaseDir, counts).catch(err => client.emit("error", client.funcs.newError(err)));
   if (client.coreBaseDir !== client.clientBaseDir) {
-    loadEvents(client, client.coreBaseDir, count).then((counts) => {
-      loadEvents(client, client.clientBaseDir, counts).then((countss) => {
-        client.funcs.log(`Loaded ${countss} events`);
-      });
-    });
-  } else {
-    loadEvents(client, client.coreBaseDir, count).then((counts) => {
-      client.funcs.log(`Loaded ${counts} events`);
-    });
+    counts = await loadEvents(client, client.clientBaseDir, counts).catch(err => client.emit("error", client.funcs.newError(err)));
   }
+  client.funcs.log(`Loaded ${counts} events`);
 };

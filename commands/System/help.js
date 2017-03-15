@@ -11,17 +11,29 @@ exports.run = (client, msg, [cmd]) => {
           }
           helpMessage.push("```\n\u200b");
         }
-        msg.channel.sendMessage(helpMessage, { split: { char: "\u200b" } }).catch((e) => { console.error(e); });
+        if (!client.config.selfbot) {
+          msg.author.sendMessage(helpMessage, { split: { char: "\u200b" } }).catch((e) => { console.error(e); });
+          if (msg.channel.type.toLowerCase() !== "dm") {
+            msg.reply("Commands have been sent to your DMs.");
+          }
+        } else {
+          msg.channel.sendMessage(helpMessage, { split: { char: "\u200b" } })
+        .catch((e) => { console.error(e); });
+        }
       });
   } else if (client.commands.has(cmd)) {
     cmd = client.commands.get(cmd);
-    msg.channel.sendCode("asciidoc", `= ${cmd.help.name} = \n${cmd.help.description}\nusage :: ${client.funcs.fullUsage(client, cmd)}`);
+    if (!client.config.selfbot) {
+      msg.author.sendCode("asciidoc", `= ${cmd.help.name} = \n${cmd.help.description}\nusage :: ${client.funcs.fullUsage(client, cmd)}\nExtended Help ::\n${cmd.help.extendedHelp ? cmd.help.extendedHelp : "No extended help available."}`);
+    } else {
+      msg.channel.sendCode("asciidoc", `= ${cmd.help.name} = \n${cmd.help.description}\nusage :: ${client.funcs.fullUsage(client, cmd)}\nExtended Help ::\n${cmd.help.extendedHelp ? cmd.help.extendedHelp : "No extended help available."}`);
+    }
   }
 };
 
 exports.conf = {
   enabled: true,
-  guildOnly: false,
+  runIn: ["text", "dm", "group"],
   aliases: [],
   permLevel: 0,
   botPerms: [],
@@ -44,13 +56,16 @@ const buildHelp = (client, msg) => new Promise((resolve) => {
 
   client.commands.forEach((command) => {
     mps.push(new Promise((res) => {
-      client.funcs.runCommandInhibitors(client, msg, command, true)
+      client.funcs.runCommandInhibitors(client, msg, command, [], true)
           .then(() => {
-            const cat = command.help.category;
-            const subcat = command.help.subCategory;
-            if (!help.hasOwnProperty(cat)) help[cat] = {};
-            if (!help[cat].hasOwnProperty(subcat)) help[cat][subcat] = [];
-            help[cat][subcat].push(`${msg.guildConf.prefix}${command.help.name}${" ".repeat(longest - command.help.name.length)} :: ${command.help.description}`);
+            if (command.conf.permLevel <= msg.author.permLevel) {
+              const cat = command.help.category;
+              const subcat = command.help.subCategory;
+              if (!help.hasOwnProperty(cat)) help[cat] = {};
+              if (!help[cat].hasOwnProperty(subcat)) help[cat][subcat] = [];
+              help[cat][subcat].push(`${msg.guildConf.prefix}${command.help.name}${" ".repeat(longest - command.help.name.length)} :: ${command.help.description}`);
+              res();
+            }
             res();
           })
           .catch(() => {

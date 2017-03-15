@@ -1,60 +1,36 @@
 const fs = require("fs-extra-promise");
 const path = require("path");
 
-const loadCommands = (client, baseDir, counts) => new Promise((resolve, reject) => {
+const loadCommands = (client, baseDir) => new Promise(async (resolve, reject) => {
   const dir = path.resolve(`${baseDir}./commands/`);
-  let [c, a] = counts;
   try {
-    fs.ensureDirAsync(dir)
-    .then(() => {
-      fs.walk(dir)
-        .on("data", (item) => {
-          const fileinfo = path.parse(item.path);
-          const fileDir = fileinfo.dir;
-          const name = fileinfo.name;
-          const ext = fileinfo.ext;
-
-          if (!ext || ext !== ".js") return;
-
-          client.funcs.loadSingleCommand(client, name, false, `${fileDir}${path.sep}${fileinfo.base}`).then((cmd) => {
-            c++;
-            cmd.conf.aliases.forEach(() => {
-              a++;
-            });
-          })
-          .catch((e) => {
-            client.funcs.log(e, "Error");
-          });
-        })
-        .on("end", () => {
-          resolve([c, a]);
-        });
-    }).catch(err => reject(err));
+    await fs.ensureDirAsync(dir).catch(err => client.funcs.log(err, "error"));
+    const files = await client.funcs.getFileListing(client, baseDir, "commands").catch(err => client.emit("error", client.funcs.newError(err)));
+    files.forEach(async (f) => {
+      await client.funcs.loadSingleCommand(client, `${f.name}`, false, `${f.path}${path.sep}${f.base}`).catch(err => client.emit("error", client.funcs.newError(err)));
+    });
+    resolve();
   } catch (e) {
     if (e.code === "MODULE_NOT_FOUND") {
       const module = /'[^']+'/g.exec(e.toString());
-      client.funcs.installNPM(module[0].slice(1, -1))
-        .then(() => {
-          client.funcs.loadCommands(client);
-        })
+      await client.funcs.installNPM(module[0].slice(1, -1))
         .catch((err) => {
           console.error(err);
           process.exit();
         });
+      client.funcs.loadCommands(client);
     } else {
       reject(e);
     }
   }
 });
 
-module.exports = (client) => {
+module.exports = async (client) => {
   client.commands.clear();
   client.aliases.clear();
-  const count = [0, 0];
-  loadCommands(client, client.coreBaseDir, count).then((counts) => {
-    loadCommands(client, client.clientBaseDir, counts).then((countss) => {
-      const [c, a] = countss;
-      client.funcs.log(`Loaded ${c} commands, with ${a} aliases.`);
-    });
-  });
+  await loadCommands(client, client.coreBaseDir).catch(err => client.emit("error", client.funcs.newError(err)));
+  if (client.coreBaseDir !== client.clientBaseDir) {
+    await loadCommands(client, client.clientBaseDir).catch(err => client.emit("error", client.funcs.newError(err)));
+  }
+  client.funcs.log(`Loaded ${client.commands.size} commands, with ${client.aliases.size} aliases.`);
 };

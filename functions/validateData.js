@@ -38,7 +38,7 @@ module.exports = (data, properties, values) => {
         }
         break;
       case "bool":
-        if (!["true", "false", true, false, 1, 0].includes(v.toLowerCase())) {
+        if (!["true", "false", true, false, 1, 0].includes(!!JSON.parse(v))) {
           throw new Error(`at value #${i + 1}: The 'bool' type must be 'true(1)' or 'false(0)', got '${v}`);
         }
         break;

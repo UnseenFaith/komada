@@ -1,18 +1,19 @@
-module.exports = (client, msg, cmd, selective = false) => new Promise((resolve, reject) => {
-  const mps = [true];
-  let i = 1;
+
+module.exports = (client, msg, cmd, selective = false) => new Promise(async (resolve, reject) => {
   let usage;
-  client.commandInhibitors.forEach((mProc, key) => {
-    if (key === "usage") usage = i;
-    if (!mProc.conf.spamProtection || !selective) {
-      mps.push(mProc.run(client, msg, cmd));
-    }
-    i++;
+  const inhibitors = client.commandInhibitors.array().sort((a, b) => a.conf.priority < b.conf.priority);
+  inhibitors.some((inhib) => {
+    usage = inhib.run(client, msg, cmd);
+    if (usage) return true;
+    return false;
   });
-  Promise.all(mps)
-      .then((value) => {
-        resolve(value[usage]);
-      }, (reason) => {
-        reject(reason);
-      });
+  if (usage) return reject(usage);
+  if (!selective || !client.funcs.usage.conf.spamProtection) {
+    try {
+      usage = await client.funcs.usage.run(client, msg, cmd);
+    } catch (err) {
+      return reject(err);
+    }
+  }
+  return resolve(usage);
 });

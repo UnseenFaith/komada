@@ -1,64 +1,66 @@
-exports.run = (client, msg, [type, name]) => {
+exports.run = async (client, msg, [type, name]) => {
+  let m;
+  let message;
   switch (type) {
     case "function":
-      msg.channel.sendMessage(`Attemping to reload function ${name}`).then((m) => {
-        client.funcs.reload.function(client, client.clientBaseDir, name).then((message) => {
-          m.edit(`:white_check_mark: ${message}`);
-        }).catch((e) => {
-          m.edit(`:x: ${e}`);
-        });
-      });
+      try {
+        m = await msg.channel.sendMessage(`Attempting to reload function ${name}`);
+        message = await client.funcs.reload.function(client, client.clientBaseDir, name);
+        m.edit(`✅ ${message}`);
+      } catch (err) {
+        m.edit(`❌ ${err}`);
+      }
       break;
     case "inhibitor":
-      msg.channel.sendMessage(`Attempting to reload inhibitor ${name}`).then((m) => {
-        client.funcs.reload.inhibitor(client, client.clientBaseDir, name).then((message) => {
-          m.edit(`:white_check_mark: ${message}`);
-        }).catch((e) => {
-          m.edit(`:x: ${e}`);
-        });
-      });
+      try {
+        m = await msg.channel.sendMessage(`Attempting to reload inhibitor ${name}`);
+        message = await client.funcs.reload.inhibitor(client, client.clientBaseDir, name);
+        m.edit(`✅ ${message}`);
+      } catch (err) {
+        m.edit(`❌ ${err}`);
+      }
       break;
     case "monitor":
-      msg.channel.sendMessage(`Attempting to reload monitor ${name}`).then((m) => {
-        client.funcs.reload.monitor(client, client.clientBaseDir, name).then((message) => {
-          m.edit(`:white_check_mark: ${message}`);
-        }).catch((e) => {
-          m.edit(`:x: ${e}`);
-        });
-      });
+      try {
+        m = await msg.channel.sendMessage(`Attempting to reload monitor ${name}`);
+        message = await client.funcs.reload.monitor(client, client.clientBaseDir, name);
+        m.edit(`✅ ${message}`);
+      } catch (err) {
+        m.edit(`❌ ${err}`);
+      }
       break;
     case "provider":
-      msg.channel.sendMessage(`Attempting to reload provider ${name}`).then((m) => {
-        client.funcs.reload.provider(client, client.clientBaseDir, name).then((message) => {
-          m.edit(`:white_check_mark: ${message}`);
-        }).catch((e) => {
-          m.edit(`:x: ${e}`);
-        });
-      });
+      try {
+        m = await msg.channel.sendMessage(`Attempting to reload provider ${name}`);
+        message = await client.funcs.reload.provider(client, client.clientBaseDir, name);
+        m.edit(`✅ ${message}`);
+      } catch (err) {
+        m.edit(`❌ ${err}`);
+      }
       break;
     case "event":
-      msg.channel.sendMessage(`Attempting to reload event ${name}`).then((m) => {
-        client.funcs.reload.event(client, name).then((message) => {
-          m.edit(`:white_check_mark: ${message}`);
-        }).catch((e) => {
-          m.edit(`:x: ${e}`);
-        });
-      });
+      try {
+        m = await msg.channel.sendMessage(`Attempting to reload event ${name}`);
+        message = await client.funcs.reload.event(client, name);
+        m.edit(`✅ ${message}`);
+      } catch (err) {
+        m.edit(`❌ ${err}`);
+      }
       break;
     case "command":
       switch (name) {
         case "all":
-          client.funcs.loadCommands(client);
-          msg.channel.sendMessage(":white_check_mark: Reloaded all commands.");
+          await client.funcs.loadCommands(client);
+          msg.channel.sendMessage("✅ Reloaded all commands.");
           break;
         default:
-          msg.channel.sendMessage(`Attempting to reload command ${name}`).then((m) => {
-            client.funcs.reload.command(client, client.clientBaseDir, name).then((message) => {
-              m.edit(`:white_check_mark: ${message}`);
-            }).catch((e) => {
-              m.edit(`:x: ${e}`);
-            });
-          });
+          try {
+            m = await msg.channel.sendMessage(`Attempting to reload command ${name}`);
+            message = await client.funcs.reload.command(client, client.clientBaseDir, name);
+            m.edit(`✅ ${message}`);
+          } catch (err) {
+            m.edit(`❌ ${err}`);
+          }
           break;
       }
       break;
@@ -68,7 +70,7 @@ exports.run = (client, msg, [type, name]) => {
 
 exports.conf = {
   enabled: true,
-  guildOnly: false,
+  runIn: ["text", "dm", "group"],
   aliases: ["r", "load"],
   permLevel: 10,
   botPerms: [],
