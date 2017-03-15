@@ -50,6 +50,7 @@ exports.start = async (config) => {
   client.on("disconnect", e => client.funcs.log(e, "error"));
 
   client.on("message", async (msg) => {
+    if (msg.author.bot) return;
     await client.funcs.runMessageMonitors(client, msg);
     msg.author.permLevel = await client.funcs.permissionLevel(client, msg.author, msg.guild);
     msg.guildConf = Config.get(msg.guild);
