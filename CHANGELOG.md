@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [0.18.0] - 2017-03-16
 ### Added
 - Added a bunch of unusable configuration options that'll make their debut soon.
 - All Bad Requests/Forbiddens.. etc, now properly give a human readable error in console or chat, depending on the error. (Not as of (0.17.0).. must be fixed) ***
@@ -176,11 +178,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Various Confs fixes from [UnseenFaith]
 - Usage Addition/ParseUsage fix from [UnseenFaith]
 
-[Unreleased]: https://github.com/eslachance/komada/compare/0.12.4...indev
+[Unreleased]: https://github.com/eslachance/komada/compare/0.18.0...indev
 [0.10.0]: https://github.com/eslachance/komada/compare/1627e6deb1d8c352d83e52ccd590f2330f5f8bb2...0.10.0
 [0.11.0]: https://github.com/eslachance/komada/compare/0.10.0...0.11.0
 [0.12.0]: https://github.com/eslachance/komada/compare/0.11.0...0.12.0
 [0.12.4]: https://github.com/eslachance/komada/compare/0.12.0...0.12.4
+[0.18.0]: https://github.com/eslachance/komada/compare/0.12.4...0.18
 
 [vzwGrey]: https://github.com/vzwGrey
 [eslachance]: https://github.com/eslachance
