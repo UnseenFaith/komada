@@ -48,6 +48,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - dataProviders renamed to Providers
 
 ### Fixed
+- Fixed function reload event.
 - Fixed command reload all. underlying bug since 0.15.x days.
 - Fixed typo in validateData function
 - Fixed Default Conf initialize. (No longer outputs undefined)
