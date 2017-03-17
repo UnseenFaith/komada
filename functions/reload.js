@@ -216,26 +216,23 @@ exports.provider = (client, dir, providerName) => new Promise(async (resolve, re
 
 exports.event = (client, eventName) => new Promise(async (resolve, reject) => {
   const files = await client.funcs.getFileListing(client, client.clientBaseDir, "events").catch(err => client.emit("error", client.funcs.newError(err)));
-  const oldEvent = files.filter(f => f.name === eventName);
-  if (oldEvent[0] && oldEvent[0].name === eventName) {
+  const file = files.find((f) => f.name === eventName);
+  if (file && file.name === eventName) {
     const runEvent = (...args) => require(`${file.path}${path.sep}${file.base}`).run(client, ...args);
-    if (!client.events[eventName]) {
-      const file = oldEvent[0];
+    if (!client._events[eventName]) {
       client.on(file.name, runEvent);
       resolve(`Successfully loaded a new event called ${eventName}.`);
       return;
     }
     client.removeListener(eventName, runEvent);
     try {
-      oldEvent.forEach((file) => {
-        delete require.cache[require.resolve(`${file.path}${path.sep}${file.base}`)];
-        client.on(file.name, runEvent);
-      });
+      delete require.cache[require.resolve(`${file.path}${path.sep}${file.base}`)];
+      client.on(file.name, runEvent);
     } catch (error) {
       reject(error);
       return;
     }
-    resolve(`Successfully reloaded the event ${eventName}.`);
+    resolve(`Successfully reloaded the event ${eventName}`);
   } else {
     reject(`The event **${eventName}** does not seem to exist!`);
   }
