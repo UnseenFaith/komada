@@ -23,7 +23,7 @@ module.exports = (client, command, reload = false, loadPath = null) => new Promi
         cmd.init(client);
       }
     } catch (e) {
-      reject(`Could not load existing command data: ${e.stack}`);
+      reject(`Could not load existing command data: \`\`\`js\n${e.stack}\`\`\``);
     }
   } else {
     try {
@@ -47,7 +47,7 @@ module.exports = (client, command, reload = false, loadPath = null) => new Promi
             });
         client.funcs.loadSingleCommand(client, command, false, loadPath);
       } else {
-        reject(`Could not load new command data: ${e.stack}`);
+        reject(`Could not load new command data: \`\`\`js\n${e.stack}\`\`\``);
       }
     }
   }
