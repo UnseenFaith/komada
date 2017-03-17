@@ -17,7 +17,7 @@ exports.start = async (config) => {
 
   client.config = config;
 
-    // Extend client
+  // Extend client
   client.funcs = {};
   client.helpStructure = new Map();
   client.commands = new Discord.Collection();

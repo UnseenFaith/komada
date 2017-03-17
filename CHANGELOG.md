@@ -110,6 +110,86 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Old Configuration System
 - Selfbot Inhibitor
 
+## [0.18.0] - 2017-03-16
+### Added
+- Added a bunch of unusable configuration options that'll make their debut soon.
+- All Bad Requests/Forbiddens.. etc, now properly give a human readable error in console or chat, depending on the error. (Not as of (0.17.0).. must be fixed) ***
+- New Error Creator
+- New CommandHandler (Removed it from message event)
+- New Core Command "Transfer"
+- New extended help feature added.
+- New Beta Configuration (Needs heavy testing)
+- New Argument Prompting for Commands
+- ~~New Initialize Function to alleviate undefined errors~~ Reverted in #139
+- New Download Command
+
+### Changed
+- ~~All pieces now initialize upon being loaded, in order.~~ ~~Reverted in 0.17.3~~ Reimplemented in 0.17.4 within `client.on("ready")`
+- Changed Emojis to unicode variants in Reload.js
+- Broke down App.js Message Event into several smaller, changeable parts.
+- newError changed to send arguments to awaitMessage when errors are from usage
+- awaitMessage changed to work perfectly with the new system
+- msg.author.permLevel is now available immediately on a message, instead of after inhibitors run correctly.
+- Usage Inhibitor is now a function instead, which will help issues with racing and prompts.
+- All Inhibitors now return values instead of using promises to resolve or reject. (Change will be reflected on Documentation soon)
+- Reverted Log function for the time being.
+- Many Files to use the new Error creator
+- guildOnly Inhibitor is now a `runIn` Inhibitor.
+- Inhibitors now use .some() to determine if more inhibitors should be ran.
+- Stats command now uses `<Collection>.reduce` to correctly determine User Count when fetchAllMembers is false
+- Changed info to no longer mention Evie because she said she was tired of it.. kek
+- New runCommandInhibitors should be much faster and prioritizes inhibitors via a prioritiy configuration setting.
+- Old Configuration system now points to the new configuration system, to ease the trouble of updating to newer versions of Komada
+- Pieces now have  specific order they load in. (Functions, Providers, Commands, Inhibitors, Monitors, Events)
+- Confs.js uses new configuration system now
+- Configuration now split into smaller parts as requested.
+- Help command is now a Direct Message.
+- Async/Await for all pieces && app.js
+- dataProviders renamed to Providers
+
+### Fixed
+- Fixed validateData Booleans.
+- Fixed Reloading Events not loading new events correctly.
+- Fixed Typo in transfer command
+- Fixed Usage not working properly with selective
+- permissionLevels -> permissionLevel
+- Unchanged Package.json links to the repository
+- App.js uncaughtWarnings reverted (for now)
+- Download.js Fix && Reload.js typo fix.
+- Inhibitors now run one by one until one of them fails or all succeed. Fixes race conditions permanently.
+- Empty Message errors
+- CmdPrompts should now be fixed completely (as of 0.17.0)
+- Inhibitors now await
+- Usage typos fixed
+- LoadFunctions now calls itself when installing a new dependency in a client function
+- Fixed Default configuration not being read before guild configurations are created
+- Inhibitors now are correctly 'disabled' when set to be.
+- Events.... now should be fixed
+- Inhibitors now running in the correct order
+- Fixed Prompts sending an extra message.
+- Help command back to msg.author...
+- Help command is now working. `msg.author.permlvl => msg.member.permlvl`.
+- Bunch of fixes for Inhibitors/Commands
+- Fixed Typo in disable
+- Fixed Help Command sending extra message when DMed
+- New Configuration system fixed and outputs files correctly now.
+- No longer able to kill komada with Client.destroy()
+- All Pieces should now initialize in the correct order.
+- loadCommands no longer counts/loads "Ghost" commands.
+- DMs throwing errors with new Config System && permLevel
+- Fixed Reload not erroring on new commands that aren't found
+- Fixed Bug on Selfbot mentions introduced with the new Argument Prompts
+- Fixed Bug on Help not showing all commands with new Argument System
+- Fixed another bug introduced with the new Argument System where Permissions weren't finalized before Prompts
+- Fixed Bug within reload.js that prevented new commands from being loaded
+- More Selfbot Bugs Fixed
+- More Reload function fixes for commands
+
+### Removed
+- Old initialize system (Was borked)
+- Old Configuration System
+- Selfbot Inhibitor
+
 ## [0.12.4] - 2017-01-13
 ### Added
 - confs.getRaw(<Guild>) returns the entire configuration for developers.
