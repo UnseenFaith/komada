@@ -216,7 +216,7 @@ exports.provider = (client, dir, providerName) => new Promise(async (resolve, re
 
 exports.event = (client, eventName) => new Promise(async (resolve, reject) => {
   const files = await client.funcs.getFileListing(client, client.clientBaseDir, "events").catch(err => client.emit("error", client.funcs.newError(err)));
-  const file = files.find((f) => f.name === eventName);
+  const file = files.find(f => f.name === eventName);
   if (file && file.name === eventName) {
     const runEvent = (...args) => require(`${file.path}${path.sep}${file.base}`).run(client, ...args);
     if (!client._events[eventName]) {
