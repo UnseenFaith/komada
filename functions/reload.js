@@ -43,11 +43,7 @@ exports.function = (client, dir, funcName) => new Promise(async (resolve, reject
             process.exit();
           });
         } else {
-<<<<<<< HEAD
           reject(`Could not load new function data: \`\`\`js\n${error.stack}\`\`\``);
-=======
-          reject(`Could not load new function data: ${error}`);
->>>>>>> master
         }
       }
     } else {
@@ -71,13 +67,8 @@ exports.inhibitor = (client, dir, inhibName) => new Promise(async (resolve, reje
             props.init(client);
           }
         });
-<<<<<<< HEAD
       } catch (e) {
         reject(`Could not load new inhibitor data: \`\`\`js\n${e.stack}\`\`\``);
-=======
-      } catch (error) {
-        reject(error);
->>>>>>> master
         return;
       }
       resolve(`Successfully reloaded the inhibitor ${inhibName}`);
@@ -106,11 +97,7 @@ exports.inhibitor = (client, dir, inhibName) => new Promise(async (resolve, reje
             process.exit();
           });
         } else {
-<<<<<<< HEAD
           reject(`Could not load new inhibitor data: \`\`\`js\n${error.stack}\`\`\``);
-=======
-          reject(`Could not load new inhibitor data: ${error}`);
->>>>>>> master
         }
       }
     } else {
@@ -134,13 +121,8 @@ exports.monitor = (client, dir, monitName) => new Promise(async (resolve, reject
             props.init(client);
           }
         });
-<<<<<<< HEAD
       } catch (e) {
         reject(`Could not load new monitor data: \`\`\`js\n${e.stack}\`\`\``);
-=======
-      } catch (error) {
-        reject(error);
->>>>>>> master
         return;
       }
       resolve(`Succesfully reloaded the monitor ${monitName}.`);
@@ -169,11 +151,7 @@ exports.monitor = (client, dir, monitName) => new Promise(async (resolve, reject
             process.exit();
           });
         } else {
-<<<<<<< HEAD
           reject(`Could not load new monitor data: \`\`\`js\n${error.stack}\`\`\``);
-=======
-          reject(`Could not load new monitor data: ${error}`);
->>>>>>> master
         }
       }
     } else {
@@ -227,11 +205,7 @@ exports.provider = (client, dir, providerName) => new Promise(async (resolve, re
             process.exit();
           });
         } else {
-<<<<<<< HEAD
           reject(`Could not load new provider data: \`\`\`js\n${error.stack}\`\`\``);
-=======
-          reject(`Could not load new provider data: ${error}`);
->>>>>>> master
         }
       }
     } else {
@@ -242,7 +216,6 @@ exports.provider = (client, dir, providerName) => new Promise(async (resolve, re
 
 exports.event = (client, eventName) => new Promise(async (resolve, reject) => {
   const files = await client.funcs.getFileListing(client, client.clientBaseDir, "events").catch(err => client.emit("error", client.funcs.newError(err)));
-<<<<<<< HEAD
   const file = files.find(f => f.name === eventName);
   if (file && file.name === eventName) {
     const runEvent = (...args) => require(`${file.path}${path.sep}${file.base}`).run(client, ...args);
@@ -257,29 +230,6 @@ exports.event = (client, eventName) => new Promise(async (resolve, reject) => {
       client.on(file.name, runEvent);
     } catch (e) {
       reject(`Could not load new event data: \`\`\`js\n${e.stack}\`\`\``);
-=======
-  const oldEvent = files.filter(f => f.name === eventName);
-  if (oldEvent[0] && oldEvent[0].name === eventName) {
-    if (!client.events[eventName]) {
-      const file = oldEvent[0];
-      client.on(file.name, (...args) => require(`${file.path}${path.sep}${file.base}`).run(client, ...args));
-      return;
-    }
-    let listener;
-    if (client._events[eventName].length !== 0) {
-      listener = client._events[eventName][1];
-    } else {
-      listener = client._events[eventName];
-    }
-    client.removeListener(eventName, listener);
-    try {
-      oldEvent.forEach((file) => {
-        delete require.cache[require.resolve(`${file.path}${path.sep}${file.base}`)];
-        client.on(file.name, (...args) => require(`${file.path}${path.sep}${file.base}`).run(client, ...args));
-      });
-    } catch (error) {
-      reject(error);
->>>>>>> master
       return;
     }
     resolve(`Successfully reloaded the event ${eventName}`);
