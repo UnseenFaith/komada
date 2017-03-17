@@ -57,7 +57,7 @@ exports.start = async (config) => {
 
   client.on("error", e => client.funcs.log(e, "error"));
   client.on("warn", w => client.funcs.log(w, "warning"));
-  client.on("disconnect", () => client.funcs.log("Disconnected", "error"));
+  client.on("disconnect", e => client.funcs.log(`Disconnected: ${e.reason}`, "error"));
 
   client.on("message", async (msg) => {
     if (!client.ready) return;
