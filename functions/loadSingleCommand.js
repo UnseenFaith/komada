@@ -23,7 +23,7 @@ module.exports = (client, command, reload = false, loadPath = null) => new Promi
         cmd.init(client);
       }
     } catch (e) {
-      reject(`Could not load existing command data: ${e.stack}`);
+      reject(`Could not load existing command data: \`\`\`js\n${e.stack}\`\`\``);
     }
   } else {
     try {
@@ -31,6 +31,7 @@ module.exports = (client, command, reload = false, loadPath = null) => new Promi
       if (cmd.conf.selfbot && !client.config.selfbot) {
         return reject(`The command \`${cmd.help.name}\` is only usable in selfbots!`);
       }
+      delete require.cache[require.resolve(loadPath)];
       if (cmd.init) cmd.init(client);
       let pathParts = loadPath.split(path.sep);
       pathParts = pathParts.slice(pathParts.indexOf("commands") + 1);
@@ -46,7 +47,7 @@ module.exports = (client, command, reload = false, loadPath = null) => new Promi
             });
         client.funcs.loadSingleCommand(client, command, false, loadPath);
       } else {
-        reject(`Could not load new command data: ${e.stack}`);
+        reject(`Could not load new command data: \`\`\`js\n${e.stack}\`\`\``);
       }
     }
   }

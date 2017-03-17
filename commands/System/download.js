@@ -63,7 +63,7 @@ exports.run = (client, msg, [link, piece, folder = "Downloaded"]) => {
         if (client.messageMonitors.has(name)) return msg.channel.sendMessage(`<@!${msg.author.id}> | That message monitor already exists in your bot. Aborting the load.`);
         break;
       case "providers":
-        if (client.providers.has(name)) return msg.channel.sendMessage(`<@!${msg.author.id} | That provider already exists in your bot. Aborting the load.`);
+        if (client.providers.has(name)) return msg.channel.sendMessage(`<@!${msg.author.id}> | That provider already exists in your bot. Aborting the load.`);
         break;
       default:
         return "This will never trigger";

@@ -354,7 +354,7 @@ class Config {
     .then((conf) => {
       if (conf) defaultConf = conf;
     })
-    .catch(() => fs.outputJSONAsync(`${dataDir}${path.sep}${defaultFile}`));
+    .catch(() => fs.outputJSONAsync(`${dataDir}${path.sep}${defaultFile}`, defaultConf));
     client.guilds.forEach((guild) => {
       fs.readJSONAsync(path.resolve(`${dataDir}${path.sep}${guild.id}.json`))
       .then((thisConf) => {

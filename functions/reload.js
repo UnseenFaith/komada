@@ -14,8 +14,8 @@ exports.function = (client, dir, funcName) => new Promise(async (resolve, reject
             client.funcs[funcName].init(client);
           }
         });
-      } catch (error) {
-        reject(error);
+      } catch (e) {
+        reject(`Could not load new function data: \`\`\`js\n${e.stack}\`\`\``);
         return;
       }
       resolve(`Successfully reloaded the function ${funcName}.`);
@@ -43,7 +43,7 @@ exports.function = (client, dir, funcName) => new Promise(async (resolve, reject
             process.exit();
           });
         } else {
-          reject(`Could not load new function data: ${error}`);
+          reject(`Could not load new function data: \`\`\`js\n${error.stack}\`\`\``);
         }
       }
     } else {
@@ -67,8 +67,8 @@ exports.inhibitor = (client, dir, inhibName) => new Promise(async (resolve, reje
             props.init(client);
           }
         });
-      } catch (error) {
-        reject(error);
+      } catch (e) {
+        reject(`Could not load new inhibitor data: \`\`\`js\n${e.stack}\`\`\``);
         return;
       }
       resolve(`Successfully reloaded the inhibitor ${inhibName}`);
@@ -97,7 +97,7 @@ exports.inhibitor = (client, dir, inhibName) => new Promise(async (resolve, reje
             process.exit();
           });
         } else {
-          reject(`Could not load new inhibitor data: ${error}`);
+          reject(`Could not load new inhibitor data: \`\`\`js\n${error.stack}\`\`\``);
         }
       }
     } else {
@@ -121,8 +121,8 @@ exports.monitor = (client, dir, monitName) => new Promise(async (resolve, reject
             props.init(client);
           }
         });
-      } catch (error) {
-        reject(error);
+      } catch (e) {
+        reject(`Could not load new monitor data: \`\`\`js\n${e.stack}\`\`\``);
         return;
       }
       resolve(`Succesfully reloaded the monitor ${monitName}.`);
@@ -151,7 +151,7 @@ exports.monitor = (client, dir, monitName) => new Promise(async (resolve, reject
             process.exit();
           });
         } else {
-          reject(`Could not load new monitor data: ${error}`);
+          reject(`Could not load new monitor data: \`\`\`js\n${error.stack}\`\`\``);
         }
       }
     } else {
@@ -175,8 +175,8 @@ exports.provider = (client, dir, providerName) => new Promise(async (resolve, re
             props.init(client);
           }
         });
-      } catch (error) {
-        reject(error);
+      } catch (e) {
+        reject(`Could not load new provider data: \`\`\`js\n${e.stack}\`\`\``);
         return;
       }
       resolve(`Successfully reloaded the provider ${providerName}.`);
@@ -205,7 +205,7 @@ exports.provider = (client, dir, providerName) => new Promise(async (resolve, re
             process.exit();
           });
         } else {
-          reject(`Could not load new provider data: ${error}`);
+          reject(`Could not load new provider data: \`\`\`js\n${error.stack}\`\`\``);
         }
       }
     } else {
@@ -216,27 +216,20 @@ exports.provider = (client, dir, providerName) => new Promise(async (resolve, re
 
 exports.event = (client, eventName) => new Promise(async (resolve, reject) => {
   const files = await client.funcs.getFileListing(client, client.clientBaseDir, "events").catch(err => client.emit("error", client.funcs.newError(err)));
-  const oldEvent = files.filter(f => f.name === eventName);
-  if (oldEvent[0] && oldEvent[0].name === eventName) {
-    if (!client.events[eventName]) {
-      const file = oldEvent[0];
-      client.on(file.name, (...args) => require(`${file.path}${path.sep}${file.base}`).run(client, ...args));
+  const file = files.find(f => f.name === eventName);
+  if (file && file.name === eventName) {
+    const runEvent = (...args) => require(`${file.path}${path.sep}${file.base}`).run(client, ...args);
+    if (!client._events[eventName]) {
+      client.on(file.name, runEvent);
+      resolve(`Successfully loaded a new event called ${eventName}.`);
       return;
     }
-    let listener;
-    if (client._events[eventName].length !== 0) {
-      listener = client._events[eventName][1];
-    } else {
-      listener = client._events[eventName];
-    }
-    client.removeListener(eventName, listener);
+    client.removeListener(eventName, runEvent);
     try {
-      oldEvent.forEach((file) => {
-        delete require.cache[require.resolve(`${file.path}${path.sep}${file.base}`)];
-        client.on(file.name, (...args) => require(`${file.path}${path.sep}${file.base}`).run(client, ...args));
-      });
-    } catch (error) {
-      reject(error);
+      delete require.cache[require.resolve(`${file.path}${path.sep}${file.base}`)];
+      client.on(file.name, runEvent);
+    } catch (e) {
+      reject(`Could not load new event data: \`\`\`js\n${e.stack}\`\`\``);
       return;
     }
     resolve(`Successfully reloaded the event ${eventName}`);

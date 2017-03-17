@@ -5,6 +5,30 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+## [0.18.1] - 2017-03-17
+### Added
+- Sentry Integration for Error Tracking purposes direct to Komada Devs,
+- Added the new utils from `Discord.js#master`: escapeMarkdown and splitMessage are now in `client.methods`.
+- Added support for silent inhibitors (if `return true`, it won't send a reply).
+- Added Environmental Variable support for clientDir.
+- Added regExpEscape function.
+
+### Changed
+- Add error.stack to the function log.js to avoid [object Object].
+- Disconnect event should now prints a more human readable error instead of `[object Object]`.
+- error and warn event errors are now inspected with depth 0, for better debug.
+- loading Functions are removed from Functions folder and moved to a Utils folder. (This folder will be there for future features as well.)
+
+### Fixed
+- Reloading pieces should now return the error stack in a codeblock.
+- Fixed function reload event.
+- Fixed command reload all. underlying bug since 0.15.x days.
+- Fixed typo in validateData function
+- Fixed Default Conf initialize. (No longer outputs undefined)
+- Fixed invalid regex for prefixes in parseCommand
+
+### Removed
+- client.email redaction from the clean function.
 
 ## [0.18.0] - 2017-03-16
 ### Added
@@ -178,12 +202,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Various Confs fixes from [UnseenFaith]
 - Usage Addition/ParseUsage fix from [UnseenFaith]
 
-[Unreleased]: https://github.com/eslachance/komada/compare/0.18.0...indev
+[Unreleased]: https://github.com/eslachance/komada/compare/0.18.1...indev
 [0.10.0]: https://github.com/eslachance/komada/compare/1627e6deb1d8c352d83e52ccd590f2330f5f8bb2...0.10.0
 [0.11.0]: https://github.com/eslachance/komada/compare/0.10.0...0.11.0
 [0.12.0]: https://github.com/eslachance/komada/compare/0.11.0...0.12.0
 [0.12.4]: https://github.com/eslachance/komada/compare/0.12.0...0.12.4
 [0.18.0]: https://github.com/eslachance/komada/compare/0.12.4...0.18
+[0.18.1]: https://github.com/eslachance/komada/compare/0.12.4...0.18.1
 
 [vzwGrey]: https://github.com/vzwGrey
 [eslachance]: https://github.com/eslachance

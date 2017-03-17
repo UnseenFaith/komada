@@ -3,7 +3,6 @@ function sensitivePattern(client) {
     let pattern = "";
     if (client.token) pattern += client.token;
     if (client.token) pattern += (pattern.length > 0 ? "|" : "") + client.token;
-    if (client.email) pattern += (pattern.length > 0 ? "|" : "") + client.email;
     if (client.user.email) pattern += (pattern.length > 0 ? "|" : "") + client.user.email;
     if (client.password) pattern += (pattern.length > 0 ? "|" : "") + client.password;
     this.sensitivePattern = new RegExp(pattern, "gi");
