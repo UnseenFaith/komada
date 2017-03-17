@@ -5,6 +5,110 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+## [0.18.1] - 2017-03-17
+### Added
+- Sentry Integration for Error Tracking purposes direct to Komada Devs,
+- Added the new utils from `Discord.js#master`: escapeMarkdown and splitMessage are now in `client.methods`.
+- Added support for silent inhibitors (if `return true`, it won't send a reply).
+- Added Environmental Variable support for clientDir.
+- Added regExpEscape function.
+
+### Changed
+- Add error.stack to the function log.js to avoid [object Object].
+- Disconnect event should now prints a more human readable error instead of `[object Object]`.
+- error and warn event errors are now inspected with depth 0, for better debug.
+- loading Functions are removed from Functions folder and moved to a Utils folder. (This folder will be there for future features as well.)
+
+### Fixed
+- Reloading pieces should now return the error stack in a codeblock.
+- Fixed function reload event.
+- Fixed command reload all. underlying bug since 0.15.x days.
+- Fixed typo in validateData function
+- Fixed Default Conf initialize. (No longer outputs undefined)
+- Fixed invalid regex for prefixes in parseCommand
+
+### Removed
+- client.email redaction from the clean function.
+
+## [0.18.0] - 2017-03-16
+### Added
+- Added a bunch of unusable configuration options that'll make their debut soon.
+- All Bad Requests/Forbiddens.. etc, now properly give a human readable error in console or chat, depending on the error. (Not as of (0.17.0).. must be fixed) ***
+- New Error Creator
+- New CommandHandler (Removed it from message event)
+- New Core Command "Transfer"
+- New extended help feature added.
+- New Beta Configuration (Needs heavy testing)
+- New Argument Prompting for Commands
+- ~~New Initialize Function to alleviate undefined errors~~ Reverted in #139
+- New Download Command
+
+### Changed
+- ~~All pieces now initialize upon being loaded, in order.~~ ~~Reverted in 0.17.3~~ Reimplemented in 0.17.4 within `client.on("ready")`
+- Changed Emojis to unicode variants in Reload.js
+- Broke down App.js Message Event into several smaller, changeable parts.
+- newError changed to send arguments to awaitMessage when errors are from usage
+- awaitMessage changed to work perfectly with the new system
+- msg.author.permLevel is now available immediately on a message, instead of after inhibitors run correctly.
+- Usage Inhibitor is now a function instead, which will help issues with racing and prompts.
+- All Inhibitors now return values instead of using promises to resolve or reject. (Change will be reflected on Documentation soon)
+- Reverted Log function for the time being.
+- Many Files to use the new Error creator
+- guildOnly Inhibitor is now a `runIn` Inhibitor.
+- Inhibitors now use .some() to determine if more inhibitors should be ran.
+- Stats command now uses `<Collection>.reduce` to correctly determine User Count when fetchAllMembers is false
+- Changed info to no longer mention Evie because she said she was tired of it.. kek
+- New runCommandInhibitors should be much faster and prioritizes inhibitors via a prioritiy configuration setting.
+- Old Configuration system now points to the new configuration system, to ease the trouble of updating to newer versions of Komada
+- Pieces now have  specific order they load in. (Functions, Providers, Commands, Inhibitors, Monitors, Events)
+- Confs.js uses new configuration system now
+- Configuration now split into smaller parts as requested.
+- Help command is now a Direct Message.
+- Async/Await for all pieces && app.js
+- dataProviders renamed to Providers
+
+### Fixed
+- Fixed validateData Booleans.
+- Fixed Reloading Events not loading new events correctly.
+- Fixed Typo in transfer command
+- Fixed Usage not working properly with selective
+- permissionLevels -> permissionLevel
+- Unchanged Package.json links to the repository
+- App.js uncaughtWarnings reverted (for now)
+- Download.js Fix && Reload.js typo fix.
+- Inhibitors now run one by one until one of them fails or all succeed. Fixes race conditions permanently.
+- Empty Message errors
+- CmdPrompts should now be fixed completely (as of 0.17.0)
+- Inhibitors now await
+- Usage typos fixed
+- LoadFunctions now calls itself when installing a new dependency in a client function
+- Fixed Default configuration not being read before guild configurations are created
+- Inhibitors now are correctly 'disabled' when set to be.
+- Events.... now should be fixed
+- Inhibitors now running in the correct order
+- Fixed Prompts sending an extra message.
+- Help command back to msg.author...
+- Help command is now working. `msg.author.permlvl => msg.member.permlvl`.
+- Bunch of fixes for Inhibitors/Commands
+- Fixed Typo in disable
+- Fixed Help Command sending extra message when DMed
+- New Configuration system fixed and outputs files correctly now.
+- No longer able to kill komada with Client.destroy()
+- All Pieces should now initialize in the correct order.
+- loadCommands no longer counts/loads "Ghost" commands.
+- DMs throwing errors with new Config System && permLevel
+- Fixed Reload not erroring on new commands that aren't found
+- Fixed Bug on Selfbot mentions introduced with the new Argument Prompts
+- Fixed Bug on Help not showing all commands with new Argument System
+- Fixed another bug introduced with the new Argument System where Permissions weren't finalized before Prompts
+- Fixed Bug within reload.js that prevented new commands from being loaded
+- More Selfbot Bugs Fixed
+- More Reload function fixes for commands
+
+### Removed
+- Old initialize system (Was borked)
+- Old Configuration System
+- Selfbot Inhibitor
 
 ## [0.18.0] - 2017-03-16
 ### Added
@@ -178,12 +282,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Various Confs fixes from [UnseenFaith]
 - Usage Addition/ParseUsage fix from [UnseenFaith]
 
-[Unreleased]: https://github.com/eslachance/komada/compare/0.18.0...indev
+[Unreleased]: https://github.com/eslachance/komada/compare/0.18.1...indev
 [0.10.0]: https://github.com/eslachance/komada/compare/1627e6deb1d8c352d83e52ccd590f2330f5f8bb2...0.10.0
 [0.11.0]: https://github.com/eslachance/komada/compare/0.10.0...0.11.0
 [0.12.0]: https://github.com/eslachance/komada/compare/0.11.0...0.12.0
 [0.12.4]: https://github.com/eslachance/komada/compare/0.12.0...0.12.4
 [0.18.0]: https://github.com/eslachance/komada/compare/0.12.4...0.18
+[0.18.1]: https://github.com/eslachance/komada/compare/0.12.4...0.18.1
 
 [vzwGrey]: https://github.com/vzwGrey
 [eslachance]: https://github.com/eslachance

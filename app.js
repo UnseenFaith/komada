@@ -1,7 +1,14 @@
 const Discord = require("discord.js");
 const path = require("path");
+const util = require("util");
 
-const loadFunctions = require("./functions/loadFunctions.js");
+const loadFunctions = require("./utils/loadFunctions.js");
+const loadEvents = require("./utils/loadEvents.js");
+const loadProviders = require("./utils/loadProviders.js");
+const loadCommands = require("./utils/loadCommands.js");
+const loadCommandInhibitors = require("./utils/loadCommandInhibitors.js");
+const loadMessageMonitors = require("./utils/loadMessageMonitors.js");
+
 const Config = require("./classes/Config.js");
 
 exports.start = async (config) => {
@@ -19,37 +26,42 @@ exports.start = async (config) => {
   client.messageMonitors = new Discord.Collection();
   client.providers = new Discord.Collection();
 
-  // Extend Client with Native Discord.js Functions for use in our pieces.
+    // Extend Client with Native Discord.js Functions for use in our pieces.
   client.methods = {};
   client.methods.Collection = Discord.Collection;
   client.methods.Embed = Discord.RichEmbed;
   client.methods.MessageCollector = Discord.MessageCollector;
   client.methods.Webhook = Discord.WebhookClient;
+  client.methods.escapeMarkdown = Discord.escapeMarkdown;
+  client.methods.splitMessage = Discord.splitMessage;
 
   client.coreBaseDir = `${__dirname}${path.sep}`;
-  client.clientBaseDir = `${process.cwd()}${path.sep}`;
+  client.clientBaseDir = `${process.env.clientDir || process.cwd()}${path.sep}`;
   client.guildConfs = Config.guildConfs;
   client.configuration = Config;
 
+  await loadEvents(client);
+
   client.once("ready", async () => {
     client.config.prefixMention = new RegExp(`^<@!?${client.user.id}>`);
-    client.configuration.initialize(client);
+    await client.configuration.initialize(client);
     await loadFunctions(client);
-    await client.funcs.loadProviders(client);
-    await client.funcs.loadCommands(client);
-    await client.funcs.loadCommandInhibitors(client);
-    await client.funcs.loadMessageMonitors(client);
-    await client.funcs.loadEvents(client);
+    await loadProviders(client);
+    await loadCommands(client);
+    await loadCommandInhibitors(client);
+    await loadMessageMonitors(client);
     client.i18n = client.funcs.loadLocalizations;
     client.i18n.init(client);
     client.destroy = () => "You cannot use this within Komada, use process.exit() instead.";
+    client.ready = true;
   });
 
-  client.on("error", e => client.funcs.log(e, "error"));
-  client.on("warn", w => client.funcs.log(w, "warning"));
-  client.on("disconnect", e => client.funcs.log(e, "error"));
+  client.on("error", e => client.funcs.log(util.inspect(e, { depth: 0 }), "error"));
+  client.on("warn", w => client.funcs.log(util.inspect(w, { depth: 0 }), "warn"));
+  client.on("disconnect", e => client.funcs.log(`Disconnected | ${e.code}: ${e.reason}`, "error"));
 
   client.on("message", async (msg) => {
+    if (!client.ready) return;
     await client.funcs.runMessageMonitors(client, msg);
     msg.author.permLevel = await client.funcs.permissionLevel(client, msg.author, msg.guild);
     msg.guildConf = Config.get(msg.guild);
@@ -62,7 +74,6 @@ exports.start = async (config) => {
   client.login(client.config.botToken);
   return client;
 };
-
 process.on("unhandledRejection", (err) => {
   if (!err) return;
   console.error(`Uncaught Promise Error: \n${err.stack || err}`);

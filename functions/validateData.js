@@ -67,7 +67,7 @@ module.exports = (data, properties, values) => {
       case "string":
         break;
       default:
-        throw new Error("unsuported");
+        throw new Error("unsupported");
     }
   });
 };

@@ -12,7 +12,7 @@ module.exports = (data, type = "log") => {
       console.warn(`${clk.black.bgYellow(`[${moment().format("YYYY-MM-DD HH:mm:ss")}]`)} ${data}`);
       break;
     case "error":
-      console.error(`${clk.bgRed(`[${moment().format("YYYY-MM-DD HH:mm:ss")}]`)} ${data}`);
+      console.error(`${clk.bgRed(`[${moment().format("YYYY-MM-DD HH:mm:ss")}]`)} ${data.stack || data}`);
       break;
     case "log":
       console.log(`${clk.bgBlue(`[${moment().format("YYYY-MM-DD HH:mm:ss")}]`)} ${data}`);
