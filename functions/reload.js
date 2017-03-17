@@ -14,8 +14,8 @@ exports.function = (client, dir, funcName) => new Promise(async (resolve, reject
             client.funcs[funcName].init(client);
           }
         });
-      } catch (error) {
-        reject(error);
+      } catch (e) {
+        reject(`Could not load new function data: \`\`\`js\n${e.stack}\`\`\``);
         return;
       }
       resolve(`Successfully reloaded the function ${funcName}.`);
@@ -43,7 +43,7 @@ exports.function = (client, dir, funcName) => new Promise(async (resolve, reject
             process.exit();
           });
         } else {
-          reject(`Could not load new function data: ${error}`);
+          reject(`Could not load new function data: \`\`\`js\n${error.stack}\`\`\``);
         }
       }
     } else {
@@ -67,8 +67,8 @@ exports.inhibitor = (client, dir, inhibName) => new Promise(async (resolve, reje
             props.init(client);
           }
         });
-      } catch (error) {
-        reject(error);
+      } catch (e) {
+        reject(`Could not load new inhibitor data: \`\`\`js\n${e.stack}\`\`\``);
         return;
       }
       resolve(`Successfully reloaded the inhibitor ${inhibName}`);
@@ -97,7 +97,7 @@ exports.inhibitor = (client, dir, inhibName) => new Promise(async (resolve, reje
             process.exit();
           });
         } else {
-          reject(`Could not load new inhibitor data: ${error}`);
+          reject(`Could not load new inhibitor data: \`\`\`js\n${error.stack}\`\`\``);
         }
       }
     } else {
@@ -121,8 +121,8 @@ exports.monitor = (client, dir, monitName) => new Promise(async (resolve, reject
             props.init(client);
           }
         });
-      } catch (error) {
-        reject(error);
+      } catch (e) {
+        reject(`Could not load new monitor data: \`\`\`js\n${e.stack}\`\`\``);
         return;
       }
       resolve(`Succesfully reloaded the monitor ${monitName}.`);
@@ -151,7 +151,7 @@ exports.monitor = (client, dir, monitName) => new Promise(async (resolve, reject
             process.exit();
           });
         } else {
-          reject(`Could not load new monitor data: ${error}`);
+          reject(`Could not load new monitor data: \`\`\`js\n${error.stack}\`\`\``);
         }
       }
     } else {
@@ -175,8 +175,8 @@ exports.provider = (client, dir, providerName) => new Promise(async (resolve, re
             props.init(client);
           }
         });
-      } catch (error) {
-        reject(error);
+      } catch (e) {
+        reject(`Could not load new provider data: \`\`\`js\n${e.stack}\`\`\``);
         return;
       }
       resolve(`Successfully reloaded the provider ${providerName}.`);
@@ -205,7 +205,7 @@ exports.provider = (client, dir, providerName) => new Promise(async (resolve, re
             process.exit();
           });
         } else {
-          reject(`Could not load new provider data: ${error}`);
+          reject(`Could not load new provider data: \`\`\`js\n${error.stack}\`\`\``);
         }
       }
     } else {
@@ -228,8 +228,8 @@ exports.event = (client, eventName) => new Promise(async (resolve, reject) => {
     try {
       delete require.cache[require.resolve(`${file.path}${path.sep}${file.base}`)];
       client.on(file.name, runEvent);
-    } catch (error) {
-      reject(error);
+    } catch (e) {
+      reject(`Could not load new event data: \`\`\`js\n${e.stack}\`\`\``);
       return;
     }
     resolve(`Successfully reloaded the event ${eventName}`);
