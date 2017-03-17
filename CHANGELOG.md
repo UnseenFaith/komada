@@ -14,9 +14,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Added regExpEscape function.
 
 ### Changed
+- Add error.stack to the function log.js to avoid [object Object].
 - loading Functions are removed from Functions folder and moved to a Utils folder. (This folder will be there for future features as well.)
 
 ### Fixed
+- Disconnect event should print "Disconnected" instead of `[object Object]`.
 - Reloading pieces should now return the error stack in a codeblock.
 - Fixed function reload event.
 - Fixed command reload all. underlying bug since 0.15.x days.
