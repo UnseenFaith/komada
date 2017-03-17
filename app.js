@@ -1,5 +1,6 @@
 const Discord = require("discord.js");
 const path = require("path");
+const util = require("util");
 
 const loadFunctions = require("./utils/loadFunctions.js");
 const loadEvents = require("./utils/loadEvents.js");
@@ -55,8 +56,8 @@ exports.start = async (config) => {
     client.ready = true;
   });
 
-  client.on("error", e => client.funcs.log(require("util").inspect(e, { depth: 0 }), "error"));
-  client.on("warn", w => client.funcs.log(require("util").inspect(w, { depth: 0 }), "warn"));
+  client.on("error", e => client.funcs.log(util.inspect(e, { depth: 0 }), "error"));
+  client.on("warn", w => client.funcs.log(util.inspect(w, { depth: 0 }), "warn"));
   client.on("disconnect", e => client.funcs.log(`Disconnected | ${e.code}: ${e.reason}`, "error"));
 
   client.on("message", async (msg) => {
