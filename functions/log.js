@@ -4,7 +4,7 @@ const chalk = require("chalk");
 const clk = new chalk.constructor({ enabled: true });
 
 function resolveObject(error) {
-  error = `${error.message || error.stack || error}`;
+  error = error.stack || error.message || error;
   let out;
   if (typeof error === "object" && typeof error !== "string") {
     out = require("util").inspect(error, { depth: 0 });
