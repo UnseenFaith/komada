@@ -20,7 +20,7 @@ const loadMessageMonitors = (client, baseDir) => new Promise(async (resolve, rej
         console.error(err);
         process.exit();
       });
-      client.funcs.loadMessageMonitors(client);
+      loadMessageMonitors(client, baseDir);
     } else {
       reject(e);
     }

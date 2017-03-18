@@ -20,6 +20,7 @@ const loadProviders = (client, baseDir) => new Promise(async (resolve, reject) =
         console.error(err);
         process.exit();
       });
+      loadProviders(client, baseDir);
     } else {
       reject(e);
     }

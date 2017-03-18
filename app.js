@@ -2,6 +2,7 @@ const Discord = require("discord.js");
 const path = require("path");
 const util = require("util");
 
+require("./utils/Extendables.js");
 const loadFunctions = require("./utils/loadFunctions.js");
 const loadEvents = require("./utils/loadEvents.js");
 const loadProviders = require("./utils/loadProviders.js");
@@ -63,8 +64,6 @@ exports.start = async (config) => {
   client.on("message", async (msg) => {
     if (!client.ready) return;
     await client.funcs.runMessageMonitors(client, msg);
-    msg.author.permLevel = await client.funcs.permissionLevel(client, msg.author, msg.guild);
-    msg.guildConf = Config.get(msg.guild);
     client.i18n.use(msg.guildConf.lang);
     if (!client.funcs.handleMessage(client, msg)) return;
     const command = client.funcs.parseCommand(client, msg);
