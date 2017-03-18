@@ -18,7 +18,7 @@ const loadCommands = (client, baseDir) => new Promise(async (resolve, reject) =>
           console.error(err);
           process.exit();
         });
-      client.funcs.loadCommands(client);
+      loadCommands(client, baseDir);
     } else {
       reject(e);
     }

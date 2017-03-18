@@ -56,21 +56,15 @@ const buildHelp = (client, msg) => new Promise((resolve) => {
 
   client.commands.forEach((command) => {
     mps.push(new Promise((res) => {
-      client.funcs.runCommandInhibitors(client, msg, command, [], true)
-          .then(() => {
-            if (command.conf.permLevel <= msg.author.permLevel) {
-              const cat = command.help.category;
-              const subcat = command.help.subCategory;
-              if (!help.hasOwnProperty(cat)) help[cat] = {};
-              if (!help[cat].hasOwnProperty(subcat)) help[cat][subcat] = [];
-              help[cat][subcat].push(`${msg.guildConf.prefix}${command.help.name}${" ".repeat(longest - command.help.name.length)} :: ${command.help.description}`);
-              res();
-            }
-            res();
-          })
-          .catch(() => {
-            res();
-          });
+      if ((msg.guild ? msg.member.permLevel : msg.author.permLevel) > command.conf.permLevel) {
+        const cat = command.help.category;
+        const subcat = command.help.subCategory;
+        if (!help.hasOwnProperty(cat)) help[cat] = {};
+        if (!help[cat].hasOwnProperty(subcat)) help[cat][subcat] = [];
+        help[cat][subcat].push(`${msg.guildConf.prefix}${command.help.name}${" ".repeat(longest - command.help.name.length)} :: ${command.help.description}`);
+        res();
+      }
+      res();
     }));
   });
   Promise.all(mps).then(() => {

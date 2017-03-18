@@ -5,9 +5,23 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- Extendables Added (postable, sendable, embedable, etc.)
+
+### Changed
+- Changed permissions inhibitor and permissionLevel function to use new Extendables.
+- Help command now no longer requires runCommandInhibitors and uses new Extendables.
+- Removed several useless lines of code in app.js made redundant by Extendables.
+
+
+### Fixed
+- Several bugs that would have occurred if loading anything contained a NPM module error.
+
+### Removed
+- runCommandInhibitors no longer necessary.
+
 ## [0.18.1] - 2017-03-17
 ### Added
-- Sentry Integration for Error Tracking purposes direct to Komada Devs,
 - Added the new utils from `Discord.js#master`: escapeMarkdown and splitMessage are now in `client.methods`.
 - Added support for silent inhibitors (if `return true`, it won't send a reply).
 - Added Environmental Variable support for clientDir.

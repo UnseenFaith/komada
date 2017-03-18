@@ -20,7 +20,7 @@ const loadCommandInhibitors = (client, baseDir) => new Promise(async (resolve, r
         console.error(err);
         process.exit();
       });
-      client.funcs.loadCommandInhibitors(client);
+      loadCommandInhibitors(client, baseDir);
     } else {
       reject(e);
     }
