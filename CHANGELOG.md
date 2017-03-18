@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Extendables Added (postable, sendable, embedable, etc.)
 
 ### Changed
+- The function `log` should never display `[object Object]` now.
 - Changed permissions inhibitor and permissionLevel function to use new Extendables.
 - Help command now no longer requires runCommandInhibitors and uses new Extendables.
 - Removed several useless lines of code in app.js made redundant by Extendables.
