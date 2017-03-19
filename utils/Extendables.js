@@ -1,5 +1,7 @@
 const Discord = require("discord.js");
 
+const DMChannel = Discord.DMChannel;
+const GroupDMChannel = Discord.GroupDMChannel;
 const TextChannel = Discord.TextChannel;
 const Message = Discord.Message;
 const GuildMember = Discord.GuildMember;
@@ -9,14 +11,17 @@ const User = Discord.User;
 
 class Extendables {
   get embedable() {
+    if (!this.guild) return true;
     return this.permissionsFor(this.guild.member(this.client.user.id)).hasPermission("EMBED_LINKS");
   }
 
   get postable() {
+    if (!this.guild) return true;
     return this.permissionsFor(this.guild.member(this.client.user.id)).hasPermission("SEND_MESSAGES");
   }
 
   get attachable() {
+    if (!this.guild) return true;
     return this.permissionsFor(this.guild.member(this.client.user.id)).hasPermission("ATTACH_FILES");
   }
 
@@ -40,6 +45,8 @@ const applyToClass = (structure, props) => {
   }
 };
 
+applyToClass(GroupDMChannel, ["embedable", "postable", "attachable"]);
+applyToClass(DMChannel, ["embedable", "postable", "attachable"]);
 applyToClass(TextChannel, ["embedable", "postable", "attachable"]);
 applyToClass(Message, ["guildConf"]);
 applyToClass(GuildMember, ["permLevel"]);
