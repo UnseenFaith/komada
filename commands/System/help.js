@@ -1,3 +1,24 @@
+const buildHelp = (client, msg) => new Promise((resolve) => {
+  const help = {};
+  const mps = [];
+
+  const commandNames = Array.from(client.commands.keys());
+  const longest = commandNames.reduce((long, str) => Math.max(long, str.length), 0);
+  const permissionLevel = msg.guild ? msg.member.permLevel : msg.author.permLevel;
+
+  client.commands.filter(cmd => permissionLevel >= cmd.conf.permLevel).forEach((command) => {
+    mps.push(new Promise((res) => {
+      const cat = command.help.category;
+      const subcat = command.help.subCategory;
+      if (!help.hasOwnProperty(cat)) help[cat] = {};
+      if (!help[cat].hasOwnProperty(subcat)) help[cat][subcat] = [];
+      help[cat][subcat].push(`${msg.guildConf.prefix}${command.help.name}${" ".repeat(longest - command.help.name.length)} :: ${command.help.description}`);
+      res();
+    }));
+  });
+  Promise.all(mps).then(resolve(help))
+});
+
 exports.run = (client, msg, [cmd]) => {
   if (!cmd) {
     buildHelp(client, msg)
@@ -12,13 +33,13 @@ exports.run = (client, msg, [cmd]) => {
           helpMessage.push("```\n\u200b");
         }
         if (!client.config.selfbot) {
-          msg.author.sendMessage(helpMessage, { split: { char: "\u200b" } }).catch((e) => { console.error(e); });
+          msg.author.sendMessage(helpMessage, { split: { char: "\u200b" } }).catch(e => client.funcs.log(e, "error"));
           if (msg.channel.type.toLowerCase() !== "dm") {
             msg.reply("Commands have been sent to your DMs.");
           }
         } else {
           msg.channel.sendMessage(helpMessage, { split: { char: "\u200b" } })
-        .catch((e) => { console.error(e); });
+        .catch(e => client.funcs.log(e, "error"));
         }
       });
   } else if (client.commands.has(cmd)) {
@@ -46,28 +67,3 @@ exports.help = {
   usage: "[command:str]",
   usageDelim: "",
 };
-
-const buildHelp = (client, msg) => new Promise((resolve) => {
-  const help = {};
-  const mps = [];
-
-  const commandNames = Array.from(client.commands.keys());
-  const longest = commandNames.reduce((long, str) => Math.max(long, str.length), 0);
-
-  client.commands.forEach((command) => {
-    mps.push(new Promise((res) => {
-      if ((msg.guild ? msg.member.permLevel : msg.author.permLevel) > command.conf.permLevel) {
-        const cat = command.help.category;
-        const subcat = command.help.subCategory;
-        if (!help.hasOwnProperty(cat)) help[cat] = {};
-        if (!help[cat].hasOwnProperty(subcat)) help[cat][subcat] = [];
-        help[cat][subcat].push(`${msg.guildConf.prefix}${command.help.name}${" ".repeat(longest - command.help.name.length)} :: ${command.help.description}`);
-        res();
-      }
-      res();
-    }));
-  });
-  Promise.all(mps).then(() => {
-    resolve(help);
-  });
-});
