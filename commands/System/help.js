@@ -16,7 +16,7 @@ const buildHelp = (client, msg) => new Promise((resolve) => {
       res();
     }));
   });
-  Promise.all(mps).then(resolve(help))
+  Promise.all(mps).then(resolve(help));
 });
 
 exports.run = (client, msg, [cmd]) => {
