@@ -6,7 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Added
-- Extendables Added (postable, sendable, embedable, etc.)
+- postable, embedable, attachable now apply to any Text Channel for simplicity and to prevent errors down the road.
+- Extendables Added (postable, attachable, embedable, etc.)
 
 ### Changed
 - The function `log` should never display `[object Object]` now.
