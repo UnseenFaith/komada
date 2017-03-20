@@ -14,7 +14,7 @@ const loadCommands = (client, baseDir) => new Promise(async (resolve, reject) =>
       const module = /'[^']+'/g.exec(e.toString());
       await client.funcs.installNPM(module[0].slice(1, -1))
         .catch((err) => {
-          console.error(err);
+          client.funcs.log(err, "error");
           process.exit();
         });
       loadCommands(client, baseDir);
