@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Extendables Added (postable, attachable, embedable, etc.)
 
 ### Changed
+- [Cache optimization] After a piece is loaded inside the collection, the cache from the `require` gets deleted.
 - Pieces are now loaded on client side, then core side. (Without duplicating it).
 - Komada loads much faster now.
 - The function `log` should never display `[object Object]` now.

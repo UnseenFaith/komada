@@ -13,7 +13,7 @@ const loadFunctions = (client, baseDir) => new Promise(async (resolve, reject) =
       if (file[0] === "loadFunctions") res();
       client.funcs[file[0]] = require(`${dir}${path.sep}${f}`);
       if (client.funcs[file[0]].init) client.funcs[file[0]].init(client);
-      res();
+      res(delete require.cache[require.resolve(`${dir}${path.sep}${f}`)]);
     }));
     await Promise.all(fn).catch(e => client.funcs.log(e, "error"));
     resolve();

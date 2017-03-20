@@ -11,7 +11,7 @@ const loadProviders = (client, baseDir) => new Promise(async (resolve, reject) =
       const props = require(`${f.path}${path.sep}${f.base}`);
       if (props.init) props.init(client);
       client.providers.set(f.name, props);
-      res();
+      res(delete require.cache[require.resolve(`${f.path}${path.sep}${f.base}`)]);
     }));
     await Promise.all(fn).catch(e => client.funcs.log(e, "error"));
     resolve();
