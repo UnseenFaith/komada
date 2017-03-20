@@ -6,17 +6,13 @@ const loadProviders = (client, baseDir) => new Promise(async (resolve, reject) =
   await fs.ensureDirAsync(dir).catch(err => client.emit("error", client.funcs.newError(err)));
   const files = await client.funcs.getFileListing(client, baseDir, "providers").catch(err => client.emit("error", client.funcs.newError(err)));
   try {
-    const fn = files.map(f => new Promise((res, rej) => {
-      try {
-        const props = require(`${f.path}${path.sep}${f.base}`);
-        if (props.init) props.init(client);
-        client.providers.set(f.name, props);
-        res();
-      } catch (e) {
-        rej(e);
-      }
+    const fn = files.map(f => new Promise((res) => {
+      const props = require(`${f.path}${path.sep}${f.base}`);
+      if (props.init) props.init(client);
+      client.providers.set(f.name, props);
+      res();
     }));
-    await Promise.all(fn);
+    await Promise.all(fn).catch(e => client.funcs.log(e, "error"));
     resolve();
   } catch (e) {
     if (e.code === "MODULE_NOT_FOUND") {

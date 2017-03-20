@@ -7,18 +7,14 @@ const loadFunctions = (client, baseDir) => new Promise(async (resolve, reject) =
   let files = await fs.readdirAsync(dir).catch(err => client.emit("error", client.funcs.newError(err)));
   files = files.filter(f => f.slice(-3) === ".js");
   try {
-    const fn = files.map(f => new Promise((res, rej) => {
-      try {
-        const file = f.split(".");
-        if (file[0] === "loadFunctions") res();
-        client.funcs[file[0]] = require(`${dir}${path.sep}${f}`);
-        if (client.funcs[file[0]].init) client.funcs[file[0]].init(client);
-        res();
-      } catch (e) {
-        rej(e);
-      }
+    const fn = files.map(f => new Promise((res) => {
+      const file = f.split(".");
+      if (file[0] === "loadFunctions") res();
+      client.funcs[file[0]] = require(`${dir}${path.sep}${f}`);
+      if (client.funcs[file[0]].init) client.funcs[file[0]].init(client);
+      res();
     }));
-    await Promise.all(fn);
+    await Promise.all(fn).catch(e => client.funcs.log(e, "error"));
     resolve();
   } catch (e) {
     if (e.code === "MODULE_NOT_FOUND") {
