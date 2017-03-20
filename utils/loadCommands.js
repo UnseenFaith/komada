@@ -6,9 +6,8 @@ const loadCommands = (client, baseDir) => new Promise(async (resolve, reject) =>
   try {
     await fs.ensureDirAsync(dir).catch(err => client.funcs.log(err, "error"));
     const files = await client.funcs.getFileListing(client, baseDir, "commands").catch(err => client.emit("error", client.funcs.newError(err)));
-    files.forEach(async (f) => {
-      await client.funcs.loadSingleCommand(client, `${f.name}`, false, `${f.path}${path.sep}${f.base}`).catch(err => client.emit("error", client.funcs.newError(err)));
-    });
+    const fn = files.map(f => client.funcs.loadSingleCommand(client, `${f.name}`, false, `${f.path}${path.sep}${f.base}`));
+    await Promise.all(fn);
     resolve();
   } catch (e) {
     if (e.code === "MODULE_NOT_FOUND") {

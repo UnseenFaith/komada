@@ -6,11 +6,17 @@ const loadCommandInhibitors = (client, baseDir) => new Promise(async (resolve, r
   await fs.ensureDirAsync(dir);
   const files = await client.funcs.getFileListing(client, baseDir, "inhibitors").catch(err => client.emit("error", client.funcs.newError(err)));
   try {
-    files.forEach((f) => {
-      const props = require(`${f.path}${path.sep}${f.base}`);
-      if (props.init) props.init(client);
-      client.commandInhibitors.set(f.name, props);
-    });
+    const fn = files.map(f => new Promise((res, rej) => {
+      try {
+        const props = require(`${f.path}${path.sep}${f.base}`);
+        if (props.init) props.init(client);
+        client.commandInhibitors.set(f.name, props);
+        res();
+      } catch (e) {
+        rej(e);
+      }
+    }));
+    await Promise.all(fn);
     resolve();
   } catch (e) {
     if (e.code === "MODULE_NOT_FOUND") {
