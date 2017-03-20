@@ -33,9 +33,9 @@ const loadFunctions = (client, baseDir) => new Promise(async (resolve, reject) =
 });
 
 module.exports = client => new Promise(async (resolve, reject) => {
-  await loadFunctions(client, client.coreBaseDir).catch(reject);
+  await loadFunctions(client, client.clientBaseDir).catch(reject);
   if (client.coreBaseDir !== client.clientBaseDir) {
-    await loadFunctions(client, client.clientBaseDir).catch(reject);
+    await loadFunctions(client, client.coreBaseDir).catch(reject);
   }
   client.funcs.log(`Loaded ${Object.keys(client.funcs).length} functions.`);
   resolve();

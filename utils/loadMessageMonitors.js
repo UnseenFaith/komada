@@ -32,9 +32,9 @@ const loadMessageMonitors = (client, baseDir) => new Promise(async (resolve, rej
 
 module.exports = async (client) => {
   client.messageMonitors.clear();
-  await loadMessageMonitors(client, client.coreBaseDir).catch(err => client.emit("error", client.funcs.newError(err)));
+  await loadMessageMonitors(client, client.clientBaseDir).catch(err => client.emit("error", client.funcs.newError(err)));
   if (client.coreBaseDir !== client.clientBaseDir) {
-    await loadMessageMonitors(client, client.clientBaseDir).catch(err => client.emit("error", client.funcs.newError(err)));
+    await loadMessageMonitors(client, client.coreBaseDir).catch(err => client.emit("error", client.funcs.newError(err)));
   }
   client.funcs.log(`Loaded ${client.messageMonitors.size} command monitors.`);
 };

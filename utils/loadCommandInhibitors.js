@@ -32,9 +32,9 @@ const loadCommandInhibitors = (client, baseDir) => new Promise(async (resolve, r
 
 module.exports = async (client) => {
   client.commandInhibitors.clear();
-  await loadCommandInhibitors(client, client.coreBaseDir).catch(err => client.emit("error", client.funcs.newError(err)));
+  await loadCommandInhibitors(client, client.clientBaseDir).catch(err => client.emit("error", client.funcs.newError(err)));
   if (client.coreBaseDir !== client.clientBaseDir) {
-    await loadCommandInhibitors(client, client.clientBaseDir).catch(err => client.emit("error", client.funcs.newError(err)));
+    await loadCommandInhibitors(client, client.coreBaseDir).catch(err => client.emit("error", client.funcs.newError(err)));
   }
   client.funcs.log(`Loaded ${client.commandInhibitors.size} command inhibitors.`);
 };

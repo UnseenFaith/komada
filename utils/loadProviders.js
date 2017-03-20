@@ -32,9 +32,9 @@ const loadProviders = (client, baseDir) => new Promise(async (resolve, reject) =
 
 module.exports = async (client) => {
   client.providers.clear();
-  await loadProviders(client, client.coreBaseDir).catch(err => client.emit("error", client.funcs.newError(err)));
+  await loadProviders(client, client.clientBaseDir).catch(err => client.emit("error", client.funcs.newError(err)));
   if (client.coreBaseDir !== client.clientBaseDir) {
-    await loadProviders(client, client.clientBaseDir).catch(err => client.emit("error", client.funcs.newError(err)));
+    await loadProviders(client, client.coreBaseDir).catch(err => client.emit("error", client.funcs.newError(err)));
   }
   client.funcs.log(`Loaded ${client.providers.size} providers.`);
 };
