@@ -48,7 +48,7 @@ module.exports = (client, command, reload = false, loadPath = null) => new Promi
             });
         client.funcs.loadSingleCommand(client, command, false, loadPath);
       } else {
-        reject(`Could not load new command data: \`\`\`js\n${e.stack}\`\`\``);
+        return reject(`Could not load the command: ${e.stack}`);
       }
     }
   }
