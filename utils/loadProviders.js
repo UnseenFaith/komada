@@ -4,7 +4,8 @@ const path = require("path");
 const loadProviders = (client, baseDir) => new Promise(async (resolve, reject) => {
   const dir = path.resolve(`${baseDir}./providers/`);
   await fs.ensureDirAsync(dir).catch(err => client.emit("error", client.funcs.newError(err)));
-  const files = await client.funcs.getFileListing(client, baseDir, "providers").catch(err => client.emit("error", client.funcs.newError(err)));
+  let files = await client.funcs.getFileListing(client, baseDir, "providers").catch(err => client.emit("error", client.funcs.newError(err)));
+  files = files.filter(file => !client.providers.get(file.name));
   try {
     const fn = files.map(f => new Promise((res) => {
       const props = require(`${f.path}${path.sep}${f.base}`);

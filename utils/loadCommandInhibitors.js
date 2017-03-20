@@ -4,7 +4,8 @@ const path = require("path");
 const loadCommandInhibitors = (client, baseDir) => new Promise(async (resolve, reject) => {
   const dir = path.resolve(`${baseDir}./inhibitors/`);
   await fs.ensureDirAsync(dir);
-  const files = await client.funcs.getFileListing(client, baseDir, "inhibitors").catch(err => client.emit("error", client.funcs.newError(err)));
+  let files = await client.funcs.getFileListing(client, baseDir, "inhibitors").catch(err => client.emit("error", client.funcs.newError(err)));
+  files = files.filter(file => !client.commandInhibitors.get(file.name));
   try {
     const fn = files.map(f => new Promise((res) => {
       const props = require(`${f.path}${path.sep}${f.base}`);

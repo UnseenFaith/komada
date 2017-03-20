@@ -6,6 +6,7 @@ const loadFunctions = (client, baseDir) => new Promise(async (resolve, reject) =
   await fs.ensureDirAsync(dir).catch(err => client.emit("error", client.funcs.newError(err)));
   let files = await fs.readdirAsync(dir).catch(err => client.emit("error", client.funcs.newError(err)));
   files = files.filter(f => f.slice(-3) === ".js");
+  files = files.filter(file => !client.funcs[file.split(".")[0]]);
   try {
     const fn = files.map(f => new Promise((res) => {
       const file = f.split(".");
