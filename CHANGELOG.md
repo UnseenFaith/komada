@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Extendables Added (postable, attachable, embedable, etc.)
 
 ### Changed
+- Komada loads much faster now.
 - The function `log` should never display `[object Object]` now.
 - When a command fails at load, it should provide full stack error now.
 - Changed permissions inhibitor and permissionLevel function to use new Extendables.
