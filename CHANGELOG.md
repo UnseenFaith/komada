@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Added
+- Added readable to make postable, embedable, and attachable more accurate.
 - postable, embedable, attachable now apply to any Text Channel for simplicity and to prevent errors down the road.
 - Extendables Added (postable, attachable, embedable, etc.)
 
