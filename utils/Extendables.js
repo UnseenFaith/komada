@@ -16,7 +16,7 @@ class Extendables {
   }
   get embedable() {
     if (!this.guild) return true;
-    return this.readable && this.permissionsFor(this.guild.member(this.client.user)).hasPermission("EMBED_LINKS");
+    return this.readable && this.postable && this.permissionsFor(this.guild.member(this.client.user)).hasPermission("EMBED_LINKS");
   }
 
   get postable() {
@@ -26,7 +26,7 @@ class Extendables {
 
   get attachable() {
     if (!this.guild) return true;
-    return this.readable && this.permissionsFor(this.guild.member(this.client.user)).hasPermission("ATTACH_FILES");
+    return this.readable && this.postable && this.permissionsFor(this.guild.member(this.client.user)).hasPermission("ATTACH_FILES");
   }
 
   get guildConf() {
