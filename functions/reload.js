@@ -250,7 +250,7 @@ exports.command = (client, dir, commandName) => new Promise(async (resolve, reje
     const newCommands = files.filter(f => f.name === commandName);
     if (newCommands[0]) {
       newCommands.forEach(async (file) => {
-        await client.funcs.loadSingleCommand(client, commandName, false, `${file.path}${path.sep}${file.base}`).catch(e => reject(e));
+        await client.funcs.loadSingleCommand(client, commandName, false, `${file.path}${path.sep}${file.base}`).catch(e => reject(`\`\`\`js\n${e}\`\`\``));
         resolve(`Successfully loaded a new command called ${commandName}`);
       });
     } else {
