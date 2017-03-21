@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Extendables Added (postable, attachable, embedable, etc.)
 
 ### Changed
+- [Cache optimization] After a piece is reloaded, the cache from the `require` gets deleted.
+- [Cache optimization] After a piece is loaded inside the collection, the cache from the `require` gets deleted.
+- Pieces are now loaded on client side, then core side. (Without duplicating it).
+- Komada loads much faster now.
 - The function `log` should never display `[object Object]` now.
 - When a command fails at load, it should provide full stack error now.
 - Changed permissions inhibitor and permissionLevel function to use new Extendables.
@@ -18,11 +22,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
 ### Fixed
+- TypeError in awaitMessage.js function, issue #158
 - (Hot fix) Fixed help command (was returning BadRequest) on 0.18.5
 - (Hot fix) Fixed permissions on DMs (running msg.member.permLevel when the user DMs a command that doesn't have permissions for).
 - Several bugs that would have occurred if loading anything contained a NPM module error.
 
 ### Removed
+- A bunch of deprecated functions that were moved to utils.
 - runCommandInhibitors no longer necessary.
 
 ## [0.18.1] - 2017-03-17

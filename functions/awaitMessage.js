@@ -5,7 +5,8 @@ const options = {
 };
 
 module.exports = async (client, msg, cmd, args, error) => {
-  const permLvl = await client.funcs.permissionLevel(client, msg.author, msg.guild).catch(err => client.emit("error", client.funcs.newError(err)));
+  const user = msg.member || msg.author;
+  const permLvl = user.permLevel;
   if (cmd.conf.permLevel > permLvl) return msg.channel.sendCode("", "You do not have enough permission to use this command.").catch(err => client.emit("error", client.funcs.newError(err)));
   const message = await msg.channel.sendMessage(`<@!${msg.member.id}> | **${error}** | You have **30** seconds to respond to this prompt with a valid argument. Type **"ABORT"** to abort this prompt.`).catch(err => client.emit("error", client.funcs.newError(err)));
   const param = await msg.channel.awaitMessages(response => response.member.id === msg.author.id && response.id !== message.id, options).catch(err => client.emit("error", client.funcs.newError(err)));

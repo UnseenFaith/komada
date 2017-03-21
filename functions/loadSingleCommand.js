@@ -28,6 +28,7 @@ module.exports = (client, command, reload = false, loadPath = null) => new Promi
   } else {
     try {
       cmd = require(loadPath);
+      if (client.commands.has(cmd.help.name)) return resolve(delete require.cache[require.resolve(loadPath)]);
       if (cmd.conf.selfbot && !client.config.selfbot) {
         return reject(`The command \`${cmd.help.name}\` is only usable in selfbots!`);
       }
