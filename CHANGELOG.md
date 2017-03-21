@@ -6,11 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Added
+- Monitors can customize whether to run the monitor on a bot or self now.
 - Added readable to make postable, embedable, and attachable more accurate.
 - postable, embedable, attachable now apply to any Text Channel for simplicity and to prevent errors down the road.
 - Extendables Added (postable, attachable, embedable, etc.)
 
 ### Changed
+- Usage now gets the prefix from parseCommand, to reduce errors when using commands and escaped prefixes.
 - [Cache optimization] After a piece is reloaded, the cache from the `require` gets deleted.
 - [Cache optimization] After a piece is loaded inside the collection, the cache from the `require` gets deleted.
 - Pieces are now loaded on client side, then core side. (Without duplicating it).
