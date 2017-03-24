@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Added
+- Message.reactable added to extendables
 - Monitors can customize whether to run the monitor on a bot or self now.
 - Added readable to make postable, embedable, and attachable more accurate.
 - postable, embedable, attachable now apply to any Text Channel for simplicity and to prevent errors down the road.
@@ -25,6 +26,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
 ### Fixed
+- Fixed Usage for the 603rd time. Maybe? Probably not.
 - TypeError in awaitMessage.js function, issue #158
 - (Hot fix) Fixed help command (was returning BadRequest) on 0.18.5
 - (Hot fix) Fixed permissions on DMs (running msg.member.permLevel when the user DMs a command that doesn't have permissions for).

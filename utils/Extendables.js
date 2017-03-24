@@ -29,6 +29,11 @@ class Extendables {
     return this.readable && this.postable && this.permissionsFor(this.guild.member(this.client.user)).hasPermission("ATTACH_FILES");
   }
 
+  get reactable() {
+    if (!this.guild) return true;
+    return this.readable && this.permissionsFor(this.guild.member(this.client.user)).hasPermission("ADD_REACTIONS");
+  }
+
   get guildConf() {
     return this.client.configuration.get(this.guild);
   }
@@ -49,9 +54,9 @@ const applyToClass = (structure, props) => {
   }
 };
 
-applyToClass(GroupDMChannel, ["embedable", "postable", "attachable", "readable"]);
-applyToClass(DMChannel, ["embedable", "postable", "attachable", "readable"]);
-applyToClass(TextChannel, ["embedable", "postable", "attachable", "readable"]);
+applyToClass(GroupDMChannel, ["embedable", "postable", "attachable", "readable", "reactable"]);
+applyToClass(DMChannel, ["embedable", "postable", "attachable", "readable", "reactable"]);
+applyToClass(TextChannel, ["embedable", "postable", "attachable", "readable", "reactable"]);
 applyToClass(Message, ["guildConf"]);
 applyToClass(GuildMember, ["permLevel"]);
 applyToClass(Guild, ["conf"]);
