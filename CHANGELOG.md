@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Added
+- Little bit of Documentation to Extendables
+- Message.awaitReactions && Message.createCollector && ReactionCollector
 - Message.reactable added to extendables
 - Monitors can customize whether to run the monitor on a bot or self now.
 - Added readable to make postable, embedable, and attachable more accurate.
