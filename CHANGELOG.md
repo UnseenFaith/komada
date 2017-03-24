@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
 ### Fixed
+- Fixed Float Usage not correctly determining if NaN (finally)
 - Fixed Usage for the 603rd time. Maybe? Probably not.
 - TypeError in awaitMessage.js function, issue #158
 - (Hot fix) Fixed help command (was returning BadRequest) on 0.18.5
