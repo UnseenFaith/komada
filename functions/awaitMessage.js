@@ -12,7 +12,7 @@ module.exports = async (client, msg, cmd, args, error) => {
   try {
     const param = await msg.channel.awaitMessages(response => response.member.id === msg.author.id && response.id !== message.id, options);
     if (param.first().content.toLowerCase() === "abort") return "Aborted";
-    args[args.indexOf(undefined)] = param.first().content;
+    args[args.indexOf(null)] = param.first().content;
     const params = await client.funcs.usage.run(client, msg, cmd, args);
     cmd.run(client, msg, params);
   } catch (e) {
