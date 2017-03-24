@@ -285,7 +285,7 @@ exports.run = (client, msg, cmd, args = undefined) => new Promise((resolve, reje
         case "num":
         case "number":
         case "float":
-          if (parseFloat(args[i]) === "NaN") {
+          if (isNaN(parseFloat(args[i]))) {
             if (currentUsage.type === "optional" && !repeat) {
               args.splice(i, 0, undefined);
               validateArgs(++i);
@@ -529,7 +529,7 @@ exports.run = (client, msg, cmd, args = undefined) => new Promise((resolve, reje
           case "num":
           case "number":
           case "float":
-            if (parseFloat(args[i]) !== "NaN") {
+            if (isNaN(parseFloat(args[i]))) {
               args[i] = parseFloat(args[i]);
               if (currentUsage.possibles[p].min && currentUsage.possibles[p].max) {
                 if (args[i] <= currentUsage.possibles[p].max && args[i] >= currentUsage.possibles[p].min) {
