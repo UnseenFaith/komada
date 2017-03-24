@@ -54,10 +54,10 @@ const applyToClass = (structure, props) => {
   }
 };
 
-applyToClass(GroupDMChannel, ["embedable", "postable", "attachable", "readable", "reactable"]);
-applyToClass(DMChannel, ["embedable", "postable", "attachable", "readable", "reactable"]);
-applyToClass(TextChannel, ["embedable", "postable", "attachable", "readable", "reactable"]);
-applyToClass(Message, ["guildConf"]);
+applyToClass(GroupDMChannel, ["embedable", "postable", "attachable", "readable"]);
+applyToClass(DMChannel, ["embedable", "postable", "attachable", "readable"]);
+applyToClass(TextChannel, ["embedable", "postable", "attachable", "readable"]);
+applyToClass(Message, ["guildConf", "reactable"]);
 applyToClass(GuildMember, ["permLevel"]);
 applyToClass(Guild, ["conf"]);
 applyToClass(User, ["permLevel"]);
