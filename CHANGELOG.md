@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
 ### Fixed
+- Fixed HandleCommand not passing Arguments to awaitMessage properly.
 - Fixed AwaitMessage - Kyra
 - Fixed Float Usage not correctly determining if NaN (finally)
 - Fixed Usage for the 603rd time. Maybe? Probably not.

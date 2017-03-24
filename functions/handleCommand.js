@@ -2,17 +2,14 @@ module.exports = async (client, msg, command, args = undefined) => {
   const validCommand = this.getCommand(client, command);
   if (!validCommand) return;
   const response = this.runInhibitors(client, msg, validCommand);
-  if (response) {
-    if (typeof response === "string") return msg.reply(response);
-    return;
-  }
+  if (response) return msg.reply(response);
   try {
     const params = await client.funcs.usage.run(client, msg, validCommand, args);
     validCommand.run(client, msg, params);
   } catch (error) {
     if (error) {
       if (error.code === 1 && client.config.cmdPrompt) {
-        client.funcs.awaitMessage(client, msg, validCommand, [], error.message);
+        client.funcs.awaitMessage(client, msg, validCommand, error.args, error.message);
       } else {
         if (error.stack) client.emit("error", error.stack);
         msg.channel.sendCode("JSON", (error.message || error)).catch(err => client.emit("error", err));
