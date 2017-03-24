@@ -375,6 +375,7 @@ exports.run = (client, msg, cmd, args = undefined) => new Promise((resolve, reje
             args.splice(i, 0, undefined);
             validateArgs(++i);
           } else {
+            args.splice(i, 1, null);
             reject(client.funcs.newError(`Your option didn't match any of the possibilities: (${currentUsage.possibles.map(possibles => possibles.name).join(", ")})`, 1, args));
           }
           return;
