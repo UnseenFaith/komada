@@ -21,6 +21,7 @@ class ReactionCollector extends EventEmitter {
     if (this.filter(reaction, this)) {
       this.collected.set(reaction._emoji.name, reaction);
       this.emit("messageReactionAdd", reaction, this);
+      if (reaction.count >= this.options.maxEmojiCount) this.stop("emojiCountLimit");
       if (this.collected.size >= this.options.maxMatches) this.stop("matchesLimit");
       else if (this.options.max && this.collected.size === this.options.max) this.stop("limit");
       return true;
