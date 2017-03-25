@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
 ### Fixed
+- "`client.funcs.log` is not a function" when something was wrong at startup (events not working or faulty configurations).
 - Fixed HandleCommand not passing Arguments to awaitMessage properly.
 - Fixed AwaitMessage - Kyra
 - Fixed Float Usage not correctly determining if NaN (finally)
