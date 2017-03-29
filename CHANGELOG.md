@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
 ### Fixed
+- Fixed Multiple Prefixes
 - TypeError in awaitMessage.js function, issue #158
 - (Hot fix) Fixed help command (was returning BadRequest) on 0.18.5
 - (Hot fix) Fixed permissions on DMs (running msg.member.permLevel when the user DMs a command that doesn't have permissions for).
