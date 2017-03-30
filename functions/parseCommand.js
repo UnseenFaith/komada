@@ -21,8 +21,8 @@ exports.getPrefix = (client, msg) => {
   const escape = client.funcs.regExpEsc;
   if (prefix instanceof Array) {
     prefix.some((pref) => {
-      if (msg.content.startsWith(pref)) return prefix = pref;
-      else return prefix = false;
+      if (msg.content.startsWith(pref)) prefix = pref;
+      else prefix = false;
     });
   }
   if (prefix && msg.content.startsWith(prefix)) return new RegExp(`^${escape(prefix)}`); // eslint-disable-line
