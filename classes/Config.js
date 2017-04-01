@@ -342,7 +342,7 @@ class Config {
    */
   static initialize(client) {
     defaultConf = {
-      prefix: { type: "String", data: client.config.prefix },
+      prefix: { type: client.config.prefix.constructor.name, data: client.config.prefix },
       disabledCommands: { type: "Array", data: [] },
       modRole: { type: "String", data: "Mods" },
       adminRole: { type: "String", data: "Devs" },
