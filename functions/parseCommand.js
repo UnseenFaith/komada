@@ -20,7 +20,7 @@ exports.getPrefix = (client, msg) => {
   let prefix = msg.guildConf.prefix;
   const escape = client.funcs.regExpEsc;
   if (prefix instanceof Array) {
-    prefix.some((pref) => {
+    prefix.forEach((pref) => {
       if (msg.content.startsWith(pref)) prefix = pref;
       else prefix = false;
     });
