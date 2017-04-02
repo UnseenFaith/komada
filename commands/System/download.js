@@ -42,7 +42,7 @@ exports.run = (client, msg, [link, piece, folder = "Downloaded"]) => {
 
     const name = mod.exports.help.name;
     const description = mod.exports.help.description || "No description provided.";
-    const type = link;
+    const type = mod.exports.help.type || link;
     const modules = mod.exports.conf.requiredModules || "No required modules.. Yay!";
 
     if (!name) return msg.channel.sendMessage(`<@!${msg.author.id}> | I have stopped the load of this piece because it does not have a name value, and I cannot determine the file name without it. Please ask the Developer of this piece to add it.`);

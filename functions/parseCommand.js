@@ -22,9 +22,8 @@ exports.getPrefix = (client, msg) => {
   if (prefix instanceof Array) {
     prefix.forEach((pref) => {
       if (msg.content.startsWith(pref)) prefix = pref;
-      else pref = false;
+      else prefix = false;
     });
-    return prefix;
   }
   if (prefix && msg.content.startsWith(prefix)) return new RegExp(`^${escape(prefix)}`); // eslint-disable-line
   return false;
