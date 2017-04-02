@@ -1,5 +1,7 @@
 # Komada Framework Documentation
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/dirigeants/komada.svg)](https://greenkeeper.io/)
+
 [![Discord](https://discordapp.com/api/guilds/260202843686830080/embed.png)](https://discord.gg/dgs8263)
 [![npm](https://img.shields.io/npm/v/komada.svg?maxAge=3600)](https://www.npmjs.com/package/komada)
 [![npm](https://img.shields.io/npm/dt/komada.svg?maxAge=3600)](https://www.npmjs.com/package/komada)
