@@ -191,10 +191,7 @@ class Config {
   static setMax(key, defaultMaxValue) {
     if (!key || !defaultMaxValue) return `You supplied ${key}, ${defaultMaxValue}. Please supply both a key, and a default max value.`;
     if (defaultConf[key].type !== "Number") return "You cannot use this method on non-Numeral configurations.";
-    defaultConf[key].max = defaultMaxValue;
-    guildConfs.forEach((config) => {
-      config[key].setMax(defaultMaxValue);
-    });
+    defaultConf[key].min = defaultMaxValue;
     fs.outputJSONAsync(`${dataDir}${path.sep}${defaultFile}`, defaultConf);
     return defaultConf[key];
   }
