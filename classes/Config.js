@@ -172,7 +172,7 @@ class Config {
    */
   static setMin(key, defaultMinValue) {
     if (!key || !defaultMinValue) return `You supplied ${key}, ${defaultMinValue}. Please supply both a key, and a default min value.`;
-    if (!defaultConf[key].type !== "Number") return "You cannot use this method on non-Numeral configurations.";
+    if (defaultConf[key].type !== "Number") return "You cannot use this method on non-Numeral configurations.";
     defaultConf[key].min = defaultMinValue;
     fs.outputJSONAsync(`${dataDir}${path.sep}${defaultFile}`, defaultConf);
     return defaultConf[key];
@@ -187,7 +187,7 @@ class Config {
    */
   static setMax(key, defaultMaxValue) {
     if (!key || !defaultMaxValue) return `You supplied ${key}, ${defaultMaxValue}. Please supply both a key, and a default max value.`;
-    if (!defaultConf[key].type !== "Number") return "You cannot use this method on non-Numeral configurations.";
+    if (defaultConf[key].type !== "Number") return "You cannot use this method on non-Numeral configurations.";
     defaultConf[key].min = defaultMaxValue;
     fs.outputJSONAsync(`${dataDir}${path.sep}${defaultFile}`, defaultConf);
     return defaultConf[key];
@@ -202,7 +202,7 @@ class Config {
    */
   static add(key, defaultValue) {
     if (!key || !defaultValue) return `You supplied ${key}, ${defaultValue}. Please supply both a key, and a default value.`;
-    if (!defaultConf[key].type !== "Array") return "You cannot use this method on non-Array configuration options.";
+    if (defaultConf[key].type !== "Array") return "You cannot use this method on non-Array configuration options.";
     if (defaultConf[key].data.includes(defaultValue)) return `The default value ${defaultValue} is already in ${defaultConf[key].data}.`;
     defaultConf[key].data.push(defaultValue);
     fs.outputJSONAsync(`${dataDir}${path.sep}${defaultFile}`, defaultConf);
@@ -218,7 +218,7 @@ class Config {
    */
   static del(key, defaultValue) {
     if (!key || !defaultValue) return `You supplied ${key}, ${defaultValue}. Please supply both a key, and a default value.`;
-    if (!defaultConf[key].type !== "Array") return "You cannot use this method on non-Array configuration options.";
+    if (defaultConf[key].type !== "Array") return "You cannot use this method on non-Array configuration options.";
     if (!defaultConf[key].data.includes(defaultValue)) return `The default value ${defaultValue} is not in ${defaultConf[key].data}.`;
     defaultConf[key].data.splice(defaultConf[key].indexOf(defaultValue), 1);
     fs.outputJSONAsync(`${dataDir}${path.sep}${defaultFile}`, defaultConf);
@@ -233,7 +233,7 @@ class Config {
    */
   static toggle(key) {
     if (!key) return "Please supply a key to toggle the value for.";
-    if (!defaultConf[key].type !== "Boolean") return "You cannot use this method on non-Boolean configuration options.";
+    if (defaultConf[key].type !== "Boolean") return "You cannot use this method on non-Boolean configuration options.";
     if (defaultConf[key].data === true) defaultConf[key].data = false;
     else defaultConf[key].data = false;
     fs.outputJSONAsync(`${dataDir}${path.sep}${defaultFile}`, defaultConf);

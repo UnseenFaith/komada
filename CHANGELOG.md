@@ -28,6 +28,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
 ### Fixed
+- Some other minor fixes for confs and download
+- Fixed many issues with double negatives in configuration
 - Fixed Multiple Prefixes
 - "`client.funcs.log` is not a function" when something was wrong at startup (events not working or faulty configurations).
 - Fixed HandleCommand not passing Arguments to awaitMessage properly.
