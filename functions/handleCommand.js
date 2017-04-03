@@ -3,7 +3,7 @@ module.exports = async (client, msg, command, args = undefined) => {
   if (!validCommand) return;
   const response = this.runInhibitors(client, msg, validCommand);
   if (response) {
-    if (typeof response === "string") return msg.reply(response);
+    if (typeof response === "string") msg.reply(response);
     return;
   }
   try {
@@ -12,7 +12,7 @@ module.exports = async (client, msg, command, args = undefined) => {
   } catch (error) {
     if (error) {
       if (error.code === 1 && client.config.cmdPrompt) {
-        client.funcs.awaitMessage(client, msg, validCommand, [], error.message);
+        client.funcs.awaitMessage(client, msg, validCommand, error.args, error.message);
       } else {
         if (error.stack) client.emit("error", error.stack);
         msg.channel.sendCode("JSON", (error.message || error)).catch(err => client.emit("error", err));
