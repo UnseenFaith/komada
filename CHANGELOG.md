@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Added
+- Added Websocket Heartbeat ping to ping command.
 - Little bit of Documentation to Extendables
 - Message.awaitReactions && Message.createCollector && ReactionCollector
 - Message.reactable added to extendables
