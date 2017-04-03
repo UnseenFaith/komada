@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Extendables Added (postable, attachable, embedable, etc.)
 
 ### Changed
+- Moved Configuration System to Utils
 - Usage now gets the prefix from parseCommand, to reduce errors when using commands and escaped prefixes.
 - [Cache optimization] After a piece is reloaded, the cache from the `require` gets deleted.
 - [Cache optimization] After a piece is loaded inside the collection, the cache from the `require` gets deleted.

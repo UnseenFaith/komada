@@ -60,14 +60,14 @@ class Resolver {
 
   resolveBoolean(boolean) {
     if (boolean instanceof Boolean) return boolean;
-    if ([1, "true", "+", "t"].includes(boolean)) return true;
-    if ([0, "false", "-", "f"].includes(boolean)) return false;
+    if ([1, "true", "+", "t", "yes", "y"].includes(boolean)) return true;
+    if ([0, "false", "-", "f", "no", "n"].includes(boolean)) return false;
     return null;
   }
 
   resolveString(string) {
     if (string instanceof String) return true;
-    return sString(string);
+    return String(string);
   }
 
   resolveInteger(integer) {
