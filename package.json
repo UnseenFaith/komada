@@ -34,5 +34,10 @@
     "eslint": "^3.10.2",
     "eslint-config-airbnb-base": "^11.0.1",
     "eslint-plugin-import": "^2.2.0"
+  },
+  "greenkeeper": {
+    "ignore": [
+      "fs-extra"
+    ]
   }
 }
