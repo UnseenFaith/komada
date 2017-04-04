@@ -29,6 +29,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
 ### Fixed
+- String errors when provided to User/Member usage
 - Some other minor fixes for confs and download
 - Fixed many issues with double negatives in configuration
 - Fixed Multiple Prefixes
