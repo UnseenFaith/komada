@@ -29,6 +29,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
 ### Fixed
+- Minor fixes in ping command and awaitMessage function.
+- Usage when you use Boolean types.
 - String errors when provided to User/Member usage
 - Some other minor fixes for confs and download
 - Fixed many issues with double negatives in configuration

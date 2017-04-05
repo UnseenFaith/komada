@@ -22,6 +22,6 @@ module.exports = async (client, msg, cmd, args, error) => {
       }
     } else return "Aborted";
   } finally {
-    message.delete();
+    if (message.deletable) message.delete();
   }
 };

@@ -117,8 +117,8 @@ exports.run = (client, msg, cmd, args = undefined) => new Promise((resolve, reje
               args[i] = true;
             } else {
               args[i] = false;
-              validateArgs(++i);
             }
+            validateArgs(++i);
           } else if (currentUsage.type === "optional" && !repeat) {
             args.splice(i, 0, undefined);
             validateArgs(++i);
