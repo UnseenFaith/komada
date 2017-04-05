@@ -26,11 +26,20 @@ const loadCommands = (client, baseDir) => new Promise(async (resolve, reject) =>
 });
 
 module.exports = async (client) => {
+  // The base directory of code compiled into JS.
+  client.outBaseDir = client.config.outBaseDir;
+
   client.commands.clear();
   client.aliases.clear();
   await loadCommands(client, client.coreBaseDir).catch(err => client.emit("error", client.funcs.newError(err)));
   if (client.coreBaseDir !== client.clientBaseDir) {
     await loadCommands(client, client.clientBaseDir).catch(err => client.emit("error", client.funcs.newError(err)));
   }
-  client.funcs.log(`Loaded ${client.commands.size} commands, with ${client.aliases.size} aliases.`);
+  // Load from out dir if different from core and client dirs.
+  if (client.outBaseDir && client.coreBaseDir !== client.outBaseDir && client.clientBaseDir !== client.outBaseDir) {
+    await loadCommands(client, client.outBaseDir).catch(err => client.emit("error", client.funcs.newError(err)));
+  }
+  const countJS = client.commands.filter(c => c.help.codeLang === "JS").size;
+  const countCLJS = client.commands.filter(c => c.help.codeLang === "CLJS").size;
+  client.funcs.log(`Loaded ${client.commands.size} commands (${countJS} JS, ${countCLJS} CLJS), with ${client.aliases.size} aliases.`);
 };
