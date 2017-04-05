@@ -1,6 +1,6 @@
 exports.run = async (client, msg) => {
   try {
-    const message = await msg.channel.sendMessage("Ping?").catch(err => client.funcs.log(err, "error"));
+    const message = await msg.channel.sendMessage("Ping?");
     await message.edit(`Pong! (Roundtrip took: ${message.createdTimestamp - msg.createdTimestamp}ms. Heartbeat: ${client.ping}ms.)`);
   } catch (e) {
     client.funcs.log(e, "error");
