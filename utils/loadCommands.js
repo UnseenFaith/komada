@@ -36,7 +36,9 @@ module.exports = async (client) => {
     await loadCommands(client, client.clientBaseDir).catch(err => client.emit("error", client.funcs.newError(err)));
   }
   // Load from out dir if different from core and client dirs.
-  if (client.outBaseDir && client.coreBaseDir !== client.outBaseDir && client.clientBaseDir !== client.outBaseDir) {
+  if (client.outBaseDir &&
+      client.outBaseDir !== client.coreBaseDir &&
+      client.outBaseDir !== client.clientBaseDir) {
     await loadCommands(client, client.outBaseDir).catch(err => client.emit("error", client.funcs.newError(err)));
   }
   const countJS = client.commands.filter(c => c.help.codeLang === "JS").size;
