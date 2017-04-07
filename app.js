@@ -59,7 +59,10 @@ exports.start = async (config) => {
 
   client.on("error", e => log(e, "error"));
   client.on("warn", w => log(w, "warn"));
-  client.on("disconnect", e => log(`Disconnected | ${e.code}: ${e.reason}`, "error"));
+  client.on("disconnect", (e) => {
+    log(`Disconnected | ${e.code}: ${e.reason}`, "error");
+    if (e.code === 1000) client.login(client.config.botToken);
+  });
 
   client.on("message", async (msg) => {
     if (!client.ready) return;
