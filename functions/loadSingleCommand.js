@@ -1,4 +1,4 @@
-const fs = require("fs");
+const fs = require("fs-extra-promise");
 const path = require("path");
 
 module.exports = (client, command, reload = false, loadPath = null) => new Promise(async (resolve, reject) => {
@@ -50,13 +50,18 @@ module.exports = (client, command, reload = false, loadPath = null) => new Promi
       subCategory = client.funcs.toTitleCase(cmd.help.subCategory ? cmd.help.subCategory : (pathParts[1] && pathParts[1].length > 0 && pathParts[1].indexOf(".") === -1 ? pathParts[1] : "General"));
 
       codeLang = "JS";
-      compiledLangs.forEach((lang) => {
+      await Promise.all(compiledLangs.map(async (lang) => {
         // Remove the ".js" extension, if there is one, since it's optional.
         const compiledPath = `${loadPath.replace(/\.js$/, "")}.${lang.toLowerCase()}`;
         // If there's an equivalent file that ends with the lang, it's a code
         // file that was compiled into JS.
-        if (fs.existsSync(compiledPath)) codeLang = lang.toUpperCase();
-      });
+        try {
+          await fs.accessAsync(compiledPath);
+          codeLang = lang.toUpperCase();
+        } catch (e) {
+          // Do nothing
+        }
+      }));
     } catch (e) {
       if (e.code === "MODULE_NOT_FOUND") {
         const module = /'[^']+'/g.exec(e.toString());
