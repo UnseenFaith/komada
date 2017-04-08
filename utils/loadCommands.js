@@ -48,7 +48,7 @@ module.exports = async (client) => {
     langCounts[lang]++;
   });
   let countMsg = "";
-  if (langCounts.length >= 2) {
+  if (Object.keys(langCounts).length >= 2) {
     countMsg = ` (${Object.entries(langCounts).sort(([lang1], [lang2]) => {
       // JS should appear first
       if (lang1 === "JS") return -1;
