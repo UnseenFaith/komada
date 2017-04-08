@@ -4,9 +4,9 @@ const path = require("path");
 module.exports = (client, command, reload = false, loadPath = null) => new Promise(async (resolve, reject) => {
   let category;
   let subCategory;
-  const compiledLangs = typeof client.config.compiledLangs === "string" ?
-    [client.config.compiledLangs] :
-    client.config.compiledLangs;
+  const compiledLangs = Array.isArray(client.config.compiledLang) ?
+    client.config.compiledLang :
+    [client.config.compiledLang];
   let codeLang;
   let cmd;
   if (!loadPath && !reload) return reject("Path must be provided when loading a new command.");
