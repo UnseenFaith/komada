@@ -1,13 +1,14 @@
 const Discord = require("discord.js");
 const path = require("path");
-const util = require("util");
 
+require("./utils/Extendables.js");
 const loadFunctions = require("./utils/loadFunctions.js");
 const loadEvents = require("./utils/loadEvents.js");
 const loadProviders = require("./utils/loadProviders.js");
 const loadCommands = require("./utils/loadCommands.js");
 const loadCommandInhibitors = require("./utils/loadCommandInhibitors.js");
 const loadMessageMonitors = require("./utils/loadMessageMonitors.js");
+const log = require("./functions/log.js");
 
 const Config = require("./classes/Config.js");
 
@@ -56,15 +57,13 @@ exports.start = async (config) => {
     client.ready = true;
   });
 
-  client.on("error", e => client.funcs.log(util.inspect(e, { depth: 0 }), "error"));
-  client.on("warn", w => client.funcs.log(util.inspect(w, { depth: 0 }), "warn"));
-  client.on("disconnect", e => client.funcs.log(`Disconnected | ${e.code}: ${e.reason}`, "error"));
+  client.on("error", e => log(e, "error"));
+  client.on("warn", w => log(w, "warn"));
+  client.on("disconnect", e => log(`Disconnected | ${e.code}: ${e.reason}`, "error"));
 
   client.on("message", async (msg) => {
     if (!client.ready) return;
     await client.funcs.runMessageMonitors(client, msg);
-    msg.author.permLevel = await client.funcs.permissionLevel(client, msg.author, msg.guild);
-    msg.guildConf = Config.get(msg.guild);
     client.i18n.use(msg.guildConf.lang);
     if (!client.funcs.handleMessage(client, msg)) return;
     const command = client.funcs.parseCommand(client, msg);

@@ -2,17 +2,17 @@ const path = require("path");
 /* eslint-disable import/no-dynamic-require, global-require */
 exports.function = (client, dir, funcName) => new Promise(async (resolve, reject) => {
   const files = await client.funcs.getFileListing(client, dir, "functions").catch(err => client.emit("error", client.funcs.newError(err)));
-  if (client.funcs.hasOwnProperty(funcName)) {
+  if (client.funcs.hasOwnProperty(funcName)) { // eslint-disable-line no-prototype-builtins
     const oldFunction = files.filter(f => f.name === funcName);
     if (oldFunction[0]) {
       try {
         oldFunction.forEach((file) => {
           client.funcs[funcName] = "";
-          delete require.cache[require.resolve(`${file.path}${path.sep}${file.base}`)];
           client.funcs[funcName] = require(`${file.path}${path.sep}${file.base}`);
           if (client.funcs[funcName].init) {
             client.funcs[funcName].init(client);
           }
+          delete require.cache[require.resolve(`${file.path}${path.sep}${file.base}`)];
         });
       } catch (e) {
         reject(`Could not load new function data: \`\`\`js\n${e.stack}\`\`\``);
@@ -60,12 +60,12 @@ exports.inhibitor = (client, dir, inhibName) => new Promise(async (resolve, reje
       try {
         oldInhibitor.forEach((file) => {
           client.commandInhibitors.delete(file.name);
-          delete require.cache[require.resolve(`${file.path}${path.sep}${file.base}`)];
           const props = require(`${file.path}${path.sep}${file.base}`);
           client.commandInhibitors.set(file.name, props);
           if (props.init) {
             props.init(client);
           }
+          delete require.cache[require.resolve(`${file.path}${path.sep}${file.base}`)];
         });
       } catch (e) {
         reject(`Could not load new inhibitor data: \`\`\`js\n${e.stack}\`\`\``);
@@ -114,12 +114,12 @@ exports.monitor = (client, dir, monitName) => new Promise(async (resolve, reject
       try {
         oldMonitor.forEach((file) => {
           client.messageMonitors.delete(file.name);
-          delete require.cache[require.resolve(`${file.path}${path.sep}${file.base}`)];
           const props = require(`${file.path}${path.sep}${file.base}`);
           client.messageMonitors.set(file.name, props);
           if (props.init) {
             props.init(client);
           }
+          delete require.cache[require.resolve(`${file.path}${path.sep}${file.base}`)];
         });
       } catch (e) {
         reject(`Could not load new monitor data: \`\`\`js\n${e.stack}\`\`\``);
@@ -168,12 +168,12 @@ exports.provider = (client, dir, providerName) => new Promise(async (resolve, re
       try {
         oldProvider.forEach((file) => {
           client.providers.delete(file.name);
-          delete require.cache[require.resolve(`${file.path}${path.sep}${file.base}`)];
           const props = require(`${file.path}${path.sep}${file.base}`);
           client.providers.set(file.name, props);
           if (props.init) {
             props.init(client);
           }
+          delete require.cache[require.resolve(`${file.path}${path.sep}${file.base}`)];
         });
       } catch (e) {
         reject(`Could not load new provider data: \`\`\`js\n${e.stack}\`\`\``);
@@ -250,7 +250,7 @@ exports.command = (client, dir, commandName) => new Promise(async (resolve, reje
     const newCommands = files.filter(f => f.name === commandName);
     if (newCommands[0]) {
       newCommands.forEach(async (file) => {
-        await client.funcs.loadSingleCommand(client, commandName, false, `${file.path}${path.sep}${file.base}`).catch(e => reject(e));
+        await client.funcs.loadSingleCommand(client, commandName, false, `${file.path}${path.sep}${file.base}`).catch(e => reject(`\`\`\`js\n${e}\`\`\``));
         resolve(`Successfully loaded a new command called ${commandName}`);
       });
     } else {
