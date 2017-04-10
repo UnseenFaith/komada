@@ -100,7 +100,7 @@ exports.run = (client, msg, cmd, args = undefined) => new Promise((resolve, reje
           break;
         case "user":
         case "mention":
-          if (/^<@!?\d+>$/.test(args[i]) || (client.users.has(/\d+/.exec(args[i])[0]) && args[i].length > 5)) {
+          if ((/^<@!?\d+>$/.test(args[i]) && client.users.has(/\d+/.exec(args[i])[0])) || (/\d+/.test(args[i]) && client.users.has(/\d+/.exec(args[i])[0]) && args[i].length > 5)) {
             args[i] = client.users.get(/\d+/.exec(args[i])[0]);
             validateArgs(++i);
           } else if (currentUsage.type === "optional" && !repeat) {
@@ -117,8 +117,8 @@ exports.run = (client, msg, cmd, args = undefined) => new Promise((resolve, reje
               args[i] = true;
             } else {
               args[i] = false;
-              validateArgs(++i);
             }
+            validateArgs(++i);
           } else if (currentUsage.type === "optional" && !repeat) {
             args.splice(i, 0, undefined);
             validateArgs(++i);
@@ -128,7 +128,7 @@ exports.run = (client, msg, cmd, args = undefined) => new Promise((resolve, reje
           }
           break;
         case "member":
-          if (/^<@!?\d+>$/.test(args[i]) || (msg.guild.members.has(/\d+/.exec(args[i])[0]) && args[i].length > 5)) {
+          if ((/^<@!?\d+>$/.test(args[i]) && msg.guild.members.has(/\d+/.exec(args[i])[0])) || (/\d+/.test(args[i]) && msg.guild.members.has(/\d+/.exec(args[i])[0]) && args[i].length > 5)) {
             args[i] = msg.guild.members.get(/\d+/.exec(args[i])[0]);
             validateArgs(++i);
           } else if (currentUsage.type === "optional" && !repeat) {
