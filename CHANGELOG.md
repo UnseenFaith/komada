@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Added
+- New Merge for configs
 - Readded ParseTags function due to Komada Provider dependency,
 - Added Websocket Heartbeat ping to ping command.
 - Little bit of Documentation to Extendables
