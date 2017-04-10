@@ -2,6 +2,7 @@ const Discord = require("discord.js");
 const path = require("path");
 
 require("./utils/Extendables.js");
+const mergeConfig = require("./utils/mergeConfig.js");
 const loadFunctions = require("./utils/loadFunctions.js");
 const loadEvents = require("./utils/loadEvents.js");
 const loadProviders = require("./utils/loadProviders.js");
@@ -16,7 +17,7 @@ exports.start = async (config) => {
   if (typeof config !== "object") throw new TypeError("Configuration for Komada must be an object.");
   const client = new Discord.Client(config.clientOptions);
 
-  client.config = config;
+  Object.defineProperty(client, "config", { value: mergeConfig(config) });
 
   // Extend client
   client.funcs = {};
