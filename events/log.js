@@ -3,18 +3,7 @@ const chalk = require("chalk");
 
 const clk = new chalk.constructor({ enabled: true });
 
-function resolveObject(error) {
-  error = error.stack || error.message || error;
-  let out;
-  if (typeof error === "object" && typeof error !== "string") {
-    out = require("util").inspect(error, { depth: 0 });
-    if (typeof out === "string" && out.length > 1900) out = error.toString();
-  } else out = error;
-
-  return out;
-}
-
-module.exports = (data, type = "log") => {
+exports.run = (client, data) => {
   data = resolveObject(data);
   switch (type.toLowerCase()) {
     case "debug":
@@ -32,3 +21,14 @@ module.exports = (data, type = "log") => {
       // no default
   }
 };
+
+function resolveObject(error) {
+  error = error.stack || error.message || error;
+  let out;
+  if (typeof error === "object" && typeof error !== "string") {
+    out = require("util").inspect(error, { depth: 0 });
+    if (typeof out === "string" && out.length > 1900) out = error.toString();
+  } else out = error;
+
+  return out;
+}
