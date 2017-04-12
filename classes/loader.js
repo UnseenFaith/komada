@@ -154,7 +154,7 @@ module.exports = class Loader {
 
 	async loadFiles(files, dir, loadNew, startOver) {
 		try {
-			files.forEach(file => loadNew.call(this, file));
+			files.forEach(file => loadNew.call(this, file, dir));
 		} catch (error) {
 			if (error.code === 'MODULE_NOT_FOUND') {
 				await this.handleMissingDep(error);
@@ -175,6 +175,7 @@ module.exports = class Loader {
 
 	installNPM(module) {
 		return new Promise((resolve, reject) => {
+			console.log(`Installing: ${module}`);
 			exec(`npm i ${module} --save`, (err, stdout, stderr) => {
 				if (err) {
 					console.log('=====NEW DEPENDANCY INSTALL FAILED HORRIBLY=====');

@@ -18,7 +18,7 @@ require('./utils/Extendables.js');
 
 module.exports = class RuneInfo extends Discord.Client {
 
-	constructor(config) {
+	constructor(config = {}) {
 		if (typeof config !== 'object') throw new TypeError('Configuration for Komada must be an object.');
 		super(config.clientOptions);
 		this.config = config;
