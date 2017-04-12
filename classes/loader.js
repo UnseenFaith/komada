@@ -1,6 +1,6 @@
 const fs = require('fs-extra-promise');
 const { exec } = require('child_process');
-const path = require("path");
+const path = require('path');
 
 const ParsedUsage = require('./parsedUsage');
 
@@ -18,15 +18,15 @@ module.exports = class Loader {
 		this.client.emit('log', `Loaded ${commands} commands, with ${aliases} aliases.`);
 		this.client.emit('log', `Loaded ${inhibitors} command inhibitors.`);
 		this.client.emit('log', `Loaded ${finalizers} command finalizers.`);
-        this.client.emit('log', `Loaded ${monitors} message monitors.`);
-        this.client.emit('log', `Loaded ${providers} providers.`);
+		this.client.emit('log', `Loaded ${monitors} message monitors.`);
+		this.client.emit('log', `Loaded ${providers} providers.`);
 		this.client.emit('log', `Loaded ${events} events`);
 	}
 
 	async loadFunctions() {
-		const files = await fs.readdirAsync(`${client.coreBaseDir}./functions/`);
+		const files = await fs.readdirAsync(`${this.client.coreBaseDir}./functions/`);
 		this.loadFiles(files.filter(file => file.endsWith('.js')), this.client.coreBaseDir, this.loadNewFunction, this.loadFunctions);
-        const userFiles = await fs.readdirAsync(`${client.clientBaseDir}./functions/`);
+		const userFiles = await fs.readdirAsync(`${this.client.clientBaseDir}./functions/`);
 		this.loadFiles(userFiles.filter(file => file.endsWith('.js')), this.client.clientBaseDir, this.loadNewFunction, this.loadFunctions);
 		return files.length + userFiles.length;
 	}
@@ -39,11 +39,11 @@ module.exports = class Loader {
 	async loadCommands() {
 		this.client.commands.clear();
 		this.client.aliases.clear();
-        await Promise.all([this.walkCommandDirectories(`${this.client.coreBaseDir}./commands/`), this.walkCommandDirectories(`${this.client.clientBaseDir}./commands/`)]);
+		await Promise.all([this.walkCommandDirectories(`${this.client.coreBaseDir}./commands/`), this.walkCommandDirectories(`${this.client.clientBaseDir}./commands/`)]);
 		return [this.client.commands.size, this.client.aliases.size];
 	}
 
-    async walkCommandDirectories(dir) {
+	async walkCommandDirectories(dir) {
 		const files = await fs.readdirAsync(dir);
 		this.loadFiles(files.filter(file => file.endsWith('.js')), dir, this.loadNewCommand, this.loadCommands);
 		let mps = [];
@@ -66,7 +66,7 @@ module.exports = class Loader {
 			}));
 		});
 		return await Promise.all(mps);
-    }
+	}
 
 	loadNewCommand(command, dir) {
 		const cmd = require(`${dir}${command}`);
@@ -83,7 +83,7 @@ module.exports = class Loader {
 		this.client.commandInhibitors.clear();
 		const files = await fs.readdirAsync(`${this.client.coreBaseDir}./inhibitors/`);
 		this.loadFiles(files.filter(file => file.endsWith('.js')), this.client.coreBaseDir, this.loadNewInhibitor, this.loadCommandInhibitors);
-        const userFiles = await fs.readdirAsync(`${this.client.clientBaseDir}./inhibitors/`);
+		const userFiles = await fs.readdirAsync(`${this.client.clientBaseDir}./inhibitors/`);
 		this.loadFiles(userFiles.filter(file => file.endsWith('.js')), this.client.clientBaseDir, this.loadNewInhibitor, this.loadCommandInhibitors);
 		return this.client.commandInhibitors.size;
 	}
@@ -95,10 +95,10 @@ module.exports = class Loader {
 
 	async loadCommandFinalizers() {
 		this.client.commandFinalizers.clear();
-		const files = await fs.readdirAsync(`${client.coreBaseDir}./finalizers/`);
+		const files = await fs.readdirAsync(`${this.client.coreBaseDir}./finalizers/`);
 		this.loadFiles(files.filter(file => file.endsWith('.js')), this.client.coreBaseDir, this.loadNewFinalizer, this.loadCommandFinalizers);
-        const userFiles = await fs.readdirAsync(`${client.clientBaseDir}./finalizers/`);
-		this.loadFiles(userFiles.filter(file => file.endsWith('.js')), this.client.clientBaseDir,  this.loadNewFinalizer, this.loadCommandFinalizers);
+		const userFiles = await fs.readdirAsync(`${this.client.clientBaseDir}./finalizers/`);
+		this.loadFiles(userFiles.filter(file => file.endsWith('.js')), this.client.clientBaseDir, this.loadNewFinalizer, this.loadCommandFinalizers);
 		return this.client.commandFinalizers.size;
 	}
 
@@ -107,13 +107,13 @@ module.exports = class Loader {
 		delete require.cache[require.resolve(`${dir}./finalizers/${file}`)];
 	}
 
-	async loadEvents() { //Need to becareful here, if the user has an event of the same name, both events will exist, but only the last one will be reloadable
+	async loadEvents() { // Need to becareful here, if the user has an event of the same name, both events will exist, but only the last one will be reloadable
 		this.client.eventHandlers.forEach((listener, event) => this.client.removeListener(event, listener));
 		this.client.eventHandlers.clear();
-		const files = await fs.readdirAsync(`${client.coreBaseDir}./events/`);
+		const files = await fs.readdirAsync(`${this.client.coreBaseDir}./events/`);
 		this.loadFiles(files.filter(file => file.endsWith('.js')), this.client.coreBaseDir, this.loadNewEvent, this.loadEvents);
-        const files = await fs.readdirAsync(`${client.clientBaseDir}./events/`);
-		this.loadFiles(files.filter(file => file.endsWith('.js')), this.client.clientBaseDir, this.loadNewEvent, this.loadEvents);
+		const userFiles = await fs.readdirAsync(`${this.client.clientBaseDir}./events/`);
+		this.loadFiles(userFiles.filter(file => file.endsWith('.js')), this.client.clientBaseDir, this.loadNewEvent, this.loadEvents);
 		return this.client.eventHandlers.size;
 	}
 
@@ -124,11 +124,11 @@ module.exports = class Loader {
 		delete require.cache[require.resolve(`${dir}./events/${file}`)];
 	}
 
-    async loadMessageMonitors() {
+	async loadMessageMonitors() {
 		this.client.messageMonitors.clear();
-		const files = await fs.readdirAsync(`${client.coreBaseDir}./monitors/`);
+		const files = await fs.readdirAsync(`${this.client.coreBaseDir}./monitors/`);
 		this.loadFiles(files.filter(file => file.endsWith('.js')), this.client.coreBaseDir, this.loadNewMessageMonitor, this.loadMessageMonitors);
-        const userFiles = await fs.readdirAsync(`${client.clientBaseDir}./monitors/`);
+		const userFiles = await fs.readdirAsync(`${this.client.clientBaseDir}./monitors/`);
 		this.loadFiles(userFiles.filter(file => file.endsWith('.js')), this.client.clientBaseDir, this.loadNewMessageMonitor, this.loadMessageMonitors);
 		return this.client.messageMonitors.size;
 	}
@@ -138,11 +138,11 @@ module.exports = class Loader {
 		delete require.cache[require.resolve(`${dir}./monitors/${file}`)];
 	}
 
-    async loadProviders() {
+	async loadProviders() {
 		this.client.messageMonitors.clear();
-		const files = await fs.readdirAsync(`${client.coreBaseDir}./providers/`);
+		const files = await fs.readdirAsync(`${this.client.coreBaseDir}./providers/`);
 		this.loadFiles(files.filter(file => file.endsWith('.js')), this.client.coreBaseDir, this.loadNewMessageMonitor, this.loadMessageMonitors);
-        const userFiles = await fs.readdirAsync(`${client.clientBaseDir}./providers/`);
+		const userFiles = await fs.readdirAsync(`${this.client.clientBaseDir}./providers/`);
 		this.loadFiles(userFiles.filter(file => file.endsWith('.js')), this.client.clientBaseDir, this.loadNewMessageMonitor, this.loadMessageMonitors);
 		return this.client.messageMonitors.size;
 	}
@@ -190,7 +190,7 @@ module.exports = class Loader {
 	}
 
 	/* Probably broke
-    
+
     reload(command) {
 		return new Promise(resolve => {
 			const fullCommand = this.client.commands.get(command) || this.client.commands.get(this.client.aliases.get(command));
@@ -203,7 +203,7 @@ module.exports = class Loader {
 			resolve();
 		});
 	}
-    
+
     */
 
 };

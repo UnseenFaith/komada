@@ -1,5 +1,5 @@
 exports.run = (client, msg) => {
-  const information = `
+	const information = `
 Komada is a 'plug-and-play' framework built on top of the Discord.js library.
 Most of the code is modularized, which allows developers to edit Komada to suit their needs.
 
@@ -15,21 +15,21 @@ Some features of Komada include:
 We hope to be a 100% customizable framework that can cater to all audiences. We do frequent updates and bugfixes when available.
 If you're interested in us, check us out at https://komada.js.org
 `;
-  msg.channel.send(information);
+	msg.channel.send(information);
 };
 
 exports.conf = {
-  enabled: true,
-  runIn: ["text", "dm", "group"],
-  aliases: ["details", "what"],
-  permLevel: 0,
-  botPerms: [],
-  requiredFuncs: [],
+	enabled: true,
+	runIn: ['text', 'dm', 'group'],
+	aliases: ['details', 'what'],
+	permLevel: 0,
+	botPerms: [],
+	requiredFuncs: []
 };
 
 exports.help = {
-  name: "info",
-  description: "Provides some information about this bot.",
-  usage: "",
-  usageDelim: "",
+	name: 'info',
+	description: 'Provides some information about this bot.',
+	usage: '',
+	usageDelim: ''
 };

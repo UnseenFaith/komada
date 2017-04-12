@@ -1,3 +1,3 @@
-exports.run = (client, e) => {
-  client.emit('log', `Disconnected | ${e.code}: ${e.reason}`, "error")
+exports.run = (client, err) => {
+	client.emit('log', `Disconnected | ${err.code}: ${err.reason}`, 'error');
 };

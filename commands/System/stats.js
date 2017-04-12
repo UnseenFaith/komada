@@ -1,11 +1,11 @@
-const Discord = require("discord.js");
-const moment = require("moment");
-require("moment-duration-format");
+const Discord = require('discord.js');
+const moment = require('moment');
+require('moment-duration-format');
 
 exports.run = (client, msg) => {
   const komada = require(`${client.coreBaseDir}/package.json`); // eslint-disable-line
-  const duration = moment.duration(client.uptime).format(" D [days], H [hrs], m [mins], s [secs]");
-  msg.channel.sendCode("asciidoc", `= STATISTICS =
+	const duration = moment.duration(client.uptime).format(' D [days], H [hrs], m [mins], s [secs]');
+	msg.channel.sendCode('asciidoc', `= STATISTICS =
 
 • Mem Usage  :: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB
 • Uptime     :: ${duration}
@@ -17,17 +17,17 @@ exports.run = (client, msg) => {
 };
 
 exports.conf = {
-  enabled: true,
-  runIn: ["text", "dm", "group"],
-  aliases: ["details", "what"],
-  permLevel: 0,
-  botPerms: [],
-  requiredFuncs: [],
+	enabled: true,
+	runIn: ['text', 'dm', 'group'],
+	aliases: ['details', 'what'],
+	permLevel: 0,
+	botPerms: [],
+	requiredFuncs: []
 };
 
 exports.help = {
-  name: "stats",
-  description: "Provides some details about the bot and stats.",
-  usage: "",
-  usageDelim: "",
+	name: 'stats',
+	description: 'Provides some details about the bot and stats.',
+	usage: '',
+	usageDelim: ''
 };
