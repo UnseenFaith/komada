@@ -53,16 +53,44 @@ class Extendables {
 		return new ReactionCollector(this, filter, options);
 	}
 
+	sendMessage(content = '', options = {}) {
+		const commandMessage = this.client.commandMessages.get(this.id);
+		if (!options.embed) options.embed = null;
+		if (commandMessage) {
+			return commandMessage.response.edit(content, options);
+		} else {
+			return this.channel.send(content, options)
+				.then(mes => {
+					if (mes.constructor.name === 'Message') this.client.commandMessages.set(this.id, { trigger: this, response: mes });
+					return mes;
+				});
+		}
+	}
+
+	sendEmbed(embed, content, options) {
+		if (!options && typeof content === 'object') {
+			options = content;
+			content = '';
+		} else if (!options) {
+			options = {};
+		}
+		return this.channel.send(content, Object.assign(options, { embed }));
+	}
+
+	sendCode(lang, content, options = {}) {
+		return this.channel.send(content, Object.assign(options, { code: lang }));
+	}
+
 	awaitReactions(filter, options = {}) {
 		return new Promise((resolve, reject) => {
 			const collector = this.createCollector(filter, options);
 			collector.on('end', (collection, reason) => {
-		if (options.errors && options.errors.includes(reason)) {
-			reject(collection);
-		} else {
-			resolve(collection);
-		}
-	});
+				if (options.errors && options.errors.includes(reason)) {
+					reject(collection);
+				} else {
+					resolve(collection);
+				}
+			});
 		});
 	}
 
@@ -96,7 +124,7 @@ const applyToClass = (structure, props) => {
 applyToClass(GroupDMChannel, ['embedable', 'postable', 'attachable', 'readable']);
 applyToClass(DMChannel, ['embedable', 'postable', 'attachable', 'readable']);
 applyToClass(TextChannel, ['embedable', 'postable', 'attachable', 'readable']);
-applyToClass(Message, ['guildConf', 'reactable', 'createCollector', 'awaitReactions']);
+applyToClass(Message, ['guildConf', 'reactable', 'createCollector', 'awaitReactions', 'sendMessage', 'sendEmbed', 'sendCode']);
 applyToClass(GuildMember, ['permLevel']);
 applyToClass(Guild, ['conf']);
 applyToClass(User, ['permLevel']);
