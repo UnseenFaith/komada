@@ -1,9 +1,9 @@
 exports.run = async (client, msg) => {
 	try {
-		const message = await msg.channel.sendMessage('Ping?');
+		const message = await msg.sendMessage('Ping?');
 		await message.edit(`Pong! (Roundtrip took: ${message.createdTimestamp - msg.createdTimestamp}ms. Heartbeat: ${client.ping}ms.)`);
-	} catch (e) {
-		client.funcs.log(e, 'error');
+	} catch (err) {
+		client.emit('error', err);
 	}
 };
 
@@ -13,12 +13,12 @@ exports.conf = {
 	aliases: [],
 	permLevel: 0,
 	botPerms: [],
-	requiredFuncs: []
+	requiredFuncs: [],
 };
 
 exports.help = {
 	name: 'ping',
 	description: 'Ping/Pong command. I wonder what this does? /sarcasm',
 	usage: '',
-	usageDelim: ''
+	usageDelim: '',
 };

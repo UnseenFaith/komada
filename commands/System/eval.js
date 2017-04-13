@@ -6,12 +6,12 @@ exports.run = async (client, msg, [code]) => {
 		if (typeof evaled !== 'string') {
 			evaled = inspect(evaled);
 		}
-		msg.channel.sendCode('xl', client.funcs.clean(client, evaled));
+		msg.sendCode('xl', client.funcs.clean(client, evaled));
 	} catch (err) {
-		msg.channel.sendMessage(`\`ERROR\` \`\`\`xl\n${
+		msg.sendMessage(`\`ERROR\` \`\`\`xl\n${
       client.funcs.clean(client, err)
       }\n\`\`\``);
-		if (err.stack) client.funcs.log(err.stack, 'error');
+		if (err.stack) client.emit('error', err.stack);
 	}
 };
 
@@ -21,12 +21,12 @@ exports.conf = {
 	aliases: ['ev'],
 	permLevel: 10,
 	botPerms: [],
-	requiredFuncs: []
+	requiredFuncs: [],
 };
 
 exports.help = {
 	name: 'eval',
 	description: 'Evaluates arbitrary Javascript. Reserved for bot owner.',
 	usage: '<expression:str>',
-	usageDelim: ''
+	usageDelim: '',
 };

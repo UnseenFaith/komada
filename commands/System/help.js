@@ -33,13 +33,13 @@ exports.run = async (client, msg, [cmd]) => {
 					helpMessage.push('```\n\u200b');
 				}
 				if (!client.config.selfbot) {
-					msg.author.sendMessage(helpMessage, { split: { char: '\u200b' } }).catch(e => client.funcs.log(e, 'error'));
+					msg.author.sendMessage(helpMessage, { split: { char: '\u200b' } }).catch(err => client.emit('error', err));
 					if (msg.channel.type.toLowerCase() !== 'dm') {
 						msg.reply('Commands have been sent to your DMs.');
 					}
 				} else {
 					msg.channel.sendMessage(helpMessage, { split: { char: '\u200b' } })
-						.catch(e => client.funcs.log(e, 'error'));
+						.catch(err => client.emit('error', err));
 				}
 			});
 	} else if (client.commands.has(cmd)) {
@@ -50,7 +50,7 @@ exports.run = async (client, msg, [cmd]) => {
 				cmd.help.description,
 				`usage :: ${cmd.usage.fullUsage(msg)}`,
 				'Extended Help ::',
-				cmd.help.extendedHelp ? cmd.help.extendedHelp : 'No extended help available.'
+				cmd.help.extendedHelp ? cmd.help.extendedHelp : 'No extended help available.',
 			]);
 		} else {
 			msg.channel.sendCode('asciidoc', [
@@ -58,7 +58,7 @@ exports.run = async (client, msg, [cmd]) => {
 				cmd.help.description,
 				`usage :: ${cmd.usage.fullUsage(msg)}`,
 				'Extended Help ::',
-				cmd.help.extendedHelp ? cmd.help.extendedHelp : 'No extended help available.'
+				cmd.help.extendedHelp ? cmd.help.extendedHelp : 'No extended help available.',
 			]);
 		}
 	}
@@ -70,12 +70,12 @@ exports.conf = {
 	aliases: [],
 	permLevel: 0,
 	botPerms: [],
-	requiredFuncs: []
+	requiredFuncs: [],
 };
 
 exports.help = {
 	name: 'help',
 	description: 'Display help for a command.',
 	usage: '[command:str]',
-	usageDelim: ''
+	usageDelim: '',
 };
