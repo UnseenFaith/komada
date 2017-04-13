@@ -1,4 +1,4 @@
-exports.run = async(client, msg) => {
+exports.run = async (client, msg) => {
 	if (!client.config.selfbot) {
 		const invite = await client.generateInvite([...new Set(client.commands.reduce((a, b) => a.concat(b.conf.botPerms), ['READ_MESSAGES', 'SEND_MESSAGES']))]);
 		msg.channel.sendMessage([

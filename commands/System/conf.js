@@ -1,6 +1,6 @@
 const util = require('util').inspect;
 
-exports.run = (client, msg, [action, key, ...value]) => {
+exports.run = async (client, msg, [action, key, ...value]) => {
 	if (action === 'list') {
 		msg.channel.sendCode('json', util(msg.guildConf));
 	} else

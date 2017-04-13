@@ -1,4 +1,4 @@
-exports.run = (client, msg) => {
+exports.run = async (client, msg) => {
 	const information = `
 Komada is a 'plug-and-play' framework built on top of the Discord.js library.
 Most of the code is modularized, which allows developers to edit Komada to suit their needs.

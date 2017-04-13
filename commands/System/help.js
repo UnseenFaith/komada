@@ -19,7 +19,7 @@ const buildHelp = (client, msg) => new Promise((resolve) => {
 	Promise.all(mps).then(resolve(help));
 });
 
-exports.run = (client, msg, [cmd]) => {
+exports.run = async (client, msg, [cmd]) => {
 	if (!cmd) {
 		buildHelp(client, msg)
 			.then((help) => {

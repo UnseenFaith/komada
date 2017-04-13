@@ -1,4 +1,4 @@
-exports.run = (client, msg) => {
+exports.run = async(client, msg) => {
 	msg.channel.sendMessage('Rebooting...')
     .then(() => {
 	process.exit();

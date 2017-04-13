@@ -4,7 +4,7 @@ const fs = require('fs-extra-promise');
 const path = require('path');
 const url = require('url');
 
-exports.run = (client, msg, [link, piece, folder = 'Downloaded']) => {
+exports.run = async (client, msg, [link, piece, folder = 'Downloaded']) => {
 	const proposedURL = url.parse(link);
 	const piecesURL = 'https://raw.githubusercontent.com/dirigeants/komada-pieces/master/';
 	let newURL;

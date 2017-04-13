@@ -1,6 +1,6 @@
 const inspect = require('util').inspect;
 
-exports.run = (client, msg, [code]) => {
+exports.run = async (client, msg, [code]) => {
 	try {
 		let evaled = eval(code);
 		if (typeof evaled !== 'string') {

@@ -1,5 +1,5 @@
 /* eslint-disable no-case-declarations, consistent-return */
-exports.run = (client, msg, [type, name]) => {
+exports.run = async (client, msg, [type, name]) => {
 	switch (type) {
 		case 'inhibitor':
 			let inhibitor;
