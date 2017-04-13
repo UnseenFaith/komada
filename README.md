@@ -26,9 +26,8 @@ npm install --save komada
 Create a file called `app.js` (or whatever you prefer) which will initiate and configure Komada.
 
 ```js
-const komada = require('komada');
-komada.start({
-  "botToken": "your-bot-token",
+const Komada = require('komada');
+const client = new Komada(({
   "ownerID" : "your-user-id",
   "clientID": "the-invite-app-id",
   "prefix": "+",
@@ -36,6 +35,8 @@ komada.start({
     "fetchAllMembers": true
   }
 });
+
+client.login("your-bot-token");
 ```
 
 ### Configuration Options
