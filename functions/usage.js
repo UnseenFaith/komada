@@ -33,6 +33,7 @@ exports.run = (client, msg, cmd, args = undefined) => new Promise((resolve, reje
 		}
 		if (currentUsage.type === 'optional' && (args[i] === undefined || args[i] === '') && currentUsage.possibles[0].type !== 'rsn' && currentUsage.possibles[0].type !== 'osrsn') {
 			if (usage.slice(i).some(usa => usa.type === 'required')) {
+				args.splice(i, 1, null);
 				reject(client.funcs.newError('Missing one or more required arguments after end of input.', 1, args));
 				return;
 			} else {
@@ -40,6 +41,7 @@ exports.run = (client, msg, cmd, args = undefined) => new Promise((resolve, reje
 				return;
 			}
 		} else if (currentUsage.type === 'required' && args[i] === undefined && currentUsage.possibles[0].type !== 'rsn' && currentUsage.possibles[0].type !== 'osrsn') {
+			args.splice(i, 1, null);
 			reject(client.funcs.newError(currentUsage.possibles.length === 1 ?
 				`${currentUsage.possibles[0].name} is a required argument.` :
 				`Missing a required option: (${currentUsage.possibles.map(poss => poss.name).join(', ')})`, 1, args));
@@ -55,7 +57,10 @@ exports.run = (client, msg, cmd, args = undefined) => new Promise((resolve, reje
 						validateArgs(++i);
 					}
 				})
-				.catch(err => reject(client.funcs.newError(err, 1, args)));
+				.catch(err => {
+					args.splice(i, 1, null);
+					reject(client.funcs.newError(err, 1, args));
+				});
 			} else {
 				console.warn('Unknown Argument Type encountered');
 				validateArgs(++i);
@@ -75,6 +80,7 @@ exports.run = (client, msg, cmd, args = undefined) => new Promise((resolve, reje
 				validateArgs(++i);
 				return;
 			} else {
+				args.splice(i, 1, null);
 				reject(client.funcs.newError(`Your option didn't match any of the possibilities: (${currentUsage.possibles.map(poss => poss.name).join(', ')})`, 1, args));
 			}
 		} else if (client.argResolver[currentUsage.possibles[possible].type]) {
