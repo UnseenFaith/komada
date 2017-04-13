@@ -40,9 +40,9 @@ exports.run = (client, msg, cmd, args = undefined) => new Promise((resolve, reje
 				return;
 			}
 		} else if (currentUsage.type === 'required' && args[i] === undefined && currentUsage.possibles[0].type !== 'rsn' && currentUsage.possibles[0].type !== 'osrsn') {
-			reject(currentUsage.possibles.length === 1 ?
+			reject(client.funcs.newError(currentUsage.possibles.length === 1 ?
 				`${currentUsage.possibles[0].name} is a required argument.` :
-				`Missing a required option: (${currentUsage.possibles.map(poss => poss.name).join(', ')})`);
+				`Missing a required option: (${currentUsage.possibles.map(poss => poss.name).join(', ')})`, 1, args));
 			return;
 		} else if (currentUsage.possibles.length === 1) {
 			if (client.argResolver[currentUsage.possibles[0].type]) {
