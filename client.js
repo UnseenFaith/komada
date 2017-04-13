@@ -16,7 +16,7 @@ require('./utils/Extendables.js');
 // const loadMessageMonitors = require("./utils/loadMessageMonitors.js");
 // const log = require("./functions/log.js");
 
-module.exports = class RuneInfo extends Discord.Client {
+module.exports = class Komada extends Discord.Client {
 
 	constructor(config = {}) {
 		if (typeof config !== 'object') throw new TypeError('Configuration for Komada must be an object.');
