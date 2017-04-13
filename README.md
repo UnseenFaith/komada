@@ -27,7 +27,7 @@ Create a file called `app.js` (or whatever you prefer) which will initiate and c
 
 ```js
 const Komada = require('komada');
-const client = new Komada(({
+const client = new Komada({
   "ownerID" : "your-user-id",
   "clientID": "the-invite-app-id",
   "prefix": "+",
