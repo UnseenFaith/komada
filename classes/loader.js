@@ -158,18 +158,18 @@ module.exports = class Loader {
 	}
 
 	async loadProviders() {
-		this.client.messageMonitors.clear();
+		this.client.providers.clear();
 		await fs.readdirAsync(`${this.client.coreBaseDir}${path.sep}providers/`)
 			.then(files => { this.loadFiles(files.filter(file => file.endsWith('.js')), this.client.coreBaseDir, this.loadNewProvider, this.loadProviders); })
 			.catch(() => { fs.ensureDirAsync(`${this.client.coreBaseDir}${path.sep}providers/`).catch(err => this.client.emit('error', this.client.funcs.newError(err))); });
 		await fs.readdirAsync(`${this.client.clientBaseDir}${path.sep}providers/`)
 			.then(files => { this.loadFiles(files.filter(file => file.endsWith('.js')), this.client.clientBaseDir, this.loadNewProvider, this.loadProviders); })
 			.catch(() => { fs.ensureDirAsync(`${this.client.clientBaseDir}${path.sep}providers/`).catch(err => this.client.emit('error', this.client.funcs.newError(err))); });
-		return this.client.messageMonitors.size;
+		return this.client.providers.size;
 	}
 
 	loadNewProvider(file, dir) {
-		this.client.messageMonitors.set(file.split('.')[0], require(`${dir}${path.sep}providers/${file}`));
+		this.client.providers.set(file.split('.')[0], require(`${dir}${path.sep}providers/${file}`));
 		delete require.cache[require.resolve(`${dir}${path.sep}providers/${file}`)];
 	}
 
