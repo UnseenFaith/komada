@@ -47,7 +47,8 @@ module.exports = class Loader {
 	async loadCommands() {
 		this.client.commands.clear();
 		this.client.aliases.clear();
-		await Promise.all([this.walkCommandDirectories(`${this.client.coreBaseDir}${path.sep}commands/`), this.walkCommandDirectories(`${this.client.clientBaseDir}./commands/`)]);
+		await this.walkCommandDirectories(`${this.client.coreBaseDir}${path.sep}commands/`);
+		await this.walkCommandDirectories(`${this.client.clientBaseDir}./commands/`);
 		return [this.client.commands.size, this.client.aliases.size];
 	}
 
