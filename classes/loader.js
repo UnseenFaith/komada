@@ -24,11 +24,19 @@ module.exports = class Loader {
 	}
 
 	async loadFunctions() {
-		const files = await fs.readdirAsync(`${this.client.coreBaseDir}./functions/`);
-		this.loadFiles(files.filter(file => file.endsWith('.js')), this.client.coreBaseDir, this.loadNewFunction, this.loadFunctions);
-		const userFiles = await fs.readdirAsync(`${this.client.clientBaseDir}./functions/`);
-		this.loadFiles(userFiles.filter(file => file.endsWith('.js')), this.client.clientBaseDir, this.loadNewFunction, this.loadFunctions);
-		return files.length + userFiles.length;
+		const core = await fs.readdirAsync(`${this.client.coreBaseDir}./functions/`)
+			.then(files => {
+				this.loadFiles(files.filter(file => file.endsWith('.js')), this.client.coreBaseDir, this.loadNewFunction, this.loadFunctions);
+				return files.length;
+			})
+			.catch(() => { fs.ensureDirAsync(`${this.client.coreBaseDir}./functions/`).catch(err => this.client.emit('error', this.client.funcs.newError(err))); }) || 0;
+		const user = await fs.readdirAsync(`${this.client.clientBaseDir}./functions/`)
+			.then(files => {
+				this.loadFiles(files.filter(file => file.endsWith('.js')), this.client.coreBaseDir, this.loadNewFunction, this.loadFunctions);
+				return files.length;
+			})
+			.catch(() => { fs.ensureDirAsync(`${this.client.clientBaseDir}./functions/`).catch(err => this.client.emit('error', this.client.funcs.newError(err))); }) || 0;
+		return core + user;
 	}
 
 	loadNewFunction(file, dir) {
@@ -44,28 +52,31 @@ module.exports = class Loader {
 	}
 
 	async walkCommandDirectories(dir) {
-		const files = await fs.readdirAsync(dir);
-		this.loadFiles(files.filter(file => file.endsWith('.js')), dir, this.loadNewCommand, this.loadCommands);
-		let mps = [];
-		const subfolders = [];
-		files.filter(file => !file.includes('.')).forEach((folder) => {
-			mps.push(new Promise(async(res) => {
-				const subFiles = await fs.readdirAsync(`${dir}${folder}/`);
-				this.loadFiles(subFiles.filter(file => file.endsWith('.js')).map(file => `${folder}/${file}`), dir, this.loadNewCommand, this.loadCommands);
-				subFiles.filter(file => !file.includes('.')).forEach(subfolder => subfolders.push({ folder: folder, subfolder: subfolder }));
-				res();
-			}));
-		});
-		mps = await Promise.all(mps);
-		subfolders.forEach(async(subfolder) => {
-			mps.push(new Promise(async(res) => {
-				const subSubFiles = await fs.readdirAsync(`${dir}${subfolder.folder}/${subfolder.subfolder}/`);
-				// category/subcategory is enough
-				this.loadFiles(subSubFiles.filter(file => file.endsWith('.js')).map(file => `${subfolder.folder}/${subfolder.subfolder}/${file}`), dir, this.loadNewCommand, this.loadCommands);
-				res();
-			}));
-		});
-		return await Promise.all(mps);
+		return await fs.readdirAsync(dir)
+			.then(async(files) => {
+				this.loadFiles(files.filter(file => file.endsWith('.js')), dir, this.loadNewCommand, this.loadCommands);
+				let mps = [];
+				const subfolders = [];
+				files.filter(file => !file.includes('.')).forEach((folder) => {
+					mps.push(new Promise(async(res) => {
+						const subFiles = await fs.readdirAsync(`${dir}${folder}/`);
+						this.loadFiles(subFiles.filter(file => file.endsWith('.js')).map(file => `${folder}/${file}`), dir, this.loadNewCommand, this.loadCommands);
+						subFiles.filter(file => !file.includes('.')).forEach(subfolder => subfolders.push({ folder: folder, subfolder: subfolder }));
+						res();
+					}));
+				});
+				mps = await Promise.all(mps);
+				subfolders.forEach(async(subfolder) => {
+					mps.push(new Promise(async(res) => {
+						const subSubFiles = await fs.readdirAsync(`${dir}${subfolder.folder}/${subfolder.subfolder}/`);
+						// category/subcategory is enough
+						this.loadFiles(subSubFiles.filter(file => file.endsWith('.js')).map(file => `${subfolder.folder}/${subfolder.subfolder}/${file}`), dir, this.loadNewCommand, this.loadCommands);
+						res();
+					}));
+				});
+				return await Promise.all(mps);
+			})
+			.catch(() => { fs.ensureDirAsync(dir).catch(err => this.client.emit('error', this.client.funcs.newError(err))); });
 	}
 
 	loadNewCommand(command, dir) {
@@ -81,10 +92,12 @@ module.exports = class Loader {
 
 	async loadCommandInhibitors() {
 		this.client.commandInhibitors.clear();
-		const files = await fs.readdirAsync(`${this.client.coreBaseDir}./inhibitors/`);
-		this.loadFiles(files.filter(file => file.endsWith('.js')), this.client.coreBaseDir, this.loadNewInhibitor, this.loadCommandInhibitors);
-		const userFiles = await fs.readdirAsync(`${this.client.clientBaseDir}./inhibitors/`);
-		this.loadFiles(userFiles.filter(file => file.endsWith('.js')), this.client.clientBaseDir, this.loadNewInhibitor, this.loadCommandInhibitors);
+		await fs.readdirAsync(`${this.client.coreBaseDir}./inhibitors/`)
+			.then(files => { this.loadFiles(files.filter(file => file.endsWith('.js')), this.client.coreBaseDir, this.loadNewInhibitor, this.loadCommandInhibitors); })
+			.catch(() => { fs.ensureDirAsync(`${this.client.coreBaseDir}./inhibitors/`).catch(err => this.client.emit('error', this.client.funcs.newError(err))); });
+		await fs.readdirAsync(`${this.client.clientBaseDir}./inhibitors/`)
+			.then(files => { this.loadFiles(files.filter(file => file.endsWith('.js')), this.client.coreBaseDir, this.loadNewInhibitor, this.loadCommandInhibitors); })
+			.catch(() => { fs.ensureDirAsync(`${this.client.clientBaseDir}./inhibitors/`).catch(err => this.client.emit('error', this.client.funcs.newError(err))); });
 		return this.client.commandInhibitors.size;
 	}
 
@@ -95,10 +108,12 @@ module.exports = class Loader {
 
 	async loadCommandFinalizers() {
 		this.client.commandFinalizers.clear();
-		const files = await fs.readdirAsync(`${this.client.coreBaseDir}./finalizers/`);
-		this.loadFiles(files.filter(file => file.endsWith('.js')), this.client.coreBaseDir, this.loadNewFinalizer, this.loadCommandFinalizers);
-		const userFiles = await fs.readdirAsync(`${this.client.clientBaseDir}./finalizers/`);
-		this.loadFiles(userFiles.filter(file => file.endsWith('.js')), this.client.clientBaseDir, this.loadNewFinalizer, this.loadCommandFinalizers);
+		await fs.readdirAsync(`${this.client.coreBaseDir}./finalizers/`)
+			.then(files => { this.loadFiles(files.filter(file => file.endsWith('.js')), this.client.coreBaseDir, this.loadNewFinalizer, this.loadCommandFinalizers); })
+			.catch(() => { fs.ensureDirAsync(`${this.client.coreBaseDir}./finalizers/`).catch(err => this.client.emit('error', this.client.funcs.newError(err))); });
+		await fs.readdirAsync(`${this.client.clientBaseDir}./finalizers/`)
+			.then(files => { this.loadFiles(files.filter(file => file.endsWith('.js')), this.client.coreBaseDir, this.loadNewFinalizer, this.loadCommandFinalizers); })
+			.catch(() => { fs.ensureDirAsync(`${this.client.clientBaseDir}./finalizers/`).catch(err => this.client.emit('error', this.client.funcs.newError(err))); });
 		return this.client.commandFinalizers.size;
 	}
 
@@ -110,10 +125,12 @@ module.exports = class Loader {
 	async loadEvents() { // Need to becareful here, if the user has an event of the same name, both events will exist, but only the last one will be reloadable
 		this.client.eventHandlers.forEach((listener, event) => this.client.removeListener(event, listener));
 		this.client.eventHandlers.clear();
-		const files = await fs.readdirAsync(`${this.client.coreBaseDir}./events/`);
-		this.loadFiles(files.filter(file => file.endsWith('.js')), this.client.coreBaseDir, this.loadNewEvent, this.loadEvents);
-		const userFiles = await fs.readdirAsync(`${this.client.clientBaseDir}./events/`);
-		this.loadFiles(userFiles.filter(file => file.endsWith('.js')), this.client.clientBaseDir, this.loadNewEvent, this.loadEvents);
+		await fs.readdirAsync(`${this.client.coreBaseDir}./events/`)
+			.then(files => { this.loadFiles(files.filter(file => file.endsWith('.js')), this.client.coreBaseDir, this.loadNewEvent, this.loadEvents); })
+			.catch(() => { fs.ensureDirAsync(`${this.client.coreBaseDir}./events/`).catch(err => this.client.emit('error', this.client.funcs.newError(err))); });
+		await fs.readdirAsync(`${this.client.clientBaseDir}./events/`)
+			.then(files => { this.loadFiles(files.filter(file => file.endsWith('.js')), this.client.coreBaseDir, this.loadNewEvent, this.loadEvents); })
+			.catch(() => { fs.ensureDirAsync(`${this.client.clientBaseDir}./events/`).catch(err => this.client.emit('error', this.client.funcs.newError(err))); });
 		return this.client.eventHandlers.size;
 	}
 
@@ -126,10 +143,12 @@ module.exports = class Loader {
 
 	async loadMessageMonitors() {
 		this.client.messageMonitors.clear();
-		const files = await fs.readdirAsync(`${this.client.coreBaseDir}./monitors/`);
-		this.loadFiles(files.filter(file => file.endsWith('.js')), this.client.coreBaseDir, this.loadNewMessageMonitor, this.loadMessageMonitors);
-		const userFiles = await fs.readdirAsync(`${this.client.clientBaseDir}./monitors/`);
-		this.loadFiles(userFiles.filter(file => file.endsWith('.js')), this.client.clientBaseDir, this.loadNewMessageMonitor, this.loadMessageMonitors);
+		await fs.readdirAsync(`${this.client.coreBaseDir}./monitors/`)
+			.then(files => { this.loadFiles(files.filter(file => file.endsWith('.js')), this.client.coreBaseDir, this.loadNewMessageMonitor, this.loadMessageMonitors); })
+			.catch(() => { fs.ensureDirAsync(`${this.client.coreBaseDir}./monitors/`).catch(err => this.client.emit('error', this.client.funcs.newError(err))); });
+		await fs.readdirAsync(`${this.client.clientBaseDir}./monitors/`)
+			.then(files => { this.loadFiles(files.filter(file => file.endsWith('.js')), this.client.coreBaseDir, this.loadNewMessageMonitor, this.loadMessageMonitors); })
+			.catch(() => { fs.ensureDirAsync(`${this.client.clientBaseDir}./monitors/`).catch(err => this.client.emit('error', this.client.funcs.newError(err))); });
 		return this.client.messageMonitors.size;
 	}
 
@@ -140,10 +159,12 @@ module.exports = class Loader {
 
 	async loadProviders() {
 		this.client.messageMonitors.clear();
-		const files = await fs.readdirAsync(`${this.client.coreBaseDir}./providers/`);
-		this.loadFiles(files.filter(file => file.endsWith('.js')), this.client.coreBaseDir, this.loadNewMessageMonitor, this.loadMessageMonitors);
-		const userFiles = await fs.readdirAsync(`${this.client.clientBaseDir}./providers/`);
-		this.loadFiles(userFiles.filter(file => file.endsWith('.js')), this.client.clientBaseDir, this.loadNewMessageMonitor, this.loadMessageMonitors);
+		await fs.readdirAsync(`${this.client.coreBaseDir}./providers/`)
+			.then(files => { this.loadFiles(files.filter(file => file.endsWith('.js')), this.client.coreBaseDir, this.loadNewProvider, this.loadProviders); })
+			.catch(() => { fs.ensureDirAsync(`${this.client.coreBaseDir}./providers/`).catch(err => this.client.emit('error', this.client.funcs.newError(err))); });
+		await fs.readdirAsync(`${this.client.clientBaseDir}./providers/`)
+			.then(files => { this.loadFiles(files.filter(file => file.endsWith('.js')), this.client.coreBaseDir, this.loadNewProvider, this.loadProviders); })
+			.catch(() => { fs.ensureDirAsync(`${this.client.clientBaseDir}./providers/`).catch(err => this.client.emit('error', this.client.funcs.newError(err))); });
 		return this.client.messageMonitors.size;
 	}
 
