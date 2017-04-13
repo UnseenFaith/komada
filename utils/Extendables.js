@@ -53,6 +53,10 @@ class Extendables {
 		return new ReactionCollector(this, filter, options);
 	}
 
+	send(content = '', options = {}) {
+		this.sendMessage(content, options);
+	}
+
 	sendMessage(content = '', options = {}) {
 		const commandMessage = this.client.commandMessages.get(this.id);
 		if (!options.embed) options.embed = null;
@@ -124,7 +128,7 @@ const applyToClass = (structure, props) => {
 applyToClass(GroupDMChannel, ['embedable', 'postable', 'attachable', 'readable']);
 applyToClass(DMChannel, ['embedable', 'postable', 'attachable', 'readable']);
 applyToClass(TextChannel, ['embedable', 'postable', 'attachable', 'readable']);
-applyToClass(Message, ['guildConf', 'reactable', 'createCollector', 'awaitReactions', 'sendMessage', 'sendEmbed', 'sendCode']);
+applyToClass(Message, ['guildConf', 'reactable', 'createCollector', 'awaitReactions', 'sendMessage', 'sendEmbed', 'sendCode', 'send']);
 applyToClass(GuildMember, ['permLevel']);
 applyToClass(Guild, ['conf']);
 applyToClass(User, ['permLevel']);
