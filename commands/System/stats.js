@@ -5,7 +5,7 @@ require('moment-duration-format');
 exports.run = async (client, msg) => {
   const komada = require(`${client.coreBaseDir}/package.json`); // eslint-disable-line
 	const duration = moment.duration(client.uptime).format(' D [days], H [hrs], m [mins], s [secs]');
-	msg.channel.sendCode('asciidoc', `= STATISTICS =
+	msg.sendCode('asciidoc', `= STATISTICS =
 
 • Mem Usage  :: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB
 • Uptime     :: ${duration}
@@ -22,12 +22,12 @@ exports.conf = {
 	aliases: ['details', 'what'],
 	permLevel: 0,
 	botPerms: [],
-	requiredFuncs: []
+	requiredFuncs: [],
 };
 
 exports.help = {
 	name: 'stats',
 	description: 'Provides some details about the bot and stats.',
 	usage: '',
-	usageDelim: ''
+	usageDelim: '',
 };

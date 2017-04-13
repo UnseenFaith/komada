@@ -42,7 +42,7 @@ module.exports = class Komada extends Discord.Client {
 			MessageCollector: Discord.MessageCollector,
 			Webhook: Discord.WebhookClient,
 			escapeMarkdown: Discord.escapeMarkdown,
-			splitMessage: Discord.splitMessage
+			splitMessage: Discord.splitMessage,
 		};
 		this.coreBaseDir = `${__dirname}${path.sep}`;
 		this.clientBaseDir = `${process.env.clientDir || process.cwd()}${path.sep}`;
@@ -95,39 +95,6 @@ module.exports = class Komada extends Discord.Client {
 		this.emit('debug', `Swept ${messages - this.commandMessages.size} commandMessages older than ${lifetime} seconds.`);
 		return messages - this.commandMessages.size;
 	}
-
-
-	/* These will probably be removed in favour of Faith's Extendables (apply to class) */
-
-	sendMessage(msg, content = '', options = {}) {
-		const commandMessage = this.commandMessages.get(msg.id);
-		if (!options.embed) options.embed = null;
-		if (commandMessage) {
-			return commandMessage.response.edit(content, options);
-		} else {
-			return msg.channel.send(content, options)
-				.then(mes => {
-					if (mes.constructor.name === 'Message') this.commandMessages.set(msg.id, { trigger: msg, response: mes });
-					return mes;
-				});
-		}
-	}
-
-	sendEmbed(msg, embed, content, options) {
-		if (!options && typeof content === 'object') {
-			options = content;
-			content = '';
-		} else if (!options) {
-			options = {};
-		}
-		return this.sendMessage(msg, content, Object.assign(options, { embed }));
-	}
-
-	sendCode(msg, lang, content, options = {}) {
-		return this.sendMessage(msg, content, Object.assign(options, { code: lang }));
-	}
-
-	/* ^^^ */
 
 };
 
