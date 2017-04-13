@@ -42,10 +42,10 @@ module.exports = (client, command, reload = false, loadPath = null) => new Promi
 			if (e.code === 'MODULE_NOT_FOUND') {
 				const module = /'[^']+'/g.exec(e.toString());
 				await client.funcs.installNPM(module[0].slice(1, -1))
-            .catch((err) => {
-	console.error(err);
-	process.exit();
-});
+					.catch((err) => {
+						console.error(err);
+						process.exit();
+					});
 				client.funcs.loadSingleCommand(client, command, false, loadPath);
 			} else {
 				return reject(`Could not load the command: ${e.stack}`);
