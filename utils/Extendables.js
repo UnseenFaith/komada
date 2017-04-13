@@ -74,29 +74,11 @@ class Extendables {
 		} else if (!options) {
 			options = {};
 		}
-		const commandMessage = this.client.commandMessages.get(this.id);
-		if (commandMessage) {
-			return commandMessage.response.edit(content, Object.assign(options, { embed }));
-		} else {
-			return this.channel.send(content, Object.assign(options, { embed }))
-				.then(mes => {
-					if (mes.constructor.name === 'Message') this.client.commandMessages.set(this.id, { trigger: this, response: mes });
-					return mes;
-				});
-		}
+		return this.sendMessage(content, Object.assign(options, { embed }));
 	}
 
 	sendCode(lang, content, options = {}) {
-		const commandMessage = this.client.commandMessages.get(this.id);
-		if (commandMessage) {
-			return commandMessage.response.edit(content, Object.assign(options, { code: lang }));
-		} else {
-			return this.channel.send(content, Object.assign(options, { code: lang }))
-				.then(mes => {
-					if (mes.constructor.name === 'Message') this.client.commandMessages.set(this.id, { trigger: this, response: mes });
-					return mes;
-				});
-		}
+		return this.sendMessage(content, Object.assign(options, { code: lang }));
 	}
 
 	awaitReactions(filter, options = {}) {
