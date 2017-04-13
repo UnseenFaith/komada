@@ -54,7 +54,7 @@ class Extendables {
 	}
 
 	send(content = '', options = {}) {
-		this.sendMessage(content, options);
+		return this.sendMessage(content, options);
 	}
 
 	sendMessage(content = '', options = {}) {
