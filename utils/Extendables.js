@@ -74,11 +74,29 @@ class Extendables {
 		} else if (!options) {
 			options = {};
 		}
-		return this.channel.send(content, Object.assign(options, { embed }));
+		const commandMessage = this.client.commandMessages.get(this.id);
+		if (commandMessage) {
+			return commandMessage.response.edit(content, Object.assign(options, { embed }));
+		} else {
+			return this.channel.send(content, Object.assign(options, { embed }))
+				.then(mes => {
+					if (mes.constructor.name === 'Message') this.client.commandMessages.set(this.id, { trigger: this, response: mes });
+					return mes;
+				});
+		}
 	}
 
 	sendCode(lang, content, options = {}) {
-		return this.channel.send(content, Object.assign(options, { code: lang }));
+		const commandMessage = this.client.commandMessages.get(this.id);
+		if (commandMessage) {
+			return commandMessage.response.edit(content, Object.assign(options, { code: lang }));
+		} else {
+			return this.channel.send(content, Object.assign(options, { code: lang }))
+				.then(mes => {
+					if (mes.constructor.name === 'Message') this.client.commandMessages.set(this.id, { trigger: this, response: mes });
+					return mes;
+				});
+		}
 	}
 
 	awaitReactions(filter, options = {}) {
