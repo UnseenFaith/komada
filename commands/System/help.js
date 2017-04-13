@@ -22,33 +22,45 @@ const buildHelp = (client, msg) => new Promise((resolve) => {
 exports.run = (client, msg, [cmd]) => {
 	if (!cmd) {
 		buildHelp(client, msg)
-      .then((help) => {
-	const helpMessage = [];
-	for (const key in help) {
-		helpMessage.push(`**${key} Commands**: \`\`\`asciidoc`);
-		for (const key2 in help[key]) {
-			helpMessage.push(`= ${key2} =`);
-			helpMessage.push(`${help[key][key2].join('\n')}\n`);
-		}
-		helpMessage.push('```\n\u200b');
-	}
-	if (!client.config.selfbot) {
-		msg.author.sendMessage(helpMessage, { split: { char: '\u200b' } }).catch(e => client.funcs.log(e, 'error'));
-		if (msg.channel.type.toLowerCase() !== 'dm') {
-			msg.reply('Commands have been sent to your DMs.');
-		}
-	} else {
-		msg.channel.sendMessage(helpMessage, { split: { char: '\u200b' } })
-        .catch(e => client.funcs.log(e, 'error'));
-	}
-});
+			.then((help) => {
+				const helpMessage = [];
+				for (const key in help) {
+					helpMessage.push(`**${key} Commands**: \`\`\`asciidoc`);
+					for (const key2 in help[key]) {
+						helpMessage.push(`= ${key2} =`);
+						helpMessage.push(`${help[key][key2].join('\n')}\n`);
+					}
+					helpMessage.push('```\n\u200b');
+				}
+				if (!client.config.selfbot) {
+					msg.author.sendMessage(helpMessage, { split: { char: '\u200b' } }).catch(e => client.funcs.log(e, 'error'));
+					if (msg.channel.type.toLowerCase() !== 'dm') {
+						msg.reply('Commands have been sent to your DMs.');
+					}
+				} else {
+					msg.channel.sendMessage(helpMessage, { split: { char: '\u200b' } })
+						.catch(e => client.funcs.log(e, 'error'));
+				}
+			});
 	} else if (client.commands.has(cmd)) {
 		cmd = client.commands.get(cmd);
 		if (!client.config.selfbot) {
-		msg.author.sendCode('asciidoc', `= ${cmd.help.name} = \n${cmd.help.description}\nusage :: ${client.funcs.fullUsage(client, cmd)}\nExtended Help ::\n${cmd.help.extendedHelp ? cmd.help.extendedHelp : 'No extended help available.'}`);
-	} else {
-		msg.channel.sendCode('asciidoc', `= ${cmd.help.name} = \n${cmd.help.description}\nusage :: ${client.funcs.fullUsage(client, cmd)}\nExtended Help ::\n${cmd.help.extendedHelp ? cmd.help.extendedHelp : 'No extended help available.'}`);
-	}
+			msg.author.sendCode('asciidoc', [
+				`= ${cmd.help.name} = `,
+				cmd.help.description,
+				`usage :: ${cmd.usage.fullUsage(msg)}`,
+				'Extended Help ::',
+				cmd.help.extendedHelp ? cmd.help.extendedHelp : 'No extended help available.'
+			]);
+		} else {
+			msg.channel.sendCode('asciidoc', [
+				`= ${cmd.help.name} = `,
+				cmd.help.description,
+				`usage :: ${cmd.usage.fullUsage(msg)}`,
+				'Extended Help ::',
+				cmd.help.extendedHelp ? cmd.help.extendedHelp : 'No extended help available.'
+			]);
+		}
 	}
 };
 
