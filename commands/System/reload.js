@@ -3,8 +3,8 @@ exports.run = async (client, msg, [type, name]) => {
 		case 'function':
 			if (name === 'all') {
 				await client.funcs.loadFunctions();
-				await Promise.all(Object.keys(this.funcs).map(key => {
-					if (this.funcs[key].init) return this.funcs[key].init(this);
+				await Promise.all(Object.keys(client.funcs).map(key => {
+					if (client.funcs[key].init) return client.funcs[key].init(client);
 					else return true;
 				}));
 				msg.sendMessage('✅ Reloaded all functions.');
@@ -18,8 +18,8 @@ exports.run = async (client, msg, [type, name]) => {
 		case 'inhibitor':
 			if (name === 'all') {
 				await client.funcs.loadCommandInhibitors();
-				await Promise.all(this.commandInhibitors.map((piece) => {
-					if (piece.init) return piece.init(this);
+				await Promise.all(client.commandInhibitors.map((piece) => {
+					if (piece.init) return piece.init(client);
 					else return true;
 				}));
 				msg.sendMessage('✅ Reloaded all inhibitors.');
@@ -33,8 +33,8 @@ exports.run = async (client, msg, [type, name]) => {
 		case 'finalizer':
 			if (name === 'all') {
 				await client.funcs.loadCommandFinalizers();
-				await Promise.all(this.commandFinalizers.map((piece) => {
-					if (piece.init) return piece.init(this);
+				await Promise.all(client.commandFinalizers.map((piece) => {
+					if (piece.init) return piece.init(client);
 					else return true;
 				}));
 				msg.sendMessage('✅ Reloaded all finalizers.');
@@ -59,8 +59,8 @@ exports.run = async (client, msg, [type, name]) => {
 		case 'monitor':
 			if (name === 'all') {
 				await client.funcs.loadMessageMonitors();
-				await Promise.all(this.messageMonitors.map((piece) => {
-					if (piece.init) return piece.init(this);
+				await Promise.all(client.messageMonitors.map((piece) => {
+					if (piece.init) return piece.init(client);
 					else return true;
 				}));
 				msg.sendMessage('✅ Reloaded all monitors.');
@@ -74,8 +74,8 @@ exports.run = async (client, msg, [type, name]) => {
 		case 'provider':
 			if (name === 'all') {
 				await client.funcs.loadProviders();
-				await Promise.all(this.providers.map((piece) => {
-					if (piece.init) return piece.init(this);
+				await Promise.all(client.providers.map((piece) => {
+					if (piece.init) return piece.init(client);
 					else return true;
 				}));
 				msg.sendMessage('✅ Reloaded all providers.');
@@ -90,8 +90,8 @@ exports.run = async (client, msg, [type, name]) => {
 			if (name === 'all') {
 				await client.funcs.loadCommands();
 				msg.sendMessage('✅ Reloaded all commands.');
-				await Promise.all(this.commands.map((piece) => {
-					if (piece.init) return piece.init(this);
+				await Promise.all(client.commands.map((piece) => {
+					if (piece.init) return piece.init(client);
 					else return true;
 				}));
 			} else {

@@ -48,7 +48,7 @@ module.exports = class Loader {
 		const file = `${name}.js`;
 		return await fs.readdirAsync(`${this.client.clientBaseDir}functions${sep}`)
 			.then(files => {
-				if (!files.includes(name)) throw `Could not find a reloadable file named ${file}`;
+				if (!files.includes(file)) throw `Could not find a reloadable file named ${file}`;
 				if (this[name]) delete this[name];
 				this.loadNewFunction(file, this.client.clientBaseDir);
 				if (this.client.funcs[name].init) this.client.funcs[name].init(this.client);
@@ -107,12 +107,12 @@ module.exports = class Loader {
 
 	async reloadCommand(name) {
 		const fullCommand = this.client.commands.get(name) || this.client.commands.get(this.client.aliases.get(name));
-		const file = `${fullCommand.help.category ? `${fullCommand.help.category}${sep}` : ''}${fullCommand.help.name}.js`;
+		const file = `${fullCommand.help.fullCategory.length !== 0 ? `${fullCommand.help.fullCategory.join(sep)}${sep}` : ''}${fullCommand.help.name}.js`;
 		const dir = `${this.client.clientBaseDir}commands${sep}`;
 		const dirToCheck = `${dir}${fullCommand.help.fullCategory ? `${fullCommand.help.fullCategory.join(sep)}${sep}` : ''}`;
 		return await fs.readdirAsync(dirToCheck)
 			.then(files => {
-				if (!files.includes(name)) throw `Could not find a reloadable file named ${file}`;
+				if (!files.includes(file)) throw `Could not find a reloadable file named ${file}`;
 				this.client.aliases.forEach((cmd, alias) => {
 					if (cmd === name) this.client.aliases.delete(alias);
 				});
@@ -142,7 +142,7 @@ module.exports = class Loader {
 		const file = `${name}.js`;
 		return await fs.readdirAsync(`${this.client.clientBaseDir}inhibitors${sep}`)
 			.then(files => {
-				if (!files.includes(name)) throw `Could not find a reloadable file named ${file}`;
+				if (!files.includes(file)) throw `Could not find a reloadable file named ${file}`;
 				this.loadNewInhibitor(file, this.client.clientBaseDir);
 				if (this.client.commandInhibitors.get(name).init) this.client.commandInhibitors.get(name).init(this.client);
 				return `Successfully reloaded the inhibitor ${name}.`;
@@ -169,7 +169,7 @@ module.exports = class Loader {
 		const file = `${name}.js`;
 		return await fs.readdirAsync(`${this.client.clientBaseDir}finalizers${sep}`)
 			.then(files => {
-				if (!files.includes(name)) throw `Could not find a reloadable file named ${file}`;
+				if (!files.includes(file)) throw `Could not find a reloadable file named ${file}`;
 				this.loadNewFinalizer(file, this.client.clientBaseDir);
 				if (this.client.commandFinalizers.get(name).init) this.client.commandFinalizers.get(name).init(this.client);
 				return `Successfully reloaded the finalizer ${name}.`;
@@ -199,7 +199,7 @@ module.exports = class Loader {
 		const file = `${name}.js`;
 		return await fs.readdirAsync(`${this.client.clientBaseDir}events${sep}`)
 			.then(files => {
-				if (!files.includes(name)) throw `Could not find a reloadable file named ${file}`;
+				if (!files.includes(file)) throw `Could not find a reloadable file named ${file}`;
 				const listener = this.client.eventHandlers.get(name);
 				if (this.client.eventHandlers.has(name)) this.client.removeListener(name, listener);
 				this.loadNewEvent(file, this.client.clientBaseDir);
@@ -227,7 +227,7 @@ module.exports = class Loader {
 		const file = `${name}.js`;
 		return await fs.readdirAsync(`${this.client.clientBaseDir}monitors${sep}`)
 			.then(files => {
-				if (!files.includes(name)) throw `Could not find a reloadable file named ${file}`;
+				if (!files.includes(file)) throw `Could not find a reloadable file named ${file}`;
 				this.loadNewMessageMonitor(file, this.client.clientBaseDir);
 				if (this.client.messageMonitors.get(name).init) this.client.messageMonitors.get(name).init(this.client);
 				return `Successfully reloaded the monitor ${name}.`;
@@ -254,7 +254,7 @@ module.exports = class Loader {
 		const file = `${name}.js`;
 		return await fs.readdirAsync(`${this.client.clientBaseDir}providers${sep}`)
 			.then(files => {
-				if (!files.includes(name)) throw `Could not find a reloadable file named ${file}`;
+				if (!files.includes(file)) throw `Could not find a reloadable file named ${file}`;
 				this.loadNewProvider(file, this.client.clientBaseDir);
 				if (this.client.providers.get(name).init) this.client.providers.get(name).init(this.client);
 				return `Successfully reloaded the provider ${name}.`;
