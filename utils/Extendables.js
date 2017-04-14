@@ -118,7 +118,7 @@ class Extendables {
 	}
 }
 
-/** The backbone of this extendable file. Adds the properties in Arrays to their respected Structures */
+/* The backbone of this extendable file. Adds the properties in Arrays to their respected Structures */
 const applyToClass = (structure, props) => {
 	for (const prop of props) {
 		Object.defineProperty(structure.prototype, prop, Object.getOwnPropertyDescriptor(Extendables.prototype, prop));

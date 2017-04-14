@@ -42,7 +42,7 @@ module.exports = class Komada extends Discord.Client {
 			MessageCollector: Discord.MessageCollector,
 			Webhook: Discord.WebhookClient,
 			escapeMarkdown: Discord.escapeMarkdown,
-			splitMessage: Discord.splitMessage,
+			splitMessage: Discord.splitMessage
 		};
 		this.coreBaseDir = `${__dirname}${path.sep}`;
 		this.clientBaseDir = `${process.env.clientDir || process.cwd()}${path.sep}`;
@@ -61,14 +61,30 @@ module.exports = class Komada extends Discord.Client {
 		await this.funcs.loadAll(this);
 		this.once('ready', async () => {
 			this.config.prefixMention = new RegExp(`^<@!?${this.user.id}>`);
-			for (const key of Object.keys(this.funcs)) {
-				if (this.funcs[key].init) this.funcs[key].init(this);
-			}
-			this.providers.forEach((piece) => { if (piece.init) piece.init(this); });
-			this.commands.forEach((piece) => { if (piece.init) piece.init(this); });
-			this.commandInhibitors.forEach((piece) => { if (piece.init) piece.init(this); });
-			this.commandFinalizers.forEach((piece) => { if (piece.init) piece.init(this); });
-			this.messageMonitors.forEach((piece) => { if (piece.init) piece.init(this); });
+			await Promise.all(Object.keys(this.funcs).map(key => {
+				if (this.funcs[key].init) return this.funcs[key].init(this);
+				else return true;
+			}));
+			await Promise.all(this.providers.map((piece) => {
+				if (piece.init) return piece.init(this);
+				else return true;
+			}));
+			await Promise.all(this.commands.map((piece) => {
+				if (piece.init) return piece.init(this);
+				else return true;
+			}));
+			await Promise.all(this.commandInhibitors.map((piece) => {
+				if (piece.init) return piece.init(this);
+				else return true;
+			}));
+			await Promise.all(this.commandFinalizers.map((piece) => {
+				if (piece.init) return piece.init(this);
+				else return true;
+			}));
+			await Promise.all(this.messageMonitors.map((piece) => {
+				if (piece.init) return piece.init(this);
+				else return true;
+			}));
 			await this.configuration.initialize(this);
 			this.i18n = this.funcs.loadLocalizations;
 			this.i18n.init(this);

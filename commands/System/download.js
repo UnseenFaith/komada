@@ -95,10 +95,10 @@ exports.run = async (client, msg, [link, piece, folder = 'Downloaded']) => {
 				const m = await msg.sendMessage(`📥 \`Loading ${type}\``).catch(err => client.funcs.log(err, 'error'));
 				if (Array.isArray(modules) && modules.length > 0) {
 					await client.funcs.installNPM(modules.join(' '))
-          .catch((err) => {
-	console.error(err);
-	process.exit();
-});
+						.catch((err) => {
+							console.error(err);
+							process.exit();
+						});
 					const category = mod.exports.help.category ? mod.exports.help.category : client.funcs.toTitleCase(folder);
 					let message;
 					switch (type) {
@@ -108,10 +108,10 @@ exports.run = async (client, msg, [link, piece, folder = 'Downloaded']) => {
 							await fs.ensureDirAsync(dir).catch(err => client.funcs.log(err, 'error'));
 							fs.writeFileSync(`${dir}${path.sep}${name}.js`, res.text);
 							message = await client.funcs.reload.command(client, client.clientBaseDir, name)
-                .catch((response) => {
-	m.edit(`📵 Command load failed ${name}\n\`\`\`${response}\`\`\``);
-	return fs.unlinkSync(`${dir}/${name}.js`);
-});
+								.catch((response) => {
+									m.edit(`📵 Command load failed ${name}\n\`\`\`${response}\`\`\``);
+									return fs.unlinkSync(`${dir}/${name}.js`);
+								});
 							if (message) m.edit(`📥 ${message}`);
 							break;
 						}
@@ -120,10 +120,10 @@ exports.run = async (client, msg, [link, piece, folder = 'Downloaded']) => {
 							m.edit(`📥 \`Loading ${type} into ${dir}/${name}.js...\``);
 							await fs.writeFileAsync(`${dir}${path.sep}${name}.js`, res.text).catch(err => client.funcs.log(err, 'error'));
 							message = await client.funcs.reload.function(client, client.clientBaseDir, name)
-                        .catch((response) => {
-	m.edit(`📵 Function load failed ${name}\n\`\`\`${response}\`\`\``);
-	return fs.unlinkSync(`${dir}/${name}.js`);
-});
+								.catch((response) => {
+									m.edit(`📵 Function load failed ${name}\n\`\`\`${response}\`\`\``);
+									return fs.unlinkSync(`${dir}/${name}.js`);
+								});
 							if (message) m.edit(`📥 ${message}`);
 							break;
 						}
@@ -132,10 +132,10 @@ exports.run = async (client, msg, [link, piece, folder = 'Downloaded']) => {
 							m.edit(`📥 \`Loading ${type} into ${dir}/${name}.js...\``);
 							await fs.writeFileAsync(`${dir}/${name}.js`, res.text).catch(err => client.funcs.log(err, 'error'));
 							message = await client.funcs.reload.inhibitor(client, client.clientBaseDir, name)
-                .catch((response) => {
-	m.edit(`📵 Inhibitor load failed ${name}\n\`\`\`${response}\`\`\``);
-	return fs.unlinkSync(`${dir}/${name}.js`);
-});
+								.catch((response) => {
+									m.edit(`📵 Inhibitor load failed ${name}\n\`\`\`${response}\`\`\``);
+									return fs.unlinkSync(`${dir}/${name}.js`);
+								});
 							if (message) m.edit(`📥 ${message}`);
 							break;
 						}
@@ -144,10 +144,10 @@ exports.run = async (client, msg, [link, piece, folder = 'Downloaded']) => {
 							m.edit(`📥 \`Loading ${type} into ${dir}/${name}.js...\``);
 							await fs.writeFileAsync(`${dir}/${name}.js`, res.text).catch(err => client.funcs.log(err, 'error'));
 							message = await client.funcs.reload.monitor(client, client.clientBaseDir, name)
-                .catch((response) => {
-	m.edit(`📵 Monitor load failed ${name}\n\`\`\`${response}\`\`\``);
-	return fs.unlinkSync(`${dir}/${name}.js`);
-});
+								.catch((response) => {
+									m.edit(`📵 Monitor load failed ${name}\n\`\`\`${response}\`\`\``);
+									return fs.unlinkSync(`${dir}/${name}.js`);
+								});
 							if (message) m.edit(`📥 ${message}`);
 							break;
 						}
@@ -156,10 +156,10 @@ exports.run = async (client, msg, [link, piece, folder = 'Downloaded']) => {
 							m.edit(`📥 \`Loading ${type} into ${dir}/${name}.js...\``);
 							await fs.writeFileAsync(`${dir}/${name}.js`, res.text).catch(err => client.funcs.log(err, 'error'));
 							message = await client.funcs.reload.provider(client, client.clientBaseDir, name)
-                .catch((response) => {
-	m.edit(`📵 Provider load failed ${name}\n\`\`\`${response}\`\`\``);
-	return fs.unlinkSync(`${dir}/${name}.js`);
-});
+								.catch((response) => {
+									m.edit(`📵 Provider load failed ${name}\n\`\`\`${response}\`\`\``);
+									return fs.unlinkSync(`${dir}/${name}.js`);
+								});
 							m.edit(`📥 ${message}`);
 							break;
 						}
@@ -176,10 +176,10 @@ exports.run = async (client, msg, [link, piece, folder = 'Downloaded']) => {
 							await fs.ensureDirAsync(dir).catch(err => client.funcs.log(err, 'error'));
 							await fs.writeFileAsync(`${dir}${path.sep}${name}.js`, res.text);
 							message = await client.funcs.reload.command(client, client.clientBaseDir, name)
-                        .catch((response) => {
-	m.edit(`📵 Command load failed ${name}\n\`\`\`${response}\`\`\``);
-	fs.unlinkSync(`${dir}/${name}.js`);
-});
+								.catch((response) => {
+									m.edit(`📵 Command load failed ${name}\n\`\`\`${response}\`\`\``);
+									fs.unlinkSync(`${dir}/${name}.js`);
+								});
 							if (message) m.edit(`📥 ${message}`);
 							break;
 						}
@@ -188,10 +188,10 @@ exports.run = async (client, msg, [link, piece, folder = 'Downloaded']) => {
 							m.edit(`📥 \`Loading ${type} into ${dir}/${name}.js...\``);
 							await fs.writeFileAsync(`${dir}/${name}.js`, res.text).catch(err => client.funcs.log(err, 'error'));
 							message = await client.funcs.reload.function(client, client.clientBaseDir, name)
-                        .catch((response) => {
-	m.edit(`📵 Function load failed ${name}\n\`\`\`${response}\`\`\``);
-	return fs.unlinkSync(`${dir}/${name}.js`);
-});
+								.catch((response) => {
+									m.edit(`📵 Function load failed ${name}\n\`\`\`${response}\`\`\``);
+									return fs.unlinkSync(`${dir}/${name}.js`);
+								});
 							m.edit(`📥 ${message}`);
 							break;
 						}
@@ -200,10 +200,10 @@ exports.run = async (client, msg, [link, piece, folder = 'Downloaded']) => {
 							m.edit(`📥 \`Loading ${type} into ${dir}/${name}.js...\``);
 							await fs.writeFileAsync(`${dir}/${name}.js`, res.text).catch(err => client.funcs.log(err, 'error'));
 							message = await client.funcs.reload.inhibitor(client, client.clientBaseDir, name)
-                        .catch((response) => {
-	m.edit(`📵 Inhibitor load failed ${name}\n\`\`\`${response}\`\`\``);
-	return fs.unlinkSync(`${dir}/${name}.js`);
-});
+								.catch((response) => {
+									m.edit(`📵 Inhibitor load failed ${name}\n\`\`\`${response}\`\`\``);
+									return fs.unlinkSync(`${dir}/${name}.js`);
+								});
 							m.edit(`📥 ${message}`);
 							break;
 						}
@@ -212,10 +212,10 @@ exports.run = async (client, msg, [link, piece, folder = 'Downloaded']) => {
 							m.edit(`📥 \`Loading ${type} into ${dir}/${name}.js...\``);
 							await fs.writeFileAsync(`${dir}/${name}.js`, res.text).catch(err => client.funcs.log(err, 'error'));
 							message = await client.funcs.reload.monitor(client, client.clientBaseDir, name)
-                        .catch((response) => {
-	m.edit(`📵 Monitor load failed ${name}\n\`\`\`${response}\`\`\``);
-	return fs.unlinkSync(`${dir}/${name}.js`);
-});
+								.catch((response) => {
+									m.edit(`📵 Monitor load failed ${name}\n\`\`\`${response}\`\`\``);
+									return fs.unlinkSync(`${dir}/${name}.js`);
+								});
 							m.edit(`📥 ${message}`);
 							break;
 						}
@@ -224,10 +224,10 @@ exports.run = async (client, msg, [link, piece, folder = 'Downloaded']) => {
 							m.edit(`📥 \`Loading ${type} into ${dir}/${name}.js...\``);
 							await fs.writeFileAsync(`${dir}/${name}.js`, res.text).catch(err => client.funcs.log(err, 'error'));
 							message = await client.funcs.reload.provider(client, client.clientBaseDir, name)
-                        .catch((response) => {
-	m.edit(`📵 Provider load failed ${name}\n\`\`\`${response}\`\`\``);
-	return fs.unlinkSync(`${dir}/${name}.js`);
-});
+								.catch((response) => {
+									m.edit(`📵 Provider load failed ${name}\n\`\`\`${response}\`\`\``);
+									return fs.unlinkSync(`${dir}/${name}.js`);
+								});
 							m.edit(`📥 ${message}`);
 							break;
 						}
@@ -246,12 +246,12 @@ exports.conf = {
 	aliases: [],
 	permLevel: 5,
 	botPerms: [],
-	requiredFuncs: [],
+	requiredFuncs: []
 };
 
 exports.help = {
 	name: 'download',
 	description: 'Downloads a piece, either from a link or our Pieces Repository, and installs it.',
-	usage: '<commands|functions|monitors|inhibitors|providers|url:url> [location:str] [folder:str]',
-	usageDelim: ' ',
+	usage: '<command|function|monitor|inhibitor|provider|url:url> [location:str] [folder:str]',
+	usageDelim: ' '
 };
