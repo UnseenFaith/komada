@@ -103,9 +103,10 @@ module.exports = class Loader {
 
 	async reloadCommand(name) {
 		const fullCommand = this.client.commands.get(name) || this.client.commands.get(this.client.aliases.get(name));
-		const file = `${fullCommand.help.name}.js`;
-		const dir = `${this.client.clientBaseDir}commands/${fullCommand.help.category ? `${fullCommand.help.category}${sep}` : ''}`;
-		return await fs.readdirAsync(dir)
+		const file = `${fullCommand.help.category ? `${fullCommand.help.category}${sep}` : ''}${fullCommand.help.name}.js`;
+		const dir = `${this.client.clientBaseDir}commands${sep}`;
+		const dirToCheck = `${dir}${fullCommand.help.category ? `${fullCommand.help.category}${sep}` : ''}`;
+		return await fs.readdirAsync(dirToCheck)
 			.then(files => {
 				if (!files.includes(name)) throw `Could not find a reloadable file named ${file}`;
 				this.client.aliases.forEach((cmd, alias) => {
