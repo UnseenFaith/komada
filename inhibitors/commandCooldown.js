@@ -1,13 +1,13 @@
 exports.conf = {
 	enabled: true,
-	spamProtection: true
+	priority: 5
 };
 
-exports.run = (client, msg, user, cmd) => {
-	if (user.id === client.config.ownerID) return false;
+exports.run = (client, msg, cmd) => {
+	if (msg.author.id === client.config.ownerID) return false;
 	if (!cmd.conf.cooldown || cmd.conf.cooldown <= 0) return false;
 
-	const instance = cmd.cooldown.get(user.id);
+	const instance = cmd.cooldown.get(msg.author.id);
 
 	if (!instance) return false;
 
