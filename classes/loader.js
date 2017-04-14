@@ -51,6 +51,8 @@ module.exports = class Loader {
 				if (!files.includes(name)) throw `Could not find a reloadable file named ${file}`;
 				if (this[name]) delete this[name];
 				this.loadNewFunction(file, this.client.clientBaseDir);
+				if (this.client.funcs[name].init) this.client.funcs[name].init(this.client);
+				return `Successfully reloaded the function ${name}.`;
 			});
 	}
 
@@ -115,6 +117,8 @@ module.exports = class Loader {
 					if (cmd === name) this.client.aliases.delete(alias);
 				});
 				this.loadNewCommand(file, dir);
+				if (this.client.commands.get(name).init) this.client.commands.get(name).init(this.client);
+				return `Successfully reloaded the command ${name}.`;
 			});
 	}
 
@@ -140,6 +144,8 @@ module.exports = class Loader {
 			.then(files => {
 				if (!files.includes(name)) throw `Could not find a reloadable file named ${file}`;
 				this.loadNewInhibitor(file, this.client.clientBaseDir);
+				if (this.client.commandInhibitors.get(name).init) this.client.commandInhibitors.get(name).init(this.client);
+				return `Successfully reloaded the inhibitor ${name}.`;
 			});
 	}
 
@@ -165,6 +171,8 @@ module.exports = class Loader {
 			.then(files => {
 				if (!files.includes(name)) throw `Could not find a reloadable file named ${file}`;
 				this.loadNewFinalizer(file, this.client.clientBaseDir);
+				if (this.client.commandFinalizers.get(name).init) this.client.commandFinalizers.get(name).init(this.client);
+				return `Successfully reloaded the finalizer ${name}.`;
 			});
 	}
 
@@ -195,6 +203,7 @@ module.exports = class Loader {
 				const listener = this.client.eventHandlers.get(name);
 				if (this.client.eventHandlers.has(name)) this.client.removeListener(name, listener);
 				this.loadNewEvent(file, this.client.clientBaseDir);
+				return `Successfully reloaded the event ${name}.`;
 			});
 	}
 
@@ -220,6 +229,8 @@ module.exports = class Loader {
 			.then(files => {
 				if (!files.includes(name)) throw `Could not find a reloadable file named ${file}`;
 				this.loadNewMessageMonitor(file, this.client.clientBaseDir);
+				if (this.client.messageMonitors.get(name).init) this.client.messageMonitors.get(name).init(this.client);
+				return `Successfully reloaded the monitor ${name}.`;
 			});
 	}
 
@@ -245,6 +256,8 @@ module.exports = class Loader {
 			.then(files => {
 				if (!files.includes(name)) throw `Could not find a reloadable file named ${file}`;
 				this.loadNewProvider(file, this.client.clientBaseDir);
+				if (this.client.providers.get(name).init) this.client.providers.get(name).init(this.client);
+				return `Successfully reloaded the provider ${name}.`;
 			});
 	}
 
