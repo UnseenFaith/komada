@@ -1,6 +1,6 @@
 exports.conf = {
 	enabled: true,
-	priority: 5
+	priority: 11
 };
 
 exports.run = (client, msg, cmd) => {
