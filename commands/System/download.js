@@ -47,22 +47,22 @@ exports.run = (client, msg, [link, piece, folder = "Downloaded"]) => {
 
     if (!name) return msg.channel.sendMessage(`<@!${msg.author.id}> | I have stopped the load of this piece because it does not have a name value, and I cannot determine the file name without it. Please ask the Developer of this piece to add it.`);
     if (!type) return msg.channel.sendMessage(`<@!${msg.author.id}> | I have stopped the load of this piece because it does not have a type value, and I cannot determine the type without it. Please ask the Developer of the piece to add it.`);
-    if (!["commands", "functions", "inhibitors", "monitors", "providers"].includes(type)) return msg.channel.sendMessage(`<@!${msg.author.id}> | I have stopped the loading of this piece because its type value doesn't match those we accept. Please ask the Developer of the piece to fix it.`);
+    if (!["command", "function", "inhibitor", "monitor", "provider"].includes(type)) return msg.channel.sendMessage(`<@!${msg.author.id}> | I have stopped the loading of this piece because its type value doesn't match those we accept. Please ask the Developer of the piece to fix it.`);
 
     switch (type) {
-      case "commands":
+      case "command":
         if (client.commands.has(name)) return msg.channel.sendMessage(`<@!${msg.author.id}> | That command already exists in your bot. Aborting the load.`);
         break;
-      case "functions":
+      case "function":
         if (client.funcs[name]) return msg.channel.sendMessage(`<@!${msg.author.id}> | That function already exists in your bot. Aborting the load.`);
         break;
-      case "inhibitors":
+      case "inhibitor":
         if (client.commandInhibitors.has(name)) return msg.channel.sendMessage(`<@!${msg.author.id}> | That command inhibitor already exists in your bot. Aborting the load.`);
         break;
-      case "monitors":
+      case "monitor":
         if (client.messageMonitors.has(name)) return msg.channel.sendMessage(`<@!${msg.author.id}> | That message monitor already exists in your bot. Aborting the load.`);
         break;
-      case "providers":
+      case "provider":
         if (client.providers.has(name)) return msg.channel.sendMessage(`<@!${msg.author.id}> | That provider already exists in your bot. Aborting the load.`);
         break;
       default:
@@ -104,7 +104,7 @@ ${modules}
           const category = mod.exports.help.category ? mod.exports.help.category : client.funcs.toTitleCase(folder);
           let message;
           switch (type) {
-            case "commands": {
+            case "command": {
               const dir = path.resolve(`${client.clientBaseDir}/commands/${category}/`);
               m.edit(`:inbox_tray: \`Loading ${type} into ${dir}/${name}.js...\``);
               await fs.ensureDirAsync(dir).catch(err => client.funcs.log(err, "error"));
@@ -117,7 +117,7 @@ ${modules}
               if (message) m.edit(`:inbox_tray: ${message}`);
               break;
             }
-            case "functions": {
+            case "function": {
               const dir = path.resolve(`${client.clientBaseDir}/functions/`);
               m.edit(`:inbox_tray: \`Loading ${type} into ${dir}/${name}.js...\``);
               await fs.writeFileAsync(`${dir}${path.sep}${name}.js`, res.text).catch(err => client.funcs.log(err, "error"));
@@ -129,7 +129,7 @@ ${modules}
               if (message) m.edit(`:inbox_tray: ${message}`);
               break;
             }
-            case "inhibitors": {
+            case "inhibitor": {
               const dir = path.resolve(`${client.clientBaseDir}/inhibitors/`);
               m.edit(`:inbox_tray: \`Loading ${type} into ${dir}/${name}.js...\``);
               await fs.writeFileAsync(`${dir}/${name}.js`, res.text).catch(err => client.funcs.log(err, "error"));
@@ -141,7 +141,7 @@ ${modules}
               if (message) m.edit(`:inbox_tray: ${message}`);
               break;
             }
-            case "monitors": {
+            case "monitor": {
               const dir = path.resolve(`${client.clientBaseDir}/monitors/`);
               m.edit(`:inbox_tray: \`Loading ${type} into ${dir}/${name}.js...\``);
               await fs.writeFileAsync(`${dir}/${name}.js`, res.text).catch(err => client.funcs.log(err, "error"));
@@ -153,7 +153,7 @@ ${modules}
               if (message) m.edit(`:inbox_tray: ${message}`);
               break;
             }
-            case "providers": {
+            case "provider": {
               const dir = path.resolve(`${client.clientBaseDir}/providers/`);
               m.edit(`:inbox_tray: \`Loading ${type} into ${dir}/${name}.js...\``);
               await fs.writeFileAsync(`${dir}/${name}.js`, res.text).catch(err => client.funcs.log(err, "error"));
@@ -172,7 +172,7 @@ ${modules}
           const category = mod.exports.help.category ? mod.exports.help.category : client.funcs.toTitleCase(folder);
           let message;
           switch (type) {
-            case "commands": {
+            case "command": {
               const dir = path.resolve(`${client.clientBaseDir}/commands/${category}`);
               m.edit(`:inbox_tray: \`Loading ${type} into ${dir}/${name}.js...\``);
               await fs.ensureDirAsync(dir).catch(err => client.funcs.log(err, "error"));
@@ -185,7 +185,7 @@ ${modules}
               if (message) m.edit(`:inbox_tray: ${message}`);
               break;
             }
-            case "functions": {
+            case "function": {
               const dir = path.resolve(`${client.clientBaseDir}/functions/`);
               m.edit(`:inbox_tray: \`Loading ${type} into ${dir}/${name}.js...\``);
               await fs.writeFileAsync(`${dir}/${name}.js`, res.text).catch(err => client.funcs.log(err, "error"));
@@ -197,7 +197,7 @@ ${modules}
               m.edit(`:inbox_tray: ${message}`);
               break;
             }
-            case "inhibitors": {
+            case "inhibitor": {
               const dir = path.resolve(`${client.clientBaseDir}/inhibitors/`);
               m.edit(`:inbox_tray: \`Loading ${type} into ${dir}/${name}.js...\``);
               await fs.writeFileAsync(`${dir}/${name}.js`, res.text).catch(err => client.funcs.log(err, "error"));
@@ -209,7 +209,7 @@ ${modules}
               m.edit(`:inbox_tray: ${message}`);
               break;
             }
-            case "monitors": {
+            case "monitor": {
               const dir = path.resolve(`${client.clientBaseDir}/monitors/`);
               m.edit(`:inbox_tray: \`Loading ${type} into ${dir}/${name}.js...\``);
               await fs.writeFileAsync(`${dir}/${name}.js`, res.text).catch(err => client.funcs.log(err, "error"));
@@ -221,7 +221,7 @@ ${modules}
               m.edit(`:inbox_tray: ${message}`);
               break;
             }
-            case "providers": {
+            case "provider": {
               const dir = path.resolve(`${client.clientBaseDir}/providers/`);
               m.edit(`:inbox_tray: \`Loading ${type} into ${dir}/${name}.js...\``);
               await fs.writeFileAsync(`${dir}/${name}.js`, res.text).catch(err => client.funcs.log(err, "error"));
