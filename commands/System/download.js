@@ -45,22 +45,22 @@ exports.run = async (client, msg, [link, piece, folder = 'Downloaded']) => {
 
 		if (!name) return msg.sendMessage(`<@!${msg.author.id}> | I have stopped the load of this piece because it does not have a name value, and I cannot determine the file name without it. Please ask the Developer of this piece to add it.`);
 		if (!type) return msg.sendMessage(`<@!${msg.author.id}> | I have stopped the load of this piece because it does not have a type value, and I cannot determine the type without it. Please ask the Developer of the piece to add it.`);
-		if (!['command', 'function', 'inhibitor', 'monitor', 'provider'].includes(type)) return msg.sendMessage(`<@!${msg.author.id}> | I have stopped the loading of this piece because its type value doesn't match those we accept. Please ask the Developer of the piece to fix it.`);
+		if (!['commands', 'functions', 'inhibitors', 'monitors', 'providers'].includes(type)) return msg.sendMessage(`<@!${msg.author.id}> | I have stopped the loading of this piece because its type value doesn't match those we accept. Please ask the Developer of the piece to fix it.`);
 
 		switch (type) {
-			case 'command':
+			case 'commands':
 				if (client.commands.has(name)) return msg.sendMessage(`<@!${msg.author.id}> | That command already exists in your bot. Aborting the load.`);
 				break;
-			case 'function':
+			case 'functions':
 				if (client.funcs[name]) return msg.sendMessage(`<@!${msg.author.id}> | That function already exists in your bot. Aborting the load.`);
 				break;
-			case 'inhibitor':
+			case 'inhibitors':
 				if (client.commandInhibitors.has(name)) return msg.sendMessage(`<@!${msg.author.id}> | That command inhibitor already exists in your bot. Aborting the load.`);
 				break;
-			case 'monitor':
+			case 'monitors':
 				if (client.messageMonitors.has(name)) return msg.sendMessage(`<@!${msg.author.id}> | That message monitor already exists in your bot. Aborting the load.`);
 				break;
-			case 'provider':
+			case 'providers':
 				if (client.providers.has(name)) return msg.sendMessage(`<@!${msg.author.id}> | That provider already exists in your bot. Aborting the load.`);
 				break;
 			default:
@@ -102,7 +102,7 @@ exports.run = async (client, msg, [link, piece, folder = 'Downloaded']) => {
 					const category = mod.exports.help.category ? mod.exports.help.category : client.funcs.toTitleCase(folder);
 					let message;
 					switch (type) {
-						case 'command': {
+						case 'commands': {
 							const dir = path.resolve(`${client.clientBaseDir}/commands/${category}/`);
 							m.edit(`📥 \`Loading ${type} into ${dir}/${name}.js...\``);
 							await fs.ensureDirAsync(dir).catch(err => client.funcs.log(err, 'error'));
@@ -115,7 +115,7 @@ exports.run = async (client, msg, [link, piece, folder = 'Downloaded']) => {
 							if (message) m.edit(`📥 ${message}`);
 							break;
 						}
-						case 'function': {
+						case 'functions': {
 							const dir = path.resolve(`${client.clientBaseDir}/functions/`);
 							m.edit(`📥 \`Loading ${type} into ${dir}/${name}.js...\``);
 							await fs.writeFileAsync(`${dir}${path.sep}${name}.js`, res.text).catch(err => client.funcs.log(err, 'error'));
@@ -127,7 +127,7 @@ exports.run = async (client, msg, [link, piece, folder = 'Downloaded']) => {
 							if (message) m.edit(`📥 ${message}`);
 							break;
 						}
-						case 'inhibitor': {
+						case 'inhibitors': {
 							const dir = path.resolve(`${client.clientBaseDir}/inhibitors/`);
 							m.edit(`📥 \`Loading ${type} into ${dir}/${name}.js...\``);
 							await fs.writeFileAsync(`${dir}/${name}.js`, res.text).catch(err => client.funcs.log(err, 'error'));
@@ -139,7 +139,7 @@ exports.run = async (client, msg, [link, piece, folder = 'Downloaded']) => {
 							if (message) m.edit(`📥 ${message}`);
 							break;
 						}
-						case 'monitor': {
+						case 'monitors': {
 							const dir = path.resolve(`${client.clientBaseDir}/monitors/`);
 							m.edit(`📥 \`Loading ${type} into ${dir}/${name}.js...\``);
 							await fs.writeFileAsync(`${dir}/${name}.js`, res.text).catch(err => client.funcs.log(err, 'error'));
@@ -151,7 +151,7 @@ exports.run = async (client, msg, [link, piece, folder = 'Downloaded']) => {
 							if (message) m.edit(`📥 ${message}`);
 							break;
 						}
-						case 'provider': {
+						case 'providers': {
 							const dir = path.resolve(`${client.clientBaseDir}/providers/`);
 							m.edit(`📥 \`Loading ${type} into ${dir}/${name}.js...\``);
 							await fs.writeFileAsync(`${dir}/${name}.js`, res.text).catch(err => client.funcs.log(err, 'error'));
@@ -170,7 +170,7 @@ exports.run = async (client, msg, [link, piece, folder = 'Downloaded']) => {
 					const category = mod.exports.help.category ? mod.exports.help.category : client.funcs.toTitleCase(folder);
 					let message;
 					switch (type) {
-						case 'command': {
+						case 'commands': {
 							const dir = path.resolve(`${client.clientBaseDir}/commands/${category}`);
 							m.edit(`📥 \`Loading ${type} into ${dir}/${name}.js...\``);
 							await fs.ensureDirAsync(dir).catch(err => client.funcs.log(err, 'error'));
@@ -183,7 +183,7 @@ exports.run = async (client, msg, [link, piece, folder = 'Downloaded']) => {
 							if (message) m.edit(`📥 ${message}`);
 							break;
 						}
-						case 'function': {
+						case 'functions': {
 							const dir = path.resolve(`${client.clientBaseDir}/functions/`);
 							m.edit(`📥 \`Loading ${type} into ${dir}/${name}.js...\``);
 							await fs.writeFileAsync(`${dir}/${name}.js`, res.text).catch(err => client.funcs.log(err, 'error'));
@@ -195,7 +195,7 @@ exports.run = async (client, msg, [link, piece, folder = 'Downloaded']) => {
 							m.edit(`📥 ${message}`);
 							break;
 						}
-						case 'inhibitor': {
+						case 'inhibitors': {
 							const dir = path.resolve(`${client.clientBaseDir}/inhibitors/`);
 							m.edit(`📥 \`Loading ${type} into ${dir}/${name}.js...\``);
 							await fs.writeFileAsync(`${dir}/${name}.js`, res.text).catch(err => client.funcs.log(err, 'error'));
@@ -207,7 +207,7 @@ exports.run = async (client, msg, [link, piece, folder = 'Downloaded']) => {
 							m.edit(`📥 ${message}`);
 							break;
 						}
-						case 'monitor': {
+						case 'monitors': {
 							const dir = path.resolve(`${client.clientBaseDir}/monitors/`);
 							m.edit(`📥 \`Loading ${type} into ${dir}/${name}.js...\``);
 							await fs.writeFileAsync(`${dir}/${name}.js`, res.text).catch(err => client.funcs.log(err, 'error'));
@@ -219,7 +219,7 @@ exports.run = async (client, msg, [link, piece, folder = 'Downloaded']) => {
 							m.edit(`📥 ${message}`);
 							break;
 						}
-						case 'provider': {
+						case 'providers': {
 							const dir = path.resolve(`${client.clientBaseDir}/providers/`);
 							m.edit(`📥 \`Loading ${type} into ${dir}/${name}.js...\``);
 							await fs.writeFileAsync(`${dir}/${name}.js`, res.text).catch(err => client.funcs.log(err, 'error'));
@@ -252,6 +252,6 @@ exports.conf = {
 exports.help = {
 	name: 'download',
 	description: 'Downloads a piece, either from a link or our Pieces Repository, and installs it.',
-	usage: '<command|function|monitor|inhibitor|provider|url:url> [location:str] [folder:str]',
+	usage: '<commands|functions|monitors|inhibitors|providers|url:url> [location:str] [folder:str]',
 	usageDelim: ' '
 };
