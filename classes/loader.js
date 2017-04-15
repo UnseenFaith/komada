@@ -107,10 +107,18 @@ module.exports = class Loader {
 	}
 
 	async reloadCommand(name) {
+		if (name.endsWith('.js')) name = name.slice(0, -3);
 		const fullCommand = this.client.commands.get(name) || this.client.commands.get(this.client.aliases.get(name));
-		const file = `${fullCommand.help.fullCategory.length !== 0 ? `${fullCommand.help.fullCategory.join(sep)}${sep}` : ''}${fullCommand.help.name}.js`;
-		const dir = `${this.client.clientBaseDir}commands${sep}`;
-		const dirToCheck = `${dir}${fullCommand.help.fullCategory ? `${fullCommand.help.fullCategory.join(sep)}${sep}` : ''}`;
+				const dir = `${this.client.clientBaseDir}commands${sep}`;
+		let file, dirToCheck;
+
+		if (fullCommand) {
+			file = `${fullCommand.help.fullCategory.length !== 0 ? `${fullCommand.help.fullCategory.join(sep)}${sep}` : ''}${fullCommand.help.name}.js`;
+
+			dirToCheck = `${dir}${fullCommand.help.fullCategory ? `${fullCommand.help.fullCategory.join(sep)}${sep}` : ''}`;
+		} else {
+			file = 
+		}
 		return await fs.readdirAsync(dirToCheck)
 			.then(files => {
 				if (!files.includes(file)) throw `Could not find a reloadable file named ${file}`;
