@@ -7,10 +7,10 @@ exports.run = (client, msg, [type, name]) => {
         inhibitor = name;
       }
       if (!inhibitor) {
-        msg.channel.sendCode("diff", `- I cannot find the inhibitor: ${name}`);
+        return msg.channel.sendCode("diff", `- I cannot find the inhibitor: ${name}`);
       }
       client.commandInhibitors.get(inhibitor).conf.enabled = false;
-      msg.channel.sendCode("diff", `+ Successfully disabled inhibitor: ${name}`);
+      return msg.channel.sendCode("diff", `+ Successfully disabled inhibitor: ${name}`);
       break;
     case "monitor":
       let monitor;
@@ -21,7 +21,7 @@ exports.run = (client, msg, [type, name]) => {
         return msg.channel.sendCode("diff", `- I cannot find the monitor: ${name}`);
       }
       client.messageMonitors.get(monitor).conf.enabled = false;
-      msg.channel.sendCode("diff", `+ Successfully disabled monitor: ${name}`);
+      return msg.channel.sendCode("diff", `+ Successfully disabled monitor: ${name}`);
       break;
     case "command":
       let command;
@@ -34,7 +34,7 @@ exports.run = (client, msg, [type, name]) => {
         return msg.channel.sendCode("diff", `- I cannot find the command: ${name}`);
       }
       client.commands.get(command).conf.enabled = false;
-      msg.channel.sendCode("diff", `+ Successfully disabled command: ${name}`);
+      return msg.channel.sendCode("diff", `+ Successfully disabled command: ${name}`);
       break;
     // no default
   }
