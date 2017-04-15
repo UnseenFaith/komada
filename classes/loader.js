@@ -107,7 +107,8 @@ module.exports = class Loader {
 	}
 
 	async reloadCommand(name) {
-		if (name.endsWith('.js')) name = name.split('/').join(sep).slice(0, -3);
+		if (name.endsWith('.js')) name = name.slice(0, -3);
+		name = name.split('/').join(sep);
 		const fullCommand = this.client.commands.get(name) || this.client.commands.get(this.client.aliases.get(name));
 		const dir = `${this.client.clientBaseDir}commands${sep}`;
 		let file, fileToCheck, dirToCheck;
