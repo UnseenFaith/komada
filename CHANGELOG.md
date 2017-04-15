@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
 ### Fixed
+- Fixed enable/disable for inhibs. Minor oversight
 - Minor fixes in ping command and awaitMessage function.
 - Usage when you use Boolean types.
 - String errors when provided to User/Member usage
