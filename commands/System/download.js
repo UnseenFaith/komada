@@ -99,7 +99,7 @@ exports.run = async (client, msg, [link, piece, folder = 'Downloaded']) => {
 							console.error(err);
 							process.exit();
 						});
-					const category = mod.exports.help.category ? mod.exports.help.category : client.funcs.toTitleCase(folder);
+					const category = mod.exports.help.category || client.funcs.toTitleCase(folder);
 					let message;
 					switch (type) {
 						case 'commands': {
@@ -107,7 +107,7 @@ exports.run = async (client, msg, [link, piece, folder = 'Downloaded']) => {
 							m.edit(`📥 \`Loading ${type} into ${dir}/${name}.js...\``);
 							await fs.ensureDirAsync(dir).catch(err => client.funcs.log(err, 'error'));
 							fs.writeFileSync(`${dir}${path.sep}${name}.js`, res.text);
-							message = await client.funcs.reload.command(client, client.clientBaseDir, name)
+							message = await client.funcs.reloadCommand(`${category}${path.sep}${name}`)
 								.catch((response) => {
 									m.edit(`📵 Command load failed ${name}\n\`\`\`${response}\`\`\``);
 									return fs.unlinkSync(`${dir}/${name}.js`);
@@ -119,7 +119,7 @@ exports.run = async (client, msg, [link, piece, folder = 'Downloaded']) => {
 							const dir = path.resolve(`${client.clientBaseDir}/functions/`);
 							m.edit(`📥 \`Loading ${type} into ${dir}/${name}.js...\``);
 							await fs.writeFileAsync(`${dir}${path.sep}${name}.js`, res.text).catch(err => client.funcs.log(err, 'error'));
-							message = await client.funcs.reload.function(client, client.clientBaseDir, name)
+							message = await client.funcs.reloadFunction(name)
 								.catch((response) => {
 									m.edit(`📵 Function load failed ${name}\n\`\`\`${response}\`\`\``);
 									return fs.unlinkSync(`${dir}/${name}.js`);
@@ -131,7 +131,7 @@ exports.run = async (client, msg, [link, piece, folder = 'Downloaded']) => {
 							const dir = path.resolve(`${client.clientBaseDir}/inhibitors/`);
 							m.edit(`📥 \`Loading ${type} into ${dir}/${name}.js...\``);
 							await fs.writeFileAsync(`${dir}/${name}.js`, res.text).catch(err => client.funcs.log(err, 'error'));
-							message = await client.funcs.reload.inhibitor(client, client.clientBaseDir, name)
+							message = await client.funcs.reloadInhibitor(name)
 								.catch((response) => {
 									m.edit(`📵 Inhibitor load failed ${name}\n\`\`\`${response}\`\`\``);
 									return fs.unlinkSync(`${dir}/${name}.js`);
@@ -143,7 +143,7 @@ exports.run = async (client, msg, [link, piece, folder = 'Downloaded']) => {
 							const dir = path.resolve(`${client.clientBaseDir}/monitors/`);
 							m.edit(`📥 \`Loading ${type} into ${dir}/${name}.js...\``);
 							await fs.writeFileAsync(`${dir}/${name}.js`, res.text).catch(err => client.funcs.log(err, 'error'));
-							message = await client.funcs.reload.monitor(client, client.clientBaseDir, name)
+							message = await client.funcs.reloadMessageMonitor(name)
 								.catch((response) => {
 									m.edit(`📵 Monitor load failed ${name}\n\`\`\`${response}\`\`\``);
 									return fs.unlinkSync(`${dir}/${name}.js`);
@@ -155,7 +155,7 @@ exports.run = async (client, msg, [link, piece, folder = 'Downloaded']) => {
 							const dir = path.resolve(`${client.clientBaseDir}/providers/`);
 							m.edit(`📥 \`Loading ${type} into ${dir}/${name}.js...\``);
 							await fs.writeFileAsync(`${dir}/${name}.js`, res.text).catch(err => client.funcs.log(err, 'error'));
-							message = await client.funcs.reload.provider(client, client.clientBaseDir, name)
+							message = await client.funcs.reloadProvider(name)
 								.catch((response) => {
 									m.edit(`📵 Provider load failed ${name}\n\`\`\`${response}\`\`\``);
 									return fs.unlinkSync(`${dir}/${name}.js`);
@@ -167,7 +167,7 @@ exports.run = async (client, msg, [link, piece, folder = 'Downloaded']) => {
 							return 'Will never trigger';
 					}
 				} else {
-					const category = mod.exports.help.category ? mod.exports.help.category : client.funcs.toTitleCase(folder);
+					const category = mod.exports.help.category || client.funcs.toTitleCase(folder);
 					let message;
 					switch (type) {
 						case 'commands': {
@@ -175,7 +175,7 @@ exports.run = async (client, msg, [link, piece, folder = 'Downloaded']) => {
 							m.edit(`📥 \`Loading ${type} into ${dir}/${name}.js...\``);
 							await fs.ensureDirAsync(dir).catch(err => client.funcs.log(err, 'error'));
 							await fs.writeFileAsync(`${dir}${path.sep}${name}.js`, res.text);
-							message = await client.funcs.reload.command(client, client.clientBaseDir, name)
+							message = await client.funcs.reloadCommand(`${category}${path.sep}${name}`)
 								.catch((response) => {
 									m.edit(`📵 Command load failed ${name}\n\`\`\`${response}\`\`\``);
 									fs.unlinkSync(`${dir}/${name}.js`);
@@ -187,7 +187,7 @@ exports.run = async (client, msg, [link, piece, folder = 'Downloaded']) => {
 							const dir = path.resolve(`${client.clientBaseDir}/functions/`);
 							m.edit(`📥 \`Loading ${type} into ${dir}/${name}.js...\``);
 							await fs.writeFileAsync(`${dir}/${name}.js`, res.text).catch(err => client.funcs.log(err, 'error'));
-							message = await client.funcs.reload.function(client, client.clientBaseDir, name)
+							message = await client.funcs.reloadFunction(name)
 								.catch((response) => {
 									m.edit(`📵 Function load failed ${name}\n\`\`\`${response}\`\`\``);
 									return fs.unlinkSync(`${dir}/${name}.js`);
@@ -199,7 +199,7 @@ exports.run = async (client, msg, [link, piece, folder = 'Downloaded']) => {
 							const dir = path.resolve(`${client.clientBaseDir}/inhibitors/`);
 							m.edit(`📥 \`Loading ${type} into ${dir}/${name}.js...\``);
 							await fs.writeFileAsync(`${dir}/${name}.js`, res.text).catch(err => client.funcs.log(err, 'error'));
-							message = await client.funcs.reload.inhibitor(client, client.clientBaseDir, name)
+							message = await client.funcs.reloadInhibitor(name)
 								.catch((response) => {
 									m.edit(`📵 Inhibitor load failed ${name}\n\`\`\`${response}\`\`\``);
 									return fs.unlinkSync(`${dir}/${name}.js`);
@@ -211,7 +211,7 @@ exports.run = async (client, msg, [link, piece, folder = 'Downloaded']) => {
 							const dir = path.resolve(`${client.clientBaseDir}/monitors/`);
 							m.edit(`📥 \`Loading ${type} into ${dir}/${name}.js...\``);
 							await fs.writeFileAsync(`${dir}/${name}.js`, res.text).catch(err => client.funcs.log(err, 'error'));
-							message = await client.funcs.reload.monitor(client, client.clientBaseDir, name)
+							message = await client.funcs.reloadMessageMonitor(name)
 								.catch((response) => {
 									m.edit(`📵 Monitor load failed ${name}\n\`\`\`${response}\`\`\``);
 									return fs.unlinkSync(`${dir}/${name}.js`);
@@ -223,7 +223,7 @@ exports.run = async (client, msg, [link, piece, folder = 'Downloaded']) => {
 							const dir = path.resolve(`${client.clientBaseDir}/providers/`);
 							m.edit(`📥 \`Loading ${type} into ${dir}/${name}.js...\``);
 							await fs.writeFileAsync(`${dir}/${name}.js`, res.text).catch(err => client.funcs.log(err, 'error'));
-							message = await client.funcs.reload.provider(client, client.clientBaseDir, name)
+							message = await client.funcs.reloadProvider(name)
 								.catch((response) => {
 									m.edit(`📵 Provider load failed ${name}\n\`\`\`${response}\`\`\``);
 									return fs.unlinkSync(`${dir}/${name}.js`);
