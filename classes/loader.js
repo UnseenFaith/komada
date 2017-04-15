@@ -107,7 +107,7 @@ module.exports = class Loader {
 	}
 
 	async reloadCommand(name) {
-		if (name.endsWith('.js')) name = name.slice(0, -3);
+		if (name.endsWith('.js')) name = name.split('/').join(sep).slice(0, -3);
 		const fullCommand = this.client.commands.get(name) || this.client.commands.get(this.client.aliases.get(name));
 		const dir = `${this.client.clientBaseDir}commands${sep}`;
 		let file, fileToCheck, dirToCheck;
@@ -116,7 +116,7 @@ module.exports = class Loader {
 			fileToCheck = file.split(sep)[file.split(sep).length - 1];
 			dirToCheck = `${dir}${fullCommand.help.fullCategory ? `${fullCommand.help.fullCategory.join(sep)}${sep}` : ''}`;
 		} else {
-			file = `${name.split('/').join(sep)}.js`;
+			file = `${name}.js`;
 			fileToCheck = file.split(sep)[file.split(sep).length - 1];
 			dirToCheck = `${dir}${file.split(sep).slice(0, -1).join(sep)}`;
 		}
@@ -127,7 +127,7 @@ module.exports = class Loader {
 					if (cmd === name) this.client.aliases.delete(alias);
 				});
 				this.loadFiles([file], dir, this.loadNewCommand, this.reloadCommand);
-				if (this.client.commands.get(name).init) this.client.commands.get(name).init(this.client);
+				if (this.client.commands.get(name.split(sep)[file.split(sep).length - 1]).init) this.client.commands.get(name).init(this.client);
 				return `Successfully reloaded the command ${name}.`;
 			});
 	}
