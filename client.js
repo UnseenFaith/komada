@@ -86,8 +86,6 @@ module.exports = class Komada extends Discord.Client {
 				else return true;
 			}));
 			await this.configuration.initialize(this);
-			this.i18n = this.funcs.loadLocalizations;
-			this.i18n.init(this);
 			this.destroy = () => 'You cannot use this within Komada, use process.exit() instead.';
 			this.ready = true;
 		});
