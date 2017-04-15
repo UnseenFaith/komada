@@ -6,7 +6,7 @@ const Loader = require('./classes/loader.js');
 const ArgResolver = require('./classes/argResolver.js');
 const Config = require('./classes/Config.js');
 
-require('./utils/Extendables.js');
+require('./classes/Extendables.js');
 
 // const loadFunctions = require("./utils/loadFunctions.js");
 // const loadEvents = require("./utils/loadEvents.js");
