@@ -109,19 +109,20 @@ module.exports = class Loader {
 	async reloadCommand(name) {
 		if (name.endsWith('.js')) name = name.slice(0, -3);
 		const fullCommand = this.client.commands.get(name) || this.client.commands.get(this.client.aliases.get(name));
-				const dir = `${this.client.clientBaseDir}commands${sep}`;
-		let file, dirToCheck;
-
+		const dir = `${this.client.clientBaseDir}commands${sep}`;
+		let file, fileToCheck, dirToCheck;
 		if (fullCommand) {
 			file = `${fullCommand.help.fullCategory.length !== 0 ? `${fullCommand.help.fullCategory.join(sep)}${sep}` : ''}${fullCommand.help.name}.js`;
-
+			fileToCheck = file.split(sep)[file.split(sep).length - 1];
 			dirToCheck = `${dir}${fullCommand.help.fullCategory ? `${fullCommand.help.fullCategory.join(sep)}${sep}` : ''}`;
 		} else {
-			file = 
+			file = `${name.split('/').join(sep)}.js`;
+			fileToCheck = file.split(sep)[file.split(sep).length - 1];
+			dirToCheck = `${dir}${file.split(sep).slice(0, -1).join(sep)}`;
 		}
 		return await fs.readdirAsync(dirToCheck)
 			.then(files => {
-				if (!files.includes(file)) throw `Could not find a reloadable file named ${file}`;
+				if (!files.includes(fileToCheck)) throw `Could not find a reloadable file named ${file}`;
 				this.client.aliases.forEach((cmd, alias) => {
 					if (cmd === name) this.client.aliases.delete(alias);
 				});
