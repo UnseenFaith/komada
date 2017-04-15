@@ -45,12 +45,13 @@ module.exports = class Loader {
 	}
 
 	async reloadFunction(name) {
-		const file = `${name}.js`;
+		const file = name.endsWith('.js') ? name : `${name}.js`;
+		if (name.endsWith('.js')) name = name.slice(0, -3);
 		return await fs.readdirAsync(`${this.client.clientBaseDir}functions${sep}`)
 			.then(files => {
 				if (!files.includes(file)) throw `Could not find a reloadable file named ${file}`;
 				if (this[name]) delete this[name];
-				this.loadNewFunction(file, this.client.clientBaseDir);
+				this.loadFiles([file], this.client.clientBaseDir, this.loadNewFunction, this.reloadFunction);
 				if (this.client.funcs[name].init) this.client.funcs[name].init(this.client);
 				return `Successfully reloaded the function ${name}.`;
 			});
@@ -116,7 +117,7 @@ module.exports = class Loader {
 				this.client.aliases.forEach((cmd, alias) => {
 					if (cmd === name) this.client.aliases.delete(alias);
 				});
-				this.loadNewCommand(file, dir);
+				this.loadFiles([file], dir, this.loadNewCommand, this.reloadCommand);
 				if (this.client.commands.get(name).init) this.client.commands.get(name).init(this.client);
 				return `Successfully reloaded the command ${name}.`;
 			});
@@ -139,11 +140,12 @@ module.exports = class Loader {
 	}
 
 	async reloadInhibitor(name) {
-		const file = `${name}.js`;
+		const file = name.endsWith('.js') ? name : `${name}.js`;
+		if (name.endsWith('.js')) name = name.slice(0, -3);
 		return await fs.readdirAsync(`${this.client.clientBaseDir}inhibitors${sep}`)
 			.then(files => {
 				if (!files.includes(file)) throw `Could not find a reloadable file named ${file}`;
-				this.loadNewInhibitor(file, this.client.clientBaseDir);
+				this.loadFiles([file], this.client.clientBaseDir, this.loadNewInhibitor, this.reloadInhibitor);
 				if (this.client.commandInhibitors.get(name).init) this.client.commandInhibitors.get(name).init(this.client);
 				return `Successfully reloaded the inhibitor ${name}.`;
 			});
@@ -166,11 +168,12 @@ module.exports = class Loader {
 	}
 
 	async reloadFinalizer(name) {
-		const file = `${name}.js`;
+		const file = name.endsWith('.js') ? name : `${name}.js`;
+		if (name.endsWith('.js')) name = name.slice(0, -3);
 		return await fs.readdirAsync(`${this.client.clientBaseDir}finalizers${sep}`)
 			.then(files => {
 				if (!files.includes(file)) throw `Could not find a reloadable file named ${file}`;
-				this.loadNewFinalizer(file, this.client.clientBaseDir);
+				this.loadFiles([file], this.client.clientBaseDir, this.loadNewFinalizer, this.reloadFinalizer);
 				if (this.client.commandFinalizers.get(name).init) this.client.commandFinalizers.get(name).init(this.client);
 				return `Successfully reloaded the finalizer ${name}.`;
 			});
@@ -196,13 +199,14 @@ module.exports = class Loader {
 	}
 
 	async reloadEvent(name) {
-		const file = `${name}.js`;
+		const file = name.endsWith('.js') ? name : `${name}.js`;
+		if (name.endsWith('.js')) name = name.slice(0, -3);
 		return await fs.readdirAsync(`${this.client.clientBaseDir}events${sep}`)
 			.then(files => {
 				if (!files.includes(file)) throw `Could not find a reloadable file named ${file}`;
 				const listener = this.client.eventHandlers.get(name);
 				if (this.client.eventHandlers.has(name)) this.client.removeListener(name, listener);
-				this.loadNewEvent(file, this.client.clientBaseDir);
+				this.loadFiles([file], this.client.clientBaseDir, this.loadNewEvent, this.reloadEvent);
 				return `Successfully reloaded the event ${name}.`;
 			});
 	}
@@ -224,11 +228,12 @@ module.exports = class Loader {
 	}
 
 	async reloadMessageMonitor(name) {
-		const file = `${name}.js`;
+		const file = name.endsWith('.js') ? name : `${name}.js`;
+		if (name.endsWith('.js')) name = name.slice(0, -3);
 		return await fs.readdirAsync(`${this.client.clientBaseDir}monitors${sep}`)
 			.then(files => {
 				if (!files.includes(file)) throw `Could not find a reloadable file named ${file}`;
-				this.loadNewMessageMonitor(file, this.client.clientBaseDir);
+				this.loadFiles([file], this.client.clientBaseDir, this.loadNewMessageMonitor, this.reloadMessageMonitor);
 				if (this.client.messageMonitors.get(name).init) this.client.messageMonitors.get(name).init(this.client);
 				return `Successfully reloaded the monitor ${name}.`;
 			});
@@ -251,11 +256,12 @@ module.exports = class Loader {
 	}
 
 	async reloadProvider(name) {
-		const file = `${name}.js`;
+		const file = name.endsWith('.js') ? name : `${name}.js`;
+		if (name.endsWith('.js')) name = name.slice(0, -3);
 		return await fs.readdirAsync(`${this.client.clientBaseDir}providers${sep}`)
 			.then(files => {
 				if (!files.includes(file)) throw `Could not find a reloadable file named ${file}`;
-				this.loadNewProvider(file, this.client.clientBaseDir);
+				this.loadFiles([file], this.client.clientBaseDir, this.loadNewProvider, this.reloadProvider);
 				if (this.client.providers.get(name).init) this.client.providers.get(name).init(this.client);
 				return `Successfully reloaded the provider ${name}.`;
 			});
@@ -267,7 +273,7 @@ module.exports = class Loader {
 		} catch (error) {
 			if (error.code === 'MODULE_NOT_FOUND') {
 				await this.handleMissingDep(error);
-				startOver.call(this);
+				startOver.call(this, files[0]);
 			} else {
 				console.error(error);
 			}
