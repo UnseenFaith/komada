@@ -33,7 +33,7 @@ exports.getCommand = (client, command) => {
 
 exports.runInhibitors = (client, msg, command) => {
 	let response;
-	priority.some((inhibitor) => { // eslint-disable-line
+	client.commandInhibitors.some((inhibitor) => { // eslint-disable-line
 		if (inhibitor.conf.enabled) {
 			response = inhibitor.run(client, msg, command);
 			if (response) return true;
