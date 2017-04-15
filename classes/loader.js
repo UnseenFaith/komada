@@ -163,7 +163,7 @@ module.exports = class Loader {
 	}
 
 	sortInhibitors() {
-		this.client.commandInhibitors = this.client.commandInhibitors.sort((key1, key2, low, high) => low.conf.priority < high.conf.priority);
+		this.client.commandInhibitors = this.client.commandInhibitors.sort((low, high) => low.conf.priority < high.conf.priority);
 	}
 
 	async loadCommandFinalizers() {
