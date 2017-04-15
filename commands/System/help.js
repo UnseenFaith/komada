@@ -50,7 +50,7 @@ exports.run = async (client, msg, [cmd]) => {
 				cmd.help.description,
 				`usage :: ${cmd.usage.fullUsage(msg)}`,
 				'Extended Help ::',
-				cmd.help.extendedHelp ? cmd.help.extendedHelp : 'No extended help available.',
+				cmd.help.extendedHelp ? cmd.help.extendedHelp : 'No extended help available.'
 			]);
 		} else {
 			msg.channel.sendCode('asciidoc', [
@@ -58,7 +58,7 @@ exports.run = async (client, msg, [cmd]) => {
 				cmd.help.description,
 				`usage :: ${cmd.usage.fullUsage(msg)}`,
 				'Extended Help ::',
-				cmd.help.extendedHelp ? cmd.help.extendedHelp : 'No extended help available.',
+				cmd.help.extendedHelp ? cmd.help.extendedHelp : 'No extended help available.'
 			]);
 		}
 	}
@@ -70,12 +70,12 @@ exports.conf = {
 	aliases: [],
 	permLevel: 0,
 	botPerms: [],
-	requiredFuncs: [],
+	requiredFuncs: []
 };
 
 exports.help = {
 	name: 'help',
 	description: 'Display help for a command.',
 	usage: '[command:str]',
-	usageDelim: '',
+	usageDelim: ''
 };

@@ -140,6 +140,7 @@ module.exports = class Loader {
 		await fs.readdirAsync(`${this.client.clientBaseDir}inhibitors${sep}`)
 			.then(files => { this.loadFiles(files.filter(file => file.endsWith('.js')), this.client.clientBaseDir, this.loadNewInhibitor, this.loadCommandInhibitors); })
 			.catch(() => { fs.ensureDirAsync(`${this.client.clientBaseDir}inhibitors${sep}`).catch(err => this.client.emit('error', this.client.funcs.newError(err))); });
+		this.sortInhibitors();
 		return this.client.commandInhibitors.size;
 	}
 
@@ -155,9 +156,14 @@ module.exports = class Loader {
 			.then(files => {
 				if (!files.includes(file)) throw `Could not find a reloadable file named ${file}`;
 				this.loadFiles([file], this.client.clientBaseDir, this.loadNewInhibitor, this.reloadInhibitor);
+				this.sortInhibitors();
 				if (this.client.commandInhibitors.get(name).init) this.client.commandInhibitors.get(name).init(this.client);
 				return `Successfully reloaded the inhibitor ${name}.`;
 			});
+	}
+
+	sortInhibitors() {
+		this.client.commandInhibitors = this.client.commandInhibitors.sort((key1, key2, low, high) => low.conf.priority < high.conf.priority);
 	}
 
 	async loadCommandFinalizers() {

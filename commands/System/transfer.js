@@ -11,14 +11,14 @@ exports.conf = {
 	aliases: [],
 	permLevel: 10,
 	botPerms: [],
-	requiredFuncs: [],
+	requiredFuncs: []
 };
 
 exports.help = {
 	name: 'transfer',
 	description: 'Transfers a core piece to its respected folder',
 	usage: '<command|function|inhibitor|event|monitor> <name:str>',
-	usageDelim: ' ',
+	usageDelim: ' '
 };
 
 function copy(client, msg, type, name) {

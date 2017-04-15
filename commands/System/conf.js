@@ -34,12 +34,12 @@ exports.conf = {
 	aliases: [],
 	permLevel: 3,
 	botPerms: [],
-	requiredFuncs: [],
+	requiredFuncs: []
 };
 
 exports.help = {
 	name: 'conf',
 	description: 'Define per-server configuration.',
 	usage: '<set|get|reset|list> [key:str] [boolean:boolean|channel:channel|user:user|role:role|int:int|str:str]',
-	usageDelim: ' ',
+	usageDelim: ' '
 };

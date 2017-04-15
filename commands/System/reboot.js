@@ -1,7 +1,7 @@
 exports.run = async(client, msg) => {
 	msg.sendMessage('Rebooting...')
-    .then(() => process.exit())
-    .catch(err => client.emit('error', err));
+		.then(() => process.exit())
+		.catch(err => client.emit('error', err));
 };
 
 exports.conf = {
@@ -10,17 +10,17 @@ exports.conf = {
 	aliases: [],
 	permLevel: 10,
 	botPerms: [],
-	requiredFuncs: [],
+	requiredFuncs: []
 };
 
 exports.help = {
 	name: 'reboot',
 	description: 'Reboots the bot.',
 	usage: '',
-	usageDelim: '',
+	usageDelim: ''
 };
 
 exports.strings = {
 	'Reboots the bot.': 'Redémarre le bot',
-	'Rebooting...': 'Redémarrage',
+	'Rebooting...': 'Redémarrage'
 };
