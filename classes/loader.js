@@ -128,7 +128,7 @@ module.exports = class Loader {
 					if (cmd === name) this.client.aliases.delete(alias);
 				});
 				this.loadFiles([file], dir, this.loadNewCommand, this.reloadCommand);
-				if (this.client.commands.get(name.split(sep)[file.split(sep).length - 1]).init) this.client.commands.get(name).init(this.client);
+				if (this.client.commands.get(name.split(sep)[file.split(sep).length - 1]).init) this.client.commands.get(name.split(sep)[file.split(sep).length - 1]).init(this.client);
 				return `Successfully reloaded the command ${name}.`;
 			});
 	}
