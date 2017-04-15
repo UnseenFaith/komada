@@ -8,14 +8,6 @@ const Config = require('./classes/Config.js');
 
 require('./classes/Extendables.js');
 
-// const loadFunctions = require("./utils/loadFunctions.js");
-// const loadEvents = require("./utils/loadEvents.js");
-// const loadProviders = require("./utils/loadProviders.js");
-// const loadCommands = require("./utils/loadCommands.js");
-// const loadCommandInhibitors = require("./utils/loadCommandInhibitors.js");
-// const loadMessageMonitors = require("./utils/loadMessageMonitors.js");
-// const log = require("./functions/log.js");
-
 module.exports = class Komada extends Discord.Client {
 
 	constructor(config = {}) {
