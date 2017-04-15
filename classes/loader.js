@@ -11,9 +11,15 @@ module.exports = class Loader {
 	}
 
 	async loadAll() {
-		const [funcs, [commands, aliases], inhibitors, finalizers, events, monitors, providers] = await Promise.all(
-				[this.loadFunctions(), this.loadCommands(), this.loadCommandInhibitors(), this.loadCommandFinalizers(), this.loadEvents(), this.loadMessageMonitors(), this.loadProviders()]
-			);
+		const [funcs, [commands, aliases], inhibitors, finalizers, events, monitors, providers] = await Promise.all([
+			this.loadFunctions(),
+			this.loadCommands(),
+			this.loadCommandInhibitors(),
+			this.loadCommandFinalizers(),
+			this.loadEvents(),
+			this.loadMessageMonitors(),
+			this.loadProviders()
+		]);
 		this.client.emit('log', `Loaded ${funcs} functions.`);
 		this.client.emit('log', `Loaded ${commands} commands, with ${aliases} aliases.`);
 		this.client.emit('log', `Loaded ${inhibitors} command inhibitors.`);
