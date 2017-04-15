@@ -4,19 +4,19 @@ exports.run = async (client, msg, [type, name]) => {
 			const inhibitor = client.commandInhibitors.get(name);
 			if (!inhibitor) return msg.channel.sendCode('diff', `- I cannot find the inhibitor: ${name}`);
 			inhibitor.conf.enabled = false;
-			return msg.sendCode('diff', `+ Successfully enabled inhibitor: ${name}`);
+			return msg.sendCode('diff', `+ Successfully disabled inhibitor: ${name}`);
 		}
 		case 'monitor': {
 			const monitor = client.messageMonitors.get(name);
 			if (!monitor) return msg.channel.sendCode('diff', `- I cannot find the monitor: ${name}`);
 			monitor.conf.enabled = false;
-			return msg.sendCode('diff', `+ Successfully enabled monitor: ${name}`);
+			return msg.sendCode('diff', `+ Successfully disabled monitor: ${name}`);
 		}
 		case 'command': {
 			const command = client.commands.get(name) || client.commands.get(client.aliases.has(name));
 			if (!command) return msg.sendCode('diff', `- I cannot find the command: ${name}`);
 			command.conf.enabled = false;
-			return msg.sendCode('diff', `+ Successfully enabled command: ${name}`);
+			return msg.sendCode('diff', `+ Successfully disabled command: ${name}`);
 		}
 		default:
 			return msg.sendMessage('This will never happen');
