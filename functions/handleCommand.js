@@ -1,5 +1,5 @@
 module.exports = async (client, msg, command, args = undefined) => {
-	const validCommand = this.getCommand(client, command);
+	const validCommand = client.commands.get(command) || client.commands.get(client.aliases.get(command));
 	if (!validCommand) return;
 	const response = this.runInhibitors(client, msg, validCommand);
 	if (response) {
@@ -20,15 +20,6 @@ module.exports = async (client, msg, command, args = undefined) => {
 			}
 		}
 	}
-};
-
-exports.getCommand = (client, command) => {
-	if (client.commands.has(command)) {
-		return client.commands.get(command);
-	} else if (client.aliases.has(command)) {
-		return client.commands.get(client.aliases.get(command));
-	}
-	return false;
 };
 
 exports.runInhibitors = (client, msg, command) => {
