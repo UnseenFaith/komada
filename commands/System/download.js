@@ -118,7 +118,7 @@ const runChecks = (client, type, name) => {
 	if (!type) {
 		throw `I have stopped the load of this piece because it does not have a type value, and I cannot determine the type without it. Please ask the Developer of the piece to add it.`;
 	}
-	if (!['commands', 'functions', 'inhibitors', 'monitors', 'providers'].includes(type)) {
+	if (!types.includes(type)) {
 		throw `I have stopped the loading of this piece because its type value doesn't match those we accept. Please ask the Developer of the piece to fix it.`;
 	}
 	switch (type) {
