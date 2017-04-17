@@ -271,7 +271,7 @@ module.exports = class ArgResolver {
 
 	async url(arg, currentUsage, possible, repeat) {
 		const res = url.parse(arg);
-		if (!res.protocol && !res.hostname) {
+		if (!res.protocol || !res.hostname) {
 			if (currentUsage.type === 'optional' && !repeat) {
 				return null;
 			} else {
