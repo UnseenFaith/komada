@@ -1,9 +1,9 @@
-const Array = require('../Array.js');
-const Boolean = require('../Boolean.js');
-const Channel = require('../Channel.js');
-const Number = require('../Number.js');
-const Role = require('../Role.js');
-const String = require('../String.js');
+const Array = require('./Array.js');
+const Boolean = require('./Boolean.js');
+const Channel = require('./Channel.js');
+const Number = require('./Number.js');
+const Role = require('./Role.js');
+const String = require('./String.js');
 
 module.exports = {
 	Array: Array,
