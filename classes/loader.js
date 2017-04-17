@@ -319,14 +319,14 @@ module.exports = class Loader {
 		} catch (error) {
 			if (error.code === 'MODULE_NOT_FOUND') {
 				const missingModule = /'([^']+)'/g.exec(error.toString());
-				if (/\/|\\/.test(missingModule)) throw error.toString();
+				if (/\/|\\/.test(missingModule)) throw error.stack;
 				await this.installNPM(missingModule[1]).catch(err => {
 					console.error(err);
 					process.exit();
 				});
 				startOver.call(this, files[0]);
 			} else {
-				console.error(error);
+				throw error.stack;
 			}
 		}
 	}
