@@ -240,7 +240,7 @@ module.exports = class Loader {
 		const files = await fs.readdirAsync(`${this.client.clientBaseDir}events${sep}`);
 		if (!files.includes(file)) throw `Could not find a reloadable file named ${file}`;
 		const listener = this.client.eventHandlers.get(name);
-		if (this.client.eventHandlers.has(name)) this.client.removeListener(name, listener);
+		if (listener) this.client.removeListener(name, listener);
 		await this.loadFiles([file], this.client.clientBaseDir, this.loadNewEvent, this.reloadEvent)
 			.catch(err => { throw err; });
 		return `Successfully reloaded the event ${name}.`;
