@@ -89,14 +89,13 @@ module.exports = class Loader {
 			return await this.loadFiles(subFiles.filter(file => file.endsWith('.js')).map(file => `${folder}${sep}${file}`), dir, this.loadNewCommand, this.loadCommands)
 				.catch(err => { throw err; });
 		});
-		await Promise.all(mps1).catch(err => { throw err; });
 		const mps2 = subfolders.map(async (subfolder) => {
 			const subSubFiles = await fs.readdirAsync(`${dir}${subfolder.folder}/${subfolder.subfolder}${sep}`);
 			if (!subSubFiles) return true;
 			return await this.loadFiles(subSubFiles.filter(file => file.endsWith('.js')).map(file => `${subfolder.folder}/${subfolder.subfolder}${sep}${file}`), dir, this.loadNewCommand, this.loadCommands)
 				.catch(err => { throw err; });
 		});
-		return await Promise.all(mps2).catch(err => { throw err; });
+		return await Promise.all([...mps1, ...mps2]).catch(err => { throw err; });
 	}
 
 	loadNewCommand(command, dir) {
@@ -210,7 +209,7 @@ module.exports = class Loader {
 		return `Successfully reloaded the finalizer ${name}.`;
 	}
 
-	async loadEvents() { // Need to becareful here, if the user has an event of the same name, both events will exist, but only the last one will be reloadable
+	async loadEvents() {
 		this.client.eventHandlers.forEach((listener, event) => this.client.removeListener(event, listener));
 		this.client.eventHandlers.clear();
 		const coreFiles = await fs.readdirAsync(`${this.client.coreBaseDir}events${sep}`)
@@ -319,14 +318,14 @@ module.exports = class Loader {
 		} catch (error) {
 			if (error.code === 'MODULE_NOT_FOUND') {
 				const missingModule = /'([^']+)'/g.exec(error.toString());
-				if (/\/|\\/.test(missingModule)) throw error.stack;
+				if (/\/|\\/.test(missingModule)) throw `\`\`\`${error.stack}\`\`\``;
 				await this.installNPM(missingModule[1]).catch(err => {
 					console.error(err);
 					process.exit();
 				});
 				startOver.call(this, files[0]);
 			} else {
-				throw error.stack;
+				throw `\`\`\`${error.stack}\`\`\``;
 			}
 		}
 	}
