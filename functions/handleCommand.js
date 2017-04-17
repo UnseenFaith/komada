@@ -16,7 +16,7 @@ module.exports = async (client, msg, command, args = undefined) => {
 				client.funcs.awaitMessage(client, msg, validCommand, error.args, error.message);
 			} else {
 				if (error.stack) client.emit('error', error.stack);
-				msg.channel.sendCode('JSON', error.message || error).catch(err => client.emit('error', err));
+				msg.sendCode('JSON', error.message || error).catch(err => client.emit('error', err));
 			}
 		}
 	}
