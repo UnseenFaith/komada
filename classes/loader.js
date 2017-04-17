@@ -295,7 +295,8 @@ module.exports = class Loader {
 		} catch (error) {
 			if (error.code === 'MODULE_NOT_FOUND') {
 				await this.handleMissingDep(error)
-					.then(() => startOver.call(this, files[0]));
+					.then(() => startOver.call(this, files[0]))
+					.catch(console.error);
 			} else {
 				console.error(error);
 			}
