@@ -368,13 +368,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Various Confs fixes from [UnseenFaith]
 - Usage Addition/ParseUsage fix from [UnseenFaith]
 
-[Unreleased]: https://github.com/eslachance/komada/compare/0.18.1...indev
-[0.10.0]: https://github.com/eslachance/komada/compare/1627e6deb1d8c352d83e52ccd590f2330f5f8bb2...0.10.0
-[0.11.0]: https://github.com/eslachance/komada/compare/0.10.0...0.11.0
-[0.12.0]: https://github.com/eslachance/komada/compare/0.11.0...0.12.0
-[0.12.4]: https://github.com/eslachance/komada/compare/0.12.0...0.12.4
-[0.18.0]: https://github.com/eslachance/komada/compare/0.12.4...0.18
-[0.18.1]: https://github.com/eslachance/komada/compare/0.12.4...0.18.1
+[Unreleased]: https://github.com/dirigeants/komada/compare/0.18.1...bdistin:classbased
+[0.10.0]: https://github.com/dirigeants/komada/compare/1627e6deb1d8c352d83e52ccd590f2330f5f8bb2...0.10.0
+[0.11.0]: https://github.com/dirigeants/komada/compare/0.10.0...0.11.0
+[0.12.0]: https://github.com/dirigeants/komada/compare/0.11.0...0.12.0
+[0.12.4]: https://github.com/dirigeants/komada/compare/0.12.0...0.12.4
+[0.18.0]: https://github.com/dirigeants/komada/compare/0.12.4...0.18
+[0.18.1]: https://github.com/dirigeants/komada/compare/0.12.4...0.18.1
+[0.19.0]: https://github.com/dirigeants/komada/compare/0.18.1...indev
+[0.20.0]: https://github.com/dirigeants/komada/compare/indev...bdistin:classbased
 
 [vzwGrey]: https://github.com/vzwGrey
 [eslachance]: https://github.com/eslachance
