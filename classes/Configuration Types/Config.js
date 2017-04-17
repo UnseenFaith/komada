@@ -428,7 +428,7 @@ class Config {
 			lang: { type: 'String', data: 'en' }
 		};
 		dataDir = path.resolve(`${client.clientBaseDir}${path.sep}bwd${path.sep}conf`);
-		fs.ensureFileAsync(`${dataDir}${path.sep}${defaultFile}`).catch(err => client.funcs.log(err, 'error'));
+		fs.ensureFileAsync(`${dataDir}${path.sep}${defaultFile}`).catch(err => client.emit('log', err, 'error'));
 		fs.readJSONAsync(path.resolve(`${dataDir}${path.sep}${defaultFile}`))
 			.then((conf) => {
 				if (conf) defaultConf = conf;
