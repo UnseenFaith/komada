@@ -4,7 +4,8 @@ const now = require('performance-now');
 
 const Loader = require('./classes/loader.js');
 const ArgResolver = require('./classes/argResolver.js');
-const Config = require('./classes/Config.js');
+ /* Will Change this later */
+const Config = require('./classes/Configuration Types/Config.js');
 
 require('./classes/Extendables.js');
 

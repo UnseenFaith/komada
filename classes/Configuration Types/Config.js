@@ -1,10 +1,8 @@
 /* eslint-disable no-restricted-syntax, no-underscore-dangle, no-unused-vars */
 const fs = require('fs-extra-promise');
 const path = require('path');
-const ArrayConfig = require('./Configuration Types/Array.js');
-const BooleanConfig = require('./Configuration Types/Boolean.js');
-const NumberConfig = require('./Configuration Types/Number.js');
-const StringConfig = require('./Configuration Types/String.js');
+const Types = require('./types');
+const Discord = require('discord.js');
 
 const guildConfs = new Map();
 let dataDir = '';
@@ -17,10 +15,10 @@ let defaultConf = {};
 class Config {
   /**
    * @param {Client} client The Discord.js client.
-   * @param {GuildID} guildID The guild for which the configuration is being made.
+   * @param {Guild} guild The guild for which the configuration is being made.
    * @param {Config} [config] The local config to add to the configuration.
    */
-	constructor(client, guildID, config = {}) {
+	constructor(client, guild, config = {}) {
     /**
      * The client that created this configuration
      * @type {Client}
@@ -29,10 +27,10 @@ class Config {
 		Object.defineProperty(this, '_client', { value: client });
     /**
      * The guild to create the configuration for.
-     * @type {GuildID}
+     * @type {Guild}
      * @readonly
      */
-		Object.defineProperty(this, '_id', { value: guildID });
+		Object.defineProperty(this, '_guild', { value: guild });
     /**
      * The location where we will be storing this data.
      * @type {string}
@@ -41,42 +39,63 @@ class Config {
 		Object.defineProperty(this, '_dataDir', { value: dataDir });
 		if (typeof config === 'object') {
 			for (const prop in config) {
-				if (config[prop].type === 'String') {
-					this[prop] = new StringConfig(this, config[prop].data);
-				} else if (config[prop].type === 'Boolean') {
-					this[prop] = new BooleanConfig(this, config[prop].data);
-				} else if (config[prop].type === 'Number') {
-					this[prop] = new NumberConfig(this, config[prop].data);
-				} else if (config[prop].type === 'Array') {
-					this[prop] = new ArrayConfig(this, config[prop].data);
-				} else {
-					client.funcs.log('Invalid Key type inside of your configuration. Komada will ignore this key until it is fixed.', 'warn');
+				switch (config[prop].type) {
+					case 'String':
+						this[prop] = new Types.String(this, config[prop].data);
+						break;
+					case 'Boolean':
+						this[prop] = new Types.Boolean(this, config[prop].data);
+						break;
+					case 'Number':
+						this[prop] = new Types.Number(this, config[prop].data);
+						break;
+					case 'Array':
+						this[prop] = new Types.Array(this, config[prop].data);
+						break;
+					case 'Channel':
+						this[prop] = new Types.Channel(this, config[prop].data);
+						break;
+					case 'Role':
+						this[prop] = new Types.Role(this, config[prop].data);
+						break;
+					default:
+						client.emit('warn', `${config[prop].type} in ${guild.id}.json is an invalid Configuration Type. Komada will ignore it until it is fixed.`);
 				}
 			}
 		}
-		return this;
 	}
 
   /**
    * Allows you to add a key to a guild configuration. Note: This should never be called directly as it could cause unwanted side effects.
    * @param {string} key The key to add to the configuration.
-   * @param {string|Array|number|boolean} defaultValue The value for the key.
+   * @param {string|array|number|boolean|channel|role} defaultValue The value for the key.
    * @param {string} type The type of key you want to add.
    * @returns {Config}
    */
 	addKey(key, defaultValue, type) {
-		if (type === 'String') {
-			this[key] = new StringConfig(this, defaultValue);
-		} else if (type === 'Boolean') {
-			this[key] = new BooleanConfig(this, defaultValue);
-		} else if (type === 'Number') {
-			this[key] = new NumberConfig(this, defaultValue);
-		} else if (type === 'Array') {
-			this[key] = new ArrayConfig(this, defaultValue);
-		} else {
-			console.log(`Invalid Key Type: Type: ${type}`);
+		switch (type) {
+			case 'String':
+				this[key] = new Types.String(this, defaultValue);
+				break;
+			case 'Boolean':
+				this[key] = new Types.Boolean(this, defaultValue);
+				break;
+			case 'Number':
+				this[key] = new Types.Number(this, defaultValue);
+				break;
+			case 'Array':
+				this[key] = new Types.Array(this, defaultValue);
+				break;
+			case 'Channel':
+				this[key] = new Types.Channel(this, defaultValue);
+				break;
+			case 'Role':
+				this[key] = new Types.Role(this, defaultValue);
+				break;
+			default:
+				throw 'Invalid type provided.';
 		}
-		fs.outputJSONAsync(path.resolve(`${dataDir}${path.sep}${this._id}.json`), guildConfs.get(this._id));
+		Config.save(this._dataDir, this._guild.id);
 		return this;
 	}
 
@@ -87,7 +106,7 @@ class Config {
    */
 	delKey(key) {
 		delete this[key];
-		fs.outputJSONAsync(path.resolve(`${dataDir}${path.sep}${this._id}.json`), guildConfs.get(this._id));
+		Config.save(this._dataDir, this._guild.id);
 		return null;
 	}
 
@@ -97,16 +116,30 @@ class Config {
    * @returns {Config<Key>}
    */
 	reset(key) {
-		if (this[key].type === 'String') {
-			this[key] = new StringConfig(this, defaultConf[key].data);
-		} else if (this[key].type === 'Boolean') {
-			this[key] = new BooleanConfig(this, defaultConf[key].data);
-		} else if (this[key].type === 'Number') {
-			this[key] = new NumberConfig(this, defaultConf[key].data);
-		} else if (this[key].type === 'Array') {
-			this[key] = new ArrayConfig(this, defaultConf[key].data);
+		if (key === undefined || this[key] === undefined) throw 'The key provided was undefined or does not exist';
+		switch (this[key].type) {
+			case 'String':
+				this[key] = new Types.String(this, defaultConf[key].data);
+				break;
+			case 'Boolean':
+				this[key] = new Types.Boolean(this, defaultConf[key].data);
+				break;
+			case 'Number':
+				this[key] = new Types.Number(this, defaultConf[key].data);
+				break;
+			case 'Array':
+				this[key] = new Types.Array(this, defaultConf[key].data);
+				break;
+			case 'Channel':
+				this[key] = new Types.Channel(this, defaultConf[key].data);
+				break;
+			case 'Role':
+				this[key] = new Types.Role(this, defaultConf[key].data);
+				break;
+			default:
+				throw 'Invalid type provided.';
 		}
-		fs.outputJSONAsync(path.resolve(`${dataDir}${path.sep}${this._id}.json`), guildConfs.get(this._id));
+		Config.save(this._dataDir, this._guild.id);
 		return this[key];
 	}
 
@@ -116,7 +149,7 @@ class Config {
    * @returns {boolean}
    */
 	has(key) {
-		if (!key) return 'Please supply a key.';
+		if (key === undefined) throw 'Undefined key provided';
 		return key in this;
 	}
 
@@ -149,16 +182,42 @@ class Config {
    * Set the default value for a key in the default configuration.
    * @param {string} key The key for which you want to change.
    * @param {Array|boolean|number|string} defaultValue The value you want to set as the default.
+	 * @param {boolean} force Whether or not Komada should force update all configurations with this new value.
    * @returns {Object} Returns the new default configuration for the key.
    * @static
    */
-	static set(key, defaultValue) {
-		if (!key || !defaultValue) return `You supplied ${key}, ${defaultValue}. Please supply both a key, and a default value.`;
-		if (!defaultConf[key]) return `The key ${key} does not seem to be present in the default configuration.`;
-		if (defaultConf[key].type === 'Array') this.add(key, defaultValue);
-		if (defaultConf[key].type === 'Boolean') this.toggle(key);
-		if (defaultConf[key].type === 'Number' || defaultConf[key].type === 'String') defaultConf[key].data = defaultValue;
-		else return 'Unsupported Configuration Type! Cannot set the value.';
+	static set(key, defaultValue, force = false) {
+		if (key === undefined || defaultValue === undefined) throw 'You supplied undefined values for a key or a defualt value. Please supply both';
+		if (!defaultConf.hasOwnProperty(key)) throw 'That key does not exist in the default configuration.';
+		switch (defaultConf[key].type) {
+			case 'Array':
+				this.add(key, defaultValue, force);
+				break;
+			case 'Boolean':
+				this.toggle(key, force);
+				break;
+			case 'Number':
+			case 'String':
+				defaultConf[key].data = defaultValue;
+				if (force) {
+					guildConfs.forEach((config) => {
+						config[key].data = defaultValue;
+					});
+				}
+				break;
+			case 'Channel':
+			case 'Role':
+				if (defaultValue instanceof Discord.Role || defaultValue instanceof Discord.Channel) defaultValue = defaultValue.id;
+				defaultConf[key].data = defaultValue;
+				if (force) {
+					guildConfs.forEach((config) => {
+						config[key].data = defaultValue;
+					});
+				}
+				break;
+			default:
+				throw 'Unsupported Configuration type. Cannot set the value.';
+		}
 		fs.outputJSONAsync(`${dataDir}${path.sep}${defaultFile}`, defaultConf);
 		return defaultConf[key];
 	}
@@ -167,16 +226,19 @@ class Config {
    * Sets the default minimum value for a Number key
    * @param {string} key The Number key for which you want to set the minimum value for.
    * @param {number} defaultMinValue The value you want to set as the "minimum" value.
+	 * @param {boolean} force Whether or not Komada should enforce this new minimum value in all configurations.
    * @returns {Object} Returns the new default configuration for the key.
    * @static
    */
-	static setMin(key, defaultMinValue) {
-		if (!key || !defaultMinValue) return `You supplied ${key}, ${defaultMinValue}. Please supply both a key, and a default min value.`;
-		if (defaultConf[key].type !== 'Number') return 'You cannot use this method on non-Numeral configurations.';
+	static setMin(key, defaultMinValue, force = false) {
+		if (key === undefined || defaultMinValue === undefined) throw 'You supplied an undefined variable for the function, please provide a key and minimum value.';
+		if (defaultConf[key].type !== 'Number') throw 'You cannot use this method on non-Numeral configurations.';
 		defaultConf[key].min = defaultMinValue;
-		guildConfs.forEach((config) => {
-			config[key].setMin(defaultMinValue);
-		});
+		if (force) {
+			guildConfs.forEach((config) => {
+				config[key].setMin(defaultMinValue);
+			});
+		}
 		fs.outputJSONAsync(`${dataDir}${path.sep}${defaultFile}`, defaultConf);
 		return defaultConf[key];
 	}
@@ -185,16 +247,19 @@ class Config {
    * Sets the default maximum value for a Number key
    * @param {string} key The Number key for which you want to set the maximum value for.
    * @param {number} defaultMaxValue The value you want to set as the "maximum" value.
+	 * @param {boolean} force Whether or not Komada should enforce this new maximum value in all configurations.
    * @returns {Object} Returns the new default configuration for the key.
    * @static
    */
-	static setMax(key, defaultMaxValue) {
-		if (!key || !defaultMaxValue) return `You supplied ${key}, ${defaultMaxValue}. Please supply both a key, and a default max value.`;
-		if (defaultConf[key].type !== 'Number') return 'You cannot use this method on non-Numeral configurations.';
+	static setMax(key, defaultMaxValue, force = false) {
+		if (key === undefined || defaultMaxValue === undefined) throw `You supplied ${key}, ${defaultMaxValue}. Please supply both a key, and a default max value.`;
+		if (defaultConf[key].type !== 'Number') throw 'You cannot use this method on non-Numeral configurations.';
 		defaultConf[key].max = defaultMaxValue;
-		guildConfs.forEach((config) => {
-			config[key].setMax(defaultMaxValue);
-		});
+		if (force) {
+			guildConfs.forEach((config) => {
+				config[key].setMax(defaultMaxValue);
+			});
+		}
 		fs.outputJSONAsync(`${dataDir}${path.sep}${defaultFile}`, defaultConf);
 		return defaultConf[key];
 	}
@@ -203,17 +268,20 @@ class Config {
    * Adds a value to the data array for an Array key.
    * @param {string} key The Array key for which you want to add value(s) for.
    * @param {string} defaultValue The value for which you want to add to the array.
+	 * @param {boolean} force Whether or not Komada should force add this value in all configurations.
    * @returns {Object} Returns the new default configuration for the key.
    * @static
    */
-	static add(key, defaultValue) {
-		if (!key || !defaultValue) return `You supplied ${key}, ${defaultValue}. Please supply both a key, and a default value.`;
-		if (defaultConf[key].type !== 'Array') return 'You cannot use this method on non-Array configuration options.';
-		if (defaultConf[key].data.includes(defaultValue)) return `The default value ${defaultValue} is already in ${defaultConf[key].data}.`;
+	static add(key, defaultValue, force = false) {
+		if (key === undefined || defaultValue === undefined) throw 'You supplied an undefined variable to the function. Please provide both a key and a default value.';
+		if (defaultConf[key].type !== 'Array') throw 'You cannot use this method on non-Array configuration options.';
+		if (defaultConf[key].data.includes(defaultValue)) throw `The default value ${defaultValue} is already in ${defaultConf[key].data}.`;
 		defaultConf[key].data.push(defaultValue);
-		guildConfs.forEach((config) => {
-			config[key].add(defaultValue);
-		});
+		if (force) {
+			guildConfs.forEach((config) => {
+				config[key].add(defaultValue);
+			});
+		}
 		fs.outputJSONAsync(`${dataDir}${path.sep}${defaultFile}`, defaultConf);
 		return defaultConf[key];
 	}
@@ -222,17 +290,20 @@ class Config {
    * Deletes a value from the data array for an Array key.
    * @param {string} key The array key for which you want to delete value(s) from.
    * @param {string} defaultValue The value for which you want to remove from the array.
+	 * @param {boolean} force Whether or not Komada should force delete this value from all configurations.
    * @returns {Object} Returns the new default configuration for the key.
    * @static
    */
-	static del(key, defaultValue) {
-		if (!key || !defaultValue) return `You supplied ${key}, ${defaultValue}. Please supply both a key, and a default value.`;
-		if (defaultConf[key].type !== 'Array') return 'You cannot use this method on non-Array configuration options.';
-		if (!defaultConf[key].data.includes(defaultValue)) return `The default value ${defaultValue} is not in ${defaultConf[key].data}.`;
+	static del(key, defaultValue, force = false) {
+		if (key === undefined || defaultValue === undefined) throw 'You supplied an undefined variable to the function. Please provide both a key and a default value.';
+		if (defaultConf[key].type !== 'Array') throw 'You cannot use this method on non-Array configuration options.';
+		if (!defaultConf[key].data.includes(defaultValue)) throw `The default value ${defaultValue} is not in ${defaultConf[key].data}.`;
 		defaultConf[key].data.splice(defaultConf[key].indexOf(defaultValue), 1);
-		guildConfs.forEach((config) => {
-			config[key].del(defaultValue);
-		});
+		if (force) {
+			guildConfs.forEach((config) => {
+				config[key].del(defaultValue);
+			});
+		}
 		fs.outputJSONAsync(`${dataDir}${path.sep}${defaultFile}`, defaultConf);
 		return defaultConf[key];
 	}
@@ -244,8 +315,8 @@ class Config {
    * @static
    */
 	static toggle(key) {
-		if (!key) return 'Please supply a key to toggle the value for.';
-		if (defaultConf[key].type !== 'Boolean') return 'You cannot use this method on non-Boolean configuration options.';
+		if (key === undefined) throw 'Please supply a key to toggle the value for.';
+		if (defaultConf[key].type !== 'Boolean') throw 'You cannot use this method on non-Boolean configuration options.';
 		if (defaultConf[key].data === true) defaultConf[key].data = false;
 		else defaultConf[key].data = false;
 		guildConfs.forEach((config) => {
@@ -262,7 +333,7 @@ class Config {
    * @static
    */
 	static has(guild) {
-		if (!guild) return 'Please supply a guild.';
+		if (!guild) throw 'Please supply a guild.';
 		return guildConfs.has(guild.id);
 	}
 
@@ -273,7 +344,7 @@ class Config {
   * @static
   */
 	static hasKey(key) {
-		if (!key) return 'Please supply a key to check for.';
+		if (!key) throw 'Please supply a key to check for.';
 		return key in defaultConf;
 	}
 
@@ -286,15 +357,9 @@ class Config {
    * @static
    */
 	static addKey(key, defaultValue, type = defaultValue.constructor.name) {
-		if (!key || !defaultValue) return `You supplied ${key}, ${defaultValue}. Please provide both.`;
-		if (defaultConf[key]) return "There's no reason to add this key, it already exists.";
-		if (['TextChannel', 'GuildChannel', 'Message', 'User', 'GuildMember', 'Guild', 'Role', 'VoiceChannel', 'Emoji', 'Invite'].includes(type)) {
-			defaultValue = defaultValue.id;
-		}
-		if (defaultValue.constructor.name !== type && defaultValue.constructor.name !== null) {
-			return 'Invalid Value was provided';
-		}
-		defaultConf[key] = { type: defaultValue.constructor.name, data: defaultValue };
+		if (key === undefined || defaultValue === undefined) throw `You supplied an undefined parameter to the function. Please provide both a key and default value`;
+		if (defaultConf[key]) throw "There's no reason to add this key, it already exists.";
+		defaultConf[key] = { type: type, data: defaultValue };
 		guildConfs.forEach((config) => {
 			config.addKey(key, defaultValue, type);
 		});
@@ -309,14 +374,14 @@ class Config {
    * @static
    */
 	static delKey(key) {
-		if (!key) return 'Please supply a key to delete from the default configuration.';
-		if (!defaultConf[key]) return `The key ${key} does not seem to be present in the default configuration.`;
+		if (key === undefined) throw 'Please supply a key to delete from the default configuration.';
+		if (!defaultConf[key]) throw `The key ${key} does not seem to be present in the default configuration.`;
 		if (['modRole', 'adminRole', 'disabledCommands', 'prefix', 'lang'].includes(key)) {
 			return `The key ${key} is core and cannot be deleted.`;
 		}
 		delete defaultConf[key];
 		fs.outputJSONAsync(`${dataDir}${path.sep}${defaultFile}`, defaultConf);
-		this.guildConfs.forEach((config) => {
+		guildConfs.forEach((config) => {
 			config.delKey(key);
 		});
 		return defaultConf;
@@ -324,14 +389,13 @@ class Config {
 
   /**
    * Inserts a guild into the guildConfs map and deletes the configuration JSON. This should never be called by anyone, this is purely for the guildCreate event.
-   * @param {Client} client The Discord.js Client
    * @param {Guild} guild The Guild being inserted into the map.
    * @returns {string}
    * @static
    */
-	static insert(client, guild) {
+	static insert(guild) {
 		if (!guild) return 'Please specify a guild to remove.';
-		guildConfs.set(guild.id, new Config(client, guild.id, defaultConf));
+		guildConfs.set(guild.id, new Config(guild.client, guild, defaultConf));
 		fs.outputJSONAsync(`${dataDir}${path.sep}${guild.id}.json`, guildConfs.get(guild.id));
 		return `Inserted ${guild.name} succesfully.`;
 	}
@@ -373,12 +437,21 @@ class Config {
 		client.guilds.forEach((guild) => {
 			fs.readJSONAsync(path.resolve(`${dataDir}${path.sep}${guild.id}.json`))
 				.then((thisConf) => {
-					guildConfs.set(guild.id, new Config(client, guild.id, thisConf));
+					guildConfs.set(guild.id, new Config(client, guild, thisConf));
 				}).catch(() => {
-					guildConfs.set(guild.id, new Config(client, guild.id, defaultConf));
+					guildConfs.set(guild.id, new Config(client, guild, defaultConf));
 				});
 		});
 		return null;
+	}
+
+	static save(dir, id) {
+		const config = guildConfs.get(id);
+		for (const prop in config) {
+			config[prop].data = config[prop]._data;
+			delete config[prop]._data;
+		}
+		fs.outputJSONAsync(path.resolve(`${dir}${path.sep}${id}.json`), guildConfs.get(id));
 	}
 }
 
