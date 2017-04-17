@@ -1,3 +1,5 @@
+const url = require('url');
+
 module.exports = class ArgResolver {
 
 	constructor(client) {
@@ -268,8 +270,8 @@ module.exports = class ArgResolver {
 	}
 
 	async url(arg, currentUsage, possible, repeat) {
-		// eslint-disable-next-line max-len
-		if (!/^((https?|ftps?|sftp):\/\/)?(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|(([a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])(\.[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])*\.[a-zA-Z]{2,}))(:\b([0-9]|[1-8][0-9]|9[0-9]|[1-8][0-9]{2}|9[0-8][0-9]|99[0-9]|[1-8][0-9]{3}|9[0-8][0-9]{2}|99[0-8][0-9]|999[0-9]|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])\b)?(\/([a-zA-Z0-9:#[\]@!$&'()*+,;=%\-_~]+)?)*(\/([a-zA-Z0-9:#[\]@!$&'()*+,;=%\-._~]+)?)$/.test(arg)) {
+		const res = url.parse(arg);
+		if (!res.protocol && !res.hostname) {
 			if (currentUsage.type === 'optional' && !repeat) {
 				return null;
 			} else {
