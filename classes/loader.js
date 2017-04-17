@@ -294,9 +294,8 @@ module.exports = class Loader {
 			files.forEach(file => loadNew.call(this, file, dir));
 		} catch (error) {
 			if (error.code === 'MODULE_NOT_FOUND') {
-				await this.handleMissingDep(error)
-					.then(() => startOver.call(this, files[0]))
-					.catch(console.error);
+				await this.handleMissingDep(error);
+				startOver.call(this, files[0]);
 			} else {
 				console.error(error);
 			}
@@ -304,18 +303,17 @@ module.exports = class Loader {
 	}
 
 	handleMissingDep(err) {
-		const missingModule = /'([^']+)'/g.exec(err.toString());
-		if (/\/|\\/.test(missingModule)) throw `An internal require path has been incorrectly configured: "${missingModule}"`;
-		return this.installNPM(missingModule[1]).catch(error => {
+		const module = /'([^']+)'/g.exec(err.toString());
+		return this.installNPM(module[1]).catch(error => {
 			console.error(error);
 			process.exit();
 		});
 	}
 
-	installNPM(missingModule) {
+	installNPM(module) {
 		return new Promise((resolve, reject) => {
-			console.log(`Installing: ${missingModule}`);
-			exec(`npm i ${missingModule} --save`, (err, stdout, stderr) => {
+			console.log(`Installing: ${module}`);
+			exec(`npm i ${module} --save`, (err, stdout, stderr) => {
 				if (err) {
 					console.log('=====NEW DEPENDANCY INSTALL FAILED HORRIBLY=====');
 					return reject(err);
