@@ -89,13 +89,14 @@ module.exports = class Loader {
 			return await this.loadFiles(subFiles.filter(file => file.endsWith('.js')).map(file => `${folder}${sep}${file}`), dir, this.loadNewCommand, this.loadCommands)
 				.catch(err => { throw err; });
 		});
+		await Promise.all(mps1).catch(err => { throw err; });
 		const mps2 = subfolders.map(async (subfolder) => {
 			const subSubFiles = await fs.readdirAsync(`${dir}${subfolder.folder}/${subfolder.subfolder}${sep}`);
 			if (!subSubFiles) return true;
 			return await this.loadFiles(subSubFiles.filter(file => file.endsWith('.js')).map(file => `${subfolder.folder}/${subfolder.subfolder}${sep}${file}`), dir, this.loadNewCommand, this.loadCommands)
 				.catch(err => { throw err; });
 		});
-		return await Promise.all([...mps1, ...mps2]).catch(err => { throw err; });
+		return await Promise.all(mps2).catch(err => { throw err; });
 	}
 
 	loadNewCommand(command, dir) {
