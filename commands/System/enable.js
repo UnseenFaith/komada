@@ -35,6 +35,6 @@ exports.conf = {
 exports.help = {
 	name: 'enable',
 	description: 'Re-enables or temporarily enables a Inhibitor/Command/Monitor. Default state restored on reboot.',
-	usage: '<type:str> <name:str>',
+	usage: '<inhibitor|monitor|command> <name:str>',
 	usageDelim: ' '
 };
