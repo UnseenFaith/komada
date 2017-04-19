@@ -12,27 +12,16 @@ exports.run = async (client, msg, [type, name]) => {
 		event: client.funcs.reloadEvent,
 		monitor: client.funcs.reloadMessageMonitor
 	};
-	if (type !== 'command') {
-		fs.copyAsync(path.resolve(`${coreDir}/${type}s/${name}.js`), path.resolve(`${clientDir}/${type}s/${name}.js`))
-			.then(() => {
-				reload[type](name).catch(response => msg.edit(`❌ ${response}`));
-				msg.sendMessage(`✅ Successfully Transferred ${type}: ${name}`);
-			})
-			.catch((err) => {
-				msg.sendMessage(`Transfer of ${type}: ${name} to Client has failed. Please check your Console.`);
-				client.emit('error', err.stack);
-			});
-	} else {
-		fs.copyAsync(path.resolve(`${coreDir}/${type}s/System/${name}.js`), path.resolve(`${clientDir}/${type}s/System/${name}.js`))
-			.then(() => {
-				reload[type](`System/${name}`).catch(response => msg.edit(`❌ ${response}`));
-				msg.channel.send(`✅ Successfully Transferred ${type}: ${name}`);
-			})
-			.catch((err) => {
-				msg.sendMessage(`Transfer of ${type}: ${name} to Client has failed. Please check your Console.`);
-				client.emit('error', err.stack);
-			});
-	}
+	const isCommand = type === 'command' ? 'System/' : '';
+	fs.copyAsync(path.resolve(`${coreDir}/${type}s/${isCommand}${name}.js`), path.resolve(`${clientDir}/${type}s/${isCommand}${name}.js`))
+		.then(() => {
+			reload[type](`System/${name}`).catch(response => msg.edit(`❌ ${response}`));
+			return msg.channel.send(`✅ Successfully Transferred ${type}: ${name}`);
+		})
+		.catch((err) => {
+			client.emit('error', err.stack);
+			return msg.sendMessage(`Transfer of ${type}: ${name} to Client has failed. Please check your Console.`);
+		});
 };
 
 exports.conf = {

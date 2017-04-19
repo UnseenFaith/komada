@@ -15,7 +15,7 @@ Some features of Komada include:
 We hope to be a 100% customizable framework that can cater to all audiences. We do frequent updates and bugfixes when available.
 If you're interested in us, check us out at https://komada.js.org
 `;
-	msg.channel.send(information);
+	return msg.sendMessage(information);
 };
 
 exports.conf = {
