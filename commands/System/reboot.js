@@ -17,8 +17,3 @@ exports.help = {
 	usage: '',
 	usageDelim: ''
 };
-
-exports.strings = {
-	'Reboots the bot.': 'Redémarre le bot',
-	'Rebooting...': 'Redémarrage'
-};
