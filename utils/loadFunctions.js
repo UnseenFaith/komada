@@ -60,7 +60,7 @@ module.exports = client => new Promise(async (resolve, reject) => {
   }
 
   const langCounts = [];
-  client.funcs.forEach((f) => {
+  Object.entries(client.funcs).forEach(([, f]) => {
     const lang = f.codeLang;
     langCounts[lang] = langCounts[lang] || 0;
     langCounts[lang]++;
