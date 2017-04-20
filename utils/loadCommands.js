@@ -25,9 +25,6 @@ const loadCommands = (client, baseDir) => new Promise(async (resolve, reject) =>
 });
 
 module.exports = async (client) => {
-  // The base directory of code compiled into JS.
-  client.outBaseDir = client.config.outBaseDir;
-
   client.commands.clear();
   client.aliases.clear();
   await loadCommands(client, client.clientBaseDir).catch(err => client.emit("error", client.funcs.newError(err)));

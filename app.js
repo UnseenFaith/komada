@@ -38,6 +38,9 @@ exports.start = async (config) => {
 
   client.coreBaseDir = `${__dirname}${path.sep}`;
   client.clientBaseDir = `${process.env.clientDir || process.cwd()}${path.sep}`;
+  client.outBaseDir = `${process.env.outDir || process.cwd()}${path.sep}`;
+  client.compiledLangs = process.env.compiledLangs || process.env.compiledLang || [];
+  if (!Array.isArray(client.compiledLang)) client.compiledLangs = [client.compiledLangs];
   client.guildConfs = Config.guildConfs;
   client.configuration = Config;
 
