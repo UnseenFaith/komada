@@ -10,7 +10,7 @@ const loadCommandInhibitors = require("./utils/loadCommandInhibitors.js");
 const loadMessageMonitors = require("./utils/loadMessageMonitors.js");
 const log = require("./functions/log.js");
 
-const Config = require("./classes/Config.js");
+const Config = require("./utils/Config.js");
 
 exports.start = async (config) => {
   if (typeof config !== "object") throw new TypeError("Configuration for Komada must be an object.");

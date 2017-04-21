@@ -1,10 +1,10 @@
 /* eslint-disable no-restricted-syntax, no-underscore-dangle, no-unused-vars */
 const fs = require("fs-extra-promise");
 const path = require("path");
-const ArrayConfig = require("./Configuration Types/Array.js");
-const BooleanConfig = require("./Configuration Types/Boolean.js");
-const NumberConfig = require("./Configuration Types/Number.js");
-const StringConfig = require("./Configuration Types/String.js");
+const ArrayConfig = require("./types/Array.js");
+const BooleanConfig = require("./types/Boolean.js");
+const NumberConfig = require("./types/Number.js");
+const StringConfig = require("./types/String.js");
 
 const guildConfs = new Map();
 let dataDir = "";
