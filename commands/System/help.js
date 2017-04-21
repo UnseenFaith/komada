@@ -10,7 +10,7 @@ exports.run = async (client, msg, [cmd]) => {
 			cmd.help.extendedHelp ? cmd.help.extendedHelp : 'No extended help available.'
 		]);
 	} else {
-		const help = await buildHelp(client, msg);
+		const help = this.buildHelp(client, msg);
 		const helpMessage = [];
 		for (const key in help) {
 			helpMessage.push(`**${key} Commands**: \`\`\`asciidoc`);
@@ -38,24 +38,26 @@ exports.help = {
 	usageDelim: ''
 };
 
-const buildHelp = async (client, msg) => {
+exports.buildHelp = (client, msg) => {
 	const help = {};
-	const mps = [];
 
 	const commandNames = Array.from(client.commands.keys());
 	const longest = commandNames.reduce((long, str) => Math.max(long, str.length), 0);
-	const permissionLevel = msg.guild ? msg.member.permLevel : msg.author.permLevel;
 
-	client.commands.filter(cmd => permissionLevel >= cmd.conf.permLevel).forEach((command) => {
-		mps.push(new Promise((res) => {
+	client.commands.forEach((command) => {
+		if (this.runCommandInhibitors(client, msg, command)) {
 			const cat = command.help.category;
 			const subcat = command.help.subCategory;
 			if (!help.hasOwnProperty(cat)) help[cat] = {};
 			if (!help[cat].hasOwnProperty(subcat)) help[cat][subcat] = [];
 			help[cat][subcat].push(`${msg.guildConf.prefix}${command.help.name}${' '.repeat(longest - command.help.name.length)} :: ${command.help.description}`);
-			res();
-		}));
+		}
 	});
-	await Promise.all(mps);
+
 	return help;
 };
+
+exports.runCommandInhibitors = (client, msg, command) => !client.commandInhibitors.some(inhibitor => {
+	if (!inhibitor.conf.spamProtection && inhibitor.conf.enabled) return inhibitor.run(client, msg, command);
+	return false;
+});
