@@ -1,8 +1,18 @@
+const fs = require("fs-extra-promise");
 const path = require("path");
 
 module.exports = (client, command, reload = false, loadPath = null) => new Promise(async (resolve, reject) => {
   let category;
   let subCategory;
+  let compiledLangs = [];
+  if (client.config.compiledLang) {
+    if (Array.isArray(client.config.compiledLang)) {
+      compiledLangs = client.config.compiledLang;
+    } else {
+      compiledLangs = [client.config.compiledLang];
+    }
+  }
+  let codeLang;
   let cmd;
   if (!loadPath && !reload) return reject("Path must be provided when loading a new command.");
   if (reload) {
@@ -38,6 +48,20 @@ module.exports = (client, command, reload = false, loadPath = null) => new Promi
       pathParts = pathParts.slice(pathParts.indexOf("commands") + 1);
       category = client.funcs.toTitleCase(cmd.help.category ? cmd.help.category : (pathParts[0] && pathParts[0].length > 0 && pathParts[0].indexOf(".") === -1 ? pathParts[0] : "General"));
       subCategory = client.funcs.toTitleCase(cmd.help.subCategory ? cmd.help.subCategory : (pathParts[1] && pathParts[1].length > 0 && pathParts[1].indexOf(".") === -1 ? pathParts[1] : "General"));
+
+      codeLang = "JS";
+      await Promise.all(compiledLangs.map(async (lang) => {
+        // Remove the ".js" extension, if there is one, since it's optional.
+        const compiledPath = `${loadPath.replace(/\.js$/, "")}.${lang.toLowerCase()}`;
+        // If there's an equivalent file that ends with the lang, it's a code
+        // file that was compiled into JS.
+        try {
+          await fs.accessAsync(compiledPath);
+          codeLang = lang.toUpperCase();
+        } catch (e) {
+          // Do nothing
+        }
+      }));
     } catch (e) {
       if (e.code === "MODULE_NOT_FOUND") {
         const module = /'[^']+'/g.exec(e.toString());
@@ -57,6 +81,7 @@ module.exports = (client, command, reload = false, loadPath = null) => new Promi
   cmd.help.category = category;
   cmd.help.subCategory = subCategory;
   cmd.help.filePath = loadPath;
+  cmd.help.codeLang = codeLang;
 
     // Load Aliases
   cmd.conf.aliases.forEach((alias) => {
