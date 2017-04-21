@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - fs-extra-promise has been updated to the latest version.
 - Minimum node version is now v7.6.x
 - Remaining Utils have been moved to the classes folder.
+- Use Discord.Permissions to generate and keep cached an implied permissions object, instead of generating a new object every time a command is run.
 
 ### Fixed
 - 
@@ -45,6 +46,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - fs-extra dependancy. All use of fs, is done through fs-extra-promise now.
 - Due to the class rewrite, the module can no-longer be used stand alone. So the start script has been removed from the package.json. You can however add your own start file (as you would if you were using the package as a dependancy) as a work around for using the repo as a stand alone if you really need to.
 - loading utils have been removed in favor of the new loading refactor.
+- Implied Permissions has been removed in favor of an internal discord.js class.
 
 ## [0.19.0] - unreleased/indev
 ### Added
