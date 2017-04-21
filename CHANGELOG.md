@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [0.19.0]
 ### Added
 - Readded ParseTags function due to Komada Provider dependency,
 - Added Websocket Heartbeat ping to ping command.
@@ -326,17 +328,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Various Confs fixes from [UnseenFaith]
 - Usage Addition/ParseUsage fix from [UnseenFaith]
 
-[Unreleased]: https://github.com/eslachance/komada/compare/0.18.1...indev
-[0.10.0]: https://github.com/eslachance/komada/compare/1627e6deb1d8c352d83e52ccd590f2330f5f8bb2...0.10.0
-[0.11.0]: https://github.com/eslachance/komada/compare/0.10.0...0.11.0
-[0.12.0]: https://github.com/eslachance/komada/compare/0.11.0...0.12.0
-[0.12.4]: https://github.com/eslachance/komada/compare/0.12.0...0.12.4
-[0.18.0]: https://github.com/eslachance/komada/compare/0.12.4...0.18
-[0.18.1]: https://github.com/eslachance/komada/compare/0.12.4...0.18.1
-
-[vzwGrey]: https://github.com/vzwGrey
-[eslachance]: https://github.com/eslachance
-[hkwu]: https://github.com/hkwu
-[bdistin]: https://github.com/bdistin
-[UnseenFaith]: https://github.com/UnseenFaith
-[CyberiumShadow]: https://github.com/CyberiumShadow
+[Unreleased]: https://github.com/dirigeants/komada/compare/0.19.0...indev
+[0.10.0]: https://github.com/dirigeants/komada/compare/1627e6deb1d8c352d83e52ccd590f2330f5f8bb2...0.10.0
+[0.11.0]: https://github.com/dirigeants/komada/compare/0.10.0...0.11.0
+[0.12.0]: https://github.com/dirigeants/komada/compare/0.11.0...0.12.0
+[0.12.4]: https://github.com/dirigeants/komada/compare/0.12.0...0.12.4
+[0.18.0]: https://github.com/dirigeants/komada/compare/0.12.4...0.18
+[0.18.1]: https://github.com/dirigeants/komada/compare/0.12.4...0.18.1
+[0.19.0]: https://github.com/dirigeants/komada/compare/0.18.1...0.19.0
