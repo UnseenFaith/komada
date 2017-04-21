@@ -1,6 +1,6 @@
 {
   "name": "komada",
-  "version": "0.18.16",
+  "version": "0.19.0",
   "author": "Evelyne Lachance",
   "description": "Komada: Croatian for 'pieces', is a modular bot system including reloading modules and easy to use custom commands.",
   "main": "app.js",
@@ -34,10 +34,5 @@
     "eslint": "^3.10.2",
     "eslint-config-airbnb-base": "^11.0.1",
     "eslint-plugin-import": "^2.2.0"
-  },
-  "greenkeeper": {
-    "ignore": [
-      "fs-extra"
-    ]
   }
 }
