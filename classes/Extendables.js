@@ -41,6 +41,7 @@ class Extendables {
     * <Message>.createCollector - Creates a ReactionCollector on the message. Takes the same filter and options as MessageCollectors -> returns {ReactionCollector}
     * <Message>.awaitReactions - Same as createCollector for messages, except returns a promise with the collection of reactions collected. -> returns {Collection<EmojiName, Reaction>}
     * <Message>.guildConf - Returns a guild configuration (or default if no guild) containing proper configuration settings. -> returns {Object}
+	* <Message>.usableCommands - Returns a filtered collection of commands usable by the the author in the context the message was sent. -> returns {Collection<CommandName, Command>}
     */
 	get reactable() {
 		if (!this.guild) return true;
@@ -100,21 +101,18 @@ class Extendables {
 		return this.client.configuration.get(this.guild);
 	}
 
-  /** Guild Extendable - Applies to all Guilds
-    * <Guild>.conf - Same as guildConf for message, but a different way of getting it -> returns {Object}
-    */
-	get conf() {
-		return this.client.configuration.get(this);
-	}
-
-  /** Special Extendable - Applies to both Author and Member objects
-    * <GuildMember|User> - Gets the useable commands for a user, either for DM, or Guild -> returns {Collection}
-    */
 	get usableCommands() {
 		return this.client.commands.filter(command => this.client.commandInhibitors.some((inhibitor) => {
 			if (inhibitor.conf.enabled && !inhibitor.conf.spamProtection) return inhibitor.run(this.client, this, command);
 			return false;
 		}));
+	}
+
+  /** Guild Extendable - Applies to all Guilds
+    * <Guild>.conf - Same as guildConf for message, but a different way of getting it -> returns {Object}
+    */
+	get conf() {
+		return this.client.configuration.get(this);
 	}
 
 }
