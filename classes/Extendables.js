@@ -5,9 +5,7 @@ const DMChannel = Discord.DMChannel;
 const GroupDMChannel = Discord.GroupDMChannel;
 const TextChannel = Discord.TextChannel;
 const Message = Discord.Message;
-const GuildMember = Discord.GuildMember;
 const Guild = Discord.Guild;
-const User = Discord.User;
 
 /* A List of Extendables that allows Komada to extend native Discord.js structures to be easier or more efficient when used in Komada */
 class Extendables {
@@ -131,7 +129,5 @@ const applyToClass = (structure, props) => {
 applyToClass(GroupDMChannel, ['embedable', 'postable', 'attachable', 'readable']);
 applyToClass(DMChannel, ['embedable', 'postable', 'attachable', 'readable']);
 applyToClass(TextChannel, ['embedable', 'postable', 'attachable', 'readable']);
-applyToClass(Message, ['guildConf', 'reactable', 'createCollector', 'awaitReactions', 'sendMessage', 'sendEmbed', 'sendCode', 'send']);
-applyToClass(GuildMember, ['usableCommands']);
+applyToClass(Message, ['usableCommands', 'guildConf', 'reactable', 'createCollector', 'awaitReactions', 'sendMessage', 'sendEmbed', 'sendCode', 'send']);
 applyToClass(Guild, ['conf']);
-applyToClass(User, ['usableCommands']);
