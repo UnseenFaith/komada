@@ -15,8 +15,8 @@ exports.run = async (client, msg, [type, name]) => {
 	const isCommand = type === 'command' ? 'System/' : '';
 	fs.copyAsync(path.resolve(`${coreDir}/${type}s/${isCommand}${name}.js`), path.resolve(`${clientDir}/${type}s/${isCommand}${name}.js`))
 		.then(() => {
-			reload[type](`System/${name}`).catch(response => msg.edit(`❌ ${response}`));
-			return msg.channel.send(`✅ Successfully Transferred ${type}: ${name}`);
+			reload[type](`System/${name}`).catch(response => { throw `❌ ${response}`; });
+			return msg.sendMessage(`✅ Successfully Transferred ${type}: ${name}`);
 		})
 		.catch((err) => {
 			client.emit('error', err.stack);
