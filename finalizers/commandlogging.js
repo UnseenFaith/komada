@@ -6,7 +6,7 @@ exports.run = (client, msg, mes, start) => {
 	if (client.config.cmdLogging) {
 		client.emit('log', [
 			`${msg.cmdMsg.cmd.help.name}(${msg.cmdMsg.args.join(', ')})`,
-			`${clk.bgBlue(`[${(now() - start).toFixed(2)}ms]`)}`,
+			msg.cmdMsg.reprompted ? `${clk.bgRed(`[${(now() - start).toFixed(2)}ms]`)}` : `${clk.bgBlue(`[${(now() - start).toFixed(2)}ms]`)}`,
 			`${clk.black.bgYellow(`${msg.author.username}[${msg.author.id}]`)}`,
 			this.channel(msg)
 		].join(' '), 'log');

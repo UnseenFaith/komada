@@ -6,6 +6,7 @@ module.exports = class CommandMessage {
 		this.cmd = cmd;
 		this.args = this.constructor.getArgs(this);
 		this.params = [];
+		this.reprompted = false;
 		this._currentUsage = {};
 		this._repeat = false;
 	}

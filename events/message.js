@@ -100,6 +100,7 @@ exports.awaitMessage = async (client, msg, start, error) => {
 
 	if (param.first().content.toLowerCase() === 'abort') throw 'Aborted';
 	msg.cmdMsg.args[msg.cmdMsg.args.lastIndexOf(null)] = param.first().content;
+	msg.cmdMsg.reprompted = true;
 
 	if (message.deletable) message.delete();
 
