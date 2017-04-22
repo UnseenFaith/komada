@@ -38,7 +38,7 @@ module.exports = class CommandMessage {
 				`Missing a required option: (${this._currentUsage.possibles.map(poss => poss.name).join(', ')})`, 1);
 		} else if (this._currentUsage.possibles.length === 1) {
 			if (this.client.argResolver[this._currentUsage.possibles[0].type]) {
-				return this.client.argResolver[this._currentUsage.possibles[0].type](this.args[this.params.length], this._currentUsage, 0, this._repeat)
+				return this.client.argResolver[this._currentUsage.possibles[0].type](this.args[this.params.length], this._currentUsage, 0, this._repeat, this.msg)
 					.then(res => {
 						if (res !== null) {
 							this.params.push(res);
@@ -73,7 +73,7 @@ module.exports = class CommandMessage {
 				throw this.client.funcs.newError(`Your option didn't match any of the possibilities: (${this._currentUsage.possibles.map(poss => poss.name).join(', ')})`, 1);
 			}
 		} else if (this.client.argResolver[this._currentUsage.possibles[possible].type]) {
-			return this.client.argResolver[this._currentUsage.possibles[possible].type](this.args[this.params.length], this._currentUsage, possible, this._repeat)
+			return this.client.argResolver[this._currentUsage.possibles[possible].type](this.args[this.params.length], this._currentUsage, possible, this._repeat, this.msg)
 				.then(res => {
 					if (res !== null) {
 						this.params.push(res);
