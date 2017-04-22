@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const { sep } = require('path');
 const now = require('performance-now');
-
+const CommandMessage = require('./classes/commandMessage.js');
 const Loader = require('./classes/loader.js');
 const ArgResolver = require('./classes/argResolver.js');
  /* Will Change this later */
@@ -25,6 +25,7 @@ module.exports = class Komada extends Discord.Client {
 		this.messageMonitors = new Discord.Collection();
 		this.providers = new Discord.Collection();
 		this.eventHandlers = new Discord.Collection();
+		this.CommandMessage = CommandMessage;
 		this.commandMessages = new Discord.Collection();
 		this.commandMessageLifetime = config.commandMessageLifetime || 1800;
 		this.commandMessageSweep = config.commandMessageSweep || 900;
@@ -79,7 +80,6 @@ module.exports = class Komada extends Discord.Client {
 				else return true;
 			}));
 			await this.configuration.initialize(this);
-			this.destroy = () => 'You cannot use this within Komada, use process.exit() instead.';
 			this.ready = true;
 		});
 	}

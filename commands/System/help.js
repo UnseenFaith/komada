@@ -18,7 +18,7 @@ exports.run = async (client, msg, [cmd]) => {
 			helpMessage.push('```\n\u200b');
 		}
 		return msg[method].sendMessage(helpMessage, { split: { char: '\u200b' } }).catch(err => client.emit('error', err))
-			.then(() => { if (msg.channel.type.toLowerCase() !== 'dm' && !client.config.selfbot) msg.reply('Commands have been sent to your DMs.'); });
+			.then(() => { if (msg.channel.type.toLowerCase() !== 'dm' && !client.config.selfbot) msg.sendMessage('Commands have been sent to your DMs.'); });
 	}
 };
 

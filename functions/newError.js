@@ -1,4 +1,4 @@
-module.exports = (error, code, args) => {
+module.exports = (error, code) => {
 	if (error.status) {
 		this.statusCode = error.response.res.statusCode;
 		this.statusMessage = error.response.res.statusMessage;
@@ -7,7 +7,6 @@ module.exports = (error, code, args) => {
 		return this;
 	}
 	this.code = code || null;
-	if (this.code === 1) this.args = args;
 	this.message = error;
 	this.stack = error.stack || null;
 	return this;
