@@ -21,7 +21,7 @@ exports.init = (client) => {
 	if (permStructure.some(perm => typeof perm !== 'object' || typeof perm.check !== 'function' || typeof perm.break !== 'boolean')) {
 		throw 'Perms must be an object with a check function and a break boolean.';
 	}
-	if (permStructure.length > 11) throw 'There can not be any permissions above 10.';
+	if (permStructure.length !== 11) throw 'Permissions 0-10 must all be defined.';
 };
 
 exports.default = [
