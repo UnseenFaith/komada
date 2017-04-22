@@ -72,8 +72,8 @@ exports.default = [
 
 exports.run = (client, msg, cmd) => {
 	const permStructure = client.config.permStructure || this.default;
-	for (let i = cmd.conf.permLevel; i < permStructure.length + 1; i++) {
-		if (!permStructure[i]) return true;
+	for (let i = cmd.conf.permLevel; i < 11; i++) {
+		if (i === 11) return true;
 		if (permStructure[i].check(client, msg, cmd)) return false;
 		if (permStructure[i].break) break;
 	}
