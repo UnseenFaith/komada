@@ -5,9 +5,7 @@ const DMChannel = Discord.DMChannel;
 const GroupDMChannel = Discord.GroupDMChannel;
 const TextChannel = Discord.TextChannel;
 const Message = Discord.Message;
-const GuildMember = Discord.GuildMember;
 const Guild = Discord.Guild;
-const User = Discord.User;
 
 /* A List of Extendables that allows Komada to extend native Discord.js structures to be easier or more efficient when used in Komada */
 class Extendables {
@@ -109,13 +107,6 @@ class Extendables {
 		return this.client.configuration.get(this);
 	}
 
-  /** Special Extendable - Applies to both Author and Member objects
-    * <GuildMember|User> - Gets the integer permission level for a user, either for DM, or Guild -> returns {Number}
-    */
-	get permLevel() {
-		if (!this.guild) return this.client.funcs.permissionLevel(this.client, this, true);
-		return this.client.funcs.permissionLevel(this.client, this, false);
-	}
 }
 
 /* The backbone of this extendable file. Adds the properties in Arrays to their respected Structures */
@@ -129,6 +120,4 @@ applyToClass(GroupDMChannel, ['embedable', 'postable', 'attachable', 'readable']
 applyToClass(DMChannel, ['embedable', 'postable', 'attachable', 'readable']);
 applyToClass(TextChannel, ['embedable', 'postable', 'attachable', 'readable']);
 applyToClass(Message, ['guildConf', 'reactable', 'createCollector', 'awaitReactions', 'sendMessage', 'sendEmbed', 'sendCode', 'send']);
-applyToClass(GuildMember, ['permLevel']);
 applyToClass(Guild, ['conf']);
-applyToClass(User, ['permLevel']);
