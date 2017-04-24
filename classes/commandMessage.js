@@ -26,6 +26,7 @@ module.exports = class CommandMessage {
 		}
 		if (this._currentUsage.type === 'optional' && (this.args[this.params.length] === undefined || this.args[this.params.length] === '')) {
 			if (this.cmd.usage.parsedUsage.slice(this.params.length).some(usage => usage.type === 'required')) {
+				this.args.splice(this.params.length, 0, undefined);
 				this.args.splice(this.params.length, 1, null);
 				throw this.client.funcs.newError('Missing one or more required arguments after end of input.', 1);
 			} else {
@@ -66,6 +67,7 @@ module.exports = class CommandMessage {
 			return this.validateArgs();
 		} else if (possible >= this._currentUsage.possibles.length) {
 			if (this._currentUsage.type === 'optional' && !this._repeat) {
+				this.args.splice(this.params.length, 0, undefined);
 				this.params.push(undefined);
 				return this.validateArgs();
 			} else {
