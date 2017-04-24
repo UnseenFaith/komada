@@ -19,7 +19,7 @@ exports.runMessageMonitors = (client, msg) => {
 	});
 };
 
-exports.handleMessage = (client, msg, edited = false) => {
+exports.handleMessage = (client, msg) => {
 	// Ignore Bots if True
 	if (client.config.ignoreBots && msg.author.bot) return false;
 	// Ignore Self if true
@@ -28,13 +28,11 @@ exports.handleMessage = (client, msg, edited = false) => {
 	if (client.config.selfbot && msg.author.id !== client.user.id) return false;
 	// Ignore other users if selfbot but config option is false
 	if (!client.config.selfbot && msg.author.id === client.user.id) return false;
-	// Ignore message if owner doesn't allow editableCommands
-	if (!client.config.editableCommands && edited) return false;
 	return true;
 };
 
 exports.parseCommand = (client, msg, usage = false) => {
-	const prefix = this.getPrefix(client, msg);
+	const prefix = client.funcs.getPrefix(client, msg);
 	if (!prefix) return false;
 	const prefixLength = this.getLength(client, msg, prefix);
 	if (usage) return prefixLength;
@@ -46,20 +44,6 @@ exports.getLength = (client, msg, prefix) => {
 	return prefix.exec(msg.content)[0].length;
 };
 
-exports.getPrefix = (client, msg) => {
-	if (client.config.prefixMention.test(msg.content)) return client.config.prefixMention;
-	let prefix = msg.guildConf.prefix;
-	const escape = client.funcs.regExpEsc;
-	if (prefix instanceof Array) {
-		prefix.forEach((pref) => {
-			if (msg.content.startsWith(pref)) prefix = pref;
-			else prefix = false;
-		});
-	}
-	if (prefix && msg.content.startsWith(prefix)) return new RegExp(`^${escape(prefix)}`);
-	return false;
-};
-
 exports.handleCommand = (client, msg, command) => {
 	const validCommand = client.commands.get(command) || client.commands.get(client.aliases.get(command));
 	if (!validCommand) return;
@@ -69,9 +53,7 @@ exports.handleCommand = (client, msg, command) => {
 		if (typeof response === 'string') msg.reply(response);
 		return;
 	}
-
 	msg.cmdMsg = new client.CommandMessage(msg, validCommand);
-
 	this.runCommand(client, msg, start);
 };
 
