@@ -1,11 +1,13 @@
 module.exports = class CommandMessage {
 
-	constructor(msg, cmd) {
+	constructor(msg, cmd, prefix, prefixLength) {
 		this.client = msg.client;
 		this.msg = msg;
 		this.cmd = cmd;
 		this.args = this.constructor.getArgs(this);
 		this.params = [];
+		this.prefix = prefix;
+		this.prefixLength = prefixLength;
 		this.reprompted = false;
 		this._currentUsage = {};
 		this._repeat = false;
