@@ -1,7 +1,7 @@
 module.exports = class CommandMessage {
 
 	constructor(msg, cmd, prefix, prefixLength) {
-		this.client = msg.client;
+		Object.defineProperty(this, 'client', { value: msg.client });
 		this.msg = msg;
 		this.cmd = cmd;
 		this.args = this.constructor.getArgs(this);

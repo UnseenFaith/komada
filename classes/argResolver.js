@@ -3,7 +3,7 @@ const url = require('url');
 module.exports = class ArgResolver {
 
 	constructor(client) {
-		this.client = client;
+		Object.defineProperty(this, 'client', { value: client });
 	}
 
 	async message(arg, currentUsage, possible, repeat, msg) {

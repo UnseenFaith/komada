@@ -7,7 +7,7 @@ const ParsedUsage = require('./parsedUsage');
 module.exports = class Loader {
 
 	constructor(client) {
-		this.client = client;
+		Object.defineProperty(this, 'client', { value: client });
 	}
 
 	async loadAll() {

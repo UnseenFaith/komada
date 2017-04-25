@@ -1,10 +1,10 @@
 module.exports = class ParsedUsage {
 
 	constructor(client, command) {
+		Object.defineProperty(this, 'client', { value: client });
 		this.names = [command.help.name, ...command.conf.aliases];
 		this.commands = this.names.length === 1 ? this.names[0] : `(${this.names.join('|')})`;
 		this.deliminatedUsage = command.help.usage !== '' ? ` ${command.help.usage.split(' ').join(command.help.usageDelim)}` : '';
-		this.client = client;
 		this.usageString = command.help.usage;
 		this.parsedUsage = this.parseUsage();
 		this.nearlyFullUsage = `${this.commands}${this.deliminatedUsage}`;
