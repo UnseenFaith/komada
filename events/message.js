@@ -37,7 +37,7 @@ exports.parseCommand = (client, msg, usage = false) => {
 	const prefixLength = this.getLength(client, msg, prefix);
 	if (usage) return prefixLength;
 	return {
-		commmand: msg.content.slice(prefixLength).split(' ')[0].toLowerCase(),
+		command: msg.content.slice(prefixLength).split(' ')[0].toLowerCase(),
 		prefix,
 		prefixLength
 	};
