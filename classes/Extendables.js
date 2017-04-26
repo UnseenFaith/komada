@@ -48,6 +48,10 @@ class Extendables {
 		return this.readable && this.permissionsFor(this.guild.member(this.client.user)).hasPermission('ADD_REACTIONS');
 	}
 
+	hasAtleastPermissionLevel(min) {
+		return this.client.funcs.checkPerms(this.client, this, min);
+	}
+
 	createCollector(filter, options = {}) {
 		return new ReactionCollector(this, filter, options);
 	}
@@ -127,5 +131,5 @@ const applyToClass = (structure, props) => {
 applyToClass(GroupDMChannel, ['embedable', 'postable', 'attachable', 'readable']);
 applyToClass(DMChannel, ['embedable', 'postable', 'attachable', 'readable']);
 applyToClass(TextChannel, ['embedable', 'postable', 'attachable', 'readable']);
-applyToClass(Message, ['usableCommands', 'guildConf', 'reactable', 'createCollector', 'awaitReactions', 'sendMessage', 'sendEmbed', 'sendCode', 'send']);
+applyToClass(Message, ['hasAtleastPermissionLevel', 'usableCommands', 'guildConf', 'reactable', 'createCollector', 'awaitReactions', 'sendMessage', 'sendEmbed', 'sendCode', 'send']);
 applyToClass(Guild, ['conf']);

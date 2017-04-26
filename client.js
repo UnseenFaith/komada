@@ -25,6 +25,7 @@ module.exports = class Komada extends Discord.Client {
 		this.messageMonitors = new Discord.Collection();
 		this.providers = new Discord.Collection();
 		this.eventHandlers = new Discord.Collection();
+		this.permStructure = this.validatePermStructure();
 		this.CommandMessage = CommandMessage;
 		this.commandMessages = new Discord.Collection();
 		this.commandMessageLifetime = config.commandMessageLifetime || 1800;
@@ -42,6 +43,16 @@ module.exports = class Komada extends Discord.Client {
 		this.clientBaseDir = `${process.env.clientDir || process.cwd()}${sep}`;
 		this.guildConfs = Config.guildConfs;
 		this.configuration = Config;
+	}
+
+	validatePermStructure() {
+		const permStructure = this.config.permStructure || defaultPermStructure;
+		if (!Array.isArray(permStructure)) throw 'PermStructure must be an array.';
+		if (permStructure.some(perm => typeof perm !== 'object' || typeof perm.check !== 'function' || typeof perm.break !== 'boolean')) {
+			throw 'Perms must be an object with a check function and a break boolean.';
+		}
+		if (permStructure.length !== 11) throw 'Permissions 0-10 must all be defined.';
+		return permStructure;
 	}
 
 	async login(token) {
@@ -104,6 +115,73 @@ module.exports = class Komada extends Discord.Client {
 	}
 
 };
+
+const defaultPermStructure = [
+	{
+		check: () => true,
+		break: false
+	},
+	{
+		check: () => false,
+		break: false
+	},
+	{
+		check: (client, msg) => {
+			if (!msg.guild) return false;
+			const modRole = msg.guild.roles.find('name', msg.guild.conf.modRole);
+			if (modRole && msg.member.roles.has(modRole.id)) return true;
+			return false;
+		},
+		break: false
+	},
+	{
+		check: (client, msg) => {
+			if (!msg.guild) return false;
+			const adminRole = msg.guild.roles.find('name', msg.guild.conf.adminRole);
+			if (adminRole && msg.member.roles.has(adminRole.id)) return true;
+			return false;
+		},
+		break: false
+	},
+	{
+		check: (client, msg) => {
+			if (msg.author.id === msg.guild.owner.id) return true;
+			return false;
+		},
+		break: false
+	},
+	{
+		check: () => false,
+		break: false
+	},
+	{
+		check: () => false,
+		break: false
+	},
+	{
+		check: () => false,
+		break: false
+	},
+	{
+		check: () => false,
+		break: false
+	},
+	{
+		check: (client, msg) => {
+			if (msg.author.id === client.config.ownerID) return true;
+			return false;
+		},
+		break: true
+	},
+	{
+		check: (client, msg) => {
+			if (msg.author.id === client.config.ownerID) return true;
+			return false;
+		},
+		break: false
+	}
+];
+
 
 process.on('unhandledRejection', (err) => {
 	if (!err) return;
