@@ -49,7 +49,7 @@ class Extendables {
 	}
 
 	hasAtleastPermissionLevel(min) {
-		return this.client.funcs.checkPerms(this.client, this, min);
+		return !!this.client.funcs.checkPerms(this.client, this, min);
 	}
 
 	createCollector(filter, options = {}) {
