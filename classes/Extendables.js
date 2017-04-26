@@ -102,7 +102,7 @@ class Extendables {
 	}
 
 	get usableCommands() {
-		return this.client.commands.filter(command => this.client.commandInhibitors.some((inhibitor) => {
+		return this.client.commands.filter(command => !this.client.commandInhibitors.some((inhibitor) => {
 			if (inhibitor.conf.enabled && !inhibitor.conf.spamProtection) return inhibitor.run(this.client, this, command);
 			return false;
 		}));
