@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [0.20.0] - unreleased/classbased
+## [Unreleased] - Classbased | Staged for 0.20.0
 ### Added
 - Command Editing is now possible via setting config.cmdEditing to true. You will need to make a few changes to your code to make it work though:
 - A new messageUpdate core event.
@@ -48,7 +48,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - loading utils have been removed in favor of the new loading refactor.
 - Implied Permissions has been removed in favor of an internal discord.js class.
 
-## [0.19.0] - unreleased/indev
+## [0.19.0]
 ### Added
 - Readded ParseTags function due to Komada Provider dependency,
 - Added Websocket Heartbeat ping to ping command.
@@ -370,19 +370,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Various Confs fixes from [UnseenFaith]
 - Usage Addition/ParseUsage fix from [UnseenFaith]
 
-[Unreleased]: https://github.com/dirigeants/komada/compare/0.18.1...bdistin:classbased
+[Unreleased]: https://github.com/dirigeants/komada/compare/0.19.0...indev
 [0.10.0]: https://github.com/dirigeants/komada/compare/1627e6deb1d8c352d83e52ccd590f2330f5f8bb2...0.10.0
 [0.11.0]: https://github.com/dirigeants/komada/compare/0.10.0...0.11.0
 [0.12.0]: https://github.com/dirigeants/komada/compare/0.11.0...0.12.0
 [0.12.4]: https://github.com/dirigeants/komada/compare/0.12.0...0.12.4
 [0.18.0]: https://github.com/dirigeants/komada/compare/0.12.4...0.18
 [0.18.1]: https://github.com/dirigeants/komada/compare/0.12.4...0.18.1
-[0.19.0]: https://github.com/dirigeants/komada/compare/0.18.1...indev
-[0.20.0]: https://github.com/dirigeants/komada/compare/indev...bdistin:classbased
-
-[vzwGrey]: https://github.com/vzwGrey
-[eslachance]: https://github.com/eslachance
-[hkwu]: https://github.com/hkwu
-[bdistin]: https://github.com/bdistin
-[UnseenFaith]: https://github.com/UnseenFaith
-[CyberiumShadow]: https://github.com/CyberiumShadow
+[0.19.0]: https://github.com/dirigeants/komada/compare/0.18.1...0.19.0
