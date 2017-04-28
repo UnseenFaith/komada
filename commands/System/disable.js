@@ -33,8 +33,8 @@ exports.conf = {
 };
 
 exports.help = {
-	name: 'disable',
-	description: 'Temporarily disables the inhibitor/monitor/command. Resets upon reboot.',
-	usage: '<inhibitor|monitor|command> <name:str>',
-	usageDelim: ' '
+  name: "disable",
+  description: "Temporarily disables the inhibitor/monitor/command. Resets upon reboot.",
+  usage: "<inhibitor|monitor|command> <name:str>",
+  usageDelim: " ",
 };
