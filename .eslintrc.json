@@ -31,18 +31,18 @@
     "global-require": "off",
     "no-nested-ternary": "warn",
     "valid-jsdoc": ["warn", {
-		  "requireReturn": false,
-			"requireReturnDescription": false,
-			"preferType": {
-				"String": "string",
-				"Number": "number",
-				"Boolean": "boolean",
-				"Symbol": "symbol",
-				"function": "Function",
-				"object": "Object",
-				"date": "Date",
-				"error": "Error"
-			}
-		}]
+      "requireReturn": false,
+      "requireReturnDescription": false,
+      "preferType": {
+        "String": "string",
+        "Number": "number",
+        "Boolean": "boolean",
+        "Symbol": "symbol",
+        "function": "Function",
+        "object": "Object",
+        "date": "Date",
+        "error": "Error"
+      }
+    }]
   }
 }
