@@ -47,6 +47,7 @@ module.exports = class CommandMessage {
 							this.params.push(res);
 							return this.validateArgs();
 						} else {
+							this.args.splice(this.params.length, 0, undefined);
 							this.params.push(undefined);
 							return this.validateArgs();
 						}
