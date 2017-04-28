@@ -5,9 +5,55 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [0.19.0]
+### Added
+- Readded ParseTags function due to Komada Provider dependency,
+- Added Websocket Heartbeat ping to ping command.
+- Little bit of Documentation to Extendables
+- Message.awaitReactions && Message.createCollector && ReactionCollector
+- Message.reactable added to extendables
+- Monitors can customize whether to run the monitor on a bot or self now.
+- Added readable to make postable, embedable, and attachable more accurate.
+- postable, embedable, attachable now apply to any Text Channel for simplicity and to prevent errors down the road.
+- Extendables Added (postable, attachable, embedable, etc.)
+
+### Changed
+- Usage now gets the prefix from parseCommand, to reduce errors when using commands and escaped prefixes.
+- [Cache optimization] After a piece is reloaded, the cache from the `require` gets deleted.
+- [Cache optimization] After a piece is loaded inside the collection, the cache from the `require` gets deleted.
+- Pieces are now loaded on client side, then core side. (Without duplicating it).
+- Komada loads much faster now.
+- The function `log` should never display `[object Object]` now.
+- When a command fails at load, it should provide full stack error now.
+- Changed permissions inhibitor and permissionLevel function to use new Extendables.
+- Help command now no longer requires runCommandInhibitors and uses new Extendables.
+- Removed several useless lines of code in app.js made redundant by Extendables.
+
+
+### Fixed
+- Minor fixes in ping command and awaitMessage function.
+- Usage when you use Boolean types.
+- String errors when provided to User/Member usage
+- Some other minor fixes for confs and download
+- Fixed many issues with double negatives in configuration
+- Fixed Multiple Prefixes
+- "`client.funcs.log` is not a function" when something was wrong at startup (events not working or faulty configurations).
+- Fixed HandleCommand not passing Arguments to awaitMessage properly.
+- Fixed AwaitMessage - Kyra
+- Fixed Float Usage not correctly determining if NaN (finally)
+- Fixed Usage for the 603rd time. Maybe? Probably not.
+- TypeError in awaitMessage.js function, issue #158
+- (Hot fix) Fixed help command (was returning BadRequest) on 0.18.5
+- (Hot fix) Fixed permissions on DMs (running msg.member.permLevel when the user DMs a command that doesn't have permissions for).
+- Several bugs that would have occurred if loading anything contained a NPM module error.
+
+### Removed
+- A bunch of deprecated functions that were moved to utils.
+- runCommandInhibitors no longer necessary.
+
 ## [0.18.1] - 2017-03-17
 ### Added
-- Sentry Integration for Error Tracking purposes direct to Komada Devs,
 - Added the new utils from `Discord.js#master`: escapeMarkdown and splitMessage are now in `client.methods`.
 - Added support for silent inhibitors (if `return true`, it won't send a reply).
 - Added Environmental Variable support for clientDir.
@@ -282,17 +328,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Various Confs fixes from [UnseenFaith]
 - Usage Addition/ParseUsage fix from [UnseenFaith]
 
-[Unreleased]: https://github.com/eslachance/komada/compare/0.18.1...indev
-[0.10.0]: https://github.com/eslachance/komada/compare/1627e6deb1d8c352d83e52ccd590f2330f5f8bb2...0.10.0
-[0.11.0]: https://github.com/eslachance/komada/compare/0.10.0...0.11.0
-[0.12.0]: https://github.com/eslachance/komada/compare/0.11.0...0.12.0
-[0.12.4]: https://github.com/eslachance/komada/compare/0.12.0...0.12.4
-[0.18.0]: https://github.com/eslachance/komada/compare/0.12.4...0.18
-[0.18.1]: https://github.com/eslachance/komada/compare/0.12.4...0.18.1
-
-[vzwGrey]: https://github.com/vzwGrey
-[eslachance]: https://github.com/eslachance
-[hkwu]: https://github.com/hkwu
-[bdistin]: https://github.com/bdistin
-[UnseenFaith]: https://github.com/UnseenFaith
-[CyberiumShadow]: https://github.com/CyberiumShadow
+[Unreleased]: https://github.com/dirigeants/komada/compare/0.19.0...indev
+[0.10.0]: https://github.com/dirigeants/komada/compare/1627e6deb1d8c352d83e52ccd590f2330f5f8bb2...0.10.0
+[0.11.0]: https://github.com/dirigeants/komada/compare/0.10.0...0.11.0
+[0.12.0]: https://github.com/dirigeants/komada/compare/0.11.0...0.12.0
+[0.12.4]: https://github.com/dirigeants/komada/compare/0.12.0...0.12.4
+[0.18.0]: https://github.com/dirigeants/komada/compare/0.12.4...0.18
+[0.18.1]: https://github.com/dirigeants/komada/compare/0.12.4...0.18.1
+[0.19.0]: https://github.com/dirigeants/komada/compare/0.18.1...0.19.0

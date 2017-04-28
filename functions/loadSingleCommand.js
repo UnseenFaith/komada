@@ -28,6 +28,7 @@ module.exports = (client, command, reload = false, loadPath = null) => new Promi
   } else {
     try {
       cmd = require(loadPath);
+      if (client.commands.has(cmd.help.name)) return resolve(delete require.cache[require.resolve(loadPath)]);
       if (cmd.conf.selfbot && !client.config.selfbot) {
         return reject(`The command \`${cmd.help.name}\` is only usable in selfbots!`);
       }
@@ -47,7 +48,7 @@ module.exports = (client, command, reload = false, loadPath = null) => new Promi
             });
         client.funcs.loadSingleCommand(client, command, false, loadPath);
       } else {
-        reject(`Could not load new command data: \`\`\`js\n${e.stack}\`\`\``);
+        return reject(`Could not load the command: ${e.stack}`);
       }
     }
   }
