@@ -1,19 +1,24 @@
+const Discord = require('discord.js');
+const impliedPermissions = new Discord.Permissions([
+	'READ_MESSAGES',
+	'SEND_MESSAGES',
+	'SEND_TTS_MESSAGES',
+	'EMBED_LINKS',
+	'ATTACH_FILES',
+	'READ_MESSAGE_HISTORY',
+	'MENTION_EVERYONE',
+	'EXTERNAL_EMOJIS',
+	'ADD_REACTIONS'
+]);
+
 exports.conf = {
-  enabled: true,
-  spamProtection: false,
-  priority: 7,
+	enabled: true,
+	spamProtection: false,
+	priority: 7
 };
 
 exports.run = (client, msg, cmd) => {
-  let missing = [];
-  if (msg.channel.type === "text") {
-    missing = msg.channel.permissionsFor(client.user).missingPermissions(cmd.conf.botPerms);
-  } else {
-    const impliedPermissions = client.funcs.impliedPermissions();
-    cmd.conf.botPerms.forEach((perm) => {
-      if (!impliedPermissions[perm]) missing.push(perm);
-    });
-  }
-  if (missing.length > 0) return `Insufficient permissions, missing: **${client.funcs.toTitleCase(missing.join(", ").split("_").join(" "))}**`;
-  return false;
+	const missing = msg.channel.type === 'text' ? msg.channel.permissionsFor(client.user).missing(cmd.conf.botPerms) : impliedPermissions.missing(cmd.conf.botPerms);
+	if (missing.length > 0) return `Insufficient permissions, missing: **${client.funcs.toTitleCase(missing.join(', ').split('_').join(' '))}**`;
+	return false;
 };

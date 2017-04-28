@@ -1,14 +1,12 @@
 exports.conf = {
-  enabled: true,
-  spamProtection: false,
-  priority: 10,
+	enabled: true,
+	spamProtection: false,
+	priority: 10
 };
 
 exports.run = (client, msg, cmd) => {
-  if (!msg.guild) {
-    if (msg.author.permLevel >= cmd.conf.permLevel) return false;
-    return "You do not have permission to use this command.";
-  }
-  if (msg.member.permLevel >= cmd.conf.permLevel) return false;
-  return "You do not have permission to use this command.";
+	const res = client.funcs.checkPerms(client, msg, cmd.conf.permLevel);
+	if (res === null) return true;
+	else if (!res) return 'You do not have permission to use this command.';
+	else return false;
 };
