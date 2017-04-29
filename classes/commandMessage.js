@@ -5,10 +5,10 @@ module.exports = class CommandMessage {
     Object.defineProperty(this, "client", { value: msg.client });
     this.msg = msg;
     this.cmd = cmd;
-    this.args = this.constructor.getArgs(this);
-    this.params = [];
     this.prefix = prefix;
     this.prefixLength = prefixLength;
+    this.args = this.constructor.getArgs(this);
+    this.params = [];
     this.reprompted = false;
     this._currentUsage = {};
     this._repeat = false;
@@ -93,10 +93,8 @@ module.exports = class CommandMessage {
 
 
   static getArgs(cmdMsg) {
-    const prefix = cmdMsg.msg.guildConf.prefix.length;
-    const prefixLength = cmdMsg.client.config.prefixMention.test(cmdMsg.msg.content) ? cmdMsg.client.config.prefixMention.exec(cmdMsg.msg.content)[0].length + 1 : prefix.length;
-    let args = cmdMsg.msg.content.slice(prefixLength).trim().split(" ").slice(1).join(" ").split(cmdMsg.cmd.help.usageDelim !== "" ? cmdMsg.cmd.help.usageDelim : undefined);
-    if (args[0] === "") args = [];
+    const args = cmdMsg.msg.content.slice(cmdMsg.prefixLength).trim().split(" ").slice(1).join(" ").split(cmdMsg.cmd.help.usageDelim !== "" ? cmdMsg.cmd.help.usageDelim : undefined);
+    if (args[0] === "") return [];
     return args;
   }
 
