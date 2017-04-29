@@ -1,7 +1,7 @@
 exports.conf = {
-	enabled: true,
-	spamProtection: false,
-	priority: 8
+  enabled: true,
+  spamProtection: false,
+  priority: 8,
 };
 
 exports.run = (client, msg, cmd) => {

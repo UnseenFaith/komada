@@ -1,3 +1,3 @@
 exports.run = (client, warning) => {
-	client.emit('log', warning, 'warn');
+  client.emit("log", warning, "warn");
 };

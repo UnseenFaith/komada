@@ -1,10 +1,6 @@
 {
   "parserOptions": {
-<<<<<<< HEAD:.eslintrc
-    ecmaVersion: 8
-=======
     "ecmaVersion": 8
->>>>>>> classbased:.eslintrc.json
   },
   "env": {
     "es6": true,
