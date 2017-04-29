@@ -1,3 +1,3 @@
 exports.run = (client, err) => {
-	client.emit('log', err, 'error');
+  client.emit("log", err, "error");
 };
