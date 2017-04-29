@@ -3,6 +3,7 @@ const chalk = require("chalk");
 
 const clk = new chalk.constructor({ enabled: true });
 
+/* eslint-disable no-use-before-define */
 exports.run = (client, data, type = "log") => {
   data = resolveObject(data);
   switch (type.toLowerCase()) {

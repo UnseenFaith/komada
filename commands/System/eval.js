@@ -1,5 +1,6 @@
 const inspect = require("util").inspect;
 
+/* eslint-disable no-eval */
 exports.run = async (client, msg, [code]) => {
   try {
     let evaled = eval(code);

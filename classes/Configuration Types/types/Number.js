@@ -1,5 +1,6 @@
 const Config = require("../Config.js");
 
+/* eslint-disable no-underscore-dangle, no-throw-literal */
 class Number {
   constructor(conf, data) {
     Object.defineProperty(this, "_guild", { value: conf._guild });

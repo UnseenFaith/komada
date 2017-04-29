@@ -1,5 +1,6 @@
 const url = require("url");
 
+/* eslint-disable no-throw-literal, class-methods-use-this */
 module.exports = class ArgResolver {
 
   constructor(client) {

@@ -11,8 +11,8 @@ exports.run = async (client, msg, [type, name]) => {
       }
       await msg.sendMessage(`Attempting to reload function ${name}`);
       return client.funcs.reloadFunction(name)
-					.then(mes => msg.sendMessage(`✅ ${mes}`))
-					.catch(err => msg.sendMessage(`❌ ${err}`));
+          .then(mes => msg.sendMessage(`✅ ${mes}`))
+          .catch(err => msg.sendMessage(`❌ ${err}`));
 
     case "inhibitor":
       if (name === "all") {
@@ -25,8 +25,8 @@ exports.run = async (client, msg, [type, name]) => {
       }
       await msg.sendMessage(`Attempting to reload inhibitor ${name}`);
       return client.funcs.reloadInhibitor(name)
-					.then(mes => msg.sendMessage(`✅ ${mes}`))
-					.catch(err => msg.sendMessage(`❌ ${err}`));
+          .then(mes => msg.sendMessage(`✅ ${mes}`))
+          .catch(err => msg.sendMessage(`❌ ${err}`));
 
     case "finalizer":
       if (name === "all") {
@@ -39,8 +39,8 @@ exports.run = async (client, msg, [type, name]) => {
       }
       await msg.sendMessage(`Attempting to reload finalizer ${name}`);
       return client.funcs.reloadFinalizer(name)
-					.then(mes => msg.sendMessage(`✅ ${mes}`))
-					.catch(err => msg.sendMessage(`❌ ${err}`));
+          .then(mes => msg.sendMessage(`✅ ${mes}`))
+          .catch(err => msg.sendMessage(`❌ ${err}`));
 
     case "event":
       if (name === "all") {
@@ -49,8 +49,8 @@ exports.run = async (client, msg, [type, name]) => {
       }
       await msg.sendMessage(`Attempting to reload event: ${name}`);
       return client.funcs.reloadEvent(name)
-					.then(mes => msg.sendMessage(`✅ ${mes}`))
-					.catch(err => msg.sendMessage(`❌ ${err}`));
+          .then(mes => msg.sendMessage(`✅ ${mes}`))
+          .catch(err => msg.sendMessage(`❌ ${err}`));
 
     case "monitor":
       if (name === "all") {
@@ -63,8 +63,8 @@ exports.run = async (client, msg, [type, name]) => {
       }
       await msg.sendMessage(`Attempting to reload monitor: ${name}`);
       return client.funcs.reloadMessageMonitor(name)
-					.then(mes => msg.sendMessage(`✅ ${mes}`))
-					.catch(err => msg.sendMessage(`❌ ${err}`));
+          .then(mes => msg.sendMessage(`✅ ${mes}`))
+          .catch(err => msg.sendMessage(`❌ ${err}`));
 
     case "provider":
       if (name === "all") {
@@ -77,8 +77,8 @@ exports.run = async (client, msg, [type, name]) => {
       }
       await msg.sendMessage(`Attempting to reload provider: ${name}`);
       return client.funcs.reloadProvider(name)
-					.then(mes => msg.sendMessage(`✅ ${mes}`))
-					.catch(err => msg.sendMessage(`❌ ${err}`));
+          .then(mes => msg.sendMessage(`✅ ${mes}`))
+          .catch(err => msg.sendMessage(`❌ ${err}`));
 
     case "command":
       if (name === "all") {
@@ -91,8 +91,8 @@ exports.run = async (client, msg, [type, name]) => {
       }
       await msg.sendMessage(`Attempting to reload command ${name}`);
       return client.funcs.reloadCommand(name)
-					.then(mes => msg.sendMessage(`✅ ${mes}`))
-					.catch(err => msg.sendMessage(`❌ ${err}`));
+          .then(mes => msg.sendMessage(`✅ ${mes}`))
+          .catch(err => msg.sendMessage(`❌ ${err}`));
 
     default:
       return msg.sendMessage("never going to happen");

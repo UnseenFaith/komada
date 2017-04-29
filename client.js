@@ -9,6 +9,7 @@ const Config = require("./classes/Configuration Types/Config.js");
 
 require("./classes/Extendables.js");
 
+/* eslint-disable no-throw-literal, no-use-before-define, no-restricted-syntax */
 module.exports = class Komada extends Discord.Client {
 
   constructor(config = {}) {

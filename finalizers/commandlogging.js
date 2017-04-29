@@ -1,5 +1,6 @@
 const chalk = require("chalk");
 const now = require("performance-now");
+
 const clk = new chalk.constructor({ enabled: true });
 
 exports.run = (client, msg, mes, start) => {

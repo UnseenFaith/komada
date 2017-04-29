@@ -4,6 +4,7 @@ exports.conf = {
   priority: 6,
 };
 
+/* eslint-disable no-prototype-builtins */
 exports.run = (client, msg, cmd) => {
   if (!cmd.conf.requiredFuncs) return false;
   const funcs = [];

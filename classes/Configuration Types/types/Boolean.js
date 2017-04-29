@@ -3,6 +3,7 @@ const Config = require("../Config.js");
 const truthy = [true, "true", 1, "t", "yes", "y"];
 const falsy = [false, "false", 0, "f", "no", "n"];
 
+/* eslint-disable no-underscore-dangle, no-throw-literal */
 class Boolean {
   constructor(conf, data) {
     Object.defineProperty(this, "_guild", { value: conf._guild });

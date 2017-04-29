@@ -1,4 +1,4 @@
-/* eslint-disable no-restricted-syntax, no-underscore-dangle, no-unused-vars */
+/* eslint-disable no-restricted-syntax, no-underscore-dangle, no-unused-vars, no-throw-literal, guard-for-in, no-prototype-builtins */
 const fs = require("fs-extra-promise");
 const path = require("path");
 const Types = require("./types");
@@ -182,7 +182,7 @@ class Config {
    * Set the default value for a key in the default configuration.
    * @param {string} key The key for which you want to change.
    * @param {Array|boolean|number|string} defaultValue The value you want to set as the default.
-	 * @param {boolean} force Whether or not Komada should force update all configurations with this new value.
+   * @param {boolean} force Whether or not Komada should force update all configurations with this new value.
    * @returns {Object} Returns the new default configuration for the key.
    * @static
    */
@@ -226,7 +226,7 @@ class Config {
    * Sets the default minimum value for a Number key
    * @param {string} key The Number key for which you want to set the minimum value for.
    * @param {number} defaultMinValue The value you want to set as the "minimum" value.
-	 * @param {boolean} force Whether or not Komada should enforce this new minimum value in all configurations.
+   * @param {boolean} force Whether or not Komada should enforce this new minimum value in all configurations.
    * @returns {Object} Returns the new default configuration for the key.
    * @static
    */
@@ -247,7 +247,7 @@ class Config {
    * Sets the default maximum value for a Number key
    * @param {string} key The Number key for which you want to set the maximum value for.
    * @param {number} defaultMaxValue The value you want to set as the "maximum" value.
-	 * @param {boolean} force Whether or not Komada should enforce this new maximum value in all configurations.
+   * @param {boolean} force Whether or not Komada should enforce this new maximum value in all configurations.
    * @returns {Object} Returns the new default configuration for the key.
    * @static
    */
@@ -268,7 +268,7 @@ class Config {
    * Adds a value to the data array for an Array key.
    * @param {string} key The Array key for which you want to add value(s) for.
    * @param {string} defaultValue The value for which you want to add to the array.
-	 * @param {boolean} force Whether or not Komada should force add this value in all configurations.
+   * @param {boolean} force Whether or not Komada should force add this value in all configurations.
    * @returns {Object} Returns the new default configuration for the key.
    * @static
    */
@@ -290,7 +290,7 @@ class Config {
    * Deletes a value from the data array for an Array key.
    * @param {string} key The array key for which you want to delete value(s) from.
    * @param {string} defaultValue The value for which you want to remove from the array.
-	 * @param {boolean} force Whether or not Komada should force delete this value from all configurations.
+   * @param {boolean} force Whether or not Komada should force delete this value from all configurations.
    * @returns {Object} Returns the new default configuration for the key.
    * @static
    */
@@ -430,17 +430,17 @@ class Config {
     dataDir = path.resolve(`${client.clientBaseDir}${path.sep}bwd${path.sep}conf`);
     fs.ensureFileAsync(`${dataDir}${path.sep}${defaultFile}`).catch(err => client.emit("log", err, "error"));
     fs.readJSONAsync(path.resolve(`${dataDir}${path.sep}${defaultFile}`))
-			.then((conf) => {
-  if (conf) defaultConf = conf;
-})
-			.catch(() => fs.outputJSONAsync(`${dataDir}${path.sep}${defaultFile}`, defaultConf));
+  .then((conf) => {
+    if (conf) defaultConf = conf;
+  })
+  .catch(() => fs.outputJSONAsync(`${dataDir}${path.sep}${defaultFile}`, defaultConf));
     client.guilds.forEach((guild) => {
       fs.readJSONAsync(path.resolve(`${dataDir}${path.sep}${guild.id}.json`))
-				.then((thisConf) => {
-  guildConfs.set(guild.id, new Config(client, guild, thisConf));
-}).catch(() => {
-  guildConfs.set(guild.id, new Config(client, guild, defaultConf));
-});
+  .then((thisConf) => {
+    guildConfs.set(guild.id, new Config(client, guild, thisConf));
+  }).catch(() => {
+    guildConfs.set(guild.id, new Config(client, guild, defaultConf));
+  });
     });
     return null;
   }

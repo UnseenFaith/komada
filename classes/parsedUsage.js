@@ -1,5 +1,5 @@
+/* eslint-disable no-throw-literal, class-methods-use-this */
 module.exports = class ParsedUsage {
-
   constructor(client, command) {
     Object.defineProperty(this, "client", { value: client });
     this.names = [command.help.name, ...command.conf.aliases];
@@ -46,7 +46,7 @@ module.exports = class ParsedUsage {
     });
 
     if (usage.opened) throw `from char #${this.usageString.length - usage.current.length} '${this.usageString.substr(-usage.current.length - 1)}' to end: a tag was left open`;
-    if (usage.current) throw `from char #${this.usageString.length + 1 - usage.current.length} to end '${usage.current}' a literal was found outside a tag.`;
+    if (usage.current) throw `from char #${(this.usageString.length + 1) - usage.current.length} to end '${usage.current}' a literal was found outside a tag.`;
 
     return usage.tags;
   }
@@ -171,4 +171,3 @@ module.exports = class ParsedUsage {
   }
 
 };
-

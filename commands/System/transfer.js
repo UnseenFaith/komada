@@ -1,6 +1,7 @@
 const fs = require("fs-extra-promise");
 const path = require("path");
 
+/* eslint-disable no-throw-literal */
 exports.run = async (client, msg, [type, name]) => {
   const coreDir = client.coreBaseDir;
   const clientDir = client.clientBaseDir;
@@ -14,14 +15,14 @@ exports.run = async (client, msg, [type, name]) => {
   };
   const isCommand = type === "command" ? "System/" : "";
   fs.copyAsync(path.resolve(`${coreDir}/${type}s/${isCommand}${name}.js`), path.resolve(`${clientDir}/${type}s/${isCommand}${name}.js`))
-		.then(() => {
-  reload[type](`System/${name}`).catch((response) => { throw `❌ ${response}`; });
-  return msg.sendMessage(`✅ Successfully Transferred ${type}: ${name}`);
-})
-		.catch((err) => {
-  client.emit("error", err.stack);
-  return msg.sendMessage(`Transfer of ${type}: ${name} to Client has failed. Please check your Console.`);
-});
+    .then(() => {
+      reload[type](`System/${name}`).catch((response) => { throw `❌ ${response}`; });
+      return msg.sendMessage(`✅ Successfully Transferred ${type}: ${name}`);
+    })
+    .catch((err) => {
+      client.emit("error", err.stack);
+      return msg.sendMessage(`Transfer of ${type}: ${name} to Client has failed. Please check your Console.`);
+    });
 };
 
 exports.conf = {

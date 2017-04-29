@@ -1,5 +1,6 @@
 module.exports = class CommandMessage {
 
+/* eslint-disable no-underscore-dangle, no-throw-literal, newline-per-chained-call */
   constructor(msg, cmd, prefix, prefixLength) {
     Object.defineProperty(this, "client", { value: msg.client });
     this.msg = msg;
@@ -37,24 +38,24 @@ module.exports = class CommandMessage {
     } else if (this._currentUsage.type === "required" && this.args[this.params.length] === undefined) {
       this.args.splice(this.params.length, 1, null);
       throw this.client.funcs.newError(this._currentUsage.possibles.length === 1 ?
-				`${this._currentUsage.possibles[0].name} is a required argument.` :
-				`Missing a required option: (${this._currentUsage.possibles.map(poss => poss.name).join(", ")})`, 1);
+        `${this._currentUsage.possibles[0].name} is a required argument.` :
+        `Missing a required option: (${this._currentUsage.possibles.map(poss => poss.name).join(", ")})`, 1);
     } else if (this._currentUsage.possibles.length === 1) {
       if (this.client.argResolver[this._currentUsage.possibles[0].type]) {
         return this.client.argResolver[this._currentUsage.possibles[0].type](this.args[this.params.length], this._currentUsage, 0, this._repeat, this.msg)
-					.then((res) => {
-  if (res !== null) {
-    this.params.push(res);
-    return this.validateArgs();
-  }
-  this.args.splice(this.params.length, 0, undefined);
-  this.params.push(undefined);
-  return this.validateArgs();
-})
-					.catch((err) => {
-  this.args.splice(this.params.length, 1, null);
-  throw this.client.funcs.newError(err, 1);
-});
+          .then((res) => {
+            if (res !== null) {
+              this.params.push(res);
+              return this.validateArgs();
+            }
+            this.args.splice(this.params.length, 0, undefined);
+            this.params.push(undefined);
+            return this.validateArgs();
+          })
+          .catch((err) => {
+            this.args.splice(this.params.length, 1, null);
+            throw this.client.funcs.newError(err, 1);
+          });
       }
       this.client.emit("log", "Unknown Argument Type encountered", "warn");
       return this.validateArgs();
@@ -76,14 +77,14 @@ module.exports = class CommandMessage {
       throw this.client.funcs.newError(`Your option didn't match any of the possibilities: (${this._currentUsage.possibles.map(poss => poss.name).join(", ")})`, 1);
     } else if (this.client.argResolver[this._currentUsage.possibles[possible].type]) {
       return this.client.argResolver[this._currentUsage.possibles[possible].type](this.args[this.params.length], this._currentUsage, possible, this._repeat, this.msg)
-				.then((res) => {
-  if (res !== null) {
-    this.params.push(res);
-    return this.multiPossibles(++possible, true);
-  }
-  return this.multiPossibles(++possible, validated);
-})
-				.catch(() => this.multiPossibles(++possible, validated));
+        .then((res) => {
+          if (res !== null) {
+            this.params.push(res);
+            return this.multiPossibles(++possible, true);
+          }
+          return this.multiPossibles(++possible, validated);
+        })
+        .catch(() => this.multiPossibles(++possible, validated));
     } else {
       this.client.emit("log", "Unknown Argument Type encountered", "warn");
       return this.multiPossibles(++possible, validated);
@@ -101,4 +102,3 @@ module.exports = class CommandMessage {
 
 
 };
-

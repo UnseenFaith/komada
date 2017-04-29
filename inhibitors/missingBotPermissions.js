@@ -1,4 +1,5 @@
 const Discord = require("discord.js");
+
 const impliedPermissions = new Discord.Permissions([
   "READ_MESSAGES",
   "SEND_MESSAGES",

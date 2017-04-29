@@ -6,6 +6,7 @@ const path = require("path");
 const piecesURL = "https://raw.githubusercontent.com/dirigeants/komada-pieces/master/";
 const types = ["commands", "functions", "monitors", "inhibitors", "providers"];
 
+/* eslint-disable no-throw-literal, no-use-before-define */
 exports.run = async (client, msg, [link, piece, folder = "Downloaded"]) => {
   const proposedURL = types.includes(link) ? `${piecesURL}${link}/${piece}.js` : link;
   piece = piece.split("/");
@@ -13,18 +14,18 @@ exports.run = async (client, msg, [link, piece, folder = "Downloaded"]) => {
     throw `<@!${msg.author.id}> | You provided an invalid or no subfolder for a command. Please provide a valid folder name from the Pieces Repo. Example: Misc/test`;
   }
 
-  const res = await requestAndCheck(proposedURL)
-		.catch((err) => { throw `<@!${msg.author.id}> | ${err}`; });
+  const res = requestAndCheck(proposedURL)
+    .catch((err) => { throw `<@!${msg.author.id}> | ${err}`; });
 
   const mod = { exports: {} };
   try {
     vm.runInNewContext(res.text, { module: mod, exports: mod.exports }, { timeout: 500 });
   } catch (err) {
     if (err.message === "Unexpected identifier") {
-			// eslint-disable-next-line max-len
+      // eslint-disable-next-line max-len
       throw `<@!${msg.author.id}> | An error has occured: **${err.message}** | This typically happens when you try to download a file that uses Node 7's new \`Async/await\` feature, or the creator of the piece messed up the code.`;
     } else if (err.message === "require is not defined") {
-			// eslint-disable-next-line max-len
+      // eslint-disable-next-line max-len
       throw `<@!${msg.author.id}> | An error has occured: **${err.message}** | This typically happens when you try to download a file that has a require outside of an \`exports\`. Ask the Developer to fix it or download it as a file and then load it.`;
     }
     console.log(err.message);
@@ -72,10 +73,10 @@ exports.run = async (client, msg, [link, piece, folder = "Downloaded"]) => {
       await msg.sendMessage(`📥 \`Loading ${type}\``).catch(err => client.emit("log", err, "error"));
       if (Array.isArray(modules) && modules.length > 0) {
         await client.funcs.installNPM(modules.join(" "))
-					.catch((err) => {
-  console.error(err);
-  process.exit();
-});
+          .catch((err) => {
+            console.error(err);
+            process.exit();
+          });
       }
       load[type](client, msg, type, res, name, mod.exports.help.category || client.funcs.toTitleCase(folder));
     }
@@ -137,6 +138,7 @@ const runChecks = (client, type, name) => {
     case "providers":
       if (client.providers.has(name)) throw "That provider already exists in your bot. Aborting the load.";
       break;
+    // no default
   }
 };
 
@@ -147,10 +149,10 @@ const load = {
     await fs.ensureDirAsync(dir).catch(err => client.emit("log", err, "error"));
     await fs.writeFileAsync(`${dir}${path.sep}${name}.js`, res.text);
     const message = await client.funcs.reloadCommand(`${category}${path.sep}${name}`)
-			.catch((response) => {
-  msg.sendMessage(`📵 Command load failed ${name}\n\`\`\`${response}\`\`\``);
-  return fs.unlinkSync(`${dir}/${name}.js`);
-});
+      .catch((response) => {
+        msg.sendMessage(`📵 Command load failed ${name}\n\`\`\`${response}\`\`\``);
+        return fs.unlinkSync(`${dir}/${name}.js`);
+      });
     if (message) msg.sendMessage(`📥 ${message}`);
   },
   functions: async (client, msg, type, res, name) => {
@@ -158,10 +160,10 @@ const load = {
     msg.sendMessage(`📥 \`Loading ${type} into ${dir}/${name}.js...\``);
     await fs.writeFileAsync(`${dir}${path.sep}${name}.js`, res.text).catch(err => client.emit("log", err, "error"));
     const message = await client.funcs.reloadFunction(name)
-			.catch((response) => {
-  msg.sendMessage(`📵 Function load failed ${name}\n\`\`\`${response}\`\`\``);
-  return fs.unlinkSync(`${dir}/${name}.js`);
-});
+      .catch((response) => {
+        msg.sendMessage(`📵 Function load failed ${name}\n\`\`\`${response}\`\`\``);
+        return fs.unlinkSync(`${dir}/${name}.js`);
+      });
     if (message) msg.sendMessage(`📥 ${message}`);
   },
   inhibitors: async (client, msg, type, res, name) => {
@@ -169,10 +171,10 @@ const load = {
     msg.sendMessage(`📥 \`Loading ${type} into ${dir}/${name}.js...\``);
     await fs.writeFileAsync(`${dir}/${name}.js`, res.text).catch(err => client.emit("log", err, "error"));
     const message = await client.funcs.reloadInhibitor(name)
-			.catch((response) => {
-  msg.sendMessage(`📵 Inhibitor load failed ${name}\n\`\`\`${response}\`\`\``);
-  return fs.unlinkSync(`${dir}/${name}.js`);
-});
+      .catch((response) => {
+        msg.sendMessage(`📵 Inhibitor load failed ${name}\n\`\`\`${response}\`\`\``);
+        return fs.unlinkSync(`${dir}/${name}.js`);
+      });
     if (message) msg.sendMessage(`📥 ${message}`);
   },
   monitors: async (client, msg, type, res, name) => {
@@ -180,10 +182,10 @@ const load = {
     msg.sendMessage(`📥 \`Loading ${type} into ${dir}/${name}.js...\``);
     await fs.writeFileAsync(`${dir}/${name}.js`, res.text).catch(err => client.emit("log", err, "error"));
     const message = await client.funcs.reloadMessageMonitor(name)
-			.catch((response) => {
-  msg.sendMessage(`📵 Monitor load failed ${name}\n\`\`\`${response}\`\`\``);
-  return fs.unlinkSync(`${dir}/${name}.js`);
-});
+      .catch((response) => {
+        msg.sendMessage(`📵 Monitor load failed ${name}\n\`\`\`${response}\`\`\``);
+        return fs.unlinkSync(`${dir}/${name}.js`);
+      });
     if (message) msg.sendMessage(`📥 ${message}`);
   },
   providers: async (client, msg, type, res, name) => {
@@ -191,10 +193,10 @@ const load = {
     msg.sendMessage(`📥 \`Loading ${type} into ${dir}/${name}.js...\``);
     await fs.writeFileAsync(`${dir}/${name}.js`, res.text).catch(err => client.emit("log", err, "error"));
     const message = await client.funcs.reloadProvider(name)
-			.catch((response) => {
-  msg.sendMessage(`📵 Provider load failed ${name}\n\`\`\`${response}\`\`\``);
-  return fs.unlinkSync(`${dir}/${name}.js`);
-});
+      .catch((response) => {
+        msg.sendMessage(`📵 Provider load failed ${name}\n\`\`\`${response}\`\`\``);
+        return fs.unlinkSync(`${dir}/${name}.js`);
+      });
     msg.sendMessage(`📥 ${message}`);
   },
 };

@@ -1,6 +1,7 @@
 const Config = require("../Config.js");
 const Discord = require("discord.js");
 
+/* eslint-disable no-underscore-dangle, no-throw-literal */
 class Channel {
   constructor(conf, data) {
     Object.defineProperty(this, "_guild", { value: conf._guild });

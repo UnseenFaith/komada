@@ -41,7 +41,7 @@ class Extendables {
     * <Message>.createCollector - Creates a ReactionCollector on the message. Takes the same filter and options as MessageCollectors -> returns {ReactionCollector}
     * <Message>.awaitReactions - Same as createCollector for messages, except returns a promise with the collection of reactions collected. -> returns {Collection<EmojiName, Reaction>}
     * <Message>.guildConf - Returns a guild configuration (or default if no guild) containing proper configuration settings. -> returns {Object}
-	* <Message>.usableCommands - Returns a filtered collection of commands usable by the the author in the context the message was sent. -> returns {Collection<CommandName, Command>}
+    * <Message>.usableCommands - Returns a filtered collection of commands usable by the the author in the context the message was sent. -> returns {Collection<CommandName, Command>}
     */
   get reactable() {
     if (!this.guild) return true;
@@ -67,10 +67,10 @@ class Extendables {
       return commandMessage.response.edit(content, options);
     }
     return this.channel.send(content, options)
-				.then((mes) => {
-  if (mes.constructor.name === "Message") this.client.commandMessages.set(this.id, { trigger: this, response: mes });
-  return mes;
-});
+    .then((mes) => {
+      if (mes.constructor.name === "Message") this.client.commandMessages.set(this.id, { trigger: this, response: mes });
+      return mes;
+    });
   }
 
   sendEmbed(embed, content, options) {
@@ -119,7 +119,7 @@ class Extendables {
   }
 
 }
-
+/* eslint-disable no-restricted-syntax */
 /* The backbone of this extendable file. Adds the properties in Arrays to their respected Structures */
 const applyToClass = (structure, props) => {
   for (const prop of props) {
