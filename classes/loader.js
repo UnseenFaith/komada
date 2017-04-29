@@ -338,10 +338,10 @@ module.exports = class Loader {
       console.log(`Installing: ${missingModule}`);
       exec(`npm i ${missingModule} --save`, (err, stdout, stderr) => {
         if (err) {
-          console.log("=====NEW DEPENDANCY INSTALL FAILED HORRIBLY=====");
+          console.log("=====NEW DEPENDENCY INSTALL FAILED HORRIBLY=====");
           return reject(err);
         }
-        console.log("=====INSTALLED NEW DEPENDANCY=====");
+        console.log("=====INSTALLED NEW DEPENDENCY=====");
         console.log(stdout);
         console.error(stderr);
         return resolve();
