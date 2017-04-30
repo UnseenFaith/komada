@@ -59,7 +59,7 @@ exports.run = async (client, msg, [link, piece, folder = "Downloaded"]) => {
 
   const collector = msg.channel.createMessageCollector(mes => mes.author === msg.author, { time: 20000 });
 
-  collector.on("message", (mes) => {
+  collector.on("collect", (mes) => {
     if (mes.content.toLowerCase() === "no") collector.stop("aborted");
     if (mes.content.toLowerCase() === "yes") collector.stop("success");
   });
