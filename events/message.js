@@ -79,7 +79,7 @@ exports.runCommand = (client, msg, start) => {
 
 /* eslint-disable no-throw-literal */
 exports.awaitMessage = async (client, msg, start, error) => {
-  const message = await msg.channel.sendMessage(`<@!${msg.member.id}> | **${error}** | You have **30** seconds to respond to this prompt with a valid argument. Type **"ABORT"** to abort this prompt.`)
+  const message = await msg.channel.send(`<@!${msg.member.id}> | **${error}** | You have **30** seconds to respond to this prompt with a valid argument. Type **"ABORT"** to abort this prompt.`)
     .catch((err) => { throw client.funcs.newError(err); });
 
   const param = await msg.channel.awaitMessages(response => response.member.id === msg.author.id && response.id !== message.id, { max: 1, time: 30000, errors: ["time"] });
