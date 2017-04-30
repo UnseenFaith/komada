@@ -57,7 +57,7 @@ exports.run = async (client, msg, [link, piece, folder = "Downloaded"]) => {
     "```"];
   msg.sendMessage(`Are you sure you want to load the following ${type} into your bot? This will also install all required modules. This prompt will abort after 20 seconds.${code.join("\n")}`);
 
-  const collector = msg.channel.createCollector(mes => mes.author === msg.author, { time: 20000 });
+  const collector = msg.channel.createMessageCollector(mes => mes.author === msg.author, { time: 20000 });
 
   collector.on("message", (mes) => {
     if (mes.content.toLowerCase() === "no") collector.stop("aborted");
