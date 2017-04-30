@@ -18,22 +18,22 @@ class Extendables {
     */
   get readable() {
     if (!this.guild) return true;
-    return this.permissionsFor(this.guild.member(this.client.user)).hasPermission("READ_MESSAGES");
+    return this.permissionsFor(this.guild.member(this.client.user)).has("READ_MESSAGES");
   }
 
   get embedable() {
     if (!this.guild) return true;
-    return this.readable && this.postable && this.permissionsFor(this.guild.member(this.client.user)).hasPermission("EMBED_LINKS");
+    return this.readable && this.postable && this.permissionsFor(this.guild.member(this.client.user)).has("EMBED_LINKS");
   }
 
   get postable() {
     if (!this.guild) return true;
-    return this.readable && this.permissionsFor(this.guild.member(this.client.user)).hasPermission("SEND_MESSAGES");
+    return this.readable && this.permissionsFor(this.guild.member(this.client.user)).has("SEND_MESSAGES");
   }
 
   get attachable() {
     if (!this.guild) return true;
-    return this.readable && this.postable && this.permissionsFor(this.guild.member(this.client.user)).hasPermission("ATTACH_FILES");
+    return this.readable && this.postable && this.permissionsFor(this.guild.member(this.client.user)).has("ATTACH_FILES");
   }
 
   /** Message Extendables - Apply to all messages
@@ -45,7 +45,7 @@ class Extendables {
     */
   get reactable() {
     if (!this.guild) return true;
-    return this.readable && this.permissionsFor(this.guild.member(this.client.user)).hasPermission("ADD_REACTIONS");
+    return this.readable && this.permissionsFor(this.guild.member(this.client.user)).has("ADD_REACTIONS");
   }
 
   hasAtleastPermissionLevel(min) {
