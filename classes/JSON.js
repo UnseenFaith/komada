@@ -10,7 +10,7 @@ const falsy = [false, "f", "no", "n", 0, "0", "-"];
 class JSONSettings {
   constructor(client) {
     Object.defineProperty(this, "client", { value: client });
-    Object.defineProperty(this, "_dataDir", { value: client.config.settingsDir || `${client.clientBaseDir}/bwd/`});
+    Object.defineProperty(this, "_dataDir", { value: client.config.settingsDir || `${client.clientBaseDir}/bwd/settings`});
     Object.defineProperty(this, "_defaultFile", { value: `${this._dataDir}${sep}default.json` });
     this.guildSettings = new Discord.Collection();
   }
