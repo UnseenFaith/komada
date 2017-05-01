@@ -139,7 +139,7 @@ class JSONSettings {
       case "Boolean":
         if (truthy.includes(value)) return true;
         else if (falsy.includes(value)) return false;
-        else throw `The value provided was not a valid boolean resolvable. Valid truthy: ${truthy.join(", ")}; Valid falsy: ${falsy.join(", ")}`;
+        throw `The value provided was not a valid boolean resolvable. Valid truthy: ${truthy.join(", ")}; Valid falsy: ${falsy.join(", ")}`;
       case "Number":
         min = min || setting.min || null;
         max = max || setting.max || null;
@@ -214,7 +214,7 @@ const handler = (client, guild) => {
           undefined;
       }
     },
-    set: (setting, key, value) => {
+    set: () => {
       throw "Use the set function for settings to set values that you want the settings to point to."
     }
   }
