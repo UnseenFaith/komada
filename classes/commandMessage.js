@@ -1,10 +1,11 @@
 module.exports = class CommandMessage {
 
 /* eslint-disable no-underscore-dangle, no-throw-literal, newline-per-chained-call */
-  constructor(msg, cmd, prefix, prefixLength) {
+  constructor(msg, cmd, nameInvoked, prefix, prefixLength) {
     Object.defineProperty(this, "client", { value: msg.client });
     this.msg = msg;
     this.cmd = cmd;
+    this.nameInvoked = nameInvoked;
     this.prefix = prefix;
     this.prefixLength = prefixLength;
     this.args = this.constructor.getArgs(this);
@@ -93,7 +94,7 @@ module.exports = class CommandMessage {
 
 
   static getArgs(cmdMsg) {
-    const args = cmdMsg.msg.content.slice(cmdMsg.prefixLength).trim().slice(cmdMsg.cmd.help.name.length).trim().split(cmdMsg.cmd.help.usageDelim !== "" ? cmdMsg.cmd.help.usageDelim : undefined);
+    const args = cmdMsg.msg.content.slice(cmdMsg.prefixLength).trim().slice(cmdMsg.nameInvoked.length).trim().split(cmdMsg.cmd.help.usageDelim !== "" ? cmdMsg.cmd.help.usageDelim : undefined);
     if (args[0] === "") return [];
     return args;
   }
