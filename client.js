@@ -40,7 +40,7 @@ module.exports = class Komada extends Discord.Client {
       splitMessage: Discord.splitMessage,
     };
     this.coreBaseDir = `${__dirname}${sep}`;
-    this.clientBaseDir = `${resolve(process.env.clientDir) || process.cwd()}${sep}`;
+    this.clientBaseDir = resolve(`${process.env.clientDir || process.cwd()}${sep}`);
     this.settings = new JSONSettings(this);
   }
 
