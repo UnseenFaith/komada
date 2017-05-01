@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-const { sep } = require("path");
+const { resolve, sep } = require("path");
 const now = require("performance-now");
 const CommandMessage = require("./classes/commandMessage.js");
 const Loader = require("./classes/loader.js");
@@ -41,7 +41,7 @@ module.exports = class Komada extends Discord.Client {
       splitMessage: Discord.splitMessage,
     };
     this.coreBaseDir = `${__dirname}${sep}`;
-    this.clientBaseDir = `${process.env.clientDir || process.cwd()}${sep}`;
+    this.clientBaseDir = `${resolve(process.env.clientDir) || process.cwd()}${sep}`;
     this.guildConfs = Config.guildConfs;
     this.configuration = Config;
   }
