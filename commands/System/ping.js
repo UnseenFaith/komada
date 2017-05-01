@@ -1,6 +1,6 @@
 exports.run = async (client, msg) => {
   const message = await msg.sendMessage("Ping?");
-  return msg.sendMessage(`Pong! (Roundtrip took: ${message.createdTimestamp - msg.createdTimestamp}ms. Heartbeat: ${client.ping}ms.)`);
+  return msg.sendMessage(`Pong! (Roundtrip took: ${message.createdTimestamp - msg.createdTimestamp}ms. Heartbeat: ${Math.round(client.ping)}ms.)`);
 };
 
 exports.conf = {
