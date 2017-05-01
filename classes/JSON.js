@@ -48,7 +48,7 @@ class JSONSettings {
     if (value === undefined) value = settings[key] || null;
     type = this.client.funcs.toTitleCase(type);
     if (!types.includes(type)) throw `${type} does not match a valid type. Valid types: ${types.join(", ")}`;
-    if (type === "String" || type === "Number" && (min || max || !["number", "string"].includes(typeof min) || !["number", "string"].includes(typeof max))) throw `Minimum and maximum must be either numbers or strings.`;
+    if ((type === "String" || type === "Number") && (min || max || !["number", "string"].includes(typeof min) || !["number", "string"].includes(typeof max))) throw `Minimum and maximum must be either numbers or strings.`;
     if (type === "String" && (possibles && !(possibles instanceof Array))) throw "The list of possibles must be a valid array.";
     value = this._parseValue("default", settings, key, value, { type, min, max, possibles });
     settings[key] = { data: value, type, global };
@@ -97,7 +97,8 @@ class JSONSettings {
   }
 
   set(guild, key, value, force = false) {
-    if (!guild || !this.client.guilds.has(guild.id) || guild !== "default") throw "You must provide a valid guild or \"default\" as the setting to change.";
+    guild = guild instanceof Discord.Guild ? guild.id || guild;
+    if (!guild && !this.client.guilds.has(guild) && guild !== "default") throw "You must provide a valid guild or \"default\" as the setting to change.";
     if (key === undefined) throw "You must provide a key to change data for.";
     if (value === undefined) "You must provide a value to set.";
     const settings = guild.id ? this.guildSettings.get(guild.id) : this.guildSettings.get(guild);
@@ -128,7 +129,7 @@ class JSONSettings {
       case "Array":
         const arr = setting.data || [];
         if (value instanceof Array) {
-          value.forEach(val => {
+          value.forEach((val) => {
             if (!arr.includes(val)) arr.push(val); else arr.splice(arr.indexOf(val), 1);
           });
         } else {
