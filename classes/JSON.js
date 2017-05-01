@@ -31,8 +31,8 @@ class JSONSettings {
 
   async init() {
     const start = now();
-    let defaultSettings = await fs.readJSONAsync(this._defaultFile).catch(() => fs.outputJSONAsync(this._defaultFile, defaultSetting(client)));
-    if (!defaultSettings) defaultSettings = defaultSetting(client);
+    let defaultSettings = await fs.readJSONAsync(this._defaultFile).catch(() => fs.outputJSONAsync(this._defaultFile, defaultSetting(this.client)));
+    if (!defaultSettings) defaultSettings = defaultSetting(this.client);
     Object.defineProperty(this, '_default', { value: defaultSettings });
     this.guildSettings.set('default', this._default);
     this.client.guilds.forEach(async (guild) => {
@@ -46,7 +46,7 @@ class JSONSettings {
     const settings = this.guildSettings.get('default');
     if (key === undefined) throw `You must provide a valid key name to add.`;
     if (value === undefined) value = settings[key] || null;
-    type = client.funcs.toTitleCase(type);
+    type = this.client.funcs.toTitleCase(type);
     if (!types.includes(type)) throw `${type} does not match a valid type. Valid types: ${types.join(", ")}`;
     if (type === 'String' || type === 'Number' && (min || max || !['number', 'string'].includes(typeof min) || !['number', 'string'].includes(typeof max))) throw `Minimum and maximum must be either numbers or strings.`;
     if (type === 'String' && (possibles && !(possibles instanceof Array))) throw 'The list of possibles must be a valid array.';
