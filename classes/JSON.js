@@ -14,7 +14,7 @@ class JSONSettings {
     Object.defineProperty(this, "client", { value: client });
     Object.defineProperty(this, "_dataDir", { value: client.config.settingsDir || `${client.clientBaseDir}/bwd/settings` });
     Object.defineProperty(this, "_defaultFile", { value: `${this._dataDir}${sep}default.json` });
-    this.guildSettings = new Discord.Collection();
+    this.guilds = new Discord.Collection();
   }
 
   fetchSettings(guild) {
@@ -22,7 +22,7 @@ class JSONSettings {
     Object.keys(this._default).forEach((key) => {
       merged[key] = this._default[key];
     });
-    const guildSettings = this.guildSettings.get(guild instanceof Discord.Guild ? guild.id : guild);
+    const guildSettings = this.guilds.get(guild instanceof Discord.Guild ? guild.id : guild);
     if (guildSettings) {
       Object.keys(guildSettings).forEach((key) => {
         merged[key] = guildSettings[key];
@@ -36,16 +36,16 @@ class JSONSettings {
     let defaultSettings = await fs.readJSONAsync(this._defaultFile).catch(() => fs.outputJSONAsync(this._defaultFile, defaultSetting(this.client)));
     if (!defaultSettings) defaultSettings = defaultSetting(this.client);
     Object.defineProperty(this, "_default", { value: defaultSettings });
-    this.guildSettings.set("default", this._default);
+    this.guilds.set("default", this._default);
     this.client.guilds.forEach(async (guild) => {
       const settings = await fs.readJSONAsync(`${this._dataDir}${sep}${guild.id}.json`).catch(() => {}) || {};
-      this.guildSettings.set(guild.id, settings);
+      this.guilds.set(guild.id, settings);
     });
     this.client.emit("log", `Loaded Guild Settings in ${(now() - start).toFixed(2)}ms.`);
   }
 
   addKey(key, value, { type = value.constructor.name, possibles, min, max, global = false }) {
-    const settings = this.guildSettings.get("default");
+    const settings = this.guilds.get("default");
     if (key === undefined) throw "You must provide a valid key name to add.";
     if (value === undefined) value = settings[key] || null;
     type = this.client.funcs.toTitleCase(type);
@@ -63,7 +63,7 @@ class JSONSettings {
       if (min && !isNaN(min)) settings[key].min = parseFloat(min);
       if (max && !isNaN(max)) settings[key].max = parseFloat(max);
     }
-    for (const setting in this.guildSettings.values()) {
+    for (const setting in this.guilds.values()) {
       setting[key] = settings[key];
     }
     fs.outputJSONAsync(this._defaultFile, settings);
@@ -71,11 +71,11 @@ class JSONSettings {
   }
 
   delKey(key) {
-    const settings = this.guildSettings.get("default");
+    const settings = this.guilds.get("default");
     if (key === undefined) throw "You must provide a valid key name to add.";
     if (!settings[key]) throw `${key} does not exist in the default settings.`;
     else delete this._default[key];
-    for (const [guild, guildSettings] in this.guildSettings.entries()) {
+    for (const [guild, guildSettings] in this.guilds.entries()) {
       if (key in guildSettings) {
         delete guildSettings[key];
         fs.outputJSONAsync(`${this._dataDir}${sep}${guild}.json`, settings);
@@ -85,7 +85,7 @@ class JSONSettings {
   }
 
   has(guild) {
-    return this.guildSettings.has(guild instanceof Discord.Guild ? guild.id : guild);
+    return this.guilds.has(guild instanceof Discord.Guild ? guild.id : guild);
   }
 
   hasKey(key) {
@@ -93,13 +93,17 @@ class JSONSettings {
     return key in this._default;
   }
 
+  insert(guild) {
+    return this.guilds.set(guild instanceof Discord.Guild ? guild.id : guild, {});
+  }
+
   remove(guild) {
     fs.remove(`${this._dataDir}${sep}${guild.id}.json`);
-    return this.guildSettings.delete(guild instanceof Discord.Guild ? guild.id : guild);
+    return this.guilds.delete(guild instanceof Discord.Guild ? guild.id : guild);
   }
 
   set(guild, key, value, force = false) {
-    const settings = guild.id ? this.guildSettings.get(guild.id) : this.guildSettings.get(guild);
+    const settings = guild.id ? this.guilds.get(guild.id) : this.guilds.get(guild);
     if (!settings) throw `There were no settings found for ${guild}`;
     if (key === undefined) throw "You must provide a key to change data for.";
     if (value === undefined) throw "You must provide a value to set.";
@@ -111,11 +115,11 @@ class JSONSettings {
     if (guild !== "default" && settings[key].global) throw "You cannot change the value of a global key.";
     value = this._parseValue(guild, settings, key, value);
     if (force) {
-      for (const [guildID, guildSettings] in this.guildSettings.entries()) {
+      for (const [guildID, guildSettings] in this.guilds.entries()) {
         guildSettings[key].data = value;
         fs.outputJSONAsync(`${this._dataDir}${sep}${guildID}.json`, guildSettings);
       }
-      return `${key} updated with data ${value} for ${this.guildSettings.size - 1} guilds.`;
+      return `${key} updated with data ${value} for ${this.guilds.size - 1} guilds.`;
     }
     settings[key].data = value;
     fs.outputJSONAsync(`${this._dataDir}${sep}${guild.id ? guild.id : guild}.json`, settings);
@@ -198,7 +202,7 @@ const defaultSetting = client => ({
 const handler = (client, guild) => ({
   get: (setting, key) => {
     if (key === "length" || key === "size") return Object.keys(setting).length;
-    if (setting[key] === undefined) return undefined; //eslint-disable-line 
+    if (setting[key] === undefined) return undefined; //eslint-disable-line
     switch (setting[key].type) {
       case "Array":
       case "Boolean":
