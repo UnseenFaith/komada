@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
 const fs = require('fs-extra-promise');
+const now = require("performance-now");
 const { sep } = require('path');
 
 const types = ['Array', 'Boolean', 'Number', 'String', 'Channel', 'Role', 'User', 'Member'];
@@ -29,6 +30,7 @@ class JSONSettings {
   }
 
   async init() {
+    const start = now();
     let defaultSettings = await fs.readJSONAsync(this._defaultFile).catch(() => fs.outputJSONAsync(this._defaultFile, defaultSetting(client)));
     if (!defaultSettings) defaultSettings = defaultSetting(client);
     Object.defineProperty(this, '_default', { value: defaultSettings });
@@ -37,6 +39,7 @@ class JSONSettings {
       const settings = await fs.readJSONAsync(`${this._dataDir}${path.sep}${guild.id}.json`) || {};
       this.guildSettings.set(guild.id, settings);
    });
+   this.client.emit("log", `Loaded Guild Settings in ${(now() - start).toFixed(2)}ms.`);
   }
 
   addKey(key, value, { type = value.constructor.name, possibles, min, max, global = false }) {
