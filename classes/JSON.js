@@ -19,17 +19,17 @@ class JSONSettings {
 
   fetchSettings(guild) {
     const merged = {};
-    for (const key in Object.keys(this._default)) {
+    Object.keys(this._default).forEach((key) => {
       merged[key] = this._default[key];
-    }
+    })
     const guildSettings = this.guildSettings.get(guild instanceof Discord.Guild ? guild.id : guild);
     if (guildSettings) {
-      for (const key in Object.keys(guildSettings)) {
+      Object.keys(guildSettings).forEach((key) => {
         merged[key] = guildSettings[key];
-      }
-    }
+      });
     return new Proxy(merged, handler(this.client, guild));
   }
+}
 
   async init() {
     const start = now();
