@@ -89,7 +89,7 @@ module.exports = class Komada extends Discord.Client {
         if (piece.init) return piece.init(this);
         return true;
       }));
-      await this.settings.init(this);
+      await this.settings.init();
       this.ready = true;
     });
   }
