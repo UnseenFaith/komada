@@ -4,8 +4,7 @@ const now = require("performance-now");
 const CommandMessage = require("./classes/commandMessage.js");
 const Loader = require("./classes/loader.js");
 const ArgResolver = require("./classes/argResolver.js");
- /* Will Change this later */
-const Config = require("./classes/Configuration Types/Config.js");
+const JSONSettings = require("./classes/JSON.json");
 
 require("./classes/Extendables.js");
 
@@ -42,8 +41,7 @@ module.exports = class Komada extends Discord.Client {
     };
     this.coreBaseDir = `${__dirname}${sep}`;
     this.clientBaseDir = `${resolve(process.env.clientDir) || process.cwd()}${sep}`;
-    this.guildConfs = Config.guildConfs;
-    this.configuration = Config;
+    this.settings = new JSONSettings(this);
   }
 
   validatePermStructure() {
@@ -91,7 +89,7 @@ module.exports = class Komada extends Discord.Client {
         if (piece.init) return piece.init(this);
         return true;
       }));
-      await this.configuration.initialize(this);
+      await this.settings.init(this);
       this.ready = true;
     });
   }

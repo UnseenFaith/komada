@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Command Cooldowns are now available through a new inhibitor/finalizer combo. Simply set command.conf.cooldown to an integer in seconds to put a cooldown on that command.
 
 ### Changed
+- Completely rewrote Configs (now known as Settings) **Needs heavy Testing**
 - Backend is now class based. Users main files will need to be updated. The interface is the same as creating a discord.js client, only using komada, and with komada config. No more use of start, but client.login(token) is needed now.
 - Usage will no longer be calculated everytime a command is run, but instead stored in command.usage.
 - Usage has been refactored into a ParsedUsage class, and an argResolver class. (internal)
@@ -29,7 +30,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Use Discord.Permissions to generate and keep cached an implied permissions object, instead of generating a new object every time a command is run.
 
 ### Fixed
-- 
+-
 
 ### Removed
 - generateInvite.js core function in favor of the Discord.JS generateInvite.
