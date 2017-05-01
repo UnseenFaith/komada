@@ -133,7 +133,7 @@ class JSONSettings {
             if (!arr.includes(val)) arr.push(val); else arr.splice(arr.indexOf(val), 1);
           });
         } else {
-          if (!arr.includes(val)) arr.push(val); else arr.splice(arr.indexOf(value), 1);
+          if (!arr.includes(value)) arr.push(value); else arr.splice(arr.indexOf(value), 1);
         }
         return arr;
       case "Boolean":
