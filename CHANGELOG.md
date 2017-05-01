@@ -33,6 +33,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 -
 
 ### Removed
+- Removed confs && guildCreate event (No longer needed)
 - generateInvite.js core function in favor of the Discord.JS generateInvite.
 - botpermissions.js core function which was only used by the generateInvite core function.
 - fullUsage.js core function which is now available in command.usage.fullUsage(msg).
