@@ -97,7 +97,7 @@ class JSONSettings {
   }
 
   set(guild, key, value, force = false) {
-    guild = guild instanceof Discord.Guild ? guild.id || guild;
+    guild = guild instanceof Discord.Guild ? guild.id : guild;
     if (!guild && !this.client.guilds.has(guild) && guild !== "default") throw "You must provide a valid guild or \"default\" as the setting to change.";
     if (key === undefined) throw "You must provide a key to change data for.";
     if (value === undefined) "You must provide a value to set.";
