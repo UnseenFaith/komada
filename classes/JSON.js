@@ -140,7 +140,6 @@ class JSONSettings {
         if (truthy.includes(value)) return true;
         else if (falsy.includes(value)) return false;
         else throw `The value provided was not a valid boolean resolvable. Valid truthy: ${truthy.join(", ")}; Valid falsy: ${falsy.join(", ")}`;
-        break;
       case "Number":
         min = min || setting.min || null;
         max = max || setting.max || null;
@@ -190,8 +189,8 @@ const defaultSetting = (client) => {
   return {
     prefix: { type: client.config.prefix.constructor.name, data: client.config.prefix },
     disabledCommands: { type: "Array", data: [] },
-    modRole: { type: "String", data: "Mods" },
-    adminRole: { type: "String", data: "Devs" },
+    modRole: { type: "Role", data: "Mods" },
+    adminRole: { type: "Role", data: "Devs" },
   }
 }
 
