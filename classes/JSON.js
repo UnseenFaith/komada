@@ -1,3 +1,5 @@
+/* eslint-disable no-use-before-define */
+
 const Discord = require("discord.js");
 const fs = require("fs-extra-promise");
 const now = require("performance-now");
@@ -61,7 +63,8 @@ class JSONSettings {
       if (min && !isNaN(min)) settings[key].min = parseFloat(min);
       if (max && !isNaN(max)) settings[key].max = parseFloat(max);
     }
-    for (const [guild, setting] of this.guildSettings) {
+    const values = Object.values(this.guildSettings);
+    for (const setting in values) {
       setting[key] = settings[key];
     }
     fs.outputJSONAsync(this._defaultFile, settings);
@@ -97,8 +100,8 @@ class JSONSettings {
   }
 
   set(guild, key, value, force = false) {
-    guild = guild instanceof Discord.Guild ? guild.id : guild;
-    if (!guild && !this.client.guilds.has(guild) && guild !== "default") throw "You must provide a valid guild or \"default\" as the setting to change.";
+    guild = guild instanceof Discord.Guild ? guild : this.client.guilds.get(guild);
+    if (!guild && guild !== "default") throw "You must provide a valid guild or \"default\" as the setting to change.";
     if (key === undefined) throw "You must provide a key to change data for.";
     if (value === undefined) "You must provide a value to set.";
     const settings = guild.id ? this.guildSettings.get(guild.id) : this.guildSettings.get(guild);
