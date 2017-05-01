@@ -36,7 +36,7 @@ class JSONSettings {
     Object.defineProperty(this, "_default", { value: defaultSettings });
     this.guildSettings.set("default", this._default);
     this.client.guilds.forEach(async (guild) => {
-      const settings = await fs.readJSONAsync(`${this._dataDir}${sep}${guild.id}.json`) || {};
+      const settings = await fs.readJSONAsync(`${this._dataDir}${sep}${guild.id}.json`).catch(() => ()); || {};
       this.guildSettings.set(guild.id, settings);
    });
    this.client.emit("log", `Loaded Guild Settings in ${(now() - start).toFixed(2)}ms.`);
