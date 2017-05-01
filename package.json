@@ -5,7 +5,7 @@
   "description": "Komada: Croatian for 'pieces', is a modular bot system including reloading modules and easy to use custom commands.",
   "main": "client.js",
   "scripts": {
-    "test": "eslint commands functions inhibitors events monitors utils client.js",
+    "test": "eslint classes commands finalizers functions inhibitors events client.js",
     "lint": "npm run test -- --fix"
   },
   "repository": {
