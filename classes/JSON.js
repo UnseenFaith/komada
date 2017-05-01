@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const fs = require('fs-extra-promise');
-const path = require('path');
+const { sep } = require('path');
 
 const types = ['Array', 'Boolean', 'Number', 'String', 'Channel', 'Role', 'User', 'Member'];
 const truthy = [true, 't', 'yes', 'y', 1, '1', '+'];

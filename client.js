@@ -127,7 +127,7 @@ const defaultPermStructure = [
   {
     check: (client, msg) => {
       if (!msg.guild) return false;
-      const modRole = msg.guild.roles.find("name", msg.guild.conf.modRole);
+      const modRole = msg.guild.conf.modRole;
       if (modRole && msg.member.roles.has(modRole.id)) return true;
       return false;
     },
@@ -136,7 +136,7 @@ const defaultPermStructure = [
   {
     check: (client, msg) => {
       if (!msg.guild) return false;
-      const adminRole = msg.guild.roles.find("name", msg.guild.conf.adminRole);
+      const adminRole = msg.guild.conf.adminRole;
       if (adminRole && msg.member.roles.has(adminRole.id)) return true;
       return false;
     },
