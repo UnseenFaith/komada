@@ -11,7 +11,7 @@ class JSONSettings {
   constructor(client) {
     Object.defineProperty(this, 'client', { value: client });
     Object.defineProperty(this, '_dataDir', { value: client.config.settingsDir || `${client.clientBaseDir}/bwd/`});
-    Object.defineProperty(this, '_defaultFile', { value: `${this._dataDir}${path.sep}default.json` });
+    Object.defineProperty(this, '_defaultFile', { value: `${this._dataDir}${sep}default.json` });
     this.guildSettings = new Discord.Collection();
   }
 
@@ -36,7 +36,7 @@ class JSONSettings {
     Object.defineProperty(this, '_default', { value: defaultSettings });
     this.guildSettings.set('default', this._default);
     this.client.guilds.forEach(async (guild) => {
-      const settings = await fs.readJSONAsync(`${this._dataDir}${path.sep}${guild.id}.json`) || {};
+      const settings = await fs.readJSONAsync(`${this._dataDir}${sep}${guild.id}.json`) || {};
       this.guildSettings.set(guild.id, settings);
    });
    this.client.emit("log", `Loaded Guild Settings in ${(now() - start).toFixed(2)}ms.`);
@@ -76,7 +76,7 @@ class JSONSettings {
     for (const [guild, settings] in this.guildSettings) {
       if (key in settings) {
         delete settings[key];
-        fs.outputJSONAsync(`${this._dataDir}${path.sep}${guild.id}.json`, settings);
+        fs.outputJSONAsync(`${this._dataDir}${sep}${guild.id}.json`, settings);
       }
     }
     return this._default;
@@ -92,7 +92,7 @@ class JSONSettings {
   }
 
   remove(guild) {
-    fs.remove(`${this._dataDir}${path.sep}${guild.id}.json`);
+    fs.remove(`${this._dataDir}${sep}${guild.id}.json`);
     return this.guildSettings.delete(guild instanceof Discord.Guild ? guild.id : guild);
   }
 
@@ -112,12 +112,12 @@ class JSONSettings {
     if (force) {
       for (const [guild, setting] of this.guildSettings) {
         setting[key].data = value;
-        fs.outputJSONAsync(`${this._dataDir}${path.sep}${key}.json`, setting);
+        fs.outputJSONAsync(`${this._dataDir}${sep}${key}.json`, setting);
       }
       return `${key} updated with data ${value} for ${this.guildSettings.size - 1} guilds.`;
     }
     settings[key].data = value;
-    fs.outputJSONAsync(`${this._dataDir}${path.sep}${guild.id ? guild.id : guild}.json`, settings);
+    fs.outputJSONAsync(`${this._dataDir}${sep}${guild.id ? guild.id : guild}.json`, settings);
     return settings[key];
   }
 
