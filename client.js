@@ -4,7 +4,7 @@ const now = require("performance-now");
 const CommandMessage = require("./classes/commandMessage.js");
 const Loader = require("./classes/loader.js");
 const ArgResolver = require("./classes/argResolver.js");
-const JSONSettings = require("./classes/JSON.js");
+const JSONSettings = require("./classes/settings/json.js");
 
 const coreBaseDir = `${__dirname}${sep}`;
 const clientBaseDir = `${process.env.clientDir || process.cwd()}${sep}`;
