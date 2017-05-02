@@ -6,6 +6,9 @@ const Loader = require("./classes/loader.js");
 const ArgResolver = require("./classes/argResolver.js");
 const JSONSettings = require("./classes/JSON.js");
 
+const coreBaseDir = `${__dirname}${sep}`;
+const clientBaseDir = `${process.env.clientDir || process.cwd()}${sep}`;
+
 require("./classes/Extendables.js");
 
 /* eslint-disable no-throw-literal, no-use-before-define, no-restricted-syntax */
@@ -39,8 +42,8 @@ module.exports = class Komada extends Discord.Client {
       escapeMarkdown: Discord.escapeMarkdown,
       splitMessage: Discord.splitMessage,
     };
-    this.coreBaseDir = `${__dirname}${sep}`;
-    this.clientBaseDir = `${process.env.clientDir || process.cwd()}${sep}`;
+    this.coreBaseDir = coreBaseDir;
+    this.clientBaseDir = clientBaseDir;
     this.settings = new JSONSettings(this);
   }
 
