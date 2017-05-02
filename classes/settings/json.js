@@ -45,7 +45,7 @@ class JSON extends Base {
     this.client.emit("log", `Loaded Guild Settings in ${(now() - start).toFixed(2)}ms.`);
   }
 
-  addKey(key, value, { type = value.constructor.name, possibles, min, max, global = false }) {
+  add(key, value, { type = value.constructor.name, possibles, min, max, global = false }) {
     const settings = this.guilds.get("default");
     if (key === undefined) throw "You must provide a valid key name to add.";
     if (value === undefined) value = settings[key].data || null;
@@ -69,7 +69,7 @@ class JSON extends Base {
     return settings[key];
   }
 
-  delKey(key) {
+  del(key) {
     const settings = this.guilds.get("default");
     if (key === undefined) throw "You must provide a valid key name to add.";
     if (!settings[key]) throw `${key} does not exist in the default settings.`;
