@@ -9,6 +9,6 @@ class SQL extends Base {
 
   fetch(guild) {
     const someSettings = {};
-    return super().fetch(guild, someSettings);
+    return super.fetch(guild, someSettings);
   }
 }

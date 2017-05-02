@@ -29,7 +29,7 @@ class JSON extends Base {
         merged[key] = guildSettings[key];
       });
     }
-    return super().fetch(guild, merged);
+    return super.fetch(guild, merged);
   }
 
   async init() {
