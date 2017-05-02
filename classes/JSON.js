@@ -47,16 +47,14 @@ class JSONSettings {
   addKey(key, value, { type = value.constructor.name, possibles, min, max, global = false }) {
     const settings = this.guilds.get("default");
     if (key === undefined) throw "You must provide a valid key name to add.";
-    if (value === undefined) value = settings[key] || null;
+    if (value === undefined) value = settings[key].data || null;
     type = this.client.funcs.toTitleCase(type);
     if (!types.includes(type)) throw `${type} does not match a valid type. Valid types: ${types.join(", ")}`;
-    if ((type === "String" || type === "Number") && (min || max || !["number", "string"].includes(typeof min) || !["number", "string"].includes(typeof max))) throw "Minimum and maximum must be either numbers or strings.";
-    if (type === "String" && (possibles && !(possibles instanceof Array))) throw "The list of possibles must be a valid array.";
     value = this._parseValue("default", settings, key, value, { type, min, max, possibles });
     settings[key] = { data: value, type, global };
     if (type === "String" || type === "Number") {
       if (type === "String") {
-        if (possibles && possibles.length > 0) settings[key].possibles = possibles;
+        if (possibles && possibles instanceof Array && possibles.length > 0) settings[key].possibles = possibles;
       }
       min = parseFloat(min);
       max = parseFloat(max);
