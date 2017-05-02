@@ -2,7 +2,11 @@ const { Client, Guild } = require("discord.js");
 
 class Base {
   constructor() {
-    throw Error("You cannot construct this class.");
+    if (this.constructor.name === "Base") throw Error("You cannot construct a new class with the Base.");
+  }
+
+  init() {
+    if (this.constructor.name !== "Base") throw Error(`${this.constructor.name} does not have a init function.`);
   }
 
   fetch(guild, settings) {
@@ -34,6 +38,15 @@ class Base {
       set: () => {
         throw "Use the set function for settings to set values that you want the settings to point to."; // eslint-disable-line
       },
+    };
+  }
+
+  get _default() {
+    return {
+      prefix: { type: this.client.config.prefix.constructor.name, data: this.client.config.prefix },
+      disabledCommands: { type: "Array", data: [] },
+      modRole: { type: "Role", data: "Mods" },
+      adminRole: { type: "Role", data: "Devs" },
     };
   }
 

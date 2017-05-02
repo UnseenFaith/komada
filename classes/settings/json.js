@@ -1,5 +1,5 @@
 /* eslint-disable no-use-before-define, no-underscore-dangle, no-throw-literal */
-
+const Base = require("./base.js");
 const Discord = require("discord.js");
 const fs = require("fs-extra-promise");
 const now = require("performance-now");
@@ -9,8 +9,9 @@ const types = ["Array", "Boolean", "Number", "String", "Channel", "Role", "User"
 const truthy = [true, "t", "yes", "y", 1, "1", "+"];
 const falsy = [false, "f", "no", "n", 0, "0", "-"];
 
-class JSONSettings {
+class JSON extends Base {
   constructor(client) {
+    super();
     Object.defineProperty(this, "client", { value: client });
     Object.defineProperty(this, "_dataDir", { value: client.config.settingsDir || `${client.clientBaseDir}/bwd/settings` });
     Object.defineProperty(this, "_defaultFile", { value: `${this._dataDir}${sep}default.json` });
@@ -28,13 +29,13 @@ class JSONSettings {
         merged[key] = guildSettings[key];
       });
     }
-    return new Proxy(merged, handler(this.client, guild));
+    return super().fetch(guild, merged);
   }
 
   async init() {
     const start = now();
-    let defaultSettings = await fs.readJSONAsync(this._defaultFile).catch(() => fs.outputJSONAsync(this._defaultFile, defaultSetting(this.client)));
-    if (!defaultSettings) defaultSettings = defaultSetting(this.client);
+    let defaultSettings = await fs.readJSONAsync(this._defaultFile).catch(() => fs.outputJSONAsync(this._defaultFile, this._default));
+    if (!defaultSettings) defaultSettings = this._default;
     Object.defineProperty(this, "_default", { value: defaultSettings });
     this.guilds.set("default", this._default);
     this.client.guilds.forEach(async (guild) => {
@@ -187,35 +188,4 @@ class JSONSettings {
 
 }
 
-module.exports = JSONSettings;
-
-const defaultSetting = client => ({
-  prefix: { type: client.config.prefix.constructor.name, data: client.config.prefix },
-  disabledCommands: { type: "Array", data: [] },
-  modRole: { type: "Role", data: "Mods" },
-  adminRole: { type: "Role", data: "Devs" },
-});
-
-// Define any custom property lookup we want here
-const handler = (client, guild) => ({
-  get: (setting, key) => {
-    if (key === "length" || key === "size") return Object.keys(setting).length;
-    if (setting[key] === undefined) return undefined; //eslint-disable-line
-    switch (setting[key].type) {
-      case "Array":
-      case "Boolean":
-      case "Number":
-      case "String":
-        return setting[key].data;
-      case "Channel":
-        return client.channels.get(setting[key].data);
-      case "Role":
-        return guild.roles.get(setting[key].data) || guild.roles.find("name", setting[key].data);
-      default:
-        return null;
-    }
-  },
-  set: () => {
-    throw "Use the set function for settings to set values that you want the settings to point to.";
-  },
-});
+module.exports = JSON;
