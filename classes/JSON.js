@@ -17,7 +17,7 @@ class JSONSettings {
     this.guilds = new Discord.Collection();
   }
 
-  fetchSettings(guild) {
+  fetch(guild) {
     const merged = {};
     Object.keys(this._default).forEach((key) => {
       merged[key] = this._default[key];
