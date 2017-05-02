@@ -3,7 +3,7 @@ const Base = require("./base.js");
 class SQL extends Base {
   constructor(client) {
     super();
-    Object.defineProperty(this, "client", { value: client })l
+    Object.defineProperty(this, "client", { value: client });
   }
 
 
