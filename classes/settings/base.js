@@ -6,7 +6,7 @@ class Base {
   }
 
   init() {
-    if (this.constructor.name !== "Base") throw Error(`${this.constructor.name} does not have a init function.`);
+    throw Error(`${this.constructor.name} does not have a init function.`);
   }
 
   fetch(guild, settings) {
