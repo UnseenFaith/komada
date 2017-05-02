@@ -12,3 +12,5 @@ class SQL extends Base {
     return super.fetch(guild, someSettings);
   }
 }
+
+module.exports = SQL;
