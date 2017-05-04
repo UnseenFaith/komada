@@ -13,7 +13,7 @@ class JSON extends Base {
   constructor(client) {
     super();
     Object.defineProperty(this, "client", { value: client });
-    Object.defineProperty(this, "_dataDir", { value: client.config.settingsDir || `${client.clientBaseDir}/bwd/settings` });
+    Object.defineProperty(this, "_dataDir", { value: client.config.settingsDir || `${client.clientBaseDir}${sep}bwd${sep}settings` });
     Object.defineProperty(this, "_defaultFile", { value: `${this._dataDir}${sep}default.json` });
     this.guilds = new Discord.Collection();
   }
@@ -37,7 +37,7 @@ class JSON extends Base {
     let defaultSettings = await fs.readJSONAsync(this._defaultFile).catch(() => fs.outputJSONAsync(this._defaultFile, this._default));
     if (!defaultSettings) defaultSettings = this._default;
     Object.defineProperty(this, "_default", { value: defaultSettings });
-    this.guilds.set("default", this._default);
+    this.guilds.set("default", defaultSettings);
     this.client.guilds.forEach(async (guild) => {
       const settings = await fs.readJSONAsync(`${this._dataDir}${sep}${guild.id}.json`).catch(() => {}) || {};
       this.guilds.set(guild.id, settings);
@@ -61,9 +61,6 @@ class JSON extends Base {
       max = parseFloat(max);
       if (min && !isNaN(min)) settings[key].min = parseFloat(min);
       if (max && !isNaN(max)) settings[key].max = parseFloat(max);
-    }
-    for (const setting in this.guilds.values()) {
-      setting[key] = settings[key];
     }
     fs.outputJSONAsync(this._defaultFile, settings);
     return settings[key];
