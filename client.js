@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-const { resolve, sep } = require("path");
+const { sep } = require("path");
 const now = require("performance-now");
 const CommandMessage = require("./classes/commandMessage.js");
 const Loader = require("./classes/loader.js");
