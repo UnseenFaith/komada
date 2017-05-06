@@ -1,5 +1,3 @@
-const { Client, Guild } = require("discord.js");
-
 class Base {
   constructor() {
     if (this.constructor.name === "Base") throw Error("You cannot construct a new class with the Base.");
@@ -10,13 +8,11 @@ class Base {
   }
 
   fetch(guild, settings) {
-    if (!(guild instanceof Guild)) throw Error(`${this.constructor.name} did not provide a valid Guild to fetch.`);
     if (typeof settings !== "object" && (!(settings instanceof Array))) throw Error(`${this.constructor.name} did not provide a valid settings object.`);
-    return new Proxy(settings, this._handler(guild.client, guild)); // eslint-disable-line
+    return new Proxy(settings, this._handler(this.client, guild || null)); // eslint-disable-line
   }
 
-  _handler(client, guild) {
-    if (!(client instanceof Client)) throw Error(`${this.constructor.name} did not provide a valid Client object.`);
+  _handler(client, guild) { // eslint-disable-line
     return {
       get: (setting, key) => {
         if (key === "length" || key === "size") return Object.keys(setting).length;
@@ -30,6 +26,7 @@ class Base {
           case "Channel":
             return client.channels.get(setting[key].data);
           case "Role":
+            if (!guild) return setting[key].data;
             return guild.roles.get(setting[key].data) || guild.roles.find("name", setting[key].data);
           default:
             return null;
