@@ -224,7 +224,7 @@ module.exports = class Loader {
     let coreFiles = await fs.readdirAsync(`${this.client.coreBaseDir}events${sep}`)
       .catch(() => { fs.ensureDirAsync(`${this.client.coreBaseDir}events${sep}`).catch(err => this.client.emit("error", this.client.funcs.newError(err))); });
     if (coreFiles) {
-      coreFiles = coreFiles.filter(file => !this.client.config.disabled.events.includes(file.split(".")[0]));      
+      coreFiles = coreFiles.filter(file => !this.client.config.disabled.events.includes(file.split(".")[0]));
       await this.loadFiles(coreFiles.filter(file => file.endsWith(".js")), this.client.coreBaseDir, this.loadNewEvent, this.loadEvents)
         .catch((err) => { throw err; });
     }

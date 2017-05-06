@@ -24,8 +24,8 @@ module.exports = class Komada extends Discord.Client {
       inhibitors: config.disabled.inhibitors || [],
       finalizers: config.disabled.finalizers || [],
       monitors: config.disabled.monitors || [],
-      providers: config.disabled.providers || []
-    };    
+      providers: config.disabled.providers || [],
+    };
     this.funcs = new Loader(this);
     this.argResolver = new ArgResolver(this);
     this.helpStructure = new Map();
