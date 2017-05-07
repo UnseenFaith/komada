@@ -46,9 +46,9 @@ module.exports = class Komada extends Discord.Client {
     this.configuration = Config;
     this.application = null;
   }
- 
+
   get invite() {
-    const permissions = Discord.Permissions.resolve([...new Set(client.commands.reduce((a, b) => a.concat(b.conf.botPerms), ["READ_MESSAGES", "SEND_MESSAGES"]))]);
+    const permissions = Discord.Permissions.resolve([...new Set(this.commands.reduce((a, b) => a.concat(b.conf.botPerms), ["READ_MESSAGES", "SEND_MESSAGES"]))]);
     return `https://discordapp.com/oauth2/authorize?client_id=${this.application.id}&permissions=${permissions}&scope=bot`;
   }
 
