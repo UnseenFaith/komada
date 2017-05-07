@@ -44,6 +44,12 @@ module.exports = class Komada extends Discord.Client {
     this.clientBaseDir = `${process.env.clientDir || process.cwd()}${sep}`;
     this.guildConfs = Config.guildConfs;
     this.configuration = Config;
+    this.application = null;
+  }
+
+  get invite() {
+    const permissions = Discord.Permissions.resolve([...new Set(this.commands.reduce((a, b) => a.concat(b.conf.botPerms), ["READ_MESSAGES", "SEND_MESSAGES"]))]);
+    return `https://discordapp.com/oauth2/authorize?client_id=${this.application.id}&permissions=${permissions}&scope=bot`;
   }
 
   validatePermStructure() {
@@ -67,6 +73,7 @@ module.exports = class Komada extends Discord.Client {
     await this.funcs.loadAll(this);
     this.once("ready", async () => {
       this.config.prefixMention = new RegExp(`^<@!?${this.user.id}>`);
+      this.application = await super.fetchApplication();
       await Promise.all(Object.keys(this.funcs).map((key) => {
         if (this.funcs[key].init) return this.funcs[key].init(this);
         return true;
