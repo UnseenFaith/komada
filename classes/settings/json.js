@@ -5,7 +5,7 @@ const fs = require("fs-extra-promise");
 const now = require("performance-now");
 const { sep } = require("path");
 
-const types = ["Array", "Boolean", "Number", "String", "Channel", "Role", "User", "Member"];
+const types = ["Array", "Boolean", "Number", "String", "Channel", "Role", "User", "Member", "Textchannel", "Voicechannel"];
 const truthy = [true, "t", "yes", "y", 1, "1", "+"];
 const falsy = [false, "f", "no", "n", 0, "0", "-"];
 
@@ -59,8 +59,8 @@ class JSON extends Base {
       }
       min = parseFloat(min);
       max = parseFloat(max);
-      if (min && !isNaN(min)) settings[key].min = parseFloat(min);
-      if (max && !isNaN(max)) settings[key].max = parseFloat(max);
+      if (min && !isNaN(min)) settings[key].min = min;
+      if (max && !isNaN(max)) settings[key].max = max;
     }
     fs.outputJSONAsync(this._defaultFile, settings);
     return settings[key];
@@ -139,26 +139,28 @@ class JSON extends Base {
       case "Boolean":
         if (truthy.includes(value)) return true;
         else if (falsy.includes(value)) return false;
-        throw `The value provided was not a valid boolean resolvable. Valid truthy: ${truthy.join(", ")}; Valid falsy: ${falsy.join(", ")}`;
+        throw `The value provided was not a valid boolean resolvable.\nValid truthy: ${truthy}\nValid falsy: ${falsy}`;
       case "Number":
-        min = min || setting.min || null;
-        max = max || setting.max || null;
+        min = min !== undefined ? min : setting.min !== undefined ? setting.min : null;
+        max = max !== undefined ? max : settings.max !== undefined ? setting.max : null;
         value = parseFloat(value);
         if (isNaN(value)) throw `The number value passed was NaN for ${key}`;
-        if (min && value < min) throw `The number value passed was smaller then the minimum value of ${min}`;
-        if (max && value > max) throw `The number value passed was bigger then the maximum value of ${max}`;
+        if (min && value < min) throw `The number value passed was smaller than the minimum value of ${min}`;
+        if (max && value > max) throw `The number value passed was bigger than the maximum value of ${max}`;
         break;
       case "String":
-        min = min || setting.min || null;
-        max = max || setting.max || null;
+        min = min !== undefined ? min : setting.min !== undefined ? setting.min : null;
+        max = max !== undefined ? max : settings.max !== undefined ? setting.max : null;
         possibles = possibles || setting.possibles || null;
         if (value instanceof Array) value = value.join(" ");
         else if (typeof value !== "string") throw `The value passed was not a string for ${key}`;
         if (possibles && possibles.length > 0 && possibles.includes(value)) throw `The value passed was not a valid possible. Valid possibles: ${possibles.join(", ")}`;
-        if (min && value.length < min) throw `The length of the string was smaller then the minimum value of ${min}`;
-        if (max && value.length > max) throw `The length of the string was bigger then the maximum value of ${max}`;
+        if (min && value.length < min) throw `The length of the string was smaller than the minimum value of ${min}`;
+        if (max && value.length > max) throw `The length of the string was bigger than the maximum value of ${max}`;
         break;
       case "Channel":
+      case "Textchannel":
+      case "Voicechannel":
         if (!(value instanceof Discord.Channel)) {
           const channel = this.client.channels.get(value);
           if (!channel) throw `${channel} does not exist in the collection of channels.`;
@@ -170,7 +172,7 @@ class JSON extends Base {
       case "Role":
         if (!(value instanceof Discord.Role) && guild !== "default") {
           const role = guild.roles.get(value) || guild.roles.find("name", value);
-          if (!role) throw `${role} does not exist in the guild roles.`;
+          if (!role) throw `${value} does not exist in this guild roles.`;
           else value = role.id;
         } else {
           value = value.id;
