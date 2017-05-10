@@ -18,7 +18,7 @@ exports.run = async (client, msg, [cmd]) => {
     for (const key2 in help[key]) helpMessage.push(`= ${key2} =`, `${help[key][key2].join("\n")}\n`);
     helpMessage.push("```\n\u200b");
   }
-  return msg[method].sendMessage(helpMessage, { split: { char: "\u200b" } }).catch(err => client.emit("error", err))
+  return msg[method].send(helpMessage, { split: { char: "\u200b" } }).catch(err => client.emit("error", err))
     .then(() => { if (msg.channel.type !== "dm" && !client.config.selfbot) msg.sendMessage("Commands have been sent to your DMs."); });
 };
 
