@@ -153,6 +153,7 @@ const defaultPermStructure = [
   },
   {
     check: (client, msg) => {
+      if (!msg.guild) return false;
       if (msg.author.id === msg.guild.owner.id) return true;
       return false;
     },
