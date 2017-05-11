@@ -1,70 +1,101 @@
 exports.run = async (client, msg, [type, name]) => {
-  let m;
-  let message;
   switch (type) {
     case "function":
-      try {
-        m = await msg.channel.sendMessage(`Attempting to reload function ${name}`);
-        message = await client.funcs.reload.function(client, client.clientBaseDir, name);
-        m.edit(`✅ ${message}`);
-      } catch (err) {
-        m.edit(`❌ ${err}`);
+      if (name === "all") {
+        await client.funcs.loadFunctions();
+        await Promise.all(Object.keys(client.funcs).map((key) => {
+          if (client.funcs[key].init) return client.funcs[key].init(client);
+          return true;
+        }));
+        return msg.sendMessage("✅ Reloaded all functions.");
       }
-      break;
+      await msg.sendMessage(`Attempting to reload function ${name}`);
+      return client.funcs.reloadFunction(name)
+          .then(mes => msg.sendMessage(`✅ ${mes}`))
+          .catch(err => msg.sendMessage(`❌ ${err}`));
+
     case "inhibitor":
-      try {
-        m = await msg.channel.sendMessage(`Attempting to reload inhibitor ${name}`);
-        message = await client.funcs.reload.inhibitor(client, client.clientBaseDir, name);
-        m.edit(`✅ ${message}`);
-      } catch (err) {
-        m.edit(`❌ ${err}`);
+      if (name === "all") {
+        await client.funcs.loadCommandInhibitors();
+        await Promise.all(client.commandInhibitors.map((piece) => {
+          if (piece.init) return piece.init(client);
+          return true;
+        }));
+        return msg.sendMessage("✅ Reloaded all inhibitors.");
       }
-      break;
-    case "monitor":
-      try {
-        m = await msg.channel.sendMessage(`Attempting to reload monitor ${name}`);
-        message = await client.funcs.reload.monitor(client, client.clientBaseDir, name);
-        m.edit(`✅ ${message}`);
-      } catch (err) {
-        m.edit(`❌ ${err}`);
+      await msg.sendMessage(`Attempting to reload inhibitor ${name}`);
+      return client.funcs.reloadInhibitor(name)
+          .then(mes => msg.sendMessage(`✅ ${mes}`))
+          .catch(err => msg.sendMessage(`❌ ${err}`));
+
+    case "finalizer":
+      if (name === "all") {
+        await client.funcs.loadCommandFinalizers();
+        await Promise.all(client.commandFinalizers.map((piece) => {
+          if (piece.init) return piece.init(client);
+          return true;
+        }));
+        return msg.sendMessage("✅ Reloaded all finalizers.");
       }
-      break;
-    case "provider":
-      try {
-        m = await msg.channel.sendMessage(`Attempting to reload provider ${name}`);
-        message = await client.funcs.reload.provider(client, client.clientBaseDir, name);
-        m.edit(`✅ ${message}`);
-      } catch (err) {
-        m.edit(`❌ ${err}`);
-      }
-      break;
+      await msg.sendMessage(`Attempting to reload finalizer ${name}`);
+      return client.funcs.reloadFinalizer(name)
+          .then(mes => msg.sendMessage(`✅ ${mes}`))
+          .catch(err => msg.sendMessage(`❌ ${err}`));
+
     case "event":
-      try {
-        m = await msg.channel.sendMessage(`Attempting to reload event ${name}`);
-        message = await client.funcs.reload.event(client, name);
-        m.edit(`✅ ${message}`);
-      } catch (err) {
-        m.edit(`❌ ${err}`);
+      if (name === "all") {
+        await client.funcs.loadEvents();
+        return msg.sendMessage("✅ Reloaded all events.");
       }
-      break;
+      await msg.sendMessage(`Attempting to reload event: ${name}`);
+      return client.funcs.reloadEvent(name)
+          .then(mes => msg.sendMessage(`✅ ${mes}`))
+          .catch(err => msg.sendMessage(`❌ ${err}`));
+
+    case "monitor":
+      if (name === "all") {
+        await client.funcs.loadMessageMonitors();
+        await Promise.all(client.messageMonitors.map((piece) => {
+          if (piece.init) return piece.init(client);
+          return true;
+        }));
+        return msg.sendMessage("✅ Reloaded all monitors.");
+      }
+      await msg.sendMessage(`Attempting to reload monitor: ${name}`);
+      return client.funcs.reloadMessageMonitor(name)
+          .then(mes => msg.sendMessage(`✅ ${mes}`))
+          .catch(err => msg.sendMessage(`❌ ${err}`));
+
+    case "provider":
+      if (name === "all") {
+        await client.funcs.loadProviders();
+        await Promise.all(client.providers.map((piece) => {
+          if (piece.init) return piece.init(client);
+          return true;
+        }));
+        return msg.sendMessage("✅ Reloaded all providers.");
+      }
+      await msg.sendMessage(`Attempting to reload provider: ${name}`);
+      return client.funcs.reloadProvider(name)
+          .then(mes => msg.sendMessage(`✅ ${mes}`))
+          .catch(err => msg.sendMessage(`❌ ${err}`));
+
     case "command":
-      switch (name) {
-        case "all":
-          await require(`${client.coreBaseDir}utils/loadCommands.js`)(client);
-          msg.channel.sendMessage("✅ Reloaded all commands.");
-          break;
-        default:
-          try {
-            m = await msg.channel.sendMessage(`Attempting to reload command ${name}`);
-            message = await client.funcs.reload.command(client, client.clientBaseDir, name);
-            m.edit(`✅ ${message}`);
-          } catch (err) {
-            m.edit(`❌ ${err}`);
-          }
-          break;
+      if (name === "all") {
+        await client.funcs.loadCommands();
+        await Promise.all(client.commands.map((piece) => {
+          if (piece.init) return piece.init(client);
+          return true;
+        }));
+        return msg.sendMessage("✅ Reloaded all commands.");
       }
-      break;
-      // no default
+      await msg.sendMessage(`Attempting to reload command ${name}`);
+      return client.funcs.reloadCommand(name)
+          .then(mes => msg.sendMessage(`✅ ${mes}`))
+          .catch(err => msg.sendMessage(`❌ ${err}`));
+
+    default:
+      return msg.sendMessage("never going to happen");
   }
 };
 
@@ -80,6 +111,6 @@ exports.conf = {
 exports.help = {
   name: "reload",
   description: "Reloads the command file, if it's been updated or modified.",
-  usage: "<function|inhibitor|monitor|provider|event|command> <name:str>",
+  usage: "<function|inhibitor|finalizer|monitor|provider|event|command> <name:str>",
   usageDelim: " ",
 };

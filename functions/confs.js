@@ -1,8 +1,8 @@
-const Config = require("../classes/Config.js");
-const ArrayConfig = require("../classes/Configuration Types/Array.js");
-const BooleanConfig = require("../classes/Configuration Types/Boolean.js");
-const NumberConfig = require("../classes/Configuration Types/Number.js");
-const StringConfig = require("../classes/Configuration Types/String.js");
+const Config = require("../classes/Configuration Types/Config.js");
+const ArrayConfig = require("../classes/Configuration Types/types/Array.js");
+const BooleanConfig = require("../classes/Configuration Types/types/Boolean.js");
+const NumberConfig = require("../classes/Configuration Types/types/Number.js");
+const StringConfig = require("../classes/Configuration Types/types/String.js");
 
 exports.remove = guild => Config.remove(guild);
 

@@ -4,7 +4,51 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [Unreleased] - Classbased | Staged for 0.20.0
+### Added
+- Command Editing is now possible via setting config.cmdEditing to true. You will need to make a few changes to your code to make it work though:
+- A new messageUpdate core event.
+- New methods attached to the Discord.js message object to enable command editing: message.send, message.sendMessage, message.sendCode, message.sendEmbed. These methods will cache the command message and the response message, and edit the response message if the command message is found in the cache.
+- With the new command cache, you also have access to commandMessage sweeping. These are 2 new komada configs as integers in seconds: config.commandMessageLifetime, config.commandMessageSweep
+- Added a timer to the loading.
+- Finalizers: Functions which are run on after a successful command. *Please Note: All command files must be defined as async. `exports.run = __async__ (client, msg, ...`*
+- Command Cooldowns are now available through a new inhibitor/finalizer combo. Simply set command.conf.cooldown to an integer in seconds to put a cooldown on that command.
+
+### Changed
+- Backend is now class based. Users main files will need to be updated. The interface is the same as creating a discord.js client, only using komada, and with komada config. No more use of start, but client.login(token) is needed now.
+- Usage will no longer be calculated everytime a command is run, but instead stored in command.usage.
+- Usage has been refactored into a ParsedUsage class, and an argResolver class. (internal)
+- The command loading and reload has been completely refactored for speed. You should be able to load everything in approximatly 10% of the time it used to take.
+- Refactored: Disconnect, Error, Warn, Message; into core events rather than in the app.js file.
+- Changed core log func, into an event. You can now log anything by running client.emit('log', data, type);
+- runMessageMonitors has been moved into the new Message core event.
+- dotenv dependancy has been changed to a peerdep.
+- fs-extra-promise has been updated to the latest version.
+- Minimum node version is now v7.6.x
+- Remaining Utils have been moved to the classes folder.
+- Use Discord.Permissions to generate and keep cached an implied permissions object, instead of generating a new object every time a command is run.
+
+### Fixed
+- 
+
+### Removed
+- generateInvite.js core function in favor of the Discord.JS generateInvite.
+- botpermissions.js core function which was only used by the generateInvite core function.
+- fullUsage.js core function which is now available in command.usage.fullUsage(msg).
+- addCommmas.js core function. Should use .toLocaleString() instead.
+- getFileListing.js core function in favor of the new loading refactor.
+- loadSingleCommand.js core function in favor of the new loading refactor.
+- reload.js core function in favor of the new loading refactor.
+- parseUsage.js core function in favor of the new parsedUsage class refactor.
+- log.js core function in favor of the new log event.
+- exports.getCommand in handleCommand.js in favor of more efficient code.
+- Localizations, and all references to them (per Faith)
+- fs-extra dependancy. All use of fs, is done through fs-extra-promise now.
+- Due to the class rewrite, the module can no-longer be used stand alone. So the start script has been removed from the package.json. You can however add your own start file (as you would if you were using the package as a dependancy) as a work around for using the repo as a stand alone if you really need to.
+- loading utils have been removed in favor of the new loading refactor.
+- Implied Permissions has been removed in favor of an internal discord.js class.
+
+## [0.19.0]
 ### Added
 - Readded ParseTags function due to Komada Provider dependency,
 - Added Websocket Heartbeat ping to ping command.
@@ -326,17 +370,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Various Confs fixes from [UnseenFaith]
 - Usage Addition/ParseUsage fix from [UnseenFaith]
 
-[Unreleased]: https://github.com/eslachance/komada/compare/0.18.1...indev
-[0.10.0]: https://github.com/eslachance/komada/compare/1627e6deb1d8c352d83e52ccd590f2330f5f8bb2...0.10.0
-[0.11.0]: https://github.com/eslachance/komada/compare/0.10.0...0.11.0
-[0.12.0]: https://github.com/eslachance/komada/compare/0.11.0...0.12.0
-[0.12.4]: https://github.com/eslachance/komada/compare/0.12.0...0.12.4
-[0.18.0]: https://github.com/eslachance/komada/compare/0.12.4...0.18
-[0.18.1]: https://github.com/eslachance/komada/compare/0.12.4...0.18.1
-
-[vzwGrey]: https://github.com/vzwGrey
-[eslachance]: https://github.com/eslachance
-[hkwu]: https://github.com/hkwu
-[bdistin]: https://github.com/bdistin
-[UnseenFaith]: https://github.com/UnseenFaith
-[CyberiumShadow]: https://github.com/CyberiumShadow
+[Unreleased]: https://github.com/dirigeants/komada/compare/0.19.0...indev
+[0.10.0]: https://github.com/dirigeants/komada/compare/1627e6deb1d8c352d83e52ccd590f2330f5f8bb2...0.10.0
+[0.11.0]: https://github.com/dirigeants/komada/compare/0.10.0...0.11.0
+[0.12.0]: https://github.com/dirigeants/komada/compare/0.11.0...0.12.0
+[0.12.4]: https://github.com/dirigeants/komada/compare/0.12.0...0.12.4
+[0.18.0]: https://github.com/dirigeants/komada/compare/0.12.4...0.18
+[0.18.1]: https://github.com/dirigeants/komada/compare/0.12.4...0.18.1
+[0.19.0]: https://github.com/dirigeants/komada/compare/0.18.1...0.19.0

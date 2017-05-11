@@ -1,12 +1,6 @@
-exports.run = (client, msg) => {
-  msg.channel.sendMessage("Rebooting...")
-    .then(() => {
-      process.exit();
-    })
-    .catch((e) => {
-      console.error(e);
-    });
-};
+exports.run = async (client, msg) => msg.sendMessage("Rebooting...")
+    .then(() => process.exit())
+    .catch(err => client.emit("error", err));
 
 exports.conf = {
   enabled: true,
@@ -22,9 +16,4 @@ exports.help = {
   description: "Reboots the bot.",
   usage: "",
   usageDelim: "",
-};
-
-exports.strings = {
-  "Reboots the bot.": "Redémarre le bot",
-  "Rebooting...": "Redémarrage",
 };

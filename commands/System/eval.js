@@ -1,17 +1,14 @@
 const inspect = require("util").inspect;
 
-exports.run = (client, msg, [code]) => {
+/* eslint-disable no-eval */
+exports.run = async (client, msg, [code]) => {
   try {
     let evaled = eval(code);
-    if (typeof evaled !== "string") {
-      evaled = inspect(evaled);
-    }
-    msg.channel.sendCode("xl", client.funcs.clean(client, evaled));
+    if (typeof evaled !== "string") evaled = inspect(evaled);
+    msg.sendCode("xl", client.funcs.clean(client, evaled));
   } catch (err) {
-    msg.channel.sendMessage(`\`ERROR\` \`\`\`xl\n${
-      client.funcs.clean(client, err)
-      }\n\`\`\``);
-    if (err.stack) client.funcs.log(err.stack, "error");
+    msg.sendMessage(`\`ERROR\` \`\`\`xl\n${client.funcs.clean(client, err)}\n\`\`\``);
+    if (err.stack) client.emit("error", err.stack);
   }
 };
 

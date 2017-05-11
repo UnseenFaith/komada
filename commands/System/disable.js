@@ -1,25 +1,25 @@
-exports.run = (client, msg, [type, name]) => {
+exports.run = async (client, msg, [type, name]) => {
   switch (type) {
     case "inhibitor": {
       const inhibitor = client.commandInhibitors.get(name);
-      if (!inhibitor) return msg.channel.sendCode("diff", `- I cannot find the inhibitor: ${name}`);
+      if (!inhibitor) return msg.sendCode("diff", `- I cannot find the inhibitor: ${name}`);
       inhibitor.conf.enabled = false;
-      return msg.channel.sendCode("diff", `+ Successfully disabled inhibitor: ${name}`);
+      return msg.sendCode("diff", `+ Successfully disabled inhibitor: ${name}`);
     }
     case "monitor": {
       const monitor = client.messageMonitors.get(name);
-      if (!monitor) return msg.channel.sendCode("diff", `- I cannot find the monitor: ${name}`);
+      if (!monitor) return msg.sendCode("diff", `- I cannot find the monitor: ${name}`);
       monitor.conf.enabled = false;
-      return msg.channel.sendCode("diff", `+ Successfully disabled monitor: ${name}`);
+      return msg.sendCode("diff", `+ Successfully disabled monitor: ${name}`);
     }
     case "command": {
       const command = client.commands.get(name) || client.commands.get(client.aliases.has(name));
-      if (!command) return msg.channel.sendCode("diff", `- I cannot find the command: ${name}`);
+      if (!command) return msg.sendCode("diff", `- I cannot find the command: ${name}`);
       command.conf.enabled = false;
-      return msg.channel.sendCode("diff", `+ Successfully disabled command: ${name}`);
+      return msg.sendCode("diff", `+ Successfully disabled command: ${name}`);
     }
     default:
-      return msg.channel.sendMessage("This will never happen");
+      return msg.sendMessage("This will never happen");
   }
 };
 
