@@ -73,9 +73,7 @@ module.exports = class Komada extends Discord.Client {
     await this.funcs.loadAll(this);
     this.once("ready", async () => {
       this.config.prefixMention = new RegExp(`^<@!?${this.user.id}>`);
-      if (!this.config.selfbot) {
-        this.application = await super.fetchApplication();
-      }
+      if (!this.config.selfbot) this.application = await super.fetchApplication();
       await Promise.all(Object.keys(this.funcs).map((key) => {
         if (this.funcs[key].init) return this.funcs[key].init(this);
         return true;
