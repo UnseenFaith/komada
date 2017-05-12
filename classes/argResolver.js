@@ -13,15 +13,6 @@ module.exports = class ArgResolver {
 
   async msg(arg, currentUsage, possible, repeat, msg) {
     if (/^\d+$/.test(arg)) {
-      if (this.client.config.selfbot) {
-        const mes = await msg.channel.fetchMessages({ around: arg }).catch(() => {
-          if (currentUsage.type === "optional" && !repeat) {
-            return null;
-          }
-          throw `${currentUsage.possibles[possible].name} must be a valid message id.`;
-        });
-        return mes.filter(ele => ele.id === arg).first();
-      }
       const mes = await msg.channel.fetchMessage(arg).catch(() => {
         if (currentUsage.type === "optional" && !repeat) {
           return null;
