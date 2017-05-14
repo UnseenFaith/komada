@@ -1,6 +1,6 @@
-const Discord = require("discord.js");
+const { Permissions } = require("discord.js");
 
-const impliedPermissions = new Discord.Permissions([
+const impliedPermissions = new Permissions([
   "READ_MESSAGES",
   "SEND_MESSAGES",
   "SEND_TTS_MESSAGES",
@@ -8,7 +8,7 @@ const impliedPermissions = new Discord.Permissions([
   "ATTACH_FILES",
   "READ_MESSAGE_HISTORY",
   "MENTION_EVERYONE",
-  "EXTERNAL_EMOJIS",
+  "USE_EXTERNAL_EMOJIS",
   "ADD_REACTIONS",
 ]);
 
