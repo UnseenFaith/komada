@@ -16,6 +16,16 @@ module.exports = class Komada extends Discord.Client {
     if (typeof config !== "object") throw new TypeError("Configuration for Komada must be an object.");
     super(config.clientOptions);
     this.config = config;
+    this.config.disabled = config.disabled || {};
+    this.config.disabled = {
+      commands: config.disabled.commands || [],
+      events: config.disabled.events || [],
+      functions: config.disabled.functions || [],
+      inhibitors: config.disabled.inhibitors || [],
+      finalizers: config.disabled.finalizers || [],
+      monitors: config.disabled.monitors || [],
+      providers: config.disabled.providers || [],
+    };
     this.funcs = new Loader(this);
     this.argResolver = new ArgResolver(this);
     this.helpStructure = new Map();
