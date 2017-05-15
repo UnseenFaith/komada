@@ -66,14 +66,14 @@ exports.runCommand = (client, msg, start) => {
     .then((params) => {
       msg.cmdMsg.cmd.run(client, msg, params)
         .then(mes => this.runFinalizers(client, msg, mes, start))
-        .catch(error => this.handleError(client, msg, error));
+        .catch(error => client.funcs.handleError(client, msg, error));
     })
     .catch((error) => {
       if (error.code === 1 && client.config.cmdPrompt) {
         return this.awaitMessage(client, msg, start, error.message)
-          .catch(err => this.handleError(client, msg, err));
+          .catch(err => client.funcs.handleError(client, msg, err));
       }
-      return this.handleError(client, msg, error);
+      return client.funcs.handleError(client, msg, error);
     });
 };
 
@@ -90,16 +90,6 @@ exports.awaitMessage = async (client, msg, start, error) => {
   if (message.deletable) message.delete();
 
   return this.runCommand(client, msg, start);
-};
-
-exports.handleError = (client, msg, error) => {
-  if (error.stack) {
-    client.emit("error", error.stack);
-  } else if (error.message) {
-    msg.sendCode("JSON", error.message).catch(err => client.emit("error", err));
-  } else {
-    msg.sendMessage(error).catch(err => client.emit("error", err));
-  }
 };
 
 exports.runInhibitors = (client, msg, command) => {
