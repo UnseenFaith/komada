@@ -55,6 +55,7 @@ module.exports = class Komada extends Discord.Client {
     this.guildConfs = Config.guildConfs;
     this.configuration = Config;
     this.application = null;
+    this.once('ready', this._ready.bind(this));
   }
 
   get invite() {
@@ -75,43 +76,40 @@ module.exports = class Komada extends Discord.Client {
 
   async login(token) {
     const start = now();
-    await this.loadEverything();
+    await this.funcs.loadAll(this);
     this.emit("log", `Loaded in ${(now() - start).toFixed(2)}ms.`);
     super.login(token);
   }
 
-  async loadEverything() {
-    await this.funcs.loadAll(this);
-    this.once("ready", async () => {
-      this.config.prefixMention = new RegExp(`^<@!?${this.user.id}>`);
-      if (!this.config.selfbot) this.application = await super.fetchApplication();
-      await Promise.all(Object.keys(this.funcs).map((key) => {
-        if (this.funcs[key].init) return this.funcs[key].init(this);
-        return true;
-      }));
-      await Promise.all(this.providers.map((piece) => {
-        if (piece.init) return piece.init(this);
-        return true;
-      }));
-      await Promise.all(this.commands.map((piece) => {
-        if (piece.init) return piece.init(this);
-        return true;
-      }));
-      await Promise.all(this.commandInhibitors.map((piece) => {
-        if (piece.init) return piece.init(this);
-        return true;
-      }));
-      await Promise.all(this.commandFinalizers.map((piece) => {
-        if (piece.init) return piece.init(this);
-        return true;
-      }));
-      await Promise.all(this.messageMonitors.map((piece) => {
-        if (piece.init) return piece.init(this);
-        return true;
-      }));
-      await this.configuration.initialize(this);
-      this.ready = true;
-    });
+  async _ready() {
+    this.config.prefixMention = new RegExp(`^<@!?${this.user.id}>`);
+    if (!this.config.selfbot) this.application = await super.fetchApplication();
+    await Promise.all(Object.keys(this.funcs).map((key) => {
+      if (this.funcs[key].init) return this.funcs[key].init(this);
+      return true;
+    }));
+    await Promise.all(this.providers.map((piece) => {
+      if (piece.init) return piece.init(this);
+      return true;
+    }));
+    await Promise.all(this.commands.map((piece) => {
+      if (piece.init) return piece.init(this);
+      return true;
+    }));
+    await Promise.all(this.commandInhibitors.map((piece) => {
+      if (piece.init) return piece.init(this);
+      return true;
+    }));
+    await Promise.all(this.commandFinalizers.map((piece) => {
+      if (piece.init) return piece.init(this);
+      return true;
+    }));
+    await Promise.all(this.messageMonitors.map((piece) => {
+      if (piece.init) return piece.init(this);
+      return true;
+    }));
+    await this.configuration.initialize(this);
+    this.ready = true;
   }
 
   sweepCommandMessages(lifetime = this.commandMessageLifetime) {
