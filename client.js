@@ -9,7 +9,7 @@ const Config = require("./classes/Configuration Types/Config.js");
 
 require("./classes/Extendables.js");
 
-/* eslint-disable no-throw-literal, no-use-before-define, no-restricted-syntax */
+/* eslint-disable no-throw-literal, no-use-before-define, no-restricted-syntax, no-underscore-dangle */
 module.exports = class Komada extends Discord.Client {
 
   constructor(config = {}) {
@@ -55,11 +55,11 @@ module.exports = class Komada extends Discord.Client {
     this.guildConfs = Config.guildConfs;
     this.configuration = Config;
     this.application = null;
-    this.once('ready', this._ready.bind(this));
+    this.once("ready", this._ready.bind(this));
   }
 
   get invite() {
-    if (this.config.selfbot) throw 'Why would you need an invite link for a selfbot...';
+    if (this.config.selfbot) throw "Why would you need an invite link for a selfbot...";
     const permissions = Discord.Permissions.resolve([...new Set(this.commands.reduce((a, b) => a.concat(b.conf.botPerms), ["READ_MESSAGES", "SEND_MESSAGES"]))]);
     return `https://discordapp.com/oauth2/authorize?client_id=${this.application.id}&permissions=${permissions}&scope=bot`;
   }
