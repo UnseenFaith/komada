@@ -6,7 +6,7 @@ exports.run = (client, msg, [code]) => {
     if (typeof evaled !== "string") {
       evaled = inspect(evaled);
     }
-    msg.channel.send(client.funcs.clean(client, evaled), {code: "xl"});
+    msg.channel.send(client.funcs.clean(client, evaled), { code: "xl" });
   } catch (err) {
     msg.channel.send(`\`ERROR\` \`\`\`xl\n${
       client.funcs.clean(client, err)

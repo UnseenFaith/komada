@@ -13,7 +13,7 @@ exports.run = (client, msg) => {
 • Servers    :: ${client.guilds.size.toLocaleString()}
 • Channels   :: ${client.channels.size.toLocaleString()}
 • Komada     :: v${komada.version}
-• Discord.js :: v${Discord.version}`, {code: "asciidoc"});
+• Discord.js :: v${Discord.version}`, { code: "asciidoc" });
 };
 
 exports.conf = {

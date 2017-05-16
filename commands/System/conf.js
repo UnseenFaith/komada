@@ -2,7 +2,7 @@ const util = require("util").inspect;
 
 exports.run = (client, msg, [action, key, ...value]) => {
   if (action === "list") {
-    msg.channel.send(util(msg.guildConf), {code: "js"});
+    msg.channel.send(util(msg.guildConf), { code: "js" });
   } else
 
   if (action === "get") {

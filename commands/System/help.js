@@ -45,9 +45,9 @@ exports.run = (client, msg, [cmd]) => {
   } else if (client.commands.has(cmd)) {
     cmd = client.commands.get(cmd);
     if (!client.config.selfbot) {
-      msg.author.send(`= ${cmd.help.name} = \n${cmd.help.description}\nusage :: ${client.funcs.fullUsage(client, cmd)}\nExtended Help ::\n${cmd.help.extendedHelp ? cmd.help.extendedHelp : "No extended help available."}`, {code: "asciidoc"});
+      msg.author.send(`= ${cmd.help.name} = \n${cmd.help.description}\nusage :: ${client.funcs.fullUsage(client, cmd)}\nExtended Help ::\n${cmd.help.extendedHelp ? cmd.help.extendedHelp : "No extended help available."}`, { code: "asciidoc" });
     } else {
-      msg.channel.send(`= ${cmd.help.name} = \n${cmd.help.description}\nusage :: ${client.funcs.fullUsage(client, cmd)}\nExtended Help ::\n${cmd.help.extendedHelp ? cmd.help.extendedHelp : "No extended help available."}`, {code: "asciidoc"});
+      msg.channel.send(`= ${cmd.help.name} = \n${cmd.help.description}\nusage :: ${client.funcs.fullUsage(client, cmd)}\nExtended Help ::\n${cmd.help.extendedHelp ? cmd.help.extendedHelp : "No extended help available."}`, { code: "asciidoc" });
     }
   }
 };
