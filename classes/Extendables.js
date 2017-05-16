@@ -101,7 +101,7 @@ class Extendables {
   }
 
   get guildConf() {
-    return this.client.configuration.get(this.guild);
+    return this.client.settings.fetch(this.guild);
   }
 
   get usableCommands() {
@@ -115,7 +115,7 @@ class Extendables {
     * <Guild>.conf - Same as guildConf for message, but a different way of getting it -> returns {Object}
     */
   get conf() {
-    return this.client.configuration.get(this);
+    return this.client.settings.fetch(this);
   }
 
 }

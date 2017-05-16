@@ -4,8 +4,10 @@ const now = require("performance-now");
 const CommandMessage = require("./classes/commandMessage.js");
 const Loader = require("./classes/loader.js");
 const ArgResolver = require("./classes/argResolver.js");
- /* Will Change this later */
-const Config = require("./classes/Configuration Types/Config.js");
+const JSONSettings = require("./classes/settings/json.js");
+
+const coreBaseDir = `${__dirname}${sep}`;
+const clientBaseDir = `${process.env.clientDir || process.cwd()}${sep}`;
 
 require("./classes/Extendables.js");
 
@@ -50,10 +52,10 @@ module.exports = class Komada extends Discord.Client {
       escapeMarkdown: Discord.escapeMarkdown,
       splitMessage: Discord.splitMessage,
     };
-    this.coreBaseDir = `${__dirname}${sep}`;
-    this.clientBaseDir = `${process.env.clientDir || process.cwd()}${sep}`;
-    this.guildConfs = Config.guildConfs;
-    this.configuration = Config;
+    
+    this.coreBaseDir = coreBaseDir;
+    this.clientBaseDir = clientBaseDir;
+    this.settings = new JSONSettings(this);
     this.application = null;
     this.once("ready", this._ready.bind(this));
   }
@@ -80,7 +82,7 @@ module.exports = class Komada extends Discord.Client {
     this.emit("log", `Loaded in ${(now() - start).toFixed(2)}ms.`);
     super.login(token);
   }
-
+  
   async _ready() {
     this.config.prefixMention = new RegExp(`^<@!?${this.user.id}>`);
     if (!this.config.selfbot) this.application = await super.fetchApplication();
@@ -108,7 +110,7 @@ module.exports = class Komada extends Discord.Client {
       if (piece.init) return piece.init(this);
       return true;
     }));
-    await this.configuration.initialize(this);
+    await this.settings.init();
     this.ready = true;
   }
 
@@ -145,7 +147,7 @@ const defaultPermStructure = [
   {
     check: (client, msg) => {
       if (!msg.guild) return false;
-      const modRole = msg.guild.roles.find("name", msg.guild.conf.modRole);
+      const modRole = msg.guild.conf.modRole;
       if (modRole && msg.member.roles.has(modRole.id)) return true;
       return false;
     },
@@ -154,7 +156,7 @@ const defaultPermStructure = [
   {
     check: (client, msg) => {
       if (!msg.guild) return false;
-      const adminRole = msg.guild.roles.find("name", msg.guild.conf.adminRole);
+      const adminRole = msg.guild.conf.adminRole;
       if (adminRole && msg.member.roles.has(adminRole.id)) return true;
       return false;
     },

@@ -57,7 +57,7 @@ exports.handleCommand = (client, msg, { command, prefix, prefixLength }) => {
     if (typeof response === "string") msg.reply(response);
     return;
   }
-  msg.cmdMsg = new client.CommandMessage(msg, validCommand, prefix, prefixLength);
+  msg.cmdMsg = new client.CommandMessage(msg, validCommand, command, prefix, prefixLength);
   this.runCommand(client, msg, start);
 };
 

@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased] - Classbased | Staged for 0.20.0
 ### Added
+- Automatic Selfbot detection
 - Added option to disable core functions. Now you can skip load of core functions instead of override it.
 - Command Editing is now possible via setting config.cmdEditing to true. You will need to make a few changes to your code to make it work though:
 - A new messageUpdate core event.
@@ -16,6 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Command Cooldowns are now available through a new inhibitor/finalizer combo. Simply set command.conf.cooldown to an integer in seconds to put a cooldown on that command.
 
 ### Changed
+- Completely rewrote Configs (now known as Settings) **Needs heavy Testing**
 - Changed fetchMessages to fetchMessage (backend change)
 - Backend is now class based. Users main files will need to be updated. The interface is the same as creating a discord.js client, only using komada, and with komada config. No more use of start, but client.login(token) is needed now.
 - Usage will no longer be calculated everytime a command is run, but instead stored in command.usage.
@@ -34,6 +36,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 -
 
 ### Removed
+- Removed confs && guildCreate event (No longer needed)
 - generateInvite.js core function in favor of the Discord.JS generateInvite.
 - botpermissions.js core function which was only used by the generateInvite core function.
 - fullUsage.js core function which is now available in command.usage.fullUsage(msg).
