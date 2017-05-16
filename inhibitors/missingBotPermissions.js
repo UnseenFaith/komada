@@ -7,7 +7,7 @@ exports.conf = {
 exports.run = (client, msg, cmd) => {
   let missing = [];
   if (msg.channel.type === "text") {
-    missing = msg.channel.permissionsFor(client.user).missingPermissions(cmd.conf.botPerms);
+    missing = msg.channel.permissionsFor(client.user).missing(cmd.conf.botPerms);
   } else {
     const impliedPermissions = client.funcs.impliedPermissions();
     cmd.conf.botPerms.forEach((perm) => {
