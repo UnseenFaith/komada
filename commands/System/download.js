@@ -85,9 +85,9 @@ exports.run = async (client, msg, [link, piece, folder = "Downloaded"]) => {
 
 exports.conf = {
   enabled: true,
-  runIn: ["text"],
+  runIn: ["text", "dm", "group"],
   aliases: [],
-  permLevel: 5,
+  permLevel: 10,
   botPerms: [],
   requiredFuncs: [],
 };

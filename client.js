@@ -11,7 +11,7 @@ const clientBaseDir = `${process.env.clientDir || process.cwd()}${sep}`;
 
 require("./classes/Extendables.js");
 
-/* eslint-disable no-throw-literal, no-use-before-define, no-restricted-syntax */
+/* eslint-disable no-throw-literal, no-use-before-define, no-restricted-syntax, no-underscore-dangle */
 module.exports = class Komada extends Discord.Client {
 
   constructor(config = {}) {
@@ -57,10 +57,11 @@ module.exports = class Komada extends Discord.Client {
     this.clientBaseDir = clientBaseDir;
     this.settings = new JSONSettings(this);
     this.application = null;
+    this.once("ready", this._ready.bind(this));
   }
 
   get invite() {
-    if (this.config.selfbot) throw 'Why would you need an invite link for a selfbot...';
+    if (this.config.selfbot) throw "Why would you need an invite link for a selfbot...";
     const permissions = Discord.Permissions.resolve([...new Set(this.commands.reduce((a, b) => a.concat(b.conf.botPerms), ["READ_MESSAGES", "SEND_MESSAGES"]))]);
     return `https://discordapp.com/oauth2/authorize?client_id=${this.application.id}&permissions=${permissions}&scope=bot`;
   }
@@ -77,44 +78,40 @@ module.exports = class Komada extends Discord.Client {
 
   async login(token) {
     const start = now();
-    await this.loadEverything();
+    await this.funcs.loadAll(this);
     this.emit("log", `Loaded in ${(now() - start).toFixed(2)}ms.`);
     super.login(token);
   }
-
-  async loadEverything() {
-    await this.funcs.loadAll(this);
-    this.once("ready", async () => {
-      this.config.prefixMention = new RegExp(`^<@!?${this.user.id}>`);
-      this.config.selfbot = !this.user.bot;
-      if (!this.config.selfbot) this.application = await super.fetchApplication();
-      await Promise.all(Object.keys(this.funcs).map((key) => {
-        if (this.funcs[key].init) return this.funcs[key].init(this);
-        return true;
-      }));
-      await Promise.all(this.providers.map((piece) => {
-        if (piece.init) return piece.init(this);
-        return true;
-      }));
-      await Promise.all(this.commands.map((piece) => {
-        if (piece.init) return piece.init(this);
-        return true;
-      }));
-      await Promise.all(this.commandInhibitors.map((piece) => {
-        if (piece.init) return piece.init(this);
-        return true;
-      }));
-      await Promise.all(this.commandFinalizers.map((piece) => {
-        if (piece.init) return piece.init(this);
-        return true;
-      }));
-      await Promise.all(this.messageMonitors.map((piece) => {
-        if (piece.init) return piece.init(this);
-        return true;
-      }));
-      await this.settings.init();
-      this.ready = true;
-    });
+  
+  async _ready() {
+    this.config.prefixMention = new RegExp(`^<@!?${this.user.id}>`);
+    if (!this.config.selfbot) this.application = await super.fetchApplication();
+    await Promise.all(Object.keys(this.funcs).map((key) => {
+      if (this.funcs[key].init) return this.funcs[key].init(this);
+      return true;
+    }));
+    await Promise.all(this.providers.map((piece) => {
+      if (piece.init) return piece.init(this);
+      return true;
+    }));
+    await Promise.all(this.commands.map((piece) => {
+      if (piece.init) return piece.init(this);
+      return true;
+    }));
+    await Promise.all(this.commandInhibitors.map((piece) => {
+      if (piece.init) return piece.init(this);
+      return true;
+    }));
+    await Promise.all(this.commandFinalizers.map((piece) => {
+      if (piece.init) return piece.init(this);
+      return true;
+    }));
+    await Promise.all(this.messageMonitors.map((piece) => {
+      if (piece.init) return piece.init(this);
+      return true;
+    }));
+    await this.settings.init();
+    this.ready = true;
   }
 
   sweepCommandMessages(lifetime = this.commandMessageLifetime) {
