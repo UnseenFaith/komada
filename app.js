@@ -1,88 +1,79 @@
 const Discord = require("discord.js");
-const bot = new Discord.Client({ fetchAllMembers: true });
-const fs = require("fs");
-const moment = require("moment");
+const path = require("path");
 
-const log = (msg) => {
-  console.log(`[${moment().format("YYYY-MM-DD HH:mm:ss")}] ${msg}`);
+require("./utils/Extendables.js");
+const loadFunctions = require("./utils/loadFunctions.js");
+const loadEvents = require("./utils/loadEvents.js");
+const loadProviders = require("./utils/loadProviders.js");
+const loadCommands = require("./utils/loadCommands.js");
+const loadCommandInhibitors = require("./utils/loadCommandInhibitors.js");
+const loadMessageMonitors = require("./utils/loadMessageMonitors.js");
+const log = require("./functions/log.js");
+
+const Config = require("./classes/Config.js");
+
+exports.start = async (config) => {
+  if (typeof config !== "object") throw new TypeError("Configuration for Komada must be an object.");
+  const client = new Discord.Client(config.clientOptions);
+
+  client.config = config;
+
+  // Extend client
+  client.funcs = {};
+  client.helpStructure = new Map();
+  client.commands = new Discord.Collection();
+  client.aliases = new Discord.Collection();
+  client.commandInhibitors = new Discord.Collection();
+  client.messageMonitors = new Discord.Collection();
+  client.providers = new Discord.Collection();
+
+    // Extend Client with Native Discord.js Functions for use in our pieces.
+  client.methods = {};
+  client.methods.Collection = Discord.Collection;
+  client.methods.Embed = Discord.RichEmbed;
+  client.methods.MessageCollector = Discord.MessageCollector;
+  client.methods.Webhook = Discord.WebhookClient;
+  client.methods.escapeMarkdown = Discord.escapeMarkdown;
+  client.methods.splitMessage = Discord.splitMessage;
+
+  client.coreBaseDir = `${__dirname}${path.sep}`;
+  client.clientBaseDir = `${process.env.clientDir || process.cwd()}${path.sep}`;
+  client.guildConfs = Config.guildConfs;
+  client.configuration = Config;
+
+  await loadEvents(client);
+
+  client.once("ready", async () => {
+    client.config.prefixMention = new RegExp(`^<@!?${client.user.id}>`);
+    await client.configuration.initialize(client);
+    await loadFunctions(client);
+    await loadProviders(client);
+    await loadCommands(client);
+    await loadCommandInhibitors(client);
+    await loadMessageMonitors(client);
+    client.i18n = client.funcs.loadLocalizations;
+    client.i18n.init(client);
+    client.destroy = () => "You cannot use this within Komada, use process.exit() instead.";
+    client.ready = true;
+  });
+
+  client.on("error", e => log(e, "error"));
+  client.on("warn", w => log(w, "warn"));
+  client.on("disconnect", e => log(`Disconnected | ${e.code}: ${e.reason}`, "error"));
+
+  client.on("message", async (msg) => {
+    if (!client.ready) return;
+    await client.funcs.runMessageMonitors(client, msg);
+    client.i18n.use(msg.guildConf.lang);
+    if (!client.funcs.handleMessage(client, msg)) return;
+    const command = client.funcs.parseCommand(client, msg);
+    client.funcs.handleCommand(client, msg, command);
+  });
+
+  client.login(client.config.botToken);
+  return client;
 };
-
-
-// Try local JSON config, if not, expect Process Env (Heroku)
-try{
-  bot.config = require("./config.json");
-} catch (e) {
-  if(process.env.botToken) {
-    bot.config = {
-      botToken: process.env.botToken,
-      prefix: process.env.prefix,
-      ownerid: process.env.ownerid
-    };
-  } else {
-    throw "NO CONFIG FILE FOUND, NO ENV CONF FOUND, EXITING";
-  }
-}
-
-bot.functions = {};
-// Load core functions
-fs.readdir("./functions/core", (err, files) => {
-  bot.functions.core = {};
-  if (err) console.error(err);
-  log(`Loading ${files.length} core functions`);
-  files.forEach(f=> {
-    let name = f.split(".")[0];
-    bot.functions.core[name] = require(`./functions/core/${f}`);
-  });
+process.on("unhandledRejection", (err) => {
+  if (!err) return;
+  console.error(`Uncaught Promise Error: \n${err.stack || err}`);
 });
-
-// Load optional functions
-fs.readdir("./functions/optn", (err, files) => {
-  bot.functions.optn = {};
-  if (err) console.error(err);
-  log(`Loading ${files.length} optional functions`);
-  files.forEach(f=> {
-    let name = f.split(".")[0];
-    bot.functions.optn[name] = require(`./functions/optn/${f}`);
-  });
-});
-
-bot.commands = new Discord.Collection();
-bot.aliases = new Discord.Collection();
-fs.readdir("./cmds/", (err, files) => {
-  if (err) console.error(err);
-  log(`Loading ${files.length} commands.`);
-  files.forEach(f => {
-    let props = require(`./cmds/${f}`);
-    bot.commands.set(props.help.name, props);
-    props.conf.aliases.forEach(alias => {
-      bot.aliases.set(alias, props.help.name);
-    });
-  });
-});
-
-bot.on("message", msg => {
-  if (!msg.content.startsWith(bot.config.prefix)) return;
-  let command = msg.content.split(" ")[0].slice(bot.config.prefix.length);
-  let params = msg.content.split(" ").slice(1);
-  let perms = bot.functions.core.permissions(bot, msg);
-  let cmd;
-  if (bot.commands.has(command)) {
-    cmd = bot.commands.get(command);
-  } else if (bot.aliases.has(command)) {
-    cmd = bot.commands.get(bot.aliases.get(command));
-  }
-  if (cmd) {
-    if (!cmd.conf.enabled) return msg.channel.sendMessage("This command is currently disabled");
-    if (perms < cmd.conf.permLevel) return;
-    cmd.run(bot, msg, params, perms);
-  }
-});
-
-bot.on("ready", () => {
-  log(`GuideBot: Ready to serve ${bot.users.size} users, in ${bot.channels.size} channels of ${bot.guilds.size} servers.`);
-});
-
-bot.on("error", console.error);
-bot.on("warn", console.warn);
-
-bot.login(bot.config.botToken);

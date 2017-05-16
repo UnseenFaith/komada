@@ -1,142 +1,60 @@
-# GuideBot
+# Komada Framework Documentation
 
-> "Stay a while, and listen!"
+[![Discord](https://discordapp.com/api/guilds/260202843686830080/embed.png)](https://discord.gg/dgs8263)
+[![npm](https://img.shields.io/npm/v/komada.svg?maxAge=3600)](https://www.npmjs.com/package/komada)
+[![npm](https://img.shields.io/npm/dt/komada.svg?maxAge=3600)](https://www.npmjs.com/package/komada)
+[![Greenkeeper badge](https://badges.greenkeeper.io/dirigeants/komada.svg)](https://greenkeeper.io/)
+[![Build Status](https://travis-ci.org/dirigeants/komada.svg?branch=indev)](https://travis-ci.org/dirigeants/komada)
+[![David](https://img.shields.io/david/dirigeants/komada.svg?maxAge=3600)](https://david-dm.org/dirigeants/komada)
 
-Guidebot is a very simple bot that I'm using on the
-[Discord.js Official](https://discord.gg/bRCvFy9) server to provide links to my
-[Discord.js Bot Guide](https://www.gitbook.com/book/eslachance/discord-js-bot-guide/details).
+Komada is a modular framework for bots built on top of [Discord.js](https://github.com/hydrabolt/dicord.js). It offers an extremely easy installation, downloadable commands, and a framework to build your own commands, modules, and functions.
 
-## Installing this
+## What's with the name?
 
-There's not "installation" per se, this isn't a module but really just an example code. To get it, run this:
+Komada is the Croatian word for "pieces", such as puzzle pieces. As usual to find my software name I just shove english words in a translator and see what comes out. But why "pieces"? Because Komada is modular, meaning each "piece" is a standalone part that can be easily replaced, enhanced, reloaded, removed.
+
+## Installing Komada
+
+Time to take the plunge! Komada is on NPM and can be easily installed.
+
+> I assume you know how to open a command prompt in a folder where you want to install this. Please don't prove me wrong.
 
 ```
-git clone https://github.com/eslachance/guidebot.git
+npm install --save komada
 ```
 
-Create a file called `config.json` with the following content (adjusted to your needs of course):
+Create a file called `app.js` (or whatever you prefer) which will initiate and configure Komada.
 
-```json
-{
-  "botToken": "Your-Bot-Token-Here",
-  "ownerid" : "your-user-id",
-  "prefix": "?"
-}
+```js
+const komada = require('komada');
+komada.start({
+  "botToken": "your-bot-token",
+  "ownerID" : "your-user-id",
+  "clientID": "the-invite-app-id",
+  "prefix": "+",
+  "clientOptions": {
+    "fetchAllMembers": true
+  }
+});
 ```
 
-> you can copy `config.json.example` to `config.json` and modify that instead, too!
+### Configuration Options
+
+- **botToken**: The MFA token for your bot. To get this, please see [This discord.js Getting Started Guide](https://eslachance.gitbooks.io/discord-js-bot-guide/content/getting-started/the-long-version.html), which explains how to create the bot and get the token.
+- **ownerID**: The User ID of the bot owner - you. This gives you the highest possible access to the bot's default commands, including eval! To obtain it, enable Developer Mode in Discord, right-click your name and do "Copy ID".
+- **clientID**: The bot's client ID obtained from the same place you got the token. It's at the top of the page!
+- **prefix**: The default prefix when the bot first boots up. This option becomes useless after first boot, since the prefix is written to the default configuration system.
+- **clientOptions**: These are passed directly to the discord.js library. They are optional. For more information on which options are available, see [ClientOptions in the discord.js docs](https://discord.js.org/#/docs/main/stable/typedef/ClientOptions).
+
+> For all you selfbot users out there, you can add a option ('selfbot': true) to have Komada enabled for selfbot usage. i.e. only respond to commands from you.
+
+## Running the bot
 
 Then, run the following in your folder:
 
 ```
 npm install
-node app.js
+node --harmony app.js
 ```
 
-> Requires Node 6 or higher (because discord.js requires that), also requires Discord.js v10 (currently #indev), installed automatically with `npm install`.
-
-## Command Handler Explainer
-
-It's also used as one of the most basic examples of a "proper" command handler where each command is in a separate file.
-There are 3 parts to the command handler.
-
-### 1: Making a Command:
-The very basic code for making a command is this (you may use it as a template):
-
-```js
-exports.run = (bot, msg, params = []) => {
-  // do stuff
-};
-
-exports.conf = {
-  enabled: true, // not used yet
-  guildOnly: false, // not used yet
-  aliases: ["command_alias1", "command_alias2"],
-  permLevel: 0 // Permissions Required, higher is more power
-};
-
-exports.help = {
-  name : "command",
-  description: "Command Description",
-  usage: "command <argument>"
-};
-```
-
-Currently, the `//do stuff` code is *the same* as you would normally use inside a normal message handler,
-so you can use `msg.channel.sendMessage("blah")`, check `msg.author.id`, etc. The `help` object is used by
-the `help` command provided in this repository.
-
-There are a few commands also provided as an example, for instance `ping`. `guide` is a command I personally use for this
-bot, obviously there's no need to use it yourself but it shows a way to add some external data in the form of an object added
-at the top of the file.
-
-### 2: How the code loads the commands
-
-This is the part that actually loads the commands in memory:
-
-```js
-// Uses Discord.Collection() mostly for the helpers like `map()`, to be honest.
-bot.commands = new Discord.Collection();
-bot.aliases = new Discord.Collection();
-// Load the contents of the `/cmd/` folder and each file in it.
-fs.readdir(`./cmd/`, (err, files) => {
-  if(err) console.error(err);
-  console.log(`Loading a total of ${files.length} commands.`);
-  // Loops through each file in that folder
-  files.forEach(f=> {
-    // require the file itself in memory
-    let props = require(`./cmd/${f}`);
-    console.log(`Loading Command: ${props.help.name}. :ok_hand:`);
-    // add the command to the Commands Collection
-    bot.commands.set(props.help.name, props);
-    // Loops through each Alias in that command
-    props.conf.aliases.forEach(alias => {
-      // add the alias to the Aliases Collection
-      bot.aliases.set(alias, props.help.name);
-    });
-  });
-});
-```
-
-Keen eyes may realize that I'm adding the commands straight into `bot.commands` which literally extends the `bot` object.
-The reason I'm doing this is to prevent overloading the function calling the commands with a whole lot of arguments.
-Otherwise, `exports.run = (bot, msg, params = []) => {` might look more like `exports.run = (bot, msg, params = [], reload,
-commands, etc, something else, blah, whatever) => {`
-
-It's a question of readability to be honest, and as far as know, will not cause any issues unless you decide to run `bot.destroy()`...
-
-### 3: How the bot runs the commands
-
-The `message` handler is often the biggest part of a discord.js bot file... but here it's small, and elegant:
-
-```js
-bot.on('message', msg => {
-  // Ignore message with no prefix for performance reasons
-  if(!msg.content.startsWith(config.prefix)) return;
-  // Get the command by getting the first part of the message and removing  the prefix.
-  var command = msg.content.split(" ")[0].slice(config.prefix.length);
-  // Get the params in an array of arguments to be used in the bot
-  var params = msg.content.split(" ").slice(1);
-  // run the `elevation` function to get the user's permission level
-  let perms = bot.elevation(msg);
-  let cmd;
-  // Check if the command exists in Commands
-  if (bot.commands.has(command)) {
-    // Assign the command, if it exists in Commands
-    cmd = bot.commands.get(command)
-  // Check if the command exists in Aliases
-  } else if (bot.aliases.has(command)) {
-    // Assign the command, if it exists in Aliases
-    cmd = bot.commands.get(bot.aliases.get(command));
-  }
-
-  if(cmd) {
-    // Check user's perm level against the required level in the command
-    if (perms < cmd.conf.permLevel) return;
-    // Run the `exports.run()` function defined in each command.
-    cmd.run(bot, msg, params);
-  }
-});
-```
-
-The rest of the bot file is pretty much your standard stuff. Require some files, log some events, login with the token and stuff.
+> **Requirements**: Requires Node 7 or higher to run. Depends on Discord.js v11 or higher (the appropriate version is automatically installed).
