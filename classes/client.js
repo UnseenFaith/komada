@@ -13,18 +13,18 @@ require("./Extendables.js");
 const defaultPermStructure = new PermLevels()
   .addLevel(0, false, () => true)
   .addLevel(2, false, (client, msg) => {
-      if (!msg.guild) return false;
-      const modRole = msg.guild.roles.find("name", msg.guild.conf.modRole);
-      return modRole && msg.member.roles.has(modRole.id);
+    if (!msg.guild) return false;
+    const modRole = msg.guild.roles.find("name", msg.guild.conf.modRole);
+    return modRole && msg.member.roles.has(modRole.id);
   })
   .addLevel(3, false, (client, msg) => {
-      if (!msg.guild) return false;
-      const adminRole = msg.guild.roles.find("name", msg.guild.conf.adminRole);
-      return adminRole && msg.member.roles.has(adminRole.id);
+    if (!msg.guild) return false;
+    const adminRole = msg.guild.roles.find("name", msg.guild.conf.adminRole);
+    return adminRole && msg.member.roles.has(adminRole.id);
   })
   .addLevel(4, false, (client, msg) => {
-      if (!msg.guild) return false;
-      return msg.author.id === msg.guild.owner.id;
+    if (!msg.guild) return false;
+    return msg.author.id === msg.guild.owner.id;
   })
   .addLevel(9, true, (client, msg) => msg.author.id === client.config.ownerID)
   .addLevel(10, false, (client, msg) => msg.author.id === client.config.ownerID);
