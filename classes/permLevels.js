@@ -4,9 +4,9 @@ module.exports = class PermissionLevels {
     this.levels = new Map();
   }
 
-  addLevel(level, break, check) {
+  addLevel(level, brk, chk) {
     if (this.levels.has(level)) throw new Error(`Level ${level} is already defined`);
-    this.levels.set(level, { break, check });
+    this.levels.set(level, { "break": brk, "check": chk });
     return this;
   }
 
