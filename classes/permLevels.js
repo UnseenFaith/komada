@@ -15,7 +15,7 @@ module.exports = class PermissionLevels {
     for (let i = 0; i < 11; i++) {
        const myLevel = this.levels.get(i);
        if (myLevel) structure.push(myLevel);
-       else structure.push({break: false, check: () => false});
+       else structure.push({"break": false, "check": () => false});
     }
     return structure;
   }
