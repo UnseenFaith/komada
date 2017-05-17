@@ -1,4 +1,4 @@
 module.exports = {
-  Client: require('./client'),
+  Client: require('./classes/client'),
   PermLevels: require('./classes/permLevels')
 };

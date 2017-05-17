@@ -1,13 +1,33 @@
 const Discord = require("discord.js");
 const { sep } = require("path");
 const now = require("performance-now");
-const CommandMessage = require("./classes/commandMessage.js");
-const Loader = require("./classes/loader.js");
-const ArgResolver = require("./classes/argResolver.js");
+const CommandMessage = require("./commandMessage.js");
+const Loader = require("./loader.js");
+const ArgResolver = require("./argResolver.js");
+const PermLevels = require("./permLevels.js");
  /* Will Change this later */
-const Config = require("./classes/Configuration Types/Config.js");
+const Config = require("./Configuration Types/Config.js");
 
-require("./classes/Extendables.js");
+require("./Extendables.js");
+
+const defaultPermStructure = new PermLevels()
+  .addLevel(0, false, () => true)
+  .addLevel(2, false, (client, msg) => {
+      if (!msg.guild) return false;
+      const modRole = msg.guild.roles.find("name", msg.guild.conf.modRole);
+      return modRole && msg.member.roles.has(modRole.id);
+  })
+  .addLevel(3, false, (client, msg) => {
+      if (!msg.guild) return false;
+      const adminRole = msg.guild.roles.find("name", msg.guild.conf.adminRole);
+      return adminRole && msg.member.roles.has(adminRole.id);
+  })
+  .addLevel(4, false, (client, msg) => {
+      if (!msg.guild) return false;
+      return msg.author.id === msg.guild.owner.id;
+  })
+  .addLevel(9, true, (client, msg) => msg.author.id === client.config.ownerID)
+  .addLevel(10, false, (client, msg) => msg.author.id === client.config.ownerID);
 
 /* eslint-disable no-throw-literal, no-use-before-define, no-restricted-syntax, no-underscore-dangle */
 module.exports = class Komada extends Discord.Client {
@@ -65,7 +85,7 @@ module.exports = class Komada extends Discord.Client {
   }
 
   validatePermStructure() {
-    const permStructure = this.config.permStructure || defaultPermStructure;
+    const permStructure = this.config.permStructure || defaultPermStructure.structure;
     if (!Array.isArray(permStructure)) throw "PermStructure must be an array.";
     if (permStructure.some(perm => typeof perm !== "object" || typeof perm.check !== "function" || typeof perm.break !== "boolean")) {
       throw "Perms must be an object with a check function and a break boolean.";
@@ -132,74 +152,6 @@ module.exports = class Komada extends Discord.Client {
   }
 
 };
-
-const defaultPermStructure = [
-  {
-    check: () => true,
-    break: false,
-  },
-  {
-    check: () => false,
-    break: false,
-  },
-  {
-    check: (client, msg) => {
-      if (!msg.guild) return false;
-      const modRole = msg.guild.roles.find("name", msg.guild.conf.modRole);
-      if (modRole && msg.member.roles.has(modRole.id)) return true;
-      return false;
-    },
-    break: false,
-  },
-  {
-    check: (client, msg) => {
-      if (!msg.guild) return false;
-      const adminRole = msg.guild.roles.find("name", msg.guild.conf.adminRole);
-      if (adminRole && msg.member.roles.has(adminRole.id)) return true;
-      return false;
-    },
-    break: false,
-  },
-  {
-    check: (client, msg) => {
-      if (!msg.guild) return false;
-      if (msg.author.id === msg.guild.owner.id) return true;
-      return false;
-    },
-    break: false,
-  },
-  {
-    check: () => false,
-    break: false,
-  },
-  {
-    check: () => false,
-    break: false,
-  },
-  {
-    check: () => false,
-    break: false,
-  },
-  {
-    check: () => false,
-    break: false,
-  },
-  {
-    check: (client, msg) => {
-      if (msg.author.id === client.config.ownerID) return true;
-      return false;
-    },
-    break: true,
-  },
-  {
-    check: (client, msg) => {
-      if (msg.author.id === client.config.ownerID) return true;
-      return false;
-    },
-    break: false,
-  },
-];
-
 
 process.on("unhandledRejection", (err) => {
   if (!err) return;
