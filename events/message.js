@@ -25,9 +25,9 @@ exports.handleMessage = (client, msg) => {
   // Ignore Self if true
   if (client.config.ignoreSelf && msg.author.id === client.user.id) return false;
   // Ignore other users if selfbot
-  if (!client.config.bot && msg.author.id !== client.user.id) return false;
+  if (!client.user.bot && msg.author.id !== client.user.id) return false;
   // Ignore self if bot
-  if (client.config.bot && msg.author.id === client.user.id) return false;
+  if (client.user.bot && msg.author.id === client.user.id) return false;
   return true;
 };
 
