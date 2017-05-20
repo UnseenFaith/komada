@@ -1,5 +1,5 @@
 exports.run = (client, msg) => {
-  msg.channel.sendMessage("Rebooting...")
+  msg.channel.send("Rebooting...")
     .then(() => {
       process.exit();
     })

@@ -5,7 +5,7 @@ require("moment-duration-format");
 exports.run = (client, msg) => {
   const komada = require(`${client.coreBaseDir}/package.json`); // eslint-disable-line
   const duration = moment.duration(client.uptime).format(" D [days], H [hrs], m [mins], s [secs]");
-  msg.channel.sendCode("asciidoc", `= STATISTICS =
+  msg.channel.send(`= STATISTICS =
 
 • Mem Usage  :: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB
 • Uptime     :: ${duration}
@@ -13,7 +13,7 @@ exports.run = (client, msg) => {
 • Servers    :: ${client.guilds.size.toLocaleString()}
 • Channels   :: ${client.channels.size.toLocaleString()}
 • Komada     :: v${komada.version}
-• Discord.js :: v${Discord.version}`);
+• Discord.js :: v${Discord.version}`, { code: "asciidoc" });
 };
 
 exports.conf = {
