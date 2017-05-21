@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Added a timer to the loading.
 - Finalizers: Functions which are run on after a successful command. *Please Note: All command files must be defined as async. `exports.run = __async__ (client, msg, ...`*
 - Command Cooldowns are now available through a new inhibitor/finalizer combo. Simply set command.conf.cooldown to an integer in seconds to put a cooldown on that command.
+- A helper class for generating permission levels. It can be accessed via require('komada').PermLevels, and is used via permlevels.addLevel(level, break, checkFunction). Once you have all levels added, simply pass permlevels.structure to your client.config as the "permStructure" property.
 
 ### Changed
 - Changed fetchMessages to fetchMessage (backend change)
@@ -29,6 +30,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Minimum node version is now v7.6.x
 - Remaining Utils have been moved to the classes folder.
 - Use Discord.Permissions to generate and keep cached an implied permissions object, instead of generating a new object every time a command is run.
+- client.config.selfbot config is no longer needed for selfbot mode. Komada now detects if it is being run as a user, and takes all selbot precautions.
 
 ### Fixed
 -

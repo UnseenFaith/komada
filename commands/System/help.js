@@ -1,6 +1,6 @@
 /* eslint-disable guard-for-in, no-restricted-syntax, no-prototype-builtins */
 exports.run = async (client, msg, [cmd]) => {
-  const method = !client.config.selfbot ? "author" : "channel";
+  const method = client.user.bot ? "author" : "channel";
   cmd = client.commands.get(cmd) || client.commands.get(client.aliases.get(cmd));
   if (cmd) {
     return msg[method].send([
@@ -19,7 +19,7 @@ exports.run = async (client, msg, [cmd]) => {
     helpMessage.push("```\n\u200b");
   }
   return msg[method].send(helpMessage, { split: { char: "\u200b" } }).catch(err => client.emit("error", err))
-    .then(() => { if (msg.channel.type !== "dm" && !client.config.selfbot) msg.sendMessage("Commands have been sent to your DMs."); });
+    .then(() => { if (msg.channel.type !== "dm" && client.user.bot) msg.sendMessage("Commands have been sent to your DMs."); });
 };
 
 exports.conf = {

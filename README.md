@@ -26,8 +26,8 @@ npm install --save komada
 Create a file called `app.js` (or whatever you prefer) which will initiate and configure Komada.
 
 ```js
-const Komada = require('komada');
-const client = new Komada({
+const komada = require('komada');
+const client = new komada.Client({
   "ownerID" : "your-user-id",
   "clientID": "the-invite-app-id",
   "prefix": "+",
@@ -47,7 +47,7 @@ client.login("your-bot-token");
 - **prefix**: The default prefix when the bot first boots up. This option becomes useless after first boot, since the prefix is written to the default configuration system.
 - **clientOptions**: These are passed directly to the discord.js library. They are optional. For more information on which options are available, see [ClientOptions in the discord.js docs](https://discord.js.org/#/docs/main/stable/typedef/ClientOptions).
 
-> For all you selfbot users out there, you can add a option ('selfbot': true) to have Komada enabled for selfbot usage. i.e. only respond to commands from you.
+> Komada automatically detects selfbot mode, and takes appropriate precautions, such as not responding to anyone but yourself.
 
 ## Running the bot
 
