@@ -8,7 +8,7 @@ class Base {
   }
 
   fetch(guild, settings) {
-    if (typeof settings !== "object" && (!(settings instanceof Array))) throw Error(`${this.constructor.name} did not provide a valid settings object.`);
+    if (typeof settings !== "object" || settings instanceof Array) throw Error(`${this.constructor.name} did not provide a valid settings object.`);
     return new Proxy(settings, this._handler(this.client, guild || null)); // eslint-disable-line
   }
 

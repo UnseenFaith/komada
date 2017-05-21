@@ -36,7 +36,7 @@ class JSON extends Base {
     const start = now();
     let defaultSettings = await fs.readJSONAsync(this._defaultFile).catch(() => fs.outputJSONAsync(this._defaultFile, this._default));
     if (!defaultSettings) defaultSettings = this._default;
-    Object.defineProperty(this, "_default", { value: defaultSettings });
+    Object.defineProperty(this, "default", { value: defaultSettings });
     this.guilds.set("default", defaultSettings);
     this.client.guilds.forEach(async (guild) => {
       const settings = await fs.readJSONAsync(`${this._dataDir}${sep}${guild.id}.json`).catch(() => {}) || {};
@@ -104,8 +104,9 @@ class JSON extends Base {
     if (key === undefined) throw "You must provide a key to change data for.";
     if (value === undefined) throw "You must provide a value to set.";
     if (settings[key] === undefined) {
-      if (!(key in this._default)) throw "That key not exist in the default settings.";
-      else settings[key] = this._default[key];
+      const defaultSet = this.guilds.get("default");
+      if (!(key in defaultSet)) throw "That key not exist in the default settings.";
+      else settings[key] = defaultSet[key];
     }
     if (guild !== "default" && force) throw "If you would like to force an update on all guilds, use the default settings.";
     if (guild !== "default" && settings[key].global) throw "You cannot change the value of a global key.";
