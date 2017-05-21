@@ -70,7 +70,7 @@ module.exports = class Komada extends Discord.Client {
       escapeMarkdown: Discord.escapeMarkdown,
       splitMessage: Discord.splitMessage,
     };
-    this.coreBaseDir = path.join(__dirname, '../');
+    this.coreBaseDir = path.join(__dirname, "../");
     this.clientBaseDir = `${process.env.clientDir || process.cwd()}${path.sep}`;
     this.guildConfs = Config.guildConfs;
     this.configuration = Config;
