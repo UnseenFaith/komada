@@ -3,13 +3,13 @@ exports.run = async (client, msg, [cmd]) => {
   const method = !client.config.selfbot ? "author" : "channel";
   cmd = client.commands.get(cmd) || client.commands.get(client.aliases.get(cmd));
   if (cmd) {
-    return msg[method].sendCode("asciidoc", [
+    return msg[method].send([
       `= ${cmd.help.name} = `,
       cmd.help.description,
       `usage :: ${cmd.usage.fullUsage(msg)}`,
       "Extended Help ::",
-      cmd.help.extendedHelp ? cmd.help.extendedHelp : "No extended help available.",
-    ]);
+      cmd.help.extendedHelp || "No extended help available.",
+    ].join("\n"), { code: "asciidoc" });
   }
   const help = this.buildHelp(client, msg);
   const helpMessage = [];
@@ -18,7 +18,7 @@ exports.run = async (client, msg, [cmd]) => {
     for (const key2 in help[key]) helpMessage.push(`= ${key2} =`, `${help[key][key2].join("\n")}\n`);
     helpMessage.push("```\n\u200b");
   }
-  return msg[method].sendMessage(helpMessage, { split: { char: "\u200b" } }).catch(err => client.emit("error", err))
+  return msg[method].send(helpMessage, { split: { char: "\u200b" } }).catch(err => client.emit("error", err))
     .then(() => { if (msg.channel.type !== "dm" && !client.config.selfbot) msg.sendMessage("Commands have been sent to your DMs."); });
 };
 

@@ -1,11 +1,9 @@
 exports.run = async (client, msg) => {
   if (client.config.selfbot) return msg.reply("Why would you need an invite link for a selfbot...");
 
-  const invite = await client.generateInvite([...new Set(client.commands.reduce((a, b) => a.concat(b.conf.botPerms), ["READ_MESSAGES", "SEND_MESSAGES"]))]);
-
   return msg.sendMessage([
     `To add ${client.user.username} to your discord guild:`,
-    invite,
+    client.invite,
     [
       "```The above link is generated requesting the minimum permissions required to use every command currently.",
       "I know not all permissions are right for every server, so don't be afraid to uncheck any of the boxes.",
