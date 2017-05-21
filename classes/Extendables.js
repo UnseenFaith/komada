@@ -69,7 +69,7 @@ class Extendables {
       .then((mes) => {
         if (mes.constructor.name === "Message") this.client.commandMessages.set(this.id, { trigger: this, response: mes });
         return mes;
-      });    
+      });
   }
 
   sendEmbed(embed, content, options) {
