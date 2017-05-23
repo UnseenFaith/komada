@@ -162,7 +162,7 @@ class JSON extends Base {
       case "Channel":
       case "Textchannel":
       case "Voicechannel":
-        if (!(value instanceof Discord.Channel)) {
+        if (!(value instanceof Discord.Channel) && guild !== "default") {
           const channel = this.client.channels.get(value);
           if (!channel) throw `${channel} does not exist in the collection of channels.`;
           else value = channel.id;
