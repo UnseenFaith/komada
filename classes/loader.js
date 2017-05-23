@@ -1,7 +1,7 @@
 const fs = require("fs-extra-promise");
 const { exec } = require("child_process");
 const { sep } = require("path");
-
+const Discord = require("discord.js");
 const ParsedUsage = require("./parsedUsage");
 
 const coreProtected = {
@@ -21,7 +21,7 @@ module.exports = class Loader {
   }
 
   async loadAll() {
-    const [funcs, [commands, aliases], inhibitors, finalizers, events, monitors, providers] = await Promise.all([
+    const [funcs, [commands, aliases], inhibitors, finalizers, events, monitors, providers, extendables] = await Promise.all([
       this.loadFunctions(),
       this.loadCommands(),
       this.loadCommandInhibitors(),
@@ -29,6 +29,7 @@ module.exports = class Loader {
       this.loadEvents(),
       this.loadMessageMonitors(),
       this.loadProviders(),
+      this.loadExtendables(),
     ]).catch((err) => {
       console.error(err);
       process.exit();
@@ -40,6 +41,7 @@ module.exports = class Loader {
     this.client.emit("log", `Loaded ${monitors} message monitors.`);
     this.client.emit("log", `Loaded ${providers} providers.`);
     this.client.emit("log", `Loaded ${events} events`);
+    this.client.emit("log", `Loaded ${extendables} extendables`);
   }
 
   async loadFunctions() {
@@ -342,6 +344,46 @@ module.exports = class Loader {
     if (this.client.providers.get(name).init) this.client.providers.get(name).init(this.client);
     return `Successfully reloaded the provider ${name}.`;
   }
+
+  async loadExtendables() {
+    const coreFiles = await fs.readdirAsync(`${this.client.coreBaseDir}extendables${sep}`)
+      .catch(() => { fs.ensureDirAsync(`${this.client.coreBaseDir}extendables${sep}`).catch(err => this.client.emit("error", this.client.funcs.newError(err))); });
+    if (coreFiles) {
+      await this.loadFiles(coreFiles.filter(file => file.endsWith(".js"))
+        // && (coreProtected.extendables.includes(file.split(".")[0]) || !this.client.config.disabled.functions.includes(file.split(".")[0])))
+        , this.client.coreBaseDir, this.loadNewExtendable, this.loadExtendables)
+        .catch((err) => { throw err; });
+    }
+    const userFiles = await fs.readdirAsync(`${this.client.clientBaseDir}extendables${sep}`)
+      .catch(() => { fs.ensureDirAsync(`${this.client.clientBaseDir}extendables${sep}`).catch(err => this.client.emit("error", this.client.funcs.newError(err))); });
+    if (userFiles) {
+      await this.loadFiles(userFiles.filter(file => file.endsWith(".js")), this.client.clientBaseDir, this.loadNewExtendable, this.loadExtendables)
+        .catch((err) => { throw err; });
+    }
+    return (coreFiles ? coreFiles.length : 0) + (userFiles ? userFiles.length : 0);
+  }
+
+  loadNewExtendable(file, dir) {
+    const extendable = require(`${dir}extendables${sep}${file}`);
+    let myExtend;
+    switch (extendable.conf.type) {
+      case "set":
+        myExtend = { set: extendable.extend };
+        break;
+      case "get":
+        myExtend = { get: extendable.extend };
+        break;
+      case "method":
+      default:
+        myExtend = { value: extendable.extend };
+        break;
+    }
+    extendable.conf.appliesTo.forEach((structure) => {
+      Object.defineProperty(Discord[structure].prototype, extendable.conf.method, myExtend);
+    });
+    delete require.cache[require.resolve(`${dir}extendables${sep}${file}`)];
+  }
+
 
   async loadFiles(files, dir, loadNew, startOver) {
     try {
