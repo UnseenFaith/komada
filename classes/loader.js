@@ -350,7 +350,7 @@ module.exports = class Loader {
       .catch(() => { fs.ensureDirAsync(`${this.client.coreBaseDir}extendables${sep}`).catch(err => this.client.emit("error", this.client.funcs.newError(err))); });
     if (coreFiles) {
       await this.loadFiles(coreFiles.filter(file => file.endsWith(".js"))
-        // && (coreProtected.extendables.includes(file.split(".")[0]) || !this.client.config.disabled.functions.includes(file.split(".")[0])))
+        // && (coreProtected.extendables.includes(file.split(".")[0]) || !this.client.config.disabled.extendables.includes(file.split(".")[0])))
         , this.client.coreBaseDir, this.loadNewExtendable, this.loadExtendables)
         .catch((err) => { throw err; });
     }
