@@ -43,7 +43,7 @@ exports.run = async (client, msg, [link, piece, folder = "Downloaded"]) => {
     throw `<@!${msg.author.id}> | ${err}`;
   }
 
-  if (mod.exports.conf.selfbot && !client.config.selfbot) throw `I am not a selfbot, so I cannot download nor use ${name}.`;
+  if (mod.exports.conf.selfbot && client.user.bot) throw `I am not a selfbot, so I cannot download nor use ${name}.`;
 
   const code = ["```asciidoc",
     "=== NAME ===",
@@ -85,9 +85,9 @@ exports.run = async (client, msg, [link, piece, folder = "Downloaded"]) => {
 
 exports.conf = {
   enabled: true,
-  runIn: ["text"],
+  runIn: ["text", "dm", "group"],
   aliases: [],
-  permLevel: 5,
+  permLevel: 10,
   botPerms: [],
   requiredFuncs: [],
 };

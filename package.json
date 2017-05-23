@@ -1,9 +1,9 @@
 {
   "name": "komada",
-  "version": "0.20.0",
+  "version": "0.20.1",
   "author": "Evelyne Lachance",
   "description": "Komada: Croatian for 'pieces', is a modular bot system including reloading modules and easy to use custom commands.",
-  "main": "client.js",
+  "main": "index.js",
   "scripts": {
     "test": "eslint classes commands finalizers functions inhibitors events client.js",
     "lint": "npm run test -- --fix"

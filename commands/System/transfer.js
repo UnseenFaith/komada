@@ -37,6 +37,6 @@ exports.conf = {
 exports.help = {
   name: "transfer",
   description: "Transfers a core piece to its respected folder",
-  usage: "<command|function|inhibitor|event|monitor> <name:str>",
+  usage: "<command|function|inhibitor|event|monitor|finalizer> <name:str>",
   usageDelim: " ",
 };

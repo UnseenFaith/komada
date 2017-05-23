@@ -61,16 +61,15 @@ class Extendables {
   }
 
   sendMessage(content = "", options = {}) {
+    if (!this.channel) return this.send(content, options);
     const commandMessage = this.client.commandMessages.get(this.id);
     if (!options.embed) options.embed = null;
-    if (commandMessage) {
-      return commandMessage.response.edit(content, options);
-    }
+    if (commandMessage && !("files" in options)) return commandMessage.response.edit(content, options);
     return this.channel.send(content, options)
-    .then((mes) => {
-      if (mes.constructor.name === "Message") this.client.commandMessages.set(this.id, { trigger: this, response: mes });
-      return mes;
-    });
+      .then((mes) => {
+        if (mes.constructor.name === "Message" && !("files" in options)) this.client.commandMessages.set(this.id, { trigger: this, response: mes });
+        return mes;
+      });
   }
 
   sendEmbed(embed, content, options) {
@@ -85,6 +84,14 @@ class Extendables {
 
   sendCode(lang, content, options = {}) {
     return this.sendMessage(content, Object.assign(options, { code: lang }));
+  }
+
+  sendFile(attachment, name, content, options = {}) {
+    return this.send({ files: [{ attachment, name }], content, options });
+  }
+
+  sendFiles(files, content, options = {}) {
+    return this.send(content, Object.assign(options, { files }));
   }
 
   awaitReactions(filter, options = {}) {
@@ -127,8 +134,8 @@ const applyToClass = (structure, props) => {
   }
 };
 
-applyToClass(GroupDMChannel, ["embedable", "postable", "attachable", "readable"]);
-applyToClass(DMChannel, ["embedable", "postable", "attachable", "readable"]);
-applyToClass(TextChannel, ["embedable", "postable", "attachable", "readable"]);
+applyToClass(GroupDMChannel, ["embedable", "postable", "attachable", "readable", "sendMessage", "sendEmbed", "sendCode", "sendFile", "sendFiles"]);
+applyToClass(DMChannel, ["embedable", "postable", "attachable", "readable", "sendMessage", "sendEmbed", "sendCode", "sendFile", "sendFiles"]);
+applyToClass(TextChannel, ["embedable", "postable", "attachable", "readable", "sendMessage", "sendEmbed", "sendCode", "sendFile", "sendFiles"]);
 applyToClass(Message, ["hasAtleastPermissionLevel", "usableCommands", "guildConf", "reactable", "createCollector", "awaitReactions", "sendMessage", "sendEmbed", "sendCode", "send"]);
 applyToClass(Guild, ["conf"]);

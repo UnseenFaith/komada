@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased] - Classbased | Staged for 0.20.0
 ### Added
+- Added option to disable core functions. Now you can skip load of core functions instead of override it.
 - Command Editing is now possible via setting config.cmdEditing to true. You will need to make a few changes to your code to make it work though:
 - A new messageUpdate core event.
 - New methods attached to the Discord.js message object to enable command editing: message.send, message.sendMessage, message.sendCode, message.sendEmbed. These methods will cache the command message and the response message, and edit the response message if the command message is found in the cache.
@@ -13,8 +14,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Added a timer to the loading.
 - Finalizers: Functions which are run on after a successful command. *Please Note: All command files must be defined as async. `exports.run = __async__ (client, msg, ...`*
 - Command Cooldowns are now available through a new inhibitor/finalizer combo. Simply set command.conf.cooldown to an integer in seconds to put a cooldown on that command.
+- A helper class for generating permission levels. It can be accessed via require('komada').PermLevels, and is used via permlevels.addLevel(level, break, checkFunction). Once you have all levels added, simply pass permlevels.structure to your client.config as the "permStructure" property.
 
 ### Changed
+- Changed fetchMessages to fetchMessage (backend change)
 - Backend is now class based. Users main files will need to be updated. The interface is the same as creating a discord.js client, only using komada, and with komada config. No more use of start, but client.login(token) is needed now.
 - Usage will no longer be calculated everytime a command is run, but instead stored in command.usage.
 - Usage has been refactored into a ParsedUsage class, and an argResolver class. (internal)
@@ -27,9 +30,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Minimum node version is now v7.6.x
 - Remaining Utils have been moved to the classes folder.
 - Use Discord.Permissions to generate and keep cached an implied permissions object, instead of generating a new object every time a command is run.
+- client.config.selfbot config is no longer needed for selfbot mode. Komada now detects if it is being run as a user, and takes all selbot precautions.
 
 ### Fixed
-- 
+-
 
 ### Removed
 - generateInvite.js core function in favor of the Discord.JS generateInvite.
