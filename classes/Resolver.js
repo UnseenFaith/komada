@@ -52,7 +52,6 @@ module.exports = class Resolver {
   }
 
   async role(role, guild) {
-    if (role instanceof Discord.Channel) return role;
     if (role instanceof Discord.Role) return role;
     if (role.constructor.name === "String") return regex.role.test(role) ? guild.roles.get(regex.role.exec(role)[1]) : null;
     return null;
