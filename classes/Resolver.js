@@ -35,7 +35,11 @@ module.exports = class Resolver {
 
   async member(member, guild) {
     if (member instanceof Discord.Member) return member;
-    if (member.constructor.name === "String") return regex.userOrMember.test(member) ? guild.fetchMember(regex.userOrMember.exec(member)[1]).catch(() => null) : null;
+    if (member instanceof Discord.User) return guild.fetchMember(member);
+    if (member.constructor.name === "String") {
+      const user = regex.userOrMember.test(member) ? this.user(member) : null;
+      return user ? guild.fetchMember(user).catch(() => null) : null;
+    }
     return null;
   }
 
