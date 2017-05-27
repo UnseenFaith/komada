@@ -32,7 +32,10 @@ module.exports = class ArgResolver {
   }
 
   async user(arg, currentUsage, possible, repeat) {
-    const user = regex.userOrMember.test(arg) ? await this.client.fetchUser(regex.userOrMember.exec(arg)[1]).catch(() => null) : undefined;
+    // eslint-disable-next-line no-nested-ternary
+    const user = regex.userOrMember.test(arg) && this.client.user.bot ?
+      await this.client.fetchUser(regex.userOrMember.exec(arg)[1]).catch(() => null) :
+      (regex.userOrMember.test(arg) ? this.client.users.get(regex.userOrMember.exec(arg)[1]) : undefined);
     if (user) return user;
     if (currentUsage.type === "optional" && !repeat) return null;
     throw `${currentUsage.possibles[possible].name} must be a mention or valid user id.`;
