@@ -4,6 +4,7 @@ exports.conf = {
   appliesTo: ["Message", "TextChannel", "DMChannel", "GroupDMChannel"],
 };
 
+// eslint-disable-next-line func-names
 exports.extend = function (embed, content, options) {
   if (!options && typeof content === "object") {
     options = content;
