@@ -26,7 +26,8 @@ npm install --save komada
 Create a file called `app.js` (or whatever you prefer) which will initiate and configure Komada.
 
 ```js
-const komada = require('komada');
+const komada = require("komada");
+
 const client = new komada.Client({
   ownerID : "your-user-id",
   clientID: "the-invite-app-id",
