@@ -1,5 +1,14 @@
 const url = require("url");
 
+const regex = {
+  userOrMember: new RegExp("^(?:<@!?)?(\\d{17,21})>?$"),
+  channel: new RegExp("^(?:<#)?(\\d{17,21})>?$"),
+  role: new RegExp("^(?:<@&)?(\\d{17,21})>?$"),
+  snowflake: new RegExp("^(\\d{17,21})$"),
+  bool: new RegExp("^true|false$", "i"),
+};
+
+
 /* eslint-disable no-throw-literal, class-methods-use-this */
 module.exports = class ArgResolver {
 
@@ -12,90 +21,67 @@ module.exports = class ArgResolver {
   }
 
   async msg(arg, currentUsage, possible, repeat, msg) {
-    if (/^\d+$/.test(arg)) {
-      const mes = await msg.channel.fetchMessage(arg).catch(() => {
-        if (currentUsage.type === "optional" && !repeat) {
-          return null;
-        }
-        throw `${currentUsage.possibles[possible].name} must be a valid message id.`;
-      });
-      return mes;
-    } else if (currentUsage.type === "optional" && !repeat) {
-      return null;
-    }
+    const message = regex.snowflake.test(arg) ? await msg.channel.fetchMessage(arg).catch(() => null) : undefined;
+    if (message) return message;
+    if (currentUsage.type === "optional" && !repeat) return null;
     throw `${currentUsage.possibles[possible].name} must be a valid message id.`;
-  }
-
-  async user(arg, currentUsage, possible, repeat) {
-    if ((/^<@!?\d+>$/.test(arg) && this.client.users.has(/\d+/.exec(arg)[0])) || (/\d+/.test(arg) && this.client.users.has(/\d+/.exec(arg)[0]) && arg.length > 5)) {
-      return this.client.users.get(/\d+/.exec(arg)[0]);
-    } else if (currentUsage.type === "optional" && !repeat) {
-      return null;
-    }
-    throw `${currentUsage.possibles[possible].name} must be a mention or valid user id.`;
   }
 
   async mention(arg, currentUsage, possible, repeat) {
     return this.user(arg, currentUsage, possible, repeat);
   }
 
+  async user(arg, currentUsage, possible, repeat) {
+    const user = regex.userOrMember.test(arg) ? await this.client.fetchUser(regex.userOrMember.exec(arg)[1]).catch(() => null) : undefined;
+    if (user) return user;
+    if (currentUsage.type === "optional" && !repeat) return null;
+    throw `${currentUsage.possibles[possible].name} must be a mention or valid user id.`;
+  }
+
   async member(arg, currentUsage, possible, repeat, msg) {
-    if ((/^<@!?\d+>$/.test(arg) && msg.guild.members.has(/\d+/.exec(arg)[0])) || (/\d+/.test(arg) && msg.guild.members.has(/\d+/.exec(arg)[0]) && arg.length > 5)) {
-      return msg.guild.members.get(/\d+/.exec(arg)[0]);
-    } else if (currentUsage.type === "optional" && !repeat) {
-      return null;
-    }
+    const member = regex.userOrMember.test(arg) ? await msg.guild.fetchMember(regex.userOrMember.exec(arg)[1]).catch(() => null) : undefined;
+    if (member) return member;
+    if (currentUsage.type === "optional" && !repeat) return null;
     throw `${currentUsage.possibles[possible].name} must be a mention or valid user id.`;
   }
 
   async channel(arg, currentUsage, possible, repeat) {
-    if (/^<#\d+>$/.test(arg) || this.client.channels.has(arg)) {
-      return this.client.channels.get(/\d+/.exec(arg)[0]);
-    } else if (currentUsage.type === "optional" && !repeat) {
-      return null;
-    }
+    const channel = regex.channel.test(arg) ? this.client.channels.get(regex.channel.exec(arg)[1]) : undefined;
+    if (channel) return channel;
+    if (currentUsage.type === "optional" && !repeat) return null;
     throw `${currentUsage.possibles[possible].name} must be a channel tag or valid channel id.`;
   }
 
   async guild(arg, currentUsage, possible, repeat) {
-    if (this.client.guilds.has(arg)) {
-      return this.client.guilds.get(/\d+/.exec(arg)[0]);
-    } else if (currentUsage.type === "optional" && !repeat) {
-      return null;
-    }
+    const guild = regex.snowflake.test(arg) ? this.client.guilds.get(arg) : undefined;
+    if (guild) return guild;
+    if (currentUsage.type === "optional" && !repeat) return null;
     throw `${currentUsage.possibles[possible].name} must be a valid guild id.`;
   }
 
   async role(arg, currentUsage, possible, repeat, msg) {
-    if (/^<@&\d+>$/.test(arg) || msg.guild.roles.has(arg)) {
-      return msg.guild.roles.get(/\d+/.exec(arg)[0]);
-    } else if (currentUsage.type === "optional" && !repeat) {
-      return null;
-    }
+    const role = regex.role.test(arg) ? msg.guild.roles.get(regex.role.exec(arg)[1]) : undefined;
+    if (role) return role;
+    if (currentUsage.type === "optional" && !repeat) return null;
     throw `${currentUsage.possibles[possible].name} must be a role mention or role id.`;
   }
 
   async literal(arg, currentUsage, possible, repeat) {
-    if (arg.toLowerCase() === currentUsage.possibles[possible].name.toLowerCase()) {
-      return arg.toLowerCase();
-    } else if (currentUsage.type === "optional" && !repeat) {
-      return null;
-    }
+    if (arg.toLowerCase() === currentUsage.possibles[possible].name.toLowerCase()) return arg.toLowerCase();
+    if (currentUsage.type === "optional" && !repeat) return null;
     throw [
       `Your option did not litterally match the only possibility: (${currentUsage.possibles.map(poss => poss.name).join(", ")})`,
       "This is likely caused by a mistake in the usage string.",
     ].join("\n");
   }
 
+  async bool(arg, currentUsage, possible, repeat) {
+    return this.boolean(arg, currentUsage, possible, repeat);
+  }
+
   async boolean(arg, currentUsage, possible, repeat) {
-    if (/^true|false$/i.test(arg)) {
-      if (arg.toLowerCase() === "true") {
-        return true;
-      }
-      return false;
-    } else if (currentUsage.type === "optional" && !repeat) {
-      return null;
-    }
+    if (regex.bool.test(arg)) return arg.toLowerCase() === "true";
+    if (currentUsage.type === "optional" && !repeat) return null;
     throw `${currentUsage.possibles[possible].name} must be true or false.`;
   }
 
@@ -104,39 +90,23 @@ module.exports = class ArgResolver {
   }
 
   async string(arg, currentUsage, possible, repeat) {
-    if (currentUsage.possibles[possible].min && currentUsage.possibles[possible].max) {
-      if (arg.length < currentUsage.possibles[possible].min || arg.length > currentUsage.possibles[possible].max) {
-        if (currentUsage.type === "optional" && !repeat) {
-          return null;
-        } else if (currentUsage.possibles[possible].min === currentUsage.possibles[possible].max) {
-          throw `${currentUsage.possibles[possible].name} must be exactly ${currentUsage.possibles[possible].min} characters.`;
-        } else {
-          throw `${currentUsage.possibles[possible].name} must be between ${currentUsage.possibles[possible].min} and ${currentUsage.possibles[possible].max} characters.`;
-        }
-      } else {
-        return arg;
-      }
-    } else if (currentUsage.possibles[possible].min) {
-      if (arg.length < currentUsage.possibles[possible].min) {
-        if (currentUsage.type === "optional" && !repeat) {
-          return null;
-        }
-        throw `${currentUsage.possibles[possible].name} must be longer than ${currentUsage.possibles[possible].min} characters.`;
-      } else {
-        return arg;
-      }
-    } else if (currentUsage.possibles[possible].max) {
-      if (arg.length > currentUsage.possibles[possible].max) {
-        if (currentUsage.type === "optional" && !repeat) {
-          return null;
-        }
-        throw `${currentUsage.possibles[possible].name} must be shorter than ${currentUsage.possibles[possible].max} characters.`;
-      } else {
-        return arg;
-      }
-    } else {
-      return arg;
+    const min = currentUsage.possibles[possible].min;
+    const max = currentUsage.possibles[possible].max;
+    if (min && max) {
+      if (arg.length >= min && arg.length <= max) return arg;
+      if (currentUsage.type === "optional" && !repeat) return null;
+      if (min === max) throw `${currentUsage.possibles[possible].name} must be exactly ${min} characters.`;
+      throw `${currentUsage.possibles[possible].name} must be between ${min} and ${max} characters.`;
+    } else if (min) {
+      if (arg.length >= min) return arg;
+      if (currentUsage.type === "optional" && !repeat) return null;
+      throw `${currentUsage.possibles[possible].name} must be longer than ${min} characters.`;
+    } else if (max) {
+      if (arg.length <= max) return arg;
+      if (currentUsage.type === "optional" && !repeat) return null;
+      throw `${currentUsage.possibles[possible].name} must be shorter than ${max} characters.`;
     }
+    return arg;
   }
 
   async int(arg, currentUsage, possible, repeat) {
@@ -144,48 +114,27 @@ module.exports = class ArgResolver {
   }
 
   async integer(arg, currentUsage, possible, repeat) {
+    const min = currentUsage.possibles[possible].min;
+    const max = currentUsage.possibles[possible].max;
     arg = Number(arg);
     if (!Number.isInteger(arg)) {
-      if (currentUsage.type === "optional" && !repeat) {
-        return null;
-      }
+      if (currentUsage.type === "optional" && !repeat) return null;
       throw `${currentUsage.possibles[possible].name} must be an integer.`;
-    } else if (currentUsage.possibles[possible].min && currentUsage.possibles[possible].max) {
-      if (arg < currentUsage.possibles[possible].min || arg > currentUsage.possibles[possible].max) {
-        if (currentUsage.possibles[possible].min === currentUsage.possibles[possible].max) {
-          if (currentUsage.type === "optional" && !repeat) {
-            return null;
-          }
-          throw `${currentUsage.possibles[possible].name} must be exactly ${currentUsage.possibles[possible].min}\nSo why didn't the dev use a literal?`;
-        } else if (currentUsage.type === "optional" && !repeat) {
-          return null;
-        } else {
-          throw `${currentUsage.possibles[possible].name} must be between ${currentUsage.possibles[possible].min} and ${currentUsage.possibles[possible].max}.`;
-        }
-      } else {
-        return arg;
-      }
-    } else if (currentUsage.possibles[possible].min) {
-      if (arg < currentUsage.possibles[possible].min) {
-        if (currentUsage.type === "optional" && !repeat) {
-          return null;
-        }
-        throw `${currentUsage.possibles[possible].name} must be greater than ${currentUsage.possibles[possible].min}.`;
-      } else {
-        return arg;
-      }
-    } else if (currentUsage.possibles[possible].max) {
-      if (arg > currentUsage.possibles[possible].max) {
-        if (currentUsage.type === "optional" && !repeat) {
-          return null;
-        }
-        throw `${currentUsage.possibles[possible].name} must be less than ${currentUsage.possibles[possible].max}.`;
-      } else {
-        return arg;
-      }
-    } else {
-      return arg;
+    } else if (min && max) {
+      if (arg >= min && arg <= max) return arg;
+      if (currentUsage.type === "optional" && !repeat) return null;
+      if (min === max) throw `${currentUsage.possibles[possible].name} must be exactly ${min}\nSo why didn't the dev use a literal?`;
+      throw `${currentUsage.possibles[possible].name} must be between ${min} and ${max}.`;
+    } else if (min) {
+      if (arg >= min) return arg;
+      if (currentUsage.type === "optional" && !repeat) return null;
+      throw `${currentUsage.possibles[possible].name} must be greater than ${min}.`;
+    } else if (max) {
+      if (arg <= max) return arg;
+      if (currentUsage.type === "optional" && !repeat) return null;
+      throw `${currentUsage.possibles[possible].name} must be less than ${max}.`;
     }
+    return arg;
   }
 
   async num(arg, currentUsage, possible, repeat) {
@@ -197,59 +146,34 @@ module.exports = class ArgResolver {
   }
 
   async float(arg, currentUsage, possible, repeat) {
+    const min = currentUsage.possibles[possible].min;
+    const max = currentUsage.possibles[possible].max;
     arg = Number(arg);
     if (isNaN(arg)) {
-      if (currentUsage.type === "optional" && !repeat) {
-        return null;
-      }
+      if (currentUsage.type === "optional" && !repeat) return null;
       throw `${currentUsage.possibles[possible].name} must be a valid number.`;
-    } else if (currentUsage.possibles[possible].min && currentUsage.possibles[possible].max) {
-      if (arg < currentUsage.possibles[possible].min || arg > currentUsage.possibles[possible].max) {
-        if (currentUsage.possibles[possible].min === currentUsage.possibles[possible].max) {
-          if (currentUsage.type === "optional" && !repeat) {
-            return null;
-          }
-          throw `${currentUsage.possibles[possible].name} must be exactly ${currentUsage.possibles[possible].min}\nSo why didn't the dev use a literal?`;
-        } else if (currentUsage.type === "optional" && !repeat) {
-          return null;
-        } else {
-          throw `${currentUsage.possibles[possible].name} must be between ${currentUsage.possibles[possible].min} and ${currentUsage.possibles[possible].max}.`;
-        }
-      } else {
-        return arg;
-      }
-    } else if (currentUsage.possibles[possible].min) {
-      if (arg < currentUsage.possibles[possible].min) {
-        if (currentUsage.type === "optional" && !repeat) {
-          return null;
-        }
-        throw `${currentUsage.possibles[possible].name} must be greater than ${currentUsage.possibles[possible].min}.`;
-      } else {
-        return arg;
-      }
-    } else if (currentUsage.possibles[possible].max) {
-      if (arg > currentUsage.possibles[possible].max) {
-        if (currentUsage.type === "optional" && !repeat) {
-          return null;
-        }
-        throw `${currentUsage.possibles[possible].name} must be less than ${currentUsage.possibles[possible].max}.`;
-      } else {
-        return arg;
-      }
-    } else {
-      return arg;
+    } else if (min && max) {
+      if (arg >= min && arg <= max) return arg;
+      if (currentUsage.type === "optional" && !repeat) return null;
+      if (min === max) throw `${currentUsage.possibles[possible].name} must be exactly ${min}\nSo why didn't the dev use a literal?`;
+      throw `${currentUsage.possibles[possible].name} must be between ${min} and ${max}.`;
+    } else if (min) {
+      if (arg >= min) return arg;
+      if (currentUsage.type === "optional" && !repeat) return null;
+      throw `${currentUsage.possibles[possible].name} must be greater than ${min}.`;
+    } else if (max) {
+      if (arg <= max) return arg;
+      if (currentUsage.type === "optional" && !repeat) return null;
+      throw `${currentUsage.possibles[possible].name} must be less than ${max}.`;
     }
+    return arg;
   }
 
   async url(arg, currentUsage, possible, repeat) {
     const res = url.parse(arg);
-    if (!res.protocol || !res.hostname) {
-      if (currentUsage.type === "optional" && !repeat) {
-        return null;
-      }
-      throw `${currentUsage.possibles[possible].name} must be a valid url.`;
-    } else {
-      return arg;
-    }
+    if (res.protocol && res.hostname) return arg;
+    if (currentUsage.type === "optional" && !repeat) return null;
+    throw `${currentUsage.possibles[possible].name} must be a valid url.`;
   }
+
 };
