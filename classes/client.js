@@ -8,8 +8,6 @@ const PermLevels = require("./permLevels.js");
  /* Will Change this later */
 const Config = require("./Configuration Types/Config.js");
 
-require("./Extendables.js");
-
 const defaultPermStructure = new PermLevels()
   .addLevel(0, false, () => true)
   .addLevel(2, false, (client, msg) => {
