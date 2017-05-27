@@ -28,12 +28,12 @@ Create a file called `app.js` (or whatever you prefer) which will initiate and c
 ```js
 const komada = require('komada');
 const client = new komada.Client({
-  "ownerID" : "your-user-id",
-  "clientID": "the-invite-app-id",
-  "prefix": "+",
-  "clientOptions": {
-    "fetchAllMembers": true
-  }
+  ownerID : "your-user-id",
+  clientID: "the-invite-app-id",
+  prefix: "+",
+  clientOptions": {
+    fetchAllMembers": true,
+  },
 });
 
 client.login("your-bot-token");
@@ -41,11 +41,12 @@ client.login("your-bot-token");
 
 ### Configuration Options
 
-- **botToken**: The MFA token for your bot. To get this, please see [This discord.js Getting Started Guide](https://eslachance.gitbooks.io/discord-js-bot-guide/content/getting-started/the-long-version.html), which explains how to create the bot and get the token.
+- **botToken**: The MFA token for your bot. To get this, please see [This discord.js Getting Started Guide](https://anidiotsguide.gitbooks.io/discord-js-bot-guide/getting-started/the-long-version.html), which explains how to create the bot and get the token.
 - **ownerID**: The User ID of the bot owner - you. This gives you the highest possible access to the bot's default commands, including eval! To obtain it, enable Developer Mode in Discord, right-click your name and do "Copy ID".
 - **clientID**: The bot's client ID obtained from the same place you got the token. It's at the top of the page!
 - **prefix**: The default prefix when the bot first boots up. This option becomes useless after first boot, since the prefix is written to the default configuration system.
 - **clientOptions**: These are passed directly to the discord.js library. They are optional. For more information on which options are available, see [ClientOptions in the discord.js docs](https://discord.js.org/#/docs/main/stable/typedef/ClientOptions).
+- **permStructure**: It allows you to configure the permission levels from Komada, with a range of 0-10. You can also use `Komada.PermLevels` constructor.
 
 > Komada automatically detects selfbot mode, and takes appropriate precautions, such as not responding to anyone but yourself.
 
@@ -55,7 +56,7 @@ Then, run the following in your folder:
 
 ```
 npm install
-node --harmony app.js
+node app.js
 ```
 
-> **Requirements**: Requires Node 7 or higher to run. Depends on Discord.js v11 or higher (the appropriate version is automatically installed).
+> **Requirements**: This version of Komada requires Node 7.6.0 or higher to run. Depends on Discord.js v11.1.0 or higher (the appropriate version is automatically installed).
