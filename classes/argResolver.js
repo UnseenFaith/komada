@@ -21,6 +21,7 @@ module.exports = class ArgResolver extends Resolver {
   async user(arg, currentUsage, possible, repeat) {
     const user = await super.user(arg);
     if (user) return user;
+    if (!currentUsage) return null;
     if (currentUsage.type === "optional" && !repeat) return null;
     throw `${currentUsage.possibles[possible].name} must be a mention or valid user id.`;
   }
