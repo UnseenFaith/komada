@@ -31,7 +31,7 @@ const client = new komada.Client({
   ownerID : "your-user-id",
   clientID: "the-invite-app-id",
   prefix: "+",
-  clientOptions": {
+  clientOptions: {
     fetchAllMembers": true,
   },
 });
