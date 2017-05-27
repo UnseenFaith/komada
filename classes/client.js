@@ -85,7 +85,8 @@ module.exports = class Komada extends Discord.Client {
   }
 
   validatePermStructure() {
-    const permStructure = this.config.permStructure || defaultPermStructure.structure;
+    const structure = this.config.permStructure instanceof PermLevels ? this.config.permStructure.structure : null;
+    const permStructure = structure || this.config.permStructure || defaultPermStructure.structure;
     if (!Array.isArray(permStructure)) throw "PermStructure must be an array.";
     if (permStructure.some(perm => typeof perm !== "object" || typeof perm.check !== "function" || typeof perm.break !== "boolean")) {
       throw "Perms must be an object with a check function and a break boolean.";
