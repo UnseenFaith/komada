@@ -1,27 +1,14 @@
-const url = require("url");
-
-const regex = {
-  userOrMember: new RegExp("^(?:<@!?)?(\\d{17,21})>?$"),
-  channel: new RegExp("^(?:<#)?(\\d{17,21})>?$"),
-  role: new RegExp("^(?:<@&)?(\\d{17,21})>?$"),
-  snowflake: new RegExp("^(\\d{17,21})$"),
-  bool: new RegExp("^true|false$", "i"),
-};
-
+const Resolver = require("./Resolver");
 
 /* eslint-disable no-throw-literal, class-methods-use-this */
-module.exports = class ArgResolver {
-
-  constructor(client) {
-    Object.defineProperty(this, "client", { value: client });
-  }
+module.exports = class ArgResolver extends Resolver {
 
   async message(arg, currentUsage, possible, repeat, msg) {
     return this.msg(arg, currentUsage, possible, repeat, msg);
   }
 
   async msg(arg, currentUsage, possible, repeat, msg) {
-    const message = regex.snowflake.test(arg) ? await msg.channel.fetchMessage(arg).catch(() => null) : undefined;
+    const message = await super.msg(arg, msg.channel);
     if (message) return message;
     if (currentUsage.type === "optional" && !repeat) return null;
     throw `${currentUsage.possibles[possible].name} must be a valid message id.`;
@@ -32,38 +19,35 @@ module.exports = class ArgResolver {
   }
 
   async user(arg, currentUsage, possible, repeat) {
-    // eslint-disable-next-line no-nested-ternary
-    const user = regex.userOrMember.test(arg) ?
-      this.client.user.bot ? await this.client.fetchUser(regex.userOrMember.exec(arg)[1]).catch(() => null) : this.client.users.get(regex.userOrMember.exec(arg)[1]) :
-      undefined;
+    const user = await super.user(arg);
     if (user) return user;
     if (currentUsage.type === "optional" && !repeat) return null;
     throw `${currentUsage.possibles[possible].name} must be a mention or valid user id.`;
   }
 
   async member(arg, currentUsage, possible, repeat, msg) {
-    const member = regex.userOrMember.test(arg) ? await msg.guild.fetchMember(regex.userOrMember.exec(arg)[1]).catch(() => null) : undefined;
+    const member = await super.member(arg, msg.guild);
     if (member) return member;
     if (currentUsage.type === "optional" && !repeat) return null;
     throw `${currentUsage.possibles[possible].name} must be a mention or valid user id.`;
   }
 
   async channel(arg, currentUsage, possible, repeat) {
-    const channel = regex.channel.test(arg) ? this.client.channels.get(regex.channel.exec(arg)[1]) : undefined;
+    const channel = await super.channel(arg);
     if (channel) return channel;
     if (currentUsage.type === "optional" && !repeat) return null;
     throw `${currentUsage.possibles[possible].name} must be a channel tag or valid channel id.`;
   }
 
   async guild(arg, currentUsage, possible, repeat) {
-    const guild = regex.snowflake.test(arg) ? this.client.guilds.get(arg) : undefined;
+    const guild = await super.guild(arg);
     if (guild) return guild;
     if (currentUsage.type === "optional" && !repeat) return null;
     throw `${currentUsage.possibles[possible].name} must be a valid guild id.`;
   }
 
   async role(arg, currentUsage, possible, repeat, msg) {
-    const role = regex.role.test(arg) ? msg.guild.roles.get(regex.role.exec(arg)[1]) : undefined;
+    const role = await super.role(arg, msg.guild);
     if (role) return role;
     if (currentUsage.type === "optional" && !repeat) return null;
     throw `${currentUsage.possibles[possible].name} must be a role mention or role id.`;
@@ -83,7 +67,8 @@ module.exports = class ArgResolver {
   }
 
   async boolean(arg, currentUsage, possible, repeat) {
-    if (regex.bool.test(arg)) return arg.toLowerCase() === "true";
+    const boolean = await super.boolean(arg);
+    if (boolean !== null) return boolean;
     if (currentUsage.type === "optional" && !repeat) return null;
     throw `${currentUsage.possibles[possible].name} must be true or false.`;
   }
@@ -119,8 +104,8 @@ module.exports = class ArgResolver {
   async integer(arg, currentUsage, possible, repeat) {
     const min = currentUsage.possibles[possible].min;
     const max = currentUsage.possibles[possible].max;
-    arg = Number(arg);
-    if (!Number.isInteger(arg)) {
+    arg = await super.integer(arg);
+    if (arg === null) {
       if (currentUsage.type === "optional" && !repeat) return null;
       throw `${currentUsage.possibles[possible].name} must be an integer.`;
     } else if (min && max) {
@@ -151,8 +136,8 @@ module.exports = class ArgResolver {
   async float(arg, currentUsage, possible, repeat) {
     const min = currentUsage.possibles[possible].min;
     const max = currentUsage.possibles[possible].max;
-    arg = Number(arg);
-    if (isNaN(arg)) {
+    arg = await super.float(arg);
+    if (arg === null) {
       if (currentUsage.type === "optional" && !repeat) return null;
       throw `${currentUsage.possibles[possible].name} must be a valid number.`;
     } else if (min && max) {
@@ -173,8 +158,8 @@ module.exports = class ArgResolver {
   }
 
   async url(arg, currentUsage, possible, repeat) {
-    const res = url.parse(arg);
-    if (res.protocol && res.hostname) return arg;
+    const hyperlink = await super.url(arg);
+    if (hyperlink !== null) return hyperlink;
     if (currentUsage.type === "optional" && !repeat) return null;
     throw `${currentUsage.possibles[possible].name} must be a valid url.`;
   }
