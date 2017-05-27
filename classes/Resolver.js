@@ -37,7 +37,7 @@ module.exports = class Resolver {
     if (member instanceof Discord.Member) return member;
     if (member instanceof Discord.User) return guild.fetchMember(member);
     if (member.constructor.name === "String") {
-      const user = regex.userOrMember.test(member) ? this.user(member) : null;
+      const user = regex.userOrMember.test(member) ? await this.user(member) : null;
       return user ? guild.fetchMember(user).catch(() => null) : null;
     }
     return null;
