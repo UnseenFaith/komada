@@ -12,7 +12,6 @@ const coreProtected = {
   finalizers: [],
   monitors: [],
   providers: [],
-  extendables: ["get_attachable", "get_conf", "get_embedable", "get_postable", "get_reactable", "get_readable", "get_usableCommands", "hasAtleastPermissionLevel", "send", "sendCode", "sendEmbed", "sendFile", "sendFiles", "sendMessage"],
 };
 
 /* eslint-disable no-throw-literal, import/no-dynamic-require, class-methods-use-this */
@@ -350,8 +349,8 @@ module.exports = class Loader {
     const coreFiles = await fs.readdirAsync(`${this.client.coreBaseDir}extendables${sep}`)
       .catch(() => { fs.ensureDirAsync(`${this.client.coreBaseDir}extendables${sep}`).catch(err => this.client.emit("error", this.client.funcs.newError(err))); });
     if (coreFiles) {
-      await this.loadFiles(coreFiles.filter(file => file.endsWith(".js")
-        && (coreProtected.extendables.includes(file.split(".")[0]) || !this.client.config.disabled.extendables.includes(file.split(".")[0])))
+      await this.loadFiles(coreFiles.filter(file => file.endsWith(".js"))
+        // && (coreProtected.extendables.includes(file.split(".")[0]) || !this.client.config.disabled.extendables.includes(file.split(".")[0])))
         , this.client.coreBaseDir, this.loadNewExtendable, this.loadExtendables)
         .catch((err) => { throw err; });
     }
@@ -367,13 +366,11 @@ module.exports = class Loader {
   loadNewExtendable(file, dir) {
     const extendable = require(`${dir}extendables${sep}${file}`);
     let myExtend;
-    switch (extendable.conf.type.toLowerCase()) {
+    switch (extendable.conf.type) {
       case "set":
-      case "setter":
         myExtend = { set: extendable.extend };
         break;
       case "get":
-      case "getter":
         myExtend = { get: extendable.extend };
         break;
       case "method":
