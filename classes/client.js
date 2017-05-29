@@ -43,6 +43,7 @@ module.exports = class Komada extends Discord.Client {
       finalizers: config.disabled.finalizers || [],
       monitors: config.disabled.monitors || [],
       providers: config.disabled.providers || [],
+      extendables: config.disabled.extendables || [],
     };
     this.funcs = new Loader(this);
     this.argResolver = new ArgResolver(this);
