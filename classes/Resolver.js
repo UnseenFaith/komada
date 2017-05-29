@@ -24,7 +24,7 @@ module.exports = class Resolver {
   async user(user) {
     if (user instanceof Discord.User) return user;
     if (user instanceof Discord.Member) return user.user;
-    if (user.constructor.name === "String") {
+    if (tyeof user === "string") {
       // eslint-disable-next-line no-nested-ternary
       return regex.userOrMember.test(user) ?
       this.client.user.bot ? this.client.fetchUser(regex.userOrMember.exec(user)[1]).catch(() => null) : this.client.users.get(regex.userOrMember.exec(user)[1]) :
@@ -36,7 +36,7 @@ module.exports = class Resolver {
   async member(member, guild) {
     if (member instanceof Discord.Member) return member;
     if (member instanceof Discord.User) return guild.fetchMember(member);
-    if (member.constructor.name === "String") {
+    if (tyeof member === "string") {
       const user = regex.userOrMember.test(member) ? await this.user(member) : null;
       return user ? guild.fetchMember(user).catch(() => null) : null;
     }
@@ -45,19 +45,19 @@ module.exports = class Resolver {
 
   async channel(channel) {
     if (channel instanceof Discord.Channel) return channel;
-    if (channel.constructor.name === "String") return regex.channel.test(channel) ? this.client.channels.get(regex.channel.exec(channel)[1]) : null;
+    if (tyeof channel === "string") return regex.channel.test(channel) ? this.client.channels.get(regex.channel.exec(channel)[1]) : null;
     return null;
   }
 
   async guild(guild) {
     if (guild instanceof Discord.Channel) return guild;
-    if (guild.constructor.name === "String") return regex.snowflake.test(guild) ? this.client.guilds.get(guild) : null;
+    if (tyeof guild === "string") return regex.snowflake.test(guild) ? this.client.guilds.get(guild) : null;
     return null;
   }
 
   async role(role, guild) {
     if (role instanceof Discord.Role) return role;
-    if (role.constructor.name === "String") return regex.role.test(role) ? guild.roles.get(regex.role.exec(role)[1]) : null;
+    if (tyeof role === "string") return regex.role.test(role) ? guild.roles.get(regex.role.exec(role)[1]) : null;
     return null;
   }
 
@@ -69,7 +69,7 @@ module.exports = class Resolver {
   }
 
   async string(string) {
-    if (string.constructor.name === "String") return string;
+    if (tyeof string === "string") return string;
     return String(string);
   }
 
