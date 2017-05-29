@@ -11,8 +11,8 @@ exports.extend = function (content = "", options = {}) {
   if (!options.embed) options.embed = null;
   if (commandMessage && !("files" in options)) return commandMessage.response.edit(content, options);
   return this.channel.send(content, options)
-      .then((mes) => {
-        if (mes.constructor.name === "Message" && !("files" in options)) this.client.commandMessages.set(this.id, { trigger: this, response: mes });
-        return mes;
-      });
+    .then((mes) => {
+      if (mes.constructor.name === "Message" && !("files" in options)) this.client.commandMessages.set(this.id, { trigger: this, response: mes });
+      return mes;
+    });
 };

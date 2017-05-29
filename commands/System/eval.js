@@ -1,4 +1,4 @@
-const inspect = require("util").inspect;
+const { inspect } = require("util");
 
 /* eslint-disable no-eval */
 exports.run = async (client, msg, [code]) => {
