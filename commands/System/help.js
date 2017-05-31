@@ -11,9 +11,7 @@ exports.run = async (client, msg, [cmd]) => {
       "Extended Help ::",
       cmd.help.extendedHelp || "No extended help available.",
     ].join("\n");
-    return msg.send(info, { code: "asciidoc" })
-      .then(() => { if (msg.channel.type !== "dm" && client.user.bot) msg.sendMessage("📥 | The command has been sent to your DMs."); })
-      .catch(() => { if (msg.channel.type !== "dm" && client.user.bot) msg.sendMessage("❌ | You have DMs disabled, I couldn't send you the information in DMs."); });
+    return msg.send(info, { code: "asciidoc" });
   }
   const help = this.buildHelp(client, msg);
   const helpMessage = [];
