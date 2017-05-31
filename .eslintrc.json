@@ -22,6 +22,7 @@
     "import/no-dynamic-require": "warn",
     "no-prototype-builtins": "warn",
     "no-restricted-syntax": "warn",
+    "no-throw-literal": "off",
     "guard-for-in": "warn",
     "consistent-return": ["warn", { "treatUndefinedAsUnspecified": true }],
     "no-use-before-define": ["warn", { "functions": true, "classes": true }],
