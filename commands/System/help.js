@@ -1,15 +1,19 @@
 /* eslint-disable guard-for-in, no-restricted-syntax, no-prototype-builtins */
-exports.run = async (client, msg, [cmd]) => {
+exports.run = async (client, msg, [cmd = null]) => {
   const method = client.user.bot ? "author" : "channel";
-  cmd = client.commands.get(cmd) || client.commands.get(client.aliases.get(cmd));
   if (cmd) {
-    return msg[method].send([
+    cmd = client.commands.get(cmd) || client.commands.get(client.aliases.get(cmd));
+    if (!cmd) return msg.sendMessage("❌ | Unknown command, please run the help command with no arguments to get a list of them all.");
+    const info = [
       `= ${cmd.help.name} = `,
       cmd.help.description,
       `usage :: ${cmd.usage.fullUsage(msg)}`,
       "Extended Help ::",
       cmd.help.extendedHelp || "No extended help available.",
-    ].join("\n"), { code: "asciidoc" });
+    ].join("\n");
+    return msg[method].send(info, { code: "asciidoc" })
+      .then(() => { if (msg.channel.type !== "dm" && client.user.bot) msg.sendMessage("📥 | The command has been sent to your DMs."); })
+      .catch(() => { if (msg.channel.type !== "dm" && client.user.bot) msg.sendMessage("❌ | You have DMs disabled, I couldn't send you the information in DMs."); });
   }
   const help = this.buildHelp(client, msg);
   const helpMessage = [];
@@ -18,14 +22,15 @@ exports.run = async (client, msg, [cmd]) => {
     for (const key2 in help[key]) helpMessage.push(`= ${key2} =`, `${help[key][key2].join("\n")}\n`);
     helpMessage.push("```\n\u200b");
   }
-  return msg[method].send(helpMessage, { split: { char: "\u200b" } }).catch(err => client.emit("error", err))
-    .then(() => { if (msg.channel.type !== "dm" && client.user.bot) msg.sendMessage("Commands have been sent to your DMs."); });
+  return msg[method].send(helpMessage, { split: { char: "\u200b" } })
+    .then(() => { if (msg.channel.type !== "dm" && client.user.bot) msg.sendMessage("📥 | Commands have been sent to your DMs."); })
+    .catch(() => { if (msg.channel.type !== "dm" && client.user.bot) msg.sendMessage("❌ | You have DMs disabled, I couldn't send you the commands in DMs."); });
 };
 
 exports.conf = {
   enabled: true,
   runIn: ["text", "dm", "group"],
-  aliases: [],
+  aliases: ["commands"],
   permLevel: 0,
   botPerms: [],
   requiredFuncs: [],
