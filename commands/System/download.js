@@ -1,6 +1,6 @@
 const request = require("superagent");
 const vm = require("vm");
-const fs = require("fs-extra-promise");
+const fs = require("fs-extra");
 const path = require("path");
 const url = require("url");
 
@@ -97,71 +97,71 @@ ${modules}
         const m = await msg.channel.send(`:inbox_tray: \`Loading ${type}\``).catch(err => client.funcs.log(err, "error"));
         if (Array.isArray(modules) && modules.length > 0) {
           await client.funcs.installNPM(modules.join(" "))
-          .catch((err) => {
-            console.error(err);
-            process.exit();
-          });
+            .catch((err) => {
+              console.error(err);
+              process.exit();
+            });
           const category = mod.exports.help.category ? mod.exports.help.category : client.funcs.toTitleCase(folder);
           let message;
           switch (type) {
             case "commands": {
               const dir = path.resolve(`${client.clientBaseDir}/commands/${category}/`);
               m.edit(`:inbox_tray: \`Loading ${type} into ${dir}/${name}.js...\``);
-              await fs.ensureDirAsync(dir).catch(err => client.funcs.log(err, "error"));
-              fs.writeFileSync(`${dir}${path.sep}${name}.js`, res.text);
+              await fs.ensureDir(dir).catch(err => client.funcs.log(err, "error"));
+              await fs.writeFile(`${dir}${path.sep}${name}.js`, res.text);
               message = await client.funcs.reload.command(client, client.clientBaseDir, name)
-                        .catch((response) => {
-                          m.edit(`:no_mobile_phones: Command load failed ${name}\n\`\`\`${response}\`\`\``);
-                          return fs.unlinkSync(`${dir}/${name}.js`);
-                        });
+                .catch((response) => {
+                  m.edit(`:no_mobile_phones: Command load failed ${name}\n\`\`\`${response}\`\`\``);
+                  return fs.unlink(`${dir}/${name}.js`);
+                });
               if (message) m.edit(`:inbox_tray: ${message}`);
               break;
             }
             case "functions": {
               const dir = path.resolve(`${client.clientBaseDir}/functions/`);
               m.edit(`:inbox_tray: \`Loading ${type} into ${dir}/${name}.js...\``);
-              await fs.writeFileAsync(`${dir}${path.sep}${name}.js`, res.text).catch(err => client.funcs.log(err, "error"));
+              await fs.writeFile(`${dir}${path.sep}${name}.js`, res.text).catch(err => client.funcs.log(err, "error"));
               message = await client.funcs.reload.function(client, client.clientBaseDir, name)
-                        .catch((response) => {
-                          m.edit(`:no_mobile_phones: Function load failed ${name}\n\`\`\`${response}\`\`\``);
-                          return fs.unlinkSync(`${dir}/${name}.js`);
-                        });
+                .catch((response) => {
+                  m.edit(`:no_mobile_phones: Function load failed ${name}\n\`\`\`${response}\`\`\``);
+                  return fs.unlink(`${dir}/${name}.js`);
+                });
               if (message) m.edit(`:inbox_tray: ${message}`);
               break;
             }
             case "inhibitors": {
               const dir = path.resolve(`${client.clientBaseDir}/inhibitors/`);
               m.edit(`:inbox_tray: \`Loading ${type} into ${dir}/${name}.js...\``);
-              await fs.writeFileAsync(`${dir}/${name}.js`, res.text).catch(err => client.funcs.log(err, "error"));
+              await fs.writeFile(`${dir}/${name}.js`, res.text).catch(err => client.funcs.log(err, "error"));
               message = await client.funcs.reload.inhibitor(client, client.clientBaseDir, name)
-                        .catch((response) => {
-                          m.edit(`:no_mobile_phones: Inhibitor load failed ${name}\n\`\`\`${response}\`\`\``);
-                          return fs.unlinkSync(`${dir}/${name}.js`);
-                        });
+                .catch((response) => {
+                  m.edit(`:no_mobile_phones: Inhibitor load failed ${name}\n\`\`\`${response}\`\`\``);
+                  return fs.unlink(`${dir}/${name}.js`);
+                });
               if (message) m.edit(`:inbox_tray: ${message}`);
               break;
             }
             case "monitors": {
               const dir = path.resolve(`${client.clientBaseDir}/monitors/`);
               m.edit(`:inbox_tray: \`Loading ${type} into ${dir}/${name}.js...\``);
-              await fs.writeFileAsync(`${dir}/${name}.js`, res.text).catch(err => client.funcs.log(err, "error"));
+              await fs.writeFile(`${dir}/${name}.js`, res.text).catch(err => client.funcs.log(err, "error"));
               message = await client.funcs.reload.monitor(client, client.clientBaseDir, name)
-                        .catch((response) => {
-                          m.edit(`:no_mobile_phones: Monitor load failed ${name}\n\`\`\`${response}\`\`\``);
-                          return fs.unlinkSync(`${dir}/${name}.js`);
-                        });
+                .catch((response) => {
+                  m.edit(`:no_mobile_phones: Monitor load failed ${name}\n\`\`\`${response}\`\`\``);
+                  return fs.unlink(`${dir}/${name}.js`);
+                });
               if (message) m.edit(`:inbox_tray: ${message}`);
               break;
             }
             case "providers": {
               const dir = path.resolve(`${client.clientBaseDir}/providers/`);
               m.edit(`:inbox_tray: \`Loading ${type} into ${dir}/${name}.js...\``);
-              await fs.writeFileAsync(`${dir}/${name}.js`, res.text).catch(err => client.funcs.log(err, "error"));
+              await fs.writeFile(`${dir}/${name}.js`, res.text).catch(err => client.funcs.log(err, "error"));
               message = await client.funcs.reload.provider(client, client.clientBaseDir, name)
-                        .catch((response) => {
-                          m.edit(`:no_mobile_phones: Provider load failed ${name}\n\`\`\`${response}\`\`\``);
-                          return fs.unlinkSync(`${dir}/${name}.js`);
-                        });
+                .catch((response) => {
+                  m.edit(`:no_mobile_phones: Provider load failed ${name}\n\`\`\`${response}\`\`\``);
+                  return fs.unlink(`${dir}/${name}.js`);
+                });
               m.edit(`:inbox_tray: ${message}`);
               break;
             }
@@ -175,61 +175,61 @@ ${modules}
             case "commands": {
               const dir = path.resolve(`${client.clientBaseDir}/commands/${category}`);
               m.edit(`:inbox_tray: \`Loading ${type} into ${dir}/${name}.js...\``);
-              await fs.ensureDirAsync(dir).catch(err => client.funcs.log(err, "error"));
-              await fs.writeFileAsync(`${dir}${path.sep}${name}.js`, res.text);
+              await fs.ensureDir(dir).catch(err => client.funcs.log(err, "error"));
+              await fs.writeFile(`${dir}${path.sep}${name}.js`, res.text);
               message = await client.funcs.reload.command(client, client.clientBaseDir, name)
-                        .catch((response) => {
-                          m.edit(`:no_mobile_phones: Command load failed ${name}\n\`\`\`${response}\`\`\``);
-                          fs.unlinkSync(`${dir}/${name}.js`);
-                        });
+                .catch((response) => {
+                  m.edit(`:no_mobile_phones: Command load failed ${name}\n\`\`\`${response}\`\`\``);
+                  return fs.unlink(`${dir}/${name}.js`);
+                });
               if (message) m.edit(`:inbox_tray: ${message}`);
               break;
             }
             case "functions": {
               const dir = path.resolve(`${client.clientBaseDir}/functions/`);
               m.edit(`:inbox_tray: \`Loading ${type} into ${dir}/${name}.js...\``);
-              await fs.writeFileAsync(`${dir}/${name}.js`, res.text).catch(err => client.funcs.log(err, "error"));
+              await fs.writeFile(`${dir}/${name}.js`, res.text).catch(err => client.funcs.log(err, "error"));
               message = await client.funcs.reload.function(client, client.clientBaseDir, name)
-                        .catch((response) => {
-                          m.edit(`:no_mobile_phones: Function load failed ${name}\n\`\`\`${response}\`\`\``);
-                          return fs.unlinkSync(`${dir}/${name}.js`);
-                        });
+                .catch((response) => {
+                  m.edit(`:no_mobile_phones: Function load failed ${name}\n\`\`\`${response}\`\`\``);
+                  return fs.unlink(`${dir}/${name}.js`);
+                });
               m.edit(`:inbox_tray: ${message}`);
               break;
             }
             case "inhibitors": {
               const dir = path.resolve(`${client.clientBaseDir}/inhibitors/`);
               m.edit(`:inbox_tray: \`Loading ${type} into ${dir}/${name}.js...\``);
-              await fs.writeFileAsync(`${dir}/${name}.js`, res.text).catch(err => client.funcs.log(err, "error"));
+              await fs.writeFile(`${dir}/${name}.js`, res.text).catch(err => client.funcs.log(err, "error"));
               message = await client.funcs.reload.inhibitor(client, client.clientBaseDir, name)
-                        .catch((response) => {
-                          m.edit(`:no_mobile_phones: Inhibitor load failed ${name}\n\`\`\`${response}\`\`\``);
-                          return fs.unlinkSync(`${dir}/${name}.js`);
-                        });
+                .catch((response) => {
+                  m.edit(`:no_mobile_phones: Inhibitor load failed ${name}\n\`\`\`${response}\`\`\``);
+                  return fs.unlink(`${dir}/${name}.js`);
+                });
               m.edit(`:inbox_tray: ${message}`);
               break;
             }
             case "monitors": {
               const dir = path.resolve(`${client.clientBaseDir}/monitors/`);
               m.edit(`:inbox_tray: \`Loading ${type} into ${dir}/${name}.js...\``);
-              await fs.writeFileAsync(`${dir}/${name}.js`, res.text).catch(err => client.funcs.log(err, "error"));
+              await fs.writeFile(`${dir}/${name}.js`, res.text).catch(err => client.funcs.log(err, "error"));
               message = await client.funcs.reload.monitor(client, client.clientBaseDir, name)
-                        .catch((response) => {
-                          m.edit(`:no_mobile_phones: Monitor load failed ${name}\n\`\`\`${response}\`\`\``);
-                          return fs.unlinkSync(`${dir}/${name}.js`);
-                        });
+                .catch((response) => {
+                  m.edit(`:no_mobile_phones: Monitor load failed ${name}\n\`\`\`${response}\`\`\``);
+                  return fs.unlink(`${dir}/${name}.js`);
+                });
               m.edit(`:inbox_tray: ${message}`);
               break;
             }
             case "providers": {
               const dir = path.resolve(`${client.clientBaseDir}/providers/`);
               m.edit(`:inbox_tray: \`Loading ${type} into ${dir}/${name}.js...\``);
-              await fs.writeFileAsync(`${dir}/${name}.js`, res.text).catch(err => client.funcs.log(err, "error"));
+              await fs.writeFile(`${dir}/${name}.js`, res.text).catch(err => client.funcs.log(err, "error"));
               message = await client.funcs.reload.provider(client, client.clientBaseDir, name)
-                        .catch((response) => {
-                          m.edit(`:no_mobile_phones: Provider load failed ${name}\n\`\`\`${response}\`\`\``);
-                          return fs.unlinkSync(`${dir}/${name}.js`);
-                        });
+                .catch((response) => {
+                  m.edit(`:no_mobile_phones: Provider load failed ${name}\n\`\`\`${response}\`\`\``);
+                  return fs.unlink(`${dir}/${name}.js`);
+                });
               m.edit(`:inbox_tray: ${message}`);
               break;
             }

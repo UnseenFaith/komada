@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-syntax, no-underscore-dangle, no-unused-vars */
 
-const fs = require("fs-extra-promise");
+const fs = require("fs-extra");
 const path = require("path");
 
 
@@ -33,7 +33,7 @@ class NumberConfig {
     if (this.min && parseInt(value) < this.min) return `Error while setting the value. ${value} is less than ${this.min}`;
     if (this.max && parseInt(value) > this.max) return `Error while setting the value. ${value} is more than ${this.max}`;
     this.data = value;
-    fs.outputJSONAsync(path.resolve(`${this._dataDir}${path.sep}${this._id}.json`), this._client.guildConfs.get(this._id));
+    fs.outputJSON(path.resolve(`${this._dataDir}${path.sep}${this._id}.json`), this._client.guildConfs.get(this._id));
     return this;
   }
 
@@ -44,7 +44,7 @@ class NumberConfig {
    */
   setMin(value) {
     this.min = value;
-    fs.outputJSONAsync(path.resolve(`${this._dataDir}${path.sep}${this._id}.json`), this._client.guildConfs.get(this._id));
+    fs.outputJSON(path.resolve(`${this._dataDir}${path.sep}${this._id}.json`), this._client.guildConfs.get(this._id));
     return this;
   }
 
@@ -55,7 +55,7 @@ class NumberConfig {
    */
   setMax(value) {
     this.max = value;
-    fs.outputJSONAsync(path.resolve(`${this._dataDir}${path.sep}${this._id}.json`), this._client.guildConfs.get(this._id));
+    fs.outputJSON(path.resolve(`${this._dataDir}${path.sep}${this._id}.json`), this._client.guildConfs.get(this._id));
     return this;
   }
 }
