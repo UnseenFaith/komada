@@ -1,5 +1,5 @@
 /* eslint-disable guard-for-in, no-restricted-syntax, no-prototype-builtins */
-exports.run = async (client, msg, [cmd = null]) => {
+exports.run = async (client, msg, [cmd]) => {
   const method = client.user.bot ? "author" : "channel";
   if (cmd) {
     cmd = client.commands.get(cmd) || client.commands.get(client.aliases.get(cmd));
