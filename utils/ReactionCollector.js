@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle, no-use-before-define */
 const EventEmitter = require("events").EventEmitter;
-const Collection = require("discord.js").Collection;
+const { Collection } = require("discord.js");
 
 class ReactionCollector extends EventEmitter {
   constructor(message, filter, options = {}) {

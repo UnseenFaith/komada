@@ -1,11 +1,7 @@
 exports.run = (client, msg) => {
   msg.channel.send("Rebooting...")
-    .then(() => {
-      process.exit();
-    })
-    .catch((e) => {
-      console.error(e);
-    });
+    .then(() => process.exit())
+    .catch(console.error);
 };
 
 exports.conf = {

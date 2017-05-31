@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-syntax, no-underscore-dangle, no-unused-vars */
 
-const fs = require("fs-extra-promise");
+const fs = require("fs-extra");
 const path = require("path");
 
 /** The starting point for creating a String configuration key. */
@@ -31,7 +31,7 @@ class StringConfig {
     if (!value) return "Please supply a value to set.";
     if (this.possibles.length !== 0 && !this.possibles.includes(value)) return `That is not a valid option. Valid options: ${this.possibles.join(", ")}`;
     this.data = value.toString();
-    fs.outputJSONAsync(path.resolve(`${this._dataDir}${path.sep}${this._id}.json`), this._client.guildConfs.get(this._id));
+    fs.outputJSON(path.resolve(`${this._dataDir}${path.sep}${this._id}.json`), this._client.guildConfs.get(this._id));
     return this;
   }
 
@@ -47,12 +47,12 @@ class StringConfig {
         if (this.possibles.includes(val)) return `The value ${val} is already in ${this.possibles}.`;
         return this.possibles.push(val);
       });
-      fs.outputJSONAsync(path.resolve(`${this._dataDir}${path.sep}${this._id}.json`), this._client.guildConfs.get(this._id));
+      fs.outputJSON(path.resolve(`${this._dataDir}${path.sep}${this._id}.json`), this._client.guildConfs.get(this._id));
       return this;
     }
     if (this.possibles.includes(value)) return `The value ${value} is already in ${this.possibles}.`;
     this.possibles.push(value);
-    fs.outputJSONAsync(path.resolve(`${this._dataDir}${path.sep}${this._id}.json`), this._client.guildConfs.get(this._id));
+    fs.outputJSON(path.resolve(`${this._dataDir}${path.sep}${this._id}.json`), this._client.guildConfs.get(this._id));
     return this;
   }
 
@@ -68,12 +68,12 @@ class StringConfig {
         if (!this.possibles.includes(val)) return `The value ${value} is not in ${this.possibles}.`;
         return this.possibles.splice(this.possibles.indexOf(val), 1);
       });
-      fs.outputJSONAsync(path.resolve(`${this._dataDir}${path.sep}${this._id}.json`), this._client.guildConfs.get(this._id));
+      fs.outputJSON(path.resolve(`${this._dataDir}${path.sep}${this._id}.json`), this._client.guildConfs.get(this._id));
       return this;
     }
     if (!this.possibles.includes(value)) return `The value ${value} is not in ${this.possibles}.`;
     this.possibles.splice(this.possibles.indexOf(value), 1);
-    fs.outputJSONAsync(path.resolve(`${this._dataDir}${path.sep}${this._id}.json`), this._client.guildConfs.get(this._id));
+    fs.outputJSON(path.resolve(`${this._dataDir}${path.sep}${this._id}.json`), this._client.guildConfs.get(this._id));
     return this;
   }
 }
