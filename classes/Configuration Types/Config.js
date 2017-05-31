@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-syntax, no-underscore-dangle, no-unused-vars, no-throw-literal, guard-for-in, no-prototype-builtins */
-const fs = require("fs-extra-promise");
+const fs = require("fs-extra");
 const path = require("path");
 const Types = require("./types");
 const Discord = require("discord.js");
@@ -218,7 +218,7 @@ class Config {
       default:
         throw "Unsupported Configuration type. Cannot set the value.";
     }
-    fs.outputJSONAsync(`${dataDir}${path.sep}${defaultFile}`, defaultConf);
+    fs.outputJSON(`${dataDir}${path.sep}${defaultFile}`, defaultConf);
     return defaultConf[key];
   }
 
@@ -239,7 +239,7 @@ class Config {
         config[key].setMin(defaultMinValue);
       });
     }
-    fs.outputJSONAsync(`${dataDir}${path.sep}${defaultFile}`, defaultConf);
+    fs.outputJSON(`${dataDir}${path.sep}${defaultFile}`, defaultConf);
     return defaultConf[key];
   }
 
@@ -260,7 +260,7 @@ class Config {
         config[key].setMax(defaultMaxValue);
       });
     }
-    fs.outputJSONAsync(`${dataDir}${path.sep}${defaultFile}`, defaultConf);
+    fs.outputJSON(`${dataDir}${path.sep}${defaultFile}`, defaultConf);
     return defaultConf[key];
   }
 
@@ -282,7 +282,7 @@ class Config {
         config[key].add(defaultValue);
       });
     }
-    fs.outputJSONAsync(`${dataDir}${path.sep}${defaultFile}`, defaultConf);
+    fs.outputJSON(`${dataDir}${path.sep}${defaultFile}`, defaultConf);
     return defaultConf[key];
   }
 
@@ -304,7 +304,7 @@ class Config {
         config[key].del(defaultValue);
       });
     }
-    fs.outputJSONAsync(`${dataDir}${path.sep}${defaultFile}`, defaultConf);
+    fs.outputJSON(`${dataDir}${path.sep}${defaultFile}`, defaultConf);
     return defaultConf[key];
   }
 
@@ -322,7 +322,7 @@ class Config {
     guildConfs.forEach((config) => {
       config[key].toggle();
     });
-    fs.outputJSONAsync(`${dataDir}${path.sep}${defaultFile}`, defaultConf);
+    fs.outputJSON(`${dataDir}${path.sep}${defaultFile}`, defaultConf);
     return defaultConf[key];
   }
 
@@ -363,7 +363,7 @@ class Config {
     guildConfs.forEach((config) => {
       config.addKey(key, defaultValue, type);
     });
-    fs.outputJSONAsync(path.resolve(`${dataDir}${path.sep}${defaultFile}`), defaultConf);
+    fs.outputJSON(path.resolve(`${dataDir}${path.sep}${defaultFile}`), defaultConf);
     return defaultConf;
   }
 
@@ -380,7 +380,7 @@ class Config {
       return `The key ${key} is core and cannot be deleted.`;
     }
     delete defaultConf[key];
-    fs.outputJSONAsync(`${dataDir}${path.sep}${defaultFile}`, defaultConf);
+    fs.outputJSON(`${dataDir}${path.sep}${defaultFile}`, defaultConf);
     guildConfs.forEach((config) => {
       config.delKey(key);
     });
@@ -396,7 +396,7 @@ class Config {
   static insert(guild) {
     if (!guild) return "Please specify a guild to remove.";
     guildConfs.set(guild.id, new Config(guild.client, guild, defaultConf));
-    fs.outputJSONAsync(`${dataDir}${path.sep}${guild.id}.json`, guildConfs.get(guild.id));
+    fs.outputJSON(`${dataDir}${path.sep}${guild.id}.json`, guildConfs.get(guild.id));
     return `Inserted ${guild.name} succesfully.`;
   }
 
@@ -409,7 +409,7 @@ class Config {
   static remove(guild) {
     if (!guild) return "Please specify a guild to remove.";
     guildConfs.delete(guild.id);
-    fs.removeAsync(path.resolve(`${dataDir}${path.sep}${guild.id}.json`));
+    fs.remove(path.resolve(`${dataDir}${path.sep}${guild.id}.json`));
     return `Removed ${guild.name} succesfully.`;
   }
 
@@ -428,14 +428,14 @@ class Config {
       lang: { type: "String", data: "en" },
     };
     dataDir = path.resolve(`${client.clientBaseDir}${path.sep}bwd${path.sep}conf`);
-    fs.ensureFileAsync(`${dataDir}${path.sep}${defaultFile}`).catch(err => client.emit("log", err, "error"));
-    fs.readJSONAsync(path.resolve(`${dataDir}${path.sep}${defaultFile}`))
+    fs.ensureFile(`${dataDir}${path.sep}${defaultFile}`).catch(err => client.emit("log", err, "error"));
+    fs.readJSON(path.resolve(`${dataDir}${path.sep}${defaultFile}`))
   .then((conf) => {
     if (conf) defaultConf = conf;
   })
-  .catch(() => fs.outputJSONAsync(`${dataDir}${path.sep}${defaultFile}`, defaultConf));
+  .catch(() => fs.outputJSON(`${dataDir}${path.sep}${defaultFile}`, defaultConf));
     client.guilds.forEach((guild) => {
-      fs.readJSONAsync(path.resolve(`${dataDir}${path.sep}${guild.id}.json`))
+      fs.readJSON(path.resolve(`${dataDir}${path.sep}${guild.id}.json`))
   .then((thisConf) => {
     guildConfs.set(guild.id, new Config(client, guild, thisConf));
   }).catch(() => {

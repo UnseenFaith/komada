@@ -1,4 +1,3 @@
 exports.run = (client, guild) => {
-  if (!guild.available) return;
-  client.configuration.remove(guild);
+  if (guild.available) client.configuration.remove(guild);
 };
