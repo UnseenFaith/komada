@@ -16,6 +16,7 @@
     "no-param-reassign": "off",
     "no-shadow": "warn",
     "no-plusplus": "off",
+    "no-continue": "off",
     "radix": ["error", "as-needed"],
     "import/no-extraneous-dependencies": "off",
     "import/no-unresolved": "off",
