@@ -1,6 +1,6 @@
 {
   "parserOptions": {
-    "ecmaVersion": 8
+    ecmaVersion: 8
   },
   "env": {
     "es6": true,
@@ -29,20 +29,6 @@
     "max-len": "off",
     "no-underscore-dangle": ["error", { "allow": ["_events"] }],
     "global-require": "off",
-    "no-nested-ternary": "warn",
-    "valid-jsdoc": ["warn", {
-      "requireReturn": false,
-      "requireReturnDescription": false,
-      "preferType": {
-        "String": "string",
-        "Number": "number",
-        "Boolean": "boolean",
-        "Symbol": "symbol",
-        "function": "Function",
-        "object": "Object",
-        "date": "Date",
-        "error": "Error"
-      }
-    }]
+    "no-nested-ternary": "warn"
   }
 }

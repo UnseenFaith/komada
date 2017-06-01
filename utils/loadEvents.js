@@ -1,4 +1,4 @@
-const fs = require("fs-extra");
+const fs = require("fs-extra-promise");
 const path = require("path");
 const getFileListing = require("../functions/getFileListing.js");
 const log = require("../functions/log.js");
@@ -9,7 +9,7 @@ events = Object.keys(events).map(k => events[k]);
 
 const loadEvents = (client, baseDir, counts) => new Promise(async (resolve) => {
   const dir = path.resolve(`${baseDir}./events/`);
-  await fs.ensureDir(dir).catch(err => client.emit("error", err));
+  await fs.ensureDirAsync(dir).catch(err => client.emit("error", err));
   let files = await getFileListing(client, baseDir, "events").catch(err => client.emit("error", err));
   files = files.filter(f => events.includes(f.name));
   files.forEach((f) => {

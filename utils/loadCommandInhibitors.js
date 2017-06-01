@@ -1,9 +1,9 @@
-const fs = require("fs-extra");
+const fs = require("fs-extra-promise");
 const path = require("path");
 
 const loadCommandInhibitors = (client, baseDir) => new Promise(async (resolve, reject) => {
   const dir = path.resolve(`${baseDir}./inhibitors/`);
-  await fs.ensureDir(dir);
+  await fs.ensureDirAsync(dir);
   let files = await client.funcs.getFileListing(client, baseDir, "inhibitors").catch(err => client.emit("error", client.funcs.newError(err)));
   files = files.filter(file => !client.commandInhibitors.get(file.name));
   try {
@@ -19,10 +19,10 @@ const loadCommandInhibitors = (client, baseDir) => new Promise(async (resolve, r
     if (e.code === "MODULE_NOT_FOUND") {
       const module = /'[^']+'/g.exec(e.toString());
       await client.funcs.installNPM(module[0].slice(1, -1))
-        .catch((err) => {
-          console.error(err);
-          process.exit();
-        });
+      .catch((err) => {
+        console.error(err);
+        process.exit();
+      });
       loadCommandInhibitors(client, baseDir);
     } else {
       reject(e);

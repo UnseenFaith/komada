@@ -1,4 +1,4 @@
-const { exec } = require("child_process");
+const exec = require("child_process").exec;
 
 module.exports = module => new Promise((resolve, reject) => {
   exec(`npm i ${module}`, (e, stdout, stderr) => {
