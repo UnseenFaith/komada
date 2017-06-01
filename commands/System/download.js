@@ -1,6 +1,6 @@
 const request = require("superagent");
 const vm = require("vm");
-const fs = require("fs-extra-promise");
+const fs = require("fs-extra");
 const path = require("path");
 
 const piecesURL = "https://raw.githubusercontent.com/dirigeants/komada-pieces/master/";
@@ -146,56 +146,56 @@ const load = {
   commands: async (client, msg, type, res, name, category) => {
     const dir = path.resolve(`${client.clientBaseDir}/commands/${category}/`);
     msg.sendMessage(`📥 \`Loading ${type} into ${dir}/${name}.js...\``);
-    await fs.ensureDirAsync(dir).catch(err => client.emit("log", err, "error"));
-    await fs.writeFileAsync(`${dir}${path.sep}${name}.js`, res.text);
+    await fs.ensureDir(dir).catch(err => client.emit("log", err, "error"));
+    await fs.writeFile(`${dir}${path.sep}${name}.js`, res.text);
     const message = await client.funcs.reloadCommand(`${category}${path.sep}${name}`)
       .catch((response) => {
         msg.sendMessage(`📵 Command load failed ${name}\n\`\`\`${response}\`\`\``);
-        return fs.unlinkSync(`${dir}/${name}.js`);
+        return fs.unlink(`${dir}/${name}.js`);
       });
     if (message) msg.sendMessage(`📥 ${message}`);
   },
   functions: async (client, msg, type, res, name) => {
     const dir = path.resolve(`${client.clientBaseDir}/functions/`);
     msg.sendMessage(`📥 \`Loading ${type} into ${dir}/${name}.js...\``);
-    await fs.writeFileAsync(`${dir}${path.sep}${name}.js`, res.text).catch(err => client.emit("log", err, "error"));
+    await fs.writeFile(`${dir}${path.sep}${name}.js`, res.text).catch(err => client.emit("log", err, "error"));
     const message = await client.funcs.reloadFunction(name)
       .catch((response) => {
         msg.sendMessage(`📵 Function load failed ${name}\n\`\`\`${response}\`\`\``);
-        return fs.unlinkSync(`${dir}/${name}.js`);
+        return fs.unlink(`${dir}/${name}.js`);
       });
     if (message) msg.sendMessage(`📥 ${message}`);
   },
   inhibitors: async (client, msg, type, res, name) => {
     const dir = path.resolve(`${client.clientBaseDir}/inhibitors/`);
     msg.sendMessage(`📥 \`Loading ${type} into ${dir}/${name}.js...\``);
-    await fs.writeFileAsync(`${dir}/${name}.js`, res.text).catch(err => client.emit("log", err, "error"));
+    await fs.writeFile(`${dir}/${name}.js`, res.text).catch(err => client.emit("log", err, "error"));
     const message = await client.funcs.reloadInhibitor(name)
       .catch((response) => {
         msg.sendMessage(`📵 Inhibitor load failed ${name}\n\`\`\`${response}\`\`\``);
-        return fs.unlinkSync(`${dir}/${name}.js`);
+        return fs.unlink(`${dir}/${name}.js`);
       });
     if (message) msg.sendMessage(`📥 ${message}`);
   },
   monitors: async (client, msg, type, res, name) => {
     const dir = path.resolve(`${client.clientBaseDir}/monitors/`);
     msg.sendMessage(`📥 \`Loading ${type} into ${dir}/${name}.js...\``);
-    await fs.writeFileAsync(`${dir}/${name}.js`, res.text).catch(err => client.emit("log", err, "error"));
+    await fs.writeFile(`${dir}/${name}.js`, res.text).catch(err => client.emit("log", err, "error"));
     const message = await client.funcs.reloadMessageMonitor(name)
       .catch((response) => {
         msg.sendMessage(`📵 Monitor load failed ${name}\n\`\`\`${response}\`\`\``);
-        return fs.unlinkSync(`${dir}/${name}.js`);
+        return fs.unlink(`${dir}/${name}.js`);
       });
     if (message) msg.sendMessage(`📥 ${message}`);
   },
   providers: async (client, msg, type, res, name) => {
     const dir = path.resolve(`${client.clientBaseDir}/providers/`);
     msg.sendMessage(`📥 \`Loading ${type} into ${dir}/${name}.js...\``);
-    await fs.writeFileAsync(`${dir}/${name}.js`, res.text).catch(err => client.emit("log", err, "error"));
+    await fs.writeFile(`${dir}/${name}.js`, res.text).catch(err => client.emit("log", err, "error"));
     const message = await client.funcs.reloadProvider(name)
       .catch((response) => {
         msg.sendMessage(`📵 Provider load failed ${name}\n\`\`\`${response}\`\`\``);
-        return fs.unlinkSync(`${dir}/${name}.js`);
+        return fs.unlink(`${dir}/${name}.js`);
       });
     msg.sendMessage(`📥 ${message}`);
   },
