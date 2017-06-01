@@ -27,7 +27,7 @@ function resolveObject(error) {
   error = error.stack || error.message || error;
   let out;
   if (typeof error === "object" && typeof error !== "string") {
-    out = require("util").inspect(error, { depth: 0 });
+    out = require("util").inspect(error, { depth: 0, colors: true });
     if (typeof out === "string" && out.length > 1900) out = error.toString();
   } else { out = error; }
 
