@@ -1,10 +1,10 @@
-const fs = require("fs-extra");
+const fs = require("fs-extra-promise");
 const path = require("path");
 
 const loadFunctions = (client, baseDir) => new Promise(async (resolve, reject) => {
   const dir = path.resolve(`${baseDir}./functions/`);
-  await fs.ensureDir(dir).catch(err => client.emit("error", err));
-  let files = await fs.readdir(dir).catch(err => client.emit("error", err));
+  await fs.ensureDirAsync(dir).catch(err => client.emit("error", err));
+  let files = await fs.readdirAsync(dir).catch(err => client.emit("error", err));
   files = files.filter(f => f.slice(-3) === ".js");
   files = files.filter(file => !client.funcs[file.split(".")[0]]);
   try {
@@ -21,10 +21,10 @@ const loadFunctions = (client, baseDir) => new Promise(async (resolve, reject) =
     if (e.code === "MODULE_NOT_FOUND") {
       const module = /'[^']+'/g.exec(e.toString());
       await client.funcs.installNPM(module[0].slice(1, -1))
-        .catch((error) => {
-          console.error(error);
-          process.exit();
-        });
+      .catch((error) => {
+        console.error(error);
+        process.exit();
+      });
       loadFunctions(client, baseDir);
     } else {
       reject(e);
