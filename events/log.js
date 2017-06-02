@@ -28,7 +28,6 @@ function resolveObject(error) {
 
   if (typeof error === "object" && typeof error !== "string") {
     return require("util").inspect(error, { depth: 0, colors: true });
-  } else {
-    return error;
   }
+  return error;
 }
