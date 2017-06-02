@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-syntax, no-underscore-dangle, no-unused-vars, no-throw-literal, guard-for-in, no-prototype-builtins */
-const fs = require("fs-extra");
+const fs = require("fs-nextra");
 const path = require("path");
 const Types = require("./types");
 const Discord = require("discord.js");

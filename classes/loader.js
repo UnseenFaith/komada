@@ -1,4 +1,4 @@
-const fs = require("fs-extra");
+const fs = require("fs-nextra");
 const { exec } = require("child_process");
 const { sep } = require("path");
 const Discord = require("discord.js");

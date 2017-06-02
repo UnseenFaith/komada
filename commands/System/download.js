@@ -1,6 +1,6 @@
 const request = require("superagent");
 const vm = require("vm");
-const fs = require("fs-extra-promise");
+const fs = require("fs-nextra");
 const path = require("path");
 
 const piecesURL = "https://raw.githubusercontent.com/dirigeants/komada-pieces/master/";
