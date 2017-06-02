@@ -7,7 +7,7 @@
 [![Build Status](https://travis-ci.org/dirigeants/komada.svg?branch=indev)](https://travis-ci.org/dirigeants/komada)
 [![David](https://img.shields.io/david/dirigeants/komada.svg?maxAge=3600)](https://david-dm.org/dirigeants/komada)
 
-Komada is a modular framework for bots built on top of [Discord.js](https://github.com/hydrabolt/dicord.js). It offers an extremely easy installation, downloadable commands, and a framework to build your own commands, modules, and functions.
+Komada is a modular framework for bots built on top of [Discord.js](https://github.com/hydrabolt/discord.js). It offers an extremely easy installation, downloadable commands, and a framework to build your own commands, modules, and functions.
 
 ## What's with the name?
 
