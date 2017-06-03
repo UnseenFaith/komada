@@ -5,7 +5,7 @@ exports.run = async (client, msg, [code]) => {
   try {
     let evaled = eval(code);
     if (evaled instanceof Promise) evaled = await evaled;
-    if (typeof evaled !== "string") evaled = inspect(evaled);
+    if (typeof evaled !== "string") evaled = inspect(evaled, { depth: 0 });
     msg.sendCode("xl", client.funcs.clean(client, evaled));
   } catch (err) {
     msg.sendMessage(`\`ERROR\` \`\`\`xl\n${client.funcs.clean(client, err)}\n\`\`\``);
