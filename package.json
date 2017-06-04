@@ -19,7 +19,7 @@
   "dependencies": {
     "chalk": "^1.1.3",
     "discord.js": "hydrabolt/discord.js",
-    "fs-nextra": "0.0.1",
+    "fs-nextra": "0.0.2",
     "moment": "^2.16.0",
     "moment-duration-format": "^1.3.0",
     "performance-now": "^2.1.0"
