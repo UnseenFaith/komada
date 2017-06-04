@@ -1,6 +1,7 @@
 const fs = require("fs-extra");
 const { promisify } = require("util");
 const exec = promisify(require("child_process").exec);
+
 const { sep } = require("path");
 const Discord = require("discord.js");
 const ParsedUsage = require("./parsedUsage");
