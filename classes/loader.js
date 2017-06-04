@@ -408,15 +408,15 @@ module.exports = class Loader {
   }
 
   async installNPM(missingModule) {
-    console.log(`Installing: ${missingModule}`);
+    client.emit("log", `Installing: ${missingModule}`);
     const result = await exec(`npm i ${missingModule}`).catch((err) => {
-      console.log('=====NEW DEPENDANCY INSTALL FAILED HORRIBLY=====');
+      client.emit("log", "=====NEW DEPENDANCY INSTALL FAILED HORRIBLY=====", "error");
       throw err;
     });
 
-    console.log('=====INSTALLED NEW DEPENDANCY=====');
-    console.log(result.stdout);
-    console.error(result.stderr);
+    client.emit("log", "=====INSTALLED NEW DEPENDANCY=====");
+    client.emit("log", result.stdout);
+    client.emit("log", result.stderr, "error");
   }
 
 };
