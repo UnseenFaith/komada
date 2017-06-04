@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - A helper class for generating permission levels. It can be accessed via require('komada').PermLevels, and is used via permlevels.addLevel(level, break, checkFunction). Once you have all levels added, simply pass permlevels.structure to your client.config as the "permStructure" property.
 
 ### Changed
-- Dropped support for fs-extra-promise in favor to fs-extra ^3.0.0.
+- Dropped support for fs-extra-promise in favor to fs-nextra.
 - Changed fetchMessages to fetchMessage (backend change)
 - Backend is now class based. Users main files will need to be updated. The interface is the same as creating a discord.js client, only using komada, and with komada config. No more use of start, but client.login(token) is needed now.
 - Usage will no longer be calculated everytime a command is run, but instead stored in command.usage.
