@@ -135,7 +135,7 @@ const load = {
     await msg.sendMessage(`📥 \`Loading ${type} into ${dir}${name}.js...\``);
     await fs.ensureDir(dir).catch(err => client.emit("log", err, "error"));
     await fs.writeFile(`${dir}${name}.js`, res);
-    return client.funcs.reloadCommand(`${category}${name}`)
+    return client.funcs.reloadCommand(`${category}/${name}`)
       .then(message => msg.sendMessage(`📥 ${message}`))
       .catch((response) => {
         msg.sendMessage(`📵 Command load failed ${name}\n\`\`\`${response}\`\`\``);
