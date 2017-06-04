@@ -1,5 +1,5 @@
 const snek = require("snekfetch");
-const fs = require("fs-nextra");
+const fs = require("fs-extra-promise");
 const { sep, resolve } = require("path");
 const vm = require("vm");
 
@@ -127,61 +127,61 @@ const load = {
   commands: async (client, msg, message, type, res, name, category) => {
     const dir = resolve(`${client.clientBaseDir}/commands/${category}/`) + sep;
     await message.edit(`📥 \`Loading ${type} into ${dir}${name}.js...\``);
-    await fs.ensureDir(dir).catch(err => client.funcs.log(err, "error"));
-    await fs.writeFile(`${dir}${name}.js`, res);
+    await fs.ensureDirAsync(dir).catch(err => client.funcs.log(err, "error"));
+    await fs.writeFileAsync(`${dir}${name}.js`, res);
     return client.funcs.reload.command(client, dir, name)
       .then(response => message.edit(`📥 ${response}`))
       .catch((response) => {
         message.edit(`📵 Command load failed ${name}\n\`\`\`${response}\`\`\``);
-        return fs.unlink(`${dir}${name}.js`);
+        return fs.unlinkAsync(`${dir}${name}.js`);
       });
   },
   functions: async (client, msg, message, type, res, name) => {
     const dir = resolve(`${client.clientBaseDir}/functions/`) + sep;
     await message.edit(`📥 \`Loading ${type} into ${dir}${name}.js...\``);
-    await fs.ensureDir(dir).catch(err => client.funcs.log(err, "error"));
-    await fs.writeFile(`${dir}${name}.js`, res).catch(err => client.funcs.log(err, "error"));
+    await fs.ensureDirAsync(dir).catch(err => client.funcs.log(err, "error"));
+    await fs.writeFileAsync(`${dir}${name}.js`, res).catch(err => client.funcs.log(err, "error"));
     return client.funcs.reload.function(client, dir, name)
       .then(response => message.edit(`📥 ${response}`))
       .catch((response) => {
         message.edit(`📵 Function load failed ${name}\n\`\`\`${response}\`\`\``);
-        return fs.unlink(`${dir}${name}.js`);
+        return fs.unlinkAsync(`${dir}${name}.js`);
       });
   },
   inhibitors: async (client, msg, message, type, res, name) => {
     const dir = resolve(`${client.clientBaseDir}/inhibitors/`) + sep;
     await message.edit(`📥 \`Loading ${type} into ${dir}${name}.js...\``);
-    await fs.ensureDir(dir).catch(err => client.funcs.log(err, "error"));
-    await fs.writeFile(`${dir}${name}.js`, res).catch(err => client.funcs.log(err, "error"));
+    await fs.ensureDirAsync(dir).catch(err => client.funcs.log(err, "error"));
+    await fs.writeFileAsync(`${dir}${name}.js`, res).catch(err => client.funcs.log(err, "error"));
     return client.funcs.reload.inhibitor(client, dir, name)
       .then(response => message.edit(`📥 ${response}`))
       .catch((response) => {
         message.edit(`📵 Inhibitor load failed ${name}\n\`\`\`${response}\`\`\``);
-        return fs.unlink(`${dir}${name}.js`);
+        return fs.unlinkAsync(`${dir}${name}.js`);
       });
   },
   monitors: async (client, msg, message, type, res, name) => {
     const dir = resolve(`${client.clientBaseDir}/monitors/`) + sep;
     await message.edit(`📥 \`Loading ${type} into ${dir}${name}.js...\``);
-    await fs.ensureDir(dir).catch(err => client.funcs.log(err, "error"));
-    await fs.writeFile(`${dir}${name}.js`, res).catch(err => client.funcs.log(err, "error"));
+    await fs.ensureDirAsync(dir).catch(err => client.funcs.log(err, "error"));
+    await fs.writeFileAsync(`${dir}${name}.js`, res).catch(err => client.funcs.log(err, "error"));
     return client.funcs.reload.monitor(client, dir, name)
       .then(response => message.edit(`📥 ${response}`))
       .catch((response) => {
         message.edit(`📵 Monitor load failed ${name}\n\`\`\`${response}\`\`\``);
-        return fs.unlink(`${dir}${name}.js`);
+        return fs.unlinkAsync(`${dir}${name}.js`);
       });
   },
   providers: async (client, msg, message, type, res, name) => {
     const dir = resolve(`${client.clientBaseDir}/providers/`) + sep;
     await message.edit(`📥 \`Loading ${type} into ${dir}${name}.js...\``);
-    await fs.ensureDir(dir).catch(err => client.funcs.log(err, "error"));
-    await fs.writeFile(`${dir}${name}.js`, res).catch(err => client.funcs.log(err, "error"));
+    await fs.ensureDirAsync(dir).catch(err => client.funcs.log(err, "error"));
+    await fs.writeFileAsync(`${dir}${name}.js`, res).catch(err => client.funcs.log(err, "error"));
     return client.funcs.reload.provider(client, dir, name)
       .then(response => message.edit(`📥 ${response}`))
       .catch((response) => {
         message.edit(`📵 Provider load failed ${name}\n\`\`\`${response}\`\`\``);
-        return fs.unlink(`${dir}${name}.js`);
+        return fs.unlinkAsync(`${dir}${name}.js`);
       });
   },
 };
