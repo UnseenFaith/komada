@@ -409,7 +409,7 @@ module.exports = class Loader {
   installNPM(missingModule) {
     return new Promise((resolve, reject) => {
       console.log(`Installing: ${missingModule}`);
-      exec(`npm i ${missingModule} --save`, (err, stdout, stderr) => {
+      exec(`npm i ${missingModule}`, (err, stdout, stderr) => {
         if (err) {
           console.log("=====NEW DEPENDENCY INSTALL FAILED HORRIBLY=====");
           return reject(err);
