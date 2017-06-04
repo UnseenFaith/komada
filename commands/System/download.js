@@ -11,7 +11,7 @@ const mod = { exports: {} };
 /* eslint-disable no-throw-literal, no-use-before-define */
 exports.run = async (client, msg, [link, piece, folder = "Downloaded"]) => {
   const proposedURL = types.includes(link) ? `${piecesURL}${link}/${piece}.js` : link;
-  if (link === "command" && !/\w+\/\w+/.test(piece)) {
+  if (link === "commands" && !/\w+\/\w+/.test(piece)) {
     return msg.channel.send(`${msg.author} | You provided an invalid or no subfolder for a command. Please provide a valid folder name from the Pieces Repo. Example: Misc/test`);
   }
 
