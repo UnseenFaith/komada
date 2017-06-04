@@ -24,40 +24,35 @@ module.exports = class Resolver {
   async user(user) {
     if (user instanceof Discord.User) return user;
     if (user instanceof Discord.Member) return user.user;
-    if (typeof user === "string") {
-      // eslint-disable-next-line no-nested-ternary
-      return regex.userOrMember.test(user) ?
-      this.client.user.bot ? this.client.fetchUser(regex.userOrMember.exec(user)[1]).catch(() => null) : this.client.users.get(regex.userOrMember.exec(user)[1]) :
-      null;
-    }
+    if (typeof user === "string" && regex.userOrMember.test(user)) return this.client.user.bot ? this.client.fetchUser(regex.userOrMember.exec(user)[1]).catch(() => null) : this.client.users.get(regex.userOrMember.exec(user)[1]);
     return null;
   }
 
   async member(member, guild) {
     if (member instanceof Discord.Member) return member;
     if (member instanceof Discord.User) return guild.fetchMember(member);
-    if (typeof member === "string") {
-      const user = regex.userOrMember.test(member) ? await this.user(member) : null;
-      return user ? guild.fetchMember(user).catch(() => null) : null;
+    if (typeof member === "string" && regex.userOrMember.test(member)) {
+      const user = this.client.user.bot ? await this.client.fetchUser(regex.userOrMember.exec(member)[1]).catch(() => null) : this.client.users.get(regex.userOrMember.exec(member)[1]);
+      if (user) return guild.fetchMember(user).catch(() => null);
     }
     return null;
   }
 
   async channel(channel) {
     if (channel instanceof Discord.Channel) return channel;
-    if (typeof channel === "string") return regex.channel.test(channel) ? this.client.channels.get(regex.channel.exec(channel)[1]) : null;
+    if (typeof channel === "string" && regex.channel.test(channel)) return this.client.channels.get(regex.channel.exec(channel)[1]);
     return null;
   }
 
   async guild(guild) {
-    if (guild instanceof Discord.Channel) return guild;
-    if (typeof guild === "string") return regex.snowflake.test(guild) ? this.client.guilds.get(guild) : null;
+    if (guild instanceof Discord.Guild) return guild;
+    if (typeof guild === "string" && regex.snowflake.test(guild)) return this.client.guilds.get(guild);
     return null;
   }
 
   async role(role, guild) {
     if (role instanceof Discord.Role) return role;
-    if (typeof role === "string") return regex.role.test(role) ? guild.roles.get(regex.role.exec(role)[1]) : null;
+    if (typeof role === "string" && regex.role.test(role)) return guild.roles.get(regex.role.exec(role)[1]);
     return null;
   }
 
@@ -69,7 +64,6 @@ module.exports = class Resolver {
   }
 
   async string(string) {
-    if (typeof string === "string") return string;
     return String(string);
   }
 

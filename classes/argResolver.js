@@ -21,7 +21,6 @@ module.exports = class ArgResolver extends Resolver {
   async user(arg, currentUsage, possible, repeat) {
     const user = await super.user(arg);
     if (user) return user;
-    if (!currentUsage) return null;
     if (currentUsage.type === "optional" && !repeat) return null;
     throw `${currentUsage.possibles[possible].name} must be a mention or valid user id.`;
   }
@@ -79,8 +78,7 @@ module.exports = class ArgResolver extends Resolver {
   }
 
   async string(arg, currentUsage, possible, repeat) {
-    const min = currentUsage.possibles[possible].min;
-    const max = currentUsage.possibles[possible].max;
+    const { min, max } = currentUsage.possibles[possible];
     if (min && max) {
       if (arg.length >= min && arg.length <= max) return arg;
       if (currentUsage.type === "optional" && !repeat) return null;
@@ -103,8 +101,7 @@ module.exports = class ArgResolver extends Resolver {
   }
 
   async integer(arg, currentUsage, possible, repeat) {
-    const min = currentUsage.possibles[possible].min;
-    const max = currentUsage.possibles[possible].max;
+    const { min, max } = currentUsage.possibles[possible];
     arg = await super.integer(arg);
     if (arg === null) {
       if (currentUsage.type === "optional" && !repeat) return null;
@@ -135,8 +132,7 @@ module.exports = class ArgResolver extends Resolver {
   }
 
   async float(arg, currentUsage, possible, repeat) {
-    const min = currentUsage.possibles[possible].min;
-    const max = currentUsage.possibles[possible].max;
+    const { min, max } = currentUsage.possibles[possible];
     arg = await super.float(arg);
     if (arg === null) {
       if (currentUsage.type === "optional" && !repeat) return null;
