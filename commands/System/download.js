@@ -3,15 +3,12 @@ const fs = require("fs-nextra");
 const { sep, resolve } = require("path");
 const vm = require("vm");
 
-const { promisify } = require("util");
-const exec = promisify(require("child_process").exec);
-
 const piecesURL = "https://raw.githubusercontent.com/dirigeants/komada-pieces/master/";
 const types = ["commands", "functions", "monitors", "inhibitors", "providers", "extendables"];
 
 const mod = { exports: {} };
 
-/* eslint-disable no-use-before-define */
+/* eslint-disable no-throw-literal, no-use-before-define */
 exports.run = async (client, msg, [link, piece, folder = "Downloaded"]) => {
   const proposedURL = types.includes(link) ? `${piecesURL}${link}/${piece}.js` : link;
   if (link === "command" && !/\w+\/\w+/.test(piece)) {
@@ -85,7 +82,7 @@ const process = async (client, msg, res, link, folder) => {
     else if (reason === "time") return msg.sendMessage(`⏲ Load aborted, ${type} not installed. You ran out of time.`);
     await msg.sendMessage(`📥 \`Loading ${type}\``).catch(err => client.emit("log", err, "error"));
     if (Array.isArray(modules) && modules.length > 0) {
-      await exec(`npm i ${modules.join(" ")}`)
+      await client.funcs.installNPM(modules.join(" "))
         .catch((err) => {
           client.emit("error", err);
           process.exit();
