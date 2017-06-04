@@ -1,5 +1,7 @@
-const fs = require("fs-nextra");
-const { exec } = require("child_process");
+const fs = require("fs-extra");
+const { promisify } = require("util");
+const exec = promisify(require("child_process").exec);
+
 const { sep } = require("path");
 const Discord = require("discord.js");
 const ParsedUsage = require("./parsedUsage");
@@ -406,20 +408,16 @@ module.exports = class Loader {
     }
   }
 
-  installNPM(missingModule) {
-    return new Promise((resolve, reject) => {
-      console.log(`Installing: ${missingModule}`);
-      exec(`npm i ${missingModule} --save`, (err, stdout, stderr) => {
-        if (err) {
-          console.log("=====NEW DEPENDENCY INSTALL FAILED HORRIBLY=====");
-          return reject(err);
-        }
-        console.log("=====INSTALLED NEW DEPENDENCY=====");
-        console.log(stdout);
-        console.error(stderr);
-        return resolve();
-      });
+  async installNPM(missingModule) {
+    console.log(`Installing: ${missingModule}`);
+    const { stdout, stderr } = await exec(`npm i ${missingModule}`).catch((err) => {
+      console.error("=====NEW DEPENDANCY INSTALL FAILED HORRIBLY=====");
+      throw err;
     });
+
+    console.log("=====INSTALLED NEW DEPENDANCY=====");
+    console.log(stdout);
+    console.error(stderr);
   }
 
 };
