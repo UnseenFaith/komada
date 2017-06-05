@@ -4,14 +4,14 @@ const { sep, resolve } = require("path");
 const vm = require("vm");
 
 const piecesURL = "https://raw.githubusercontent.com/dirigeants/komada-pieces/master/";
-const types = ["commands", "functions", "monitors", "inhibitors", "providers", "extendables"];
+const types = ["commands", "functions", "monitors", "inhibitors", "providers", "finalizers", "extendables"];
 
 const mod = { exports: {} };
 
 /* eslint-disable no-throw-literal, no-use-before-define */
 exports.run = async (client, msg, [link, piece, folder = "Downloaded"]) => {
   const proposedURL = types.includes(link) ? `${piecesURL}${link}/${piece}.js` : link;
-  if (link === "commands" && !/\w+\/\w+/.test(piece)) {
+  if (link === "command" && !/\w+\/\w+/.test(piece)) {
     return msg.sendMessage(`${msg.author} | You provided an invalid or no subfolder for a command. Please provide a valid folder name from the Pieces Repo. Example: Misc/test`);
   }
 
@@ -32,14 +32,17 @@ exports.conf = {
 exports.help = {
   name: "download",
   description: "Downloads a piece, either from a link or our Pieces Repository, and installs it.",
-  usage: "<commands|functions|monitors|inhibitors|providers|extendables|url:url> [location:str] [folder:str]",
+  usage: "<commands|functions|monitors|inhibitors|providers|finalizers|extendables|url:url> [location:str] [folder:str]",
   usageDelim: " ",
 };
 
-const process = async (client, msg, res, link, folder) => {
+const process = async (client, msg, text, link, folder) => {
   try {
-    vm.runInNewContext(res, { module: mod, exports: mod.exports, require: () => true }, { timeout: 500 });
+    vm.runInNewContext(text, { module: mod, exports: mod.exports, require: () => true }, { timeout: 500 });
   } catch (err) {
+    if (err.message === "require is not defined") {
+      msg.sendMessage(`${msg.author} | An error has occured: **${err.message}** | This typically happens when you try to download a file that has a require outside of an \`exports\`. Ask the Developer to fix it or download it as a file and then load it.`);
+    }
     return client.emit("log", err, "error");
   }
 
@@ -85,7 +88,7 @@ const process = async (client, msg, res, link, folder) => {
           process.exit();
         });
     }
-    return load[type](client, msg, type, res, name, mod.exports.help.category || client.funcs.toTitleCase(folder));
+    return load[type](client, msg, type, text, name, mod.exports.help.category || client.funcs.toTitleCase(folder));
   });
 
   return true;
@@ -119,16 +122,19 @@ const runChecks = (client, type, name) => {
     case "providers":
       if (client.providers.has(name)) throw "That provider already exists in your bot. Aborting the load.";
       break;
+    case "finalizers":
+      if (client.commandFinalizers.has(name)) throw "That finalizer already exists in your bot. Aborting the load.";
+      break;
     // no default
   }
 };
 
 const load = {
-  commands: async (client, msg, type, res, name, category) => {
+  commands: async (client, msg, type, text, name, category) => {
     const dir = resolve(`${client.clientBaseDir}/commands/${category}/`) + sep;
     await msg.sendMessage(`📥 \`Loading ${type} into ${dir}${name}.js...\``);
     await fs.ensureDir(dir).catch(err => client.emit("log", err, "error"));
-    await fs.writeFile(`${dir}${name}.js`, res);
+    await fs.writeFile(`${dir}${name}.js`, text);
     return client.funcs.reloadCommand(`${category}/${name}`)
       .then(message => msg.sendMessage(`📥 ${message}`))
       .catch((response) => {
@@ -136,11 +142,11 @@ const load = {
         return fs.unlink(`${dir}${name}.js`);
       });
   },
-  functions: async (client, msg, type, res, name) => {
+  functions: async (client, msg, type, text, name) => {
     const dir = resolve(`${client.clientBaseDir}/functions/`) + sep;
     await msg.sendMessage(`📥 \`Loading ${type} into ${dir}${name}.js...\``);
     await fs.ensureDir(dir).catch(err => client.emit("log", err, "error"));
-    await fs.writeFile(`${dir}${name}.js`, res).catch(err => client.emit("log", err, "error"));
+    await fs.writeFile(`${dir}${name}.js`, text).catch(err => client.emit("log", err, "error"));
     return client.funcs.reloadFunction(name)
       .then(message => msg.sendMessage(`📥 ${message}`))
       .catch((response) => {
@@ -148,11 +154,11 @@ const load = {
         return fs.unlink(`${dir}${name}.js`);
       });
   },
-  inhibitors: async (client, msg, type, res, name) => {
+  inhibitors: async (client, msg, type, text, name) => {
     const dir = resolve(`${client.clientBaseDir}/inhibitors/`) + sep;
     await msg.sendMessage(`📥 \`Loading ${type} into ${dir}${name}.js...\``);
     await fs.ensureDir(dir).catch(err => client.emit("log", err, "error"));
-    await fs.writeFile(`${dir}${name}.js`, res).catch(err => client.emit("log", err, "error"));
+    await fs.writeFile(`${dir}${name}.js`, text).catch(err => client.emit("log", err, "error"));
     return client.funcs.reloadInhibitor(name)
       .then(message => msg.sendMessage(`📥 ${message}`))
       .catch((response) => {
@@ -160,11 +166,11 @@ const load = {
         return fs.unlink(`${dir}${name}.js`);
       });
   },
-  monitors: async (client, msg, type, res, name) => {
+  monitors: async (client, msg, type, text, name) => {
     const dir = resolve(`${client.clientBaseDir}/monitors/`) + sep;
     await msg.sendMessage(`📥 \`Loading ${type} into ${dir}${name}.js...\``);
     await fs.ensureDir(dir).catch(err => client.emit("log", err, "error"));
-    await fs.writeFile(`${dir}${name}.js`, res).catch(err => client.emit("log", err, "error"));
+    await fs.writeFile(`${dir}${name}.js`, text).catch(err => client.emit("log", err, "error"));
     return client.funcs.reloadMessageMonitor(name)
       .then(message => msg.sendMessage(`📥 ${message}`))
       .catch((response) => {
@@ -172,11 +178,11 @@ const load = {
         return fs.unlink(`${dir}${name}.js`);
       });
   },
-  providers: async (client, msg, type, res, name) => {
+  providers: async (client, msg, type, text, name) => {
     const dir = resolve(`${client.clientBaseDir}/providers/`) + sep;
     await msg.sendMessage(`📥 \`Loading ${type} into ${dir}${name}.js...\``);
     await fs.ensureDir(dir).catch(err => client.emit("log", err, "error"));
-    await fs.writeFile(`${dir}${name}.js`, res).catch(err => client.emit("log", err, "error"));
+    await fs.writeFile(`${dir}${name}.js`, text).catch(err => client.emit("log", err, "error"));
     return client.funcs.reloadProvider(name)
       .then(message => msg.sendMessage(`📥 ${message}`))
       .catch((response) => {
@@ -184,11 +190,23 @@ const load = {
         return fs.unlink(`${dir}${name}.js`);
       });
   },
-  extendables: async (client, msg, type, res, name) => {
+  finalizers: async (client, msg, type, text, name) => {
+    const dir = resolve(`${client.clientBaseDir}/finalizers/`) + sep;
+    await msg.sendMessage(`📥 \`Loading ${type} into ${dir}${name}.js...\``);
+    await fs.ensureDir(dir).catch(err => client.emit("log", err, "error"));
+    await fs.writeFile(`${dir}${name}.js`, text).catch(err => client.emit("log", err, "error"));
+    return client.funcs.reloadFinalizer(name)
+      .then(message => msg.sendMessage(`📥 ${message}`))
+      .catch((response) => {
+        msg.sendMessage(`📵 Finalizer load failed ${name}\n\`\`\`${response}\`\`\``);
+        return fs.unlink(`${dir}${name}.js`);
+      });
+  },
+  extendables: async (client, msg, type, text, name) => {
     const dir = resolve(`${client.clientBaseDir}/extendables/`) + sep;
     await msg.sendMessage(`📥 \`Loading ${type} into ${dir}${name}.js...\``);
     await fs.ensureDir(dir).catch(err => client.emit("log", err, "error"));
-    await fs.writeFile(`${dir}${name}.js`, res).catch(err => client.emit("log", err, "error"));
+    await fs.writeFile(`${dir}${name}.js`, text).catch(err => client.emit("log", err, "error"));
     return msg.sendMessage(`Your extendable ${name} will be loaded after a reboot.`);
   },
 };
