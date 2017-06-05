@@ -57,7 +57,7 @@ module.exports = class ArgResolver extends Resolver {
     if (arg.toLowerCase() === currentUsage.possibles[possible].name.toLowerCase()) return arg.toLowerCase();
     if (currentUsage.type === "optional" && !repeat) return null;
     throw [
-      `Your option did not litterally match the only possibility: (${currentUsage.possibles.map(poss => poss.name).join(", ")})`,
+      `Your option did not literally match the only possibility: (${currentUsage.possibles.map(poss => poss.name).join(", ")})`,
       "This is likely caused by a mistake in the usage string.",
     ].join("\n");
   }
