@@ -1,18 +1,18 @@
 const Resolver = require("./Resolver.js");
+const CacheManager = require("./cacheManager.js");
 
-/* eslint-disable no-restricted-syntax */
-module.exports = class ConfigGateway {
+/* eslint-disable no-restricted-syntax, guard-for-in */
+module.exports = class ConfigGateway extends CacheManager {
   constructor(client) {
+    super();
     this.client = client;
     this.engine = client.config.provider.engine || "json";
     this.redis = client.config.provider.redis || false;
     this.provider = this.client.providers.get(this.engine);
     this.resolver = new Resolver(client);
-    this.init();
   }
 
   async init() {
-    this.data = this.redis ? this.client.providers.get("redis") : new Map();
     const data = await this.provider.getAll("guilds");
     for (const key of data.values()) this.data.set(key.id, key);
     return true;
@@ -27,45 +27,42 @@ module.exports = class ConfigGateway {
     };
   }
 
-  get(guild) {
-    return this.data.get(guild) || null;
-  }
-
-  getAll() {
-    return this.data;
+  get defaults() {
+    const output = [];
+    for (const key in this.schema) output.push({ [key]: this.schema[key].default });
+    return output;
   }
 
   async create(guild) {
-    await this.provider.create("guilds", guild, this.schema);
-    this.data.set(guild, this.schema);
-    return true;
+    await this.provider.create("guilds", guild, this.defaults);
+    return super.set(guild, this.defaults);
   }
 
   async destroy(guild) {
-    await this.provider.delete("guilds", guild, this.schema);
-    this.data.delete(guild);
-    return true;
+    await this.provider.delete("guilds", guild);
+    return super.delete("guilds", guild);
   }
 
   async sync(guild = null) {
     if (!guild) {
       const data = await this.provider.getAll("guilds");
-      for (const key of data.values()) this.data.set(key.id, key);
+      for (const key of data.values()) super.set(key.id, key);
       return true;
     }
     const data = await this.provider.get("guilds", guild);
-    return this.data.set(guild, data);
+    return super.set(guild, data);
   }
 
   async reset(guild, key) {
     if (!(key in this.schema)) throw `The key ${key} does not exist in the current data schema.`;
-    return this.provider.update("guilds", guild, this.schema.key.default);
+    return this.provider.update("guilds", guild, key, this.schema.key.default);
   }
 
   async update(guild, key, data) {
     if (!(key in this.schema)) throw `The key ${key} does not exist in the current data schema.`;
     const result = await this.parse(guild, this.schema.key, data);
-    return this.provider.update("guilds", guild, result);
+    await this.provider.update("guilds", guild, key, result);
+    return this.sync(guild);
   }
 
   async parse(guild, { type, min, max }, data) {
