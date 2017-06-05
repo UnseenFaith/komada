@@ -23,13 +23,13 @@ module.exports = class Resolver {
 
   async user(user) {
     if (user instanceof Discord.User) return user;
-    if (user instanceof Discord.Member) return user.user;
+    if (user instanceof Discord.GuildMember) return user.user;
     if (typeof user === "string" && regex.userOrMember.test(user)) return this.client.user.bot ? this.client.fetchUser(regex.userOrMember.exec(user)[1]).catch(() => null) : this.client.users.get(regex.userOrMember.exec(user)[1]);
     return null;
   }
 
   async member(member, guild) {
-    if (member instanceof Discord.Member) return member;
+    if (member instanceof Discord.GuildMember) return member;
     if (member instanceof Discord.User) return guild.fetchMember(member);
     if (typeof member === "string" && regex.userOrMember.test(member)) {
       const user = this.client.user.bot ? await this.client.fetchUser(regex.userOrMember.exec(member)[1]).catch(() => null) : this.client.users.get(regex.userOrMember.exec(member)[1]);
