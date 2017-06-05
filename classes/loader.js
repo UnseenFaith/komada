@@ -37,14 +37,16 @@ module.exports = class Loader {
       console.error(err);
       process.exit();
     });
-    this.client.emit("log", `Loaded ${funcs} functions.`);
-    this.client.emit("log", `Loaded ${commands} commands, with ${aliases} aliases.`);
-    this.client.emit("log", `Loaded ${inhibitors} command inhibitors.`);
-    this.client.emit("log", `Loaded ${finalizers} command finalizers.`);
-    this.client.emit("log", `Loaded ${monitors} message monitors.`);
-    this.client.emit("log", `Loaded ${providers} providers.`);
-    this.client.emit("log", `Loaded ${events} events`);
-    this.client.emit("log", `Loaded ${extendables} extendables`);
+    this.client.emit("log", [
+      `Loaded ${funcs} functions.`,
+      `Loaded ${commands} commands, with ${aliases} aliases.`,
+      `Loaded ${inhibitors} command inhibitors.`,
+      `Loaded ${finalizers} command finalizers.`,
+      `Loaded ${monitors} message monitors.`,
+      `Loaded ${providers} providers.`,
+      `Loaded ${events} events`,
+      `Loaded ${extendables} extendables`,
+    ].join("\n"));
   }
 
   async loadFunctions() {
