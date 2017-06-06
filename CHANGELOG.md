@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased] - Classbased | Staged for 0.20.0
 ### Added
+- Added version - require('komada').version
 - Added option to disable core functions. Now you can skip load of core functions instead of override it.
 - Command Editing is now possible via setting config.cmdEditing to true. You will need to make a few changes to your code to make it work though:
 - A new messageUpdate core event.
