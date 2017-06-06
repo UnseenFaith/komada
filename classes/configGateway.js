@@ -13,6 +13,7 @@ module.exports = class ConfigGateway extends CacheManager {
 
   async init() {
     if (!this.provider) throw `This provider (${this.engine}) does not exist in your system.`;
+    if (!this.schema || !this.schema.prefix) throw "There must be a valid schema with at least the prefix config.";
     const data = await this.provider.getAll("guilds");
     for (const key of data.values()) this.data.set(key.id, key);
     return true;
