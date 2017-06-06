@@ -1,7 +1,7 @@
-const Discord = require("discord.js");
+const { version: discordVersion } = require("discord.js");
 const moment = require("moment");
 require("moment-duration-format");
-const Komada = require("komada");
+const { version: komadaVersion } = require("komada");
 
 exports.run = async (client, msg) => {
   const duration = moment.duration(client.uptime).format(" D [days], H [hrs], m [mins], s [secs]");
@@ -13,8 +13,8 @@ exports.run = async (client, msg) => {
     `• Users      :: ${client.guilds.reduce((a, b) => a + b.memberCount, 0).toLocaleString()}`,
     `• Servers    :: ${client.guilds.size.toLocaleString()}`,
     `• Channels   :: ${client.channels.size.toLocaleString()}`,
-    `• Komada     :: v${Komada.version}`,
-    `• Discord.js :: v${Discord.version}`,
+    `• Komada     :: v${komadaVersion}`,
+    `• Discord.js :: v${discordVersion}`,
   ]);
 };
 
