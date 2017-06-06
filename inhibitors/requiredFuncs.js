@@ -11,6 +11,6 @@ exports.run = (client, msg, cmd) => {
   cmd.conf.requiredFuncs.forEach((func) => {
     if (!client.funcs.hasOwnProperty(func)) funcs.push(func);
   });
-  if (funcs.length > 0) return `The client is missing **${funcs.join(", ")}**, and cannot run.`;
+  if (funcs.length > 0) return `The client is missing the **${funcs.join(", ")}** function and cannot run.`;
   return false;
 };
