@@ -1,13 +1,31 @@
 const Discord = require("discord.js");
-const { sep } = require("path");
+const path = require("path");
 const now = require("performance-now");
-const CommandMessage = require("./classes/commandMessage.js");
-const Loader = require("./classes/loader.js");
-const ArgResolver = require("./classes/argResolver.js");
+const CommandMessage = require("./commandMessage.js");
+const Loader = require("./loader.js");
+const ArgResolver = require("./argResolver.js");
+const PermLevels = require("./permLevels.js");
  /* Will Change this later */
-const Config = require("./classes/Configuration Types/Config.js");
+const Config = require("./Configuration Types/Config.js");
 
-require("./classes/Extendables.js");
+const defaultPermStructure = new PermLevels()
+  .addLevel(0, false, () => true)
+  .addLevel(2, false, (client, msg) => {
+    if (!msg.guild) return false;
+    const modRole = msg.guild.roles.find("name", msg.guild.conf.modRole);
+    return modRole && msg.member.roles.has(modRole.id);
+  })
+  .addLevel(3, false, (client, msg) => {
+    if (!msg.guild) return false;
+    const adminRole = msg.guild.roles.find("name", msg.guild.conf.adminRole);
+    return adminRole && msg.member.roles.has(adminRole.id);
+  })
+  .addLevel(4, false, (client, msg) => {
+    if (!msg.guild) return false;
+    return msg.author.id === msg.guild.owner.id;
+  })
+  .addLevel(9, true, (client, msg) => msg.author.id === client.config.ownerID)
+  .addLevel(10, false, (client, msg) => msg.author.id === client.config.ownerID);
 
 /* eslint-disable no-throw-literal, no-use-before-define, no-restricted-syntax, no-underscore-dangle */
 module.exports = class Komada extends Discord.Client {
@@ -25,6 +43,7 @@ module.exports = class Komada extends Discord.Client {
       finalizers: config.disabled.finalizers || [],
       monitors: config.disabled.monitors || [],
       providers: config.disabled.providers || [],
+      extendables: config.disabled.extendables || [],
     };
     this.funcs = new Loader(this);
     this.argResolver = new ArgResolver(this);
@@ -50,8 +69,8 @@ module.exports = class Komada extends Discord.Client {
       escapeMarkdown: Discord.escapeMarkdown,
       splitMessage: Discord.splitMessage,
     };
-    this.coreBaseDir = `${__dirname}${sep}`;
-    this.clientBaseDir = `${process.env.clientDir || process.cwd()}${sep}`;
+    this.coreBaseDir = path.join(__dirname, "../");
+    this.clientBaseDir = `${process.env.clientDir || process.cwd()}${path.sep}`;
     this.guildConfs = Config.guildConfs;
     this.configuration = Config;
     this.application = null;
@@ -59,13 +78,14 @@ module.exports = class Komada extends Discord.Client {
   }
 
   get invite() {
-    if (this.config.selfbot) throw "Why would you need an invite link for a selfbot...";
+    if (!this.user.bot) throw "Why would you need an invite link for a selfbot...";
     const permissions = Discord.Permissions.resolve([...new Set(this.commands.reduce((a, b) => a.concat(b.conf.botPerms), ["READ_MESSAGES", "SEND_MESSAGES"]))]);
     return `https://discordapp.com/oauth2/authorize?client_id=${this.application.id}&permissions=${permissions}&scope=bot`;
   }
 
   validatePermStructure() {
-    const permStructure = this.config.permStructure || defaultPermStructure;
+    const structure = this.config.permStructure instanceof PermLevels ? this.config.permStructure.structure : null;
+    const permStructure = structure || this.config.permStructure || defaultPermStructure.structure;
     if (!Array.isArray(permStructure)) throw "PermStructure must be an array.";
     if (permStructure.some(perm => typeof perm !== "object" || typeof perm.check !== "function" || typeof perm.break !== "boolean")) {
       throw "Perms must be an object with a check function and a break boolean.";
@@ -83,7 +103,7 @@ module.exports = class Komada extends Discord.Client {
 
   async _ready() {
     this.config.prefixMention = new RegExp(`^<@!?${this.user.id}>`);
-    if (!this.config.selfbot) this.application = await super.fetchApplication();
+    if (this.user.bot) this.application = await super.fetchApplication();
     await Promise.all(Object.keys(this.funcs).map((key) => {
       if (this.funcs[key].init) return this.funcs[key].init(this);
       return true;
@@ -110,6 +130,7 @@ module.exports = class Komada extends Discord.Client {
     }));
     await this.configuration.initialize(this);
     this.ready = true;
+    this.emit("log", this.config.readyMessage || `Successfully initialized. Ready to serve ${this.guilds.size} guilds.`);
   }
 
   sweepCommandMessages(lifetime = this.commandMessageLifetime) {
@@ -132,74 +153,6 @@ module.exports = class Komada extends Discord.Client {
   }
 
 };
-
-const defaultPermStructure = [
-  {
-    check: () => true,
-    break: false,
-  },
-  {
-    check: () => false,
-    break: false,
-  },
-  {
-    check: (client, msg) => {
-      if (!msg.guild) return false;
-      const modRole = msg.guild.roles.find("name", msg.guild.conf.modRole);
-      if (modRole && msg.member.roles.has(modRole.id)) return true;
-      return false;
-    },
-    break: false,
-  },
-  {
-    check: (client, msg) => {
-      if (!msg.guild) return false;
-      const adminRole = msg.guild.roles.find("name", msg.guild.conf.adminRole);
-      if (adminRole && msg.member.roles.has(adminRole.id)) return true;
-      return false;
-    },
-    break: false,
-  },
-  {
-    check: (client, msg) => {
-      if (!msg.guild) return false;
-      if (msg.author.id === msg.guild.owner.id) return true;
-      return false;
-    },
-    break: false,
-  },
-  {
-    check: () => false,
-    break: false,
-  },
-  {
-    check: () => false,
-    break: false,
-  },
-  {
-    check: () => false,
-    break: false,
-  },
-  {
-    check: () => false,
-    break: false,
-  },
-  {
-    check: (client, msg) => {
-      if (msg.author.id === client.config.ownerID) return true;
-      return false;
-    },
-    break: true,
-  },
-  {
-    check: (client, msg) => {
-      if (msg.author.id === client.config.ownerID) return true;
-      return false;
-    },
-    break: false,
-  },
-];
-
 
 process.on("unhandledRejection", (err) => {
   if (!err) return;

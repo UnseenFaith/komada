@@ -24,10 +24,10 @@ exports.handleMessage = (client, msg) => {
   if (client.config.ignoreBots && msg.author.bot) return false;
   // Ignore Self if true
   if (client.config.ignoreSelf && msg.author.id === client.user.id) return false;
-  // Ignore other users if selfbot is true
-  if (client.config.selfbot && msg.author.id !== client.user.id) return false;
-  // Ignore other users if selfbot but config option is false
-  if (!client.config.selfbot && msg.author.id === client.user.id) return false;
+  // Ignore other users if selfbot
+  if (!client.user.bot && msg.author.id !== client.user.id) return false;
+  // Ignore self if bot
+  if (client.user.bot && msg.author.id === client.user.id) return false;
   return true;
 };
 

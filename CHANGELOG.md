@@ -14,8 +14,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Added a timer to the loading.
 - Finalizers: Functions which are run on after a successful command. *Please Note: All command files must be defined as async. `exports.run = __async__ (client, msg, ...`*
 - Command Cooldowns are now available through a new inhibitor/finalizer combo. Simply set command.conf.cooldown to an integer in seconds to put a cooldown on that command.
+- A helper class for generating permission levels. It can be accessed via require('komada').PermLevels, and is used via permlevels.addLevel(level, break, checkFunction). Once you have all levels added, simply pass permlevels.structure to your client.config as the "permStructure" property.
 
 ### Changed
+- Dropped support for fs-extra-promise in favor to fs-nextra.
 - Changed fetchMessages to fetchMessage (backend change)
 - Backend is now class based. Users main files will need to be updated. The interface is the same as creating a discord.js client, only using komada, and with komada config. No more use of start, but client.login(token) is needed now.
 - Usage will no longer be calculated everytime a command is run, but instead stored in command.usage.
@@ -25,10 +27,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Changed core log func, into an event. You can now log anything by running client.emit('log', data, type);
 - runMessageMonitors has been moved into the new Message core event.
 - dotenv dependancy has been changed to a peerdep.
-- fs-extra-promise has been updated to the latest version.
 - Minimum node version is now v7.6.x
 - Remaining Utils have been moved to the classes folder.
 - Use Discord.Permissions to generate and keep cached an implied permissions object, instead of generating a new object every time a command is run.
+- client.config.selfbot config is no longer needed for selfbot mode. Komada now detects if it is being run as a user, and takes all selbot precautions.
 
 ### Fixed
 -

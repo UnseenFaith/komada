@@ -1,9 +1,9 @@
-const util = require("util").inspect;
+const { inspect } = require("util");
 
 exports.run = async (client, msg, [action, key, ...value]) => {
   switch (action) {
     case "list": {
-      return msg.sendCode("json", util(msg.guildConf));
+      return msg.sendCode("json", inspect(msg.guildConf));
     }
     case "get": {
       if (!key) return msg.sendMessage("Please provide a key you wish to view");
