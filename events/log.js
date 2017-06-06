@@ -13,19 +13,19 @@ exports.run = (client, data, type = "log") => {
   if (!client.config.disableLogTimestamps) timestamp = moment().format("YYYY-MM-DD HH:mm:ss ");
   switch (type.toLowerCase()) {
     case "debug":
-      if (!client.config.disableLogTimestamps) timestamp = chalk.bgMagenta(timestamp);
+      if (!client.config.disableLogTimestamps && !client.config.disableLogColor) timestamp = chalk.bgMagenta(timestamp);
       console.log(padLines(data));
       break;
     case "warn":
-      if (!client.config.disableLogTimestamps) timestamp = chalk.black.bgYellow(timestamp);
+      if (!client.config.disableLogTimestamps && !client.config.disableLogColor) timestamp = chalk.black.bgYellow(timestamp);
       console.log(padLines(data));
       break;
     case "error":
-      if (!client.config.disableLogTimestamps) timestamp = chalk.bgRed(timestamp);
+      if (!client.config.disableLogTimestamps && !client.config.disableLogColor) timestamp = chalk.bgRed(timestamp);
       console.log(padLines(data));
       break;
     case "log":
-      if (!client.config.disableLogTimestamps) timestamp = chalk.bgBlue(timestamp);
+      if (!client.config.disableLogTimestamps && !client.config.disableLogColor) timestamp = chalk.bgBlue(timestamp);
       console.log(padLines(data));
       break;
       // no default
