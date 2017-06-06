@@ -1,9 +1,9 @@
 const Discord = require("discord.js");
 const moment = require("moment");
 require("moment-duration-format");
+const Komada = require("komada");
 
 exports.run = async (client, msg) => {
-  const komada = require(`${client.coreBaseDir}/package.json`); // eslint-disable-line
   const duration = moment.duration(client.uptime).format(" D [days], H [hrs], m [mins], s [secs]");
   return msg.sendCode("asciidoc", [
     "= STATISTICS =",
@@ -13,7 +13,7 @@ exports.run = async (client, msg) => {
     `• Users      :: ${client.guilds.reduce((a, b) => a + b.memberCount, 0).toLocaleString()}`,
     `• Servers    :: ${client.guilds.size.toLocaleString()}`,
     `• Channels   :: ${client.channels.size.toLocaleString()}`,
-    `• Komada     :: v${komada.version}`,
+    `• Komada     :: v${Komada.version}`,
     `• Discord.js :: v${Discord.version}`,
   ]);
 };
