@@ -1,5 +1,5 @@
 module.exports = {
   Client: require("./classes/client"),
   PermLevels: require("./classes/permLevels"),
-  version: require("package").version,
+  version: require("./package").version,
 };
