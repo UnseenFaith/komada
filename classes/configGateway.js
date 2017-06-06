@@ -4,27 +4,22 @@ const CacheManager = require("./cacheManager.js");
 /* eslint-disable no-restricted-syntax, guard-for-in */
 module.exports = class ConfigGateway extends CacheManager {
   constructor(client) {
-    super();
+    super(client);
     this.client = client;
     this.engine = client.config.provider.engine || "json";
-    this.redis = client.config.provider.redis || false;
     this.provider = this.client.providers.get(this.engine);
     this.resolver = new Resolver(client);
   }
 
   async init() {
+    if (!this.provider) throw `This provider (${this.engine}) does not exist in your system.`;
     const data = await this.provider.getAll("guilds");
     for (const key of data.values()) this.data.set(key.id, key);
     return true;
   }
 
   get schema() {
-    return this.client.config.provider.schema || {
-      prefix: {
-        default: this.client.config.prefix,
-        type: "string",
-      },
-    };
+    return this.client.config.provider.schema || this.defaultDataSchema;
   }
 
   get defaults() {
@@ -34,13 +29,15 @@ module.exports = class ConfigGateway extends CacheManager {
   }
 
   async create(guild) {
-    await this.provider.create("guilds", guild, this.defaults);
-    return super.set(guild, this.defaults);
+    const target = await this.validateGuild(guild);
+    await this.provider.create("guilds", target.id, this.defaults);
+    return super.set(target.id, this.defaults);
   }
 
   async destroy(guild) {
-    await this.provider.delete("guilds", guild);
-    return super.delete("guilds", guild);
+    const target = await this.validateGuild(guild);
+    await this.provider.delete("guilds", target.id);
+    return super.delete("guilds", target.id);
   }
 
   async sync(guild = null) {
@@ -49,61 +46,64 @@ module.exports = class ConfigGateway extends CacheManager {
       for (const key of data.values()) super.set(key.id, key);
       return true;
     }
-    const data = await this.provider.get("guilds", guild);
-    return super.set(guild, data);
+    const target = await this.validateGuild(guild);
+    const data = await this.provider.get("guilds", target.id);
+    return super.set(target.id, data);
   }
 
   async reset(guild, key) {
+    const target = await this.validateGuild(guild);
     if (!(key in this.schema)) throw `The key ${key} does not exist in the current data schema.`;
-    return this.provider.update("guilds", guild, key, this.schema.key.default);
+    return this.provider.update("guilds", target.id, key, this.schema.key.default);
   }
 
   async update(guild, key, data) {
+    const target = await this.validateGuild(guild);
     if (!(key in this.schema)) throw `The key ${key} does not exist in the current data schema.`;
-    const result = await this.parse(guild, this.schema.key, data);
-    await this.provider.update("guilds", guild, key, result);
-    return this.sync(guild);
+    const result = await this.parse(target, this.schema.key, data);
+    await this.provider.update("guilds", target.id, key, result);
+    return this.sync(target.id);
   }
 
   async parse(guild, { type, min, max }, data) {
     switch (type) {
-      case "user": {
+      case "User": {
         const result = await this.resolver.user(data);
         if (!result) throw "This key expects a User Object or ID.";
         return result.id;
       }
-      case "channel": {
+      case "Channel": {
         const result = await this.resolver.channel(data);
         if (!result) throw "This key expects a Channel Object or ID.";
         return result.id;
       }
-      case "guild": {
+      case "Guild": {
         const result = await this.resolver.guild(data);
         if (!result) throw "This key expects a Guild ID.";
         return result.id;
       }
-      case "role": {
+      case "Role": {
         const result = await this.resolver.role(data, guild);
         if (!result) throw "This key expects a Role Object or ID.";
         return result.id;
       }
-      case "boolean": {
+      case "Boolean": {
         const result = await this.resolver.boolean(data);
         if (!result) throw "This key expects a Boolean.";
         return result;
       }
-      case "string": {
+      case "String": {
         const result = await this.resolver.string(data);
         ConfigGateway.maxOrMin(result.length, min, max).catch((e) => { throw `The string length must be ${e} characters.`; });
         return result;
       }
-      case "integer": {
+      case "Integer": {
         const result = await this.resolver.integer(data);
         if (!result) throw "This key expects an Integer value.";
         ConfigGateway.maxOrMin(result, min, max).catch((e) => { throw `The integer value must be ${e}.`; });
         return result;
       }
-      case "float": {
+      case "Float": {
         const result = await this.resolver.float(data);
         if (!result) throw "This key expects a Float value.";
         ConfigGateway.maxOrMin(result, min, max).catch((e) => { throw `The float value must be ${e}.`; });
@@ -132,5 +132,28 @@ module.exports = class ConfigGateway extends CacheManager {
       throw `shorter than ${max}`;
     }
     return null;
+  }
+
+  async validateGuild(guild) {
+    const result = await this.resolver.guild(guild);
+    if (!result) throw "The parameter <Guild> expects either a Guild or a Guild Object.";
+    return result;
+  }
+
+  get defaultDataSchema() {
+    return {
+      prefix: {
+        type: "String",
+        data: this.client.config.prefix,
+      },
+      modRole: {
+        type: "String",
+        data: "Mods",
+      },
+      adminRole: {
+        type: "String",
+        data: "Devs",
+      },
+    };
   }
 };
