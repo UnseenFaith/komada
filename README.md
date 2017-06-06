@@ -30,7 +30,6 @@ const komada = require("komada");
 
 const client = new komada.Client({
   ownerID : "your-user-id",
-  clientID: "the-invite-app-id",
   prefix: "+",
   clientOptions: {
     fetchAllMembers: true,
@@ -60,4 +59,4 @@ npm install
 node app.js
 ```
 
-> **Requirements**: This version of Komada requires Node 7.6.0 or higher to run. Depends on Discord.js v11.1.0 or higher (the appropriate version is automatically installed).
+> **Requirements**: This version of Komada requires Node 8.0.0 or higher to run. Depends on Discord.js v11.1.0 or higher (the appropriate version is automatically installed).

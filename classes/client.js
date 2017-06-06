@@ -133,6 +133,7 @@ module.exports = class Komada extends Discord.Client {
     }));
     await this.configuration.initialize(this);
     this.ready = true;
+    this.emit("log", this.config.readyMessage || `Successfully initialized. Ready to serve ${this.guilds.size} guilds.`);
   }
 
   sweepCommandMessages(lifetime = this.commandMessageLifetime) {

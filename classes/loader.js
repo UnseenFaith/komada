@@ -1,5 +1,7 @@
-const fs = require("fs-extra");
-const { exec } = require("child_process");
+const fs = require("fs-nextra");
+const { promisify } = require("util");
+const exec = promisify(require("child_process").exec);
+
 const { sep } = require("path");
 const Discord = require("discord.js");
 const ParsedUsage = require("./parsedUsage");
@@ -52,14 +54,16 @@ module.exports = class Loader {
       }
       return "";
     };
-    this.client.emit("log", `Loaded ${funcs} functions${countMsg(funcLangs)}.`);
-    this.client.emit("log", `Loaded ${commands} commands${countMsg(cmdLangs)}, with ${aliases} aliases.`);
-    this.client.emit("log", `Loaded ${inhibitors} command inhibitors${countMsg(inhibLangs)}.`);
-    this.client.emit("log", `Loaded ${finalizers} command finalizers${countMsg(finalLangs)}.`);
-    this.client.emit("log", `Loaded ${monitors} message monitors${countMsg(monLangs)}.`);
-    this.client.emit("log", `Loaded ${providers} providers${countMsg(provLangs)}.`);
-    this.client.emit("log", `Loaded ${events} events${countMsg(eventLangs)}.`);
-    this.client.emit("log", `Loaded ${extendables} extendables${countMsg(extLangs)}.`);
+    this.client.emit("log", [
+      `Loaded ${funcs} functions${countMsg(funcLangs)}.`,
+      `Loaded ${commands} commands${countMsg(cmdLangs)}, with ${aliases} aliases.`,
+      `Loaded ${inhibitors} command inhibitors${countMsg(inhibLangs)}.`,
+      `Loaded ${finalizers} command finalizers${countMsg(finalLangs)}.`,
+      `Loaded ${monitors} message monitors${countMsg(monLangs)}.`,
+      `Loaded ${providers} providers${countMsg(provLangs)}.`,
+      `Loaded ${events} events${countMsg(eventLangs)}.`,
+      `Loaded ${extendables} extendables${countMsg(extLangs)}.`,
+    ].join("\n"));
   }
 
   async loadFunctions() {
@@ -601,20 +605,16 @@ module.exports = class Loader {
     }
   }
 
-  installNPM(missingModule) {
-    return new Promise((resolve, reject) => {
-      console.log(`Installing: ${missingModule}`);
-      exec(`npm i ${missingModule} --save`, (err, stdout, stderr) => {
-        if (err) {
-          console.log("=====NEW DEPENDENCY INSTALL FAILED HORRIBLY=====");
-          return reject(err);
-        }
-        console.log("=====INSTALLED NEW DEPENDENCY=====");
-        console.log(stdout);
-        console.error(stderr);
-        return resolve();
-      });
+  async installNPM(missingModule) {
+    console.log(`Installing: ${missingModule}`);
+    const { stdout, stderr } = await exec(`npm i ${missingModule}`).catch((err) => {
+      console.error("=====NEW DEPENDANCY INSTALL FAILED HORRIBLY=====");
+      throw err;
     });
+
+    console.log("=====INSTALLED NEW DEPENDANCY=====");
+    console.log(stdout);
+    console.error(stderr);
   }
 
 };

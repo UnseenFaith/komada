@@ -1,4 +1,4 @@
-const fs = require("fs-extra");
+const fs = require("fs-nextra");
 const path = require("path");
 
 /* eslint-disable no-throw-literal */
@@ -14,7 +14,7 @@ exports.run = async (client, msg, [type, name]) => {
     monitor: client.funcs.reloadMessageMonitor,
   };
   const isCommand = type === "command" ? "System/" : "";
-  fs.copy(path.resolve(`${coreDir}/${type}s/${isCommand}${name}.js`), path.resolve(`${clientDir}/${type}s/${isCommand}${name}.js`))
+  return fs.copy(path.resolve(`${coreDir}/${type}s/${isCommand}${name}.js`), path.resolve(`${clientDir}/${type}s/${isCommand}${name}.js`))
     .then(() => {
       reload[type].call(client.funcs, `${isCommand}${name}`).catch((response) => { throw `❌ ${response}`; });
       return msg.sendMessage(`✅ Successfully Transferred ${type}: ${name}`);
