@@ -32,5 +32,5 @@ exports.run = (client, data, type = "log") => {
   }
 
   if (type === "debug") type = "log";
-  console[type](data.split("\n").map(str => str.padStart(timestamp.length + str.length, timestamp)).join("\n"));
+  console[type](data.split("\n").map(str => timestamp + str).join("\n"));
 };
