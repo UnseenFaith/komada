@@ -11,7 +11,7 @@ exports.run = (client, data, type = "log") => {
 
   let timestamp = "";
   if (!client.config.disableLogTimestamps) {
-    timestamp = moment().format("YYYY-MM-DD HH:mm:ss ");
+    timestamp = `[${moment().format("YYYY-MM-DD HH:mm:ss")}] `;
     if (!client.config.disableLogColor) {
       switch (type) {
         case "debug":
@@ -32,5 +32,5 @@ exports.run = (client, data, type = "log") => {
   }
 
   if (type === "debug") type = "log";
-  console[type](data.split("\n").map(str => str.padStart(timestamp.length + str, timestamp)).join("\n"));
+  console[type](data.split("\n").map(str => str.padStart(timestamp.length + str.length, timestamp)).join("\n"));
 };
