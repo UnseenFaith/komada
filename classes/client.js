@@ -6,7 +6,7 @@ const Loader = require("./loader.js");
 const ArgResolver = require("./argResolver.js");
 const PermLevels = require("./permLevels.js");
  /* Will Change this later */
-const Config = require("./Configuration Types/Config.js");
+const Setting = require("./settingGateway.js");
 
 const defaultPermStructure = new PermLevels()
   .addLevel(0, false, () => true)
@@ -34,6 +34,7 @@ module.exports = class Komada extends Discord.Client {
     if (typeof config !== "object") throw new TypeError("Configuration for Komada must be an object.");
     super(config.clientOptions);
     this.config = config;
+    this.config.provider = config.provider || {};
     this.config.disabled = config.disabled || {};
     this.config.disabled = {
       commands: config.disabled.commands || [],
@@ -71,8 +72,7 @@ module.exports = class Komada extends Discord.Client {
     };
     this.coreBaseDir = path.join(__dirname, "../");
     this.clientBaseDir = `${process.env.clientDir || process.cwd()}${path.sep}`;
-    this.guildConfs = Config.guildConfs;
-    this.configuration = Config;
+    this.configuration = new Setting(this);
     this.application = null;
     this.once("ready", this._ready.bind(this));
   }
