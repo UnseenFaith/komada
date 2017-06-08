@@ -1,25 +1,32 @@
 exports.run = async (client, msg, [type, name]) => {
+  function sendSuccess() { msg.sendCode("diff", `+ Successfully disabled ${type}: ${name}`); }
+  function sendError() { msg.sendCode("diff", `- I cannot find the ${type}: ${name}`); }
   switch (type) {
+    case "command": {
+      const command = client.commands.get(name) || client.commands.get(client.aliases.has(name));
+      if (!command) return sendError();
+      command.conf.enabled = false;
+      return sendSuccess();
+    }
     case "inhibitor": {
       const inhibitor = client.commandInhibitors.get(name);
-      if (!inhibitor) return msg.sendCode("diff", `- I cannot find the inhibitor: ${name}`);
+      if (!inhibitor) return sendError();
       inhibitor.conf.enabled = false;
-      return msg.sendCode("diff", `+ Successfully disabled inhibitor: ${name}`);
+      return sendSuccess();
     }
     case "monitor": {
       const monitor = client.messageMonitors.get(name);
-      if (!monitor) return msg.sendCode("diff", `- I cannot find the monitor: ${name}`);
+      if (!monitor) return sendError();
       monitor.conf.enabled = false;
-      return msg.sendCode("diff", `+ Successfully disabled monitor: ${name}`);
+      return sendSuccess();
     }
-    case "command": {
-      const command = client.commands.get(name) || client.commands.get(client.aliases.has(name));
-      if (!command) return msg.sendCode("diff", `- I cannot find the command: ${name}`);
-      command.conf.enabled = false;
-      return msg.sendCode("diff", `+ Successfully disabled command: ${name}`);
+    case "finalizer": {
+      const finalizer = client.commandFinalizers.get(name);
+      if (!finalizer) return sendError();
+      finalizer.conf.enabled = false;
+      return sendSuccess();
     }
-    default:
-      return msg.sendMessage("This will never happen");
+    // no default
   }
 };
 
@@ -34,7 +41,7 @@ exports.conf = {
 
 exports.help = {
   name: "disable",
-  description: "Temporarily disables the inhibitor/monitor/command. Resets upon reboot.",
-  usage: "<inhibitor|monitor|command> <name:str>",
+  description: "Temporarily disables a command/inhibitor/monitor/finalizer. Default state restored on reboot.",
+  usage: "<command|inhibitor|monitor|finalizer> <name:str>",
   usageDelim: " ",
 };
