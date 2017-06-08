@@ -19,7 +19,7 @@
   "dependencies": {
     "chalk": "^1.1.3",
     "discord.js": "hydrabolt/discord.js",
-    "fs-nextra": "0.0.3",
+    "fs-nextra": "0.0.4",
     "moment": "^2.16.0",
     "moment-duration-format": "^1.3.0",
     "performance-now": "^2.1.0"
@@ -28,7 +28,7 @@
     "dotenv": "^4.0.0"
   },
   "engines": {
-    "node": ">=8.0.0"
+    "node": ">=8.1.0"
   },
   "devDependencies": {
     "eslint": "^3.10.2",
