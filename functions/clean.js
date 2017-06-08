@@ -10,10 +10,9 @@ module.exports = (client, text) => {
 };
 
 exports.init = (client) => {
-  let pattern = "";
-  if (client.token) pattern += client.token;
-  if (client.token) pattern += (pattern.length > 0 ? "|" : "") + client.token;
-  if (client.user.email) pattern += (pattern.length > 0 ? "|" : "") + client.user.email;
-  if (client.password) pattern += (pattern.length > 0 ? "|" : "") + client.password;
-  sensitivePattern = new RegExp(pattern, "gi");
+  const patterns = [];
+  if (client.token) patterns.push(client.token);
+  if (client.user.email) patterns.push(client.user.email);
+  if (client.password) patterns.push(client.password);
+  sensitivePattern = new RegExp(patterns.join("|"), "gi");
 };
