@@ -44,8 +44,8 @@ module.exports = class Loader {
       `Loaded ${finalizers} command finalizers.`,
       `Loaded ${monitors} message monitors.`,
       `Loaded ${providers} providers.`,
-      `Loaded ${events} events`,
-      `Loaded ${extendables} extendables`,
+      `Loaded ${events} events.`,
+      `Loaded ${extendables} extendables.`,
     ].join("\n"));
   }
 
