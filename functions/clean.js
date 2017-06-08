@@ -1,9 +1,10 @@
+const zws = String.fromCharCode(8203);
 let sensitivePattern;
 
 module.exports = (client, text) => {
   if (!sensitivePattern) this.init(client);
   if (typeof text === "string") {
-    return text.replace(sensitivePattern, "「ｒｅｄａｃｔｅｄ」").replace(/`/g, `\`${String.fromCharCode(8203)}`).replace(/@/g, `@${String.fromCharCode(8203)}`);
+    return text.replace(sensitivePattern, "「ｒｅｄａｃｔｅｄ」").replace(/`/g, `\`${zws}`).replace(/@/g, `@${zws}`);
   }
   return text;
 };
