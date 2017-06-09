@@ -1,6 +1,6 @@
 exports.run = async (client, msg, [type, name]) => {
   const t = { command: "commands", inhibitor: "commandInhibitors", monitor: "messageMonitors", finalizer: "commandFinalizers" }[type];
-  let toDisable = client[t].get(name)
+  let toDisable = client[t].get(name);
   if (!toDisable && type === "command") toDisable = client.commands.get(client.aliases.has(name));
   if (!toDisable) return msg.sendCode("diff", `- I cannot find the ${type}: ${name}`);
   toDisable.conf.enabled = false;
