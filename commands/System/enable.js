@@ -1,7 +1,7 @@
-const longtTypes = { command: "commands", inhibitor: "commandInhibitors", monitor: "messageMonitors", finalizer: "commandFinalizers" };
+const longTypes = { command: "commands", inhibitor: "commandInhibitors", monitor: "messageMonitors", finalizer: "commandFinalizers" };
 
 exports.run = async (client, msg, [type, name]) => {
-  let toEnable = client[longtTypes[type]].get(name);
+  let toEnable = client[longTypes[type]].get(name);
   if (!toEnable && type === "command") toEnable = client.commands.get(client.aliases.get(name));
   if (!toEnable) return msg.sendCode("diff", `- I cannot find the ${type}: ${name}`);
   toEnable.conf.enabled = true;
