@@ -13,7 +13,7 @@ exports.run = async (client, msg, [type, name]) => {
     event: client.funcs.reloadEvent,
     monitor: client.funcs.reloadMessageMonitor,
   };
-  if (type === "command") name = "System/" + name; // eslint-disable-line prefer-template
+  if (type === "command") name = `System/${name}`;
   return fs.copy(path.resolve(`${coreDir}/${type}s/${name}.js`), path.resolve(`${clientDir}/${type}s/${name}.js`))
     .then(() => {
       reload[type].call(client.funcs, `${name}`).catch((response) => { throw `❌ ${response}`; });
