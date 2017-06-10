@@ -1,5 +1,6 @@
 # Komada Framework Documentation
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/dd643ab58edf4f7581c3c02c428c799c)](https://www.codacy.com/app/CyberiumShadow/komada?utm_source=github.com&utm_medium=referral&utm_content=dirigeants/komada&utm_campaign=badger)
 [![Discord](https://discordapp.com/api/guilds/260202843686830080/embed.png)](https://discord.gg/dgs8263)
 [![npm](https://img.shields.io/npm/v/komada.svg?maxAge=3600)](https://www.npmjs.com/package/komada)
 [![npm](https://img.shields.io/npm/dt/komada.svg?maxAge=3600)](https://www.npmjs.com/package/komada)
