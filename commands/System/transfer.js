@@ -13,10 +13,10 @@ exports.run = async (client, msg, [type, name]) => {
     event: client.funcs.reloadEvent,
     monitor: client.funcs.reloadMessageMonitor,
   };
-  const isCommand = type === "command" ? "System/" : "";
-  return fs.copy(path.resolve(`${coreDir}/${type}s/${isCommand}${name}.js`), path.resolve(`${clientDir}/${type}s/${isCommand}${name}.js`))
+  if (type === "command") name = `System/${name}`;
+  return fs.copy(path.resolve(`${coreDir}/${type}s/${name}.js`), path.resolve(`${clientDir}/${type}s/${name}.js`))
     .then(() => {
-      reload[type].call(client.funcs, `${isCommand}${name}`).catch((response) => { throw `❌ ${response}`; });
+      reload[type].call(client.funcs, `${name}`).catch((response) => { throw `❌ ${response}`; });
       return msg.sendMessage(`✅ Successfully Transferred ${type}: ${name}`);
     })
     .catch((err) => {

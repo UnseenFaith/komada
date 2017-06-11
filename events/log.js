@@ -1,6 +1,8 @@
 const moment = require("moment");
 const chalk = require("chalk");
 
+const clk = new chalk.constructor({ enabled: true });
+
 /* eslint-disable no-use-before-define */
 exports.run = (client, data, type = "log") => {
   type = type.toLowerCase();
@@ -15,16 +17,16 @@ exports.run = (client, data, type = "log") => {
     if (!client.config.disableLogColor) {
       switch (type) {
         case "debug":
-          timestamp = chalk.bgMagenta(timestamp);
+          timestamp = clk.bgMagenta(timestamp);
           break;
         case "warn":
-          timestamp = chalk.black.bgYellow(timestamp);
+          timestamp = clk.black.bgYellow(timestamp);
           break;
         case "error":
-          timestamp = chalk.bgRed(timestamp);
+          timestamp = clk.bgRed(timestamp);
           break;
         case "log":
-          timestamp = chalk.bgBlue(timestamp);
+          timestamp = clk.bgBlue(timestamp);
           break;
           // no default
       }

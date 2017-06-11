@@ -8,7 +8,7 @@ const ParsedUsage = require("./parsedUsage");
 
 const coreProtected = {
   commands: [],
-  events: ["disconnect", "error", "guildCreate", "guildDelete", "log", "message", "messageBulkDelete", "messageDelete", "messageUpdate", "warn"],
+  events: ["disconnect", "error", "guildCreate", "guildDelete", "message", "messageBulkDelete", "messageDelete", "messageUpdate", "warn"],
   functions: ["checkPerms", "clean", "confs", "getPrefix", "handleError", "newError", " regExpEsc", "toTitleCase"],
   inhibitors: ["runIn", "disable", "permissions", "requiredFuncs", "missingBotPermissions", "disable"],
   finalizers: [],
