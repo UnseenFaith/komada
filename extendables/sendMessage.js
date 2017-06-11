@@ -5,7 +5,7 @@ exports.conf = {
 };
 
 // eslint-disable-next-line func-names
-exports.extend = function (content = "", options = {}) {
+exports.extend = function (content, options) {
   if (!this.channel) return this.send(content, options);
   const commandMessage = this.client.commandMessages.get(this.id);
   if (!options.embed) options.embed = null;
