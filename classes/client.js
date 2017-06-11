@@ -45,6 +45,8 @@ module.exports = class Komada extends Discord.Client {
       providers: config.disabled.providers || [],
       extendables: config.disabled.extendables || [],
     };
+    this.coreBaseDir = path.join(__dirname, "../");
+    this.clientBaseDir = `${process.env.clientDir || process.cwd()}${path.sep}`;
     this.funcs = new Loader(this);
     this.argResolver = new ArgResolver(this);
     this.helpStructure = new Map();
@@ -69,8 +71,6 @@ module.exports = class Komada extends Discord.Client {
       escapeMarkdown: Discord.escapeMarkdown,
       splitMessage: Discord.splitMessage,
     };
-    this.coreBaseDir = path.join(__dirname, "../");
-    this.clientBaseDir = `${process.env.clientDir || process.cwd()}${path.sep}`;
     this.guildConfs = Config.guildConfs;
     this.configuration = Config;
     this.application = null;
