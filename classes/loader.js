@@ -82,9 +82,9 @@ module.exports = class Loader {
     return (coreFiles ? coreFiles.length : 0) + (userFiles ? userFiles.length : 0);
   }
 
-  loadNewFunction(file) {
-    this[file.split(".")[0]] = require(file);
-    delete require.cache[file];
+  loadNewFunction(file, dir) {
+    this[file.split(".")[0]] = require(join(dir, file));
+    delete require.cache[join(dir, file)];
   }
 
   async reloadFunction(name) {
@@ -139,8 +139,8 @@ module.exports = class Loader {
     return Promise.all(mps2).catch((err) => { throw err; });
   }
 
-  loadNewCommand(file) {
-    const cmd = require(file);
+  loadNewCommand(file, dir) {
+    const cmd = require(join(dir, file));
     cmd.help.fullCategory = file.split(sep).slice(0, -1);
     cmd.help.subCategory = cmd.help.fullCategory[1] || "General";
     cmd.help.category = cmd.help.fullCategory[0] || "General";
@@ -149,7 +149,7 @@ module.exports = class Loader {
     cmd.conf.aliases = cmd.conf.aliases || [];
     cmd.conf.aliases.forEach(alias => this.client.aliases.set(alias, cmd.help.name));
     cmd.usage = new ParsedUsage(this.client, cmd);
-    delete require.cache[file];
+    delete require.cache[join(dir, file)];
   }
 
   async reloadCommand(name) {
@@ -200,9 +200,9 @@ module.exports = class Loader {
     return this.client.commandInhibitors.size;
   }
 
-  loadNewInhibitor(file) {
-    this.client.commandInhibitors.set(file.split(".")[0], require(file));
-    delete require.cache[file];
+  loadNewInhibitor(file, dir) {
+    this.client.commandInhibitors.set(file.split(".")[0], require(join(dir, file)));
+    delete require.cache[join(dir, file)];
   }
 
   async reloadInhibitor(name) {
@@ -240,9 +240,9 @@ module.exports = class Loader {
     return this.client.commandFinalizers.size;
   }
 
-  loadNewFinalizer(file) {
-    this.client.commandFinalizers.set(file.split(".")[0], require(file));
-    delete require.cache[file];
+  loadNewFinalizer(file, dir) {
+    this.client.commandFinalizers.set(file.split(".")[0], require(join(dir, file)));
+    delete require.cache[join(dir, file)];
   }
 
   async reloadFinalizer(name) {
@@ -276,11 +276,11 @@ module.exports = class Loader {
     return this.client.eventHandlers.size;
   }
 
-  loadNewEvent(file) {
+  loadNewEvent(file, dir) {
     const eventName = file.split(".")[0];
-    this.client.eventHandlers.set(eventName, (...args) => require(file).run(this.client, ...args));
+    this.client.eventHandlers.set(eventName, (...args) => require(join(dir, file)).run(this.client, ...args));
     this.client.on(eventName, this.client.eventHandlers.get(eventName));
-    delete require.cache[file];
+    delete require.cache[join(dir, file)];
   }
 
   async reloadEvent(name) {
@@ -314,9 +314,9 @@ module.exports = class Loader {
     return this.client.messageMonitors.size;
   }
 
-  loadNewMessageMonitor(file) {
-    this.client.messageMonitors.set(file.split(".")[0], require(file));
-    delete require.cache[file];
+  loadNewMessageMonitor(file, dir) {
+    this.client.messageMonitors.set(file.split(".")[0], require(join(dir, file)));
+    delete require.cache[join(dir, file)];
   }
 
   async reloadMessageMonitor(name) {
@@ -349,9 +349,9 @@ module.exports = class Loader {
     return this.client.providers.size;
   }
 
-  loadNewProvider(file) {
-    this.client.providers.set(file.split(".")[0], require(file));
-    delete require.cache[file];
+  loadNewProvider(file, dir) {
+    this.client.providers.set(file.split(".")[0], require(join(dir, file)));
+    delete require.cache[join(dir, file)];
   }
 
   async reloadProvider(name) {
@@ -383,8 +383,8 @@ module.exports = class Loader {
     return (coreFiles ? coreFiles.length : 0) + (userFiles ? userFiles.length : 0);
   }
 
-  loadNewExtendable(file) {
-    const extendable = require(file);
+  loadNewExtendable(file, dir) {
+    const extendable = require(join(dir, file));
     let myExtend;
     switch (extendable.conf.type.toLowerCase()) {
       case "set":
@@ -403,13 +403,13 @@ module.exports = class Loader {
     extendable.conf.appliesTo.forEach((structure) => {
       Object.defineProperty(Discord[structure].prototype, extendable.conf.method, myExtend);
     });
-    delete require.cache[file];
+    delete require.cache[join(dir, file)];
   }
 
 
   async loadFiles(files, dir, loadNew, startOver) {
     try {
-      files.forEach(file => loadNew.call(this, join(dir, file)));
+      files.forEach(file => loadNew.call(this, file, dir));
     } catch (error) {
       if (error.code === "MODULE_NOT_FOUND") {
         const missingModule = /'([^']+)'/g.exec(error.toString());
