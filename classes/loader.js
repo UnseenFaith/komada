@@ -26,6 +26,8 @@ module.exports = class Loader {
       inhibitors: resolve(this.client.coreBaseDir, "inhibitors"),
       finalizers: resolve(this.client.coreBaseDir, "finalizers"),
       events: resolve(this.client.coreBaseDir, "events"),
+      monitors: resolve(this.client.coreBaseDir, "monitors"),
+      providers: resolve(this.client.coreBaseDir, "providers"),
       extendables: resolve(this.client.coreBaseDir, "extendables"),
     };
     this.clientDirs = {
@@ -34,6 +36,8 @@ module.exports = class Loader {
       inhibitors: resolve(this.client.clientBaseDir, "inhibitors"),
       finalizers: resolve(this.client.clientBaseDir, "finalizers"),
       events: resolve(this.client.clientBaseDir, "events"),
+      monitors: resolve(this.client.clientBaseDir, "monitors"),
+      providers: resolve(this.client.clientBaseDir, "providers"),
       extendables: resolve(this.client.clientBaseDir, "extendables"),
     };
   }
