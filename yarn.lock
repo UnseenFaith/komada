@@ -180,7 +180,7 @@ del@^2.0.2:
 
 discord.js@hydrabolt/discord.js:
   version "12.0.0-dev"
-  resolved "https://codeload.github.com/hydrabolt/discord.js/tar.gz/d6041f9fb379b6652140600a3789c30ca4e9ce56"
+  resolved "https://codeload.github.com/hydrabolt/discord.js/tar.gz/b694ab1b8098f1f6664d350248e8f9008414f5ba"
   dependencies:
     long "^3.2.0"
     prism-media "^0.0.1"
@@ -434,9 +434,9 @@ flat-cache@^1.2.1:
     graceful-fs "^4.1.2"
     write "^0.2.1"
 
-fs-nextra@0.0.4:
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/fs-nextra/-/fs-nextra-0.0.4.tgz#956f4e1f9dedbaf8bd7629d691525178beb62a79"
+fs-nextra@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/fs-nextra/-/fs-nextra-0.1.1.tgz#3f8e5ff8fdfbab3c52eeb45e233c1637aa0c7e51"
 
 fs.realpath@^1.0.0:
   version "1.0.0"
