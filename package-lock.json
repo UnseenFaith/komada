@@ -195,7 +195,7 @@
       "dev": true
     },
     "discord.js": {
-      "version": "github:hydrabolt/discord.js#d6041f9fb379b6652140600a3789c30ca4e9ce56"
+      "version": "github:hydrabolt/discord.js#b694ab1b8098f1f6664d350248e8f9008414f5ba"
     },
     "doctrine": {
       "version": "2.0.0",
@@ -395,9 +395,9 @@
       "dev": true
     },
     "fs-nextra": {
-      "version": "0.0.4",
-      "resolved": "https://registry.npmjs.org/fs-nextra/-/fs-nextra-0.0.4.tgz",
-      "integrity": "sha512-95Qhu2r4jU1KIPRnEEdhQcMDIskEw0z1l1moHCo3AKo6qYUteqRLg2ArDsByRV40ujwq/8j1xERCV98r94v3gw=="
+      "version": "0.1.1",
+      "resolved": "https://registry.npmjs.org/fs-nextra/-/fs-nextra-0.1.1.tgz",
+      "integrity": "sha512-WBNNVm2dIT4DfCMtf7aocyp3aZC+IowOe+53cARh6QtfjhOZ8hrJ2+HeoOvwi+Yq3et9FSVN/g5zYRtyRaoJPg=="
     },
     "fs.realpath": {
       "version": "1.0.0",
