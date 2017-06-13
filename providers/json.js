@@ -41,7 +41,7 @@ exports.deleteTable = table => fs.emptyDir(baseDir + sep + table + sep).then(() 
 exports.getAll = (table) => {
   const dir = baseDir + sep + table + sep;
   return fs.readdir(dir)
-    .then(files => Promise.all(files.map(file => fs.readJSON(dir + file))));
+    .then(files => Promise.all(files.map(file => fs.readJSON(dir + file).then(d => Object.assign(d, { id: file.replace(/\.json/, "") })))));
 };
 
   /**
@@ -50,7 +50,7 @@ exports.getAll = (table) => {
    * @param {string} document The document name.
    * @returns {Promise<?Object>}
    */
-exports.get = (table, document) => fs.readJSON(`${baseDir + sep + table + sep + document}.json`).catch(() => null);
+exports.get = (table, document) => fs.readJSON(`${baseDir + sep + table + sep + document}.json`).then(d => Object.assign(d, { id: document })).catch(() => null);
 
   /**
    * Get a random document from a directory.
