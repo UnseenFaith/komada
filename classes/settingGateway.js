@@ -93,7 +93,7 @@ module.exports = class SettingGateway extends CacheManager {
   async sync(guild = null) {
     if (!guild) {
       const data = await this.provider.getAll("guilds");
-      for (const key of data.values()) super.set(key.id, key);
+      for (const key of data) super.set(key.id, key);
       return;
     }
     const target = await this.validateGuild(guild);
@@ -110,8 +110,8 @@ module.exports = class SettingGateway extends CacheManager {
   async update(guild, key, data) {
     const target = await this.validateGuild(guild);
     if (!(key in this.schema)) throw `The key ${key} does not exist in the current data schema.`;
-    const result = await this.parse(target, this.schema.key, data);
-    await this.provider.update("guilds", target.id, key, result);
+    const result = await this.parse(target, this.schema[key], data);
+    await this.provider.update("guilds", target.id, { [key]: result });
     return this.sync(target.id);
   }
 
@@ -169,7 +169,7 @@ module.exports = class SettingGateway extends CacheManager {
     return null;
   }
 
-  static maxOrMin(value, min, max) {
+  static async maxOrMin(value, min, max) {
     if (min && max) {
       if (value >= min && value <= max) return true;
       if (min === max) throw `exactly ${min}`;
