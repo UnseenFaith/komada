@@ -28,7 +28,7 @@ module.exports = class SettingGateway extends CacheManager {
     if (!(await this.provider.hasTable("guilds"))) this.provider.createTable("guilds");
     const data = await this.provider.getAll("guilds");
     if (data[0]) {
-      for (const key of data.values()) this.data.set(key.id, key);
+      for (const key of data) this.data.set(key.id, key);
     }
     this.data.set("default", this.defaults);
   }
