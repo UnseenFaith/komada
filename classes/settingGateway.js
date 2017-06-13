@@ -12,9 +12,6 @@ module.exports = class SettingGateway extends CacheManager {
     /** @type {string} */
     this.engine = client.config.provider.engine || "json";
 
-    /** @type {object} */
-    this.provider = this.client.providers.get(this.engine);
-
     /** @type {Resolver} */
     this.resolver = new Resolver(client);
   }
@@ -24,11 +21,16 @@ module.exports = class SettingGateway extends CacheManager {
    * @returns {void}
    */
   async init() {
+    this.provider = this.client.providers.get(this.engine);
     if (!this.provider) throw `This provider (${this.engine}) does not exist in your system.`;
     if (!this.schema || !this.schema.prefix) throw "There must be a valid schema with at least the prefix config.";
     await this.provider.init(this.client);
+    if (!(await this.provider.hasTable("guilds"))) this.provider.createTable("guilds");
     const data = await this.provider.getAll("guilds");
-    for (const key of data.values()) this.data.set(key.id, key);
+    if (data[0]) {
+      for (const key of data.values()) this.data.set(key.id, key);
+    }
+    this.data.set("default", this.defaults);
   }
 
   /**
@@ -46,8 +48,8 @@ module.exports = class SettingGateway extends CacheManager {
    * @returns {Object}
    */
   get defaults() {
-    const output = [];
-    for (const key in this.schema) output.push({ [key]: this.schema[key].default });
+    const output = {};
+    for (const key in this.schema) output[key] = this.schema[key].default;
     return output;
   }
 
@@ -197,15 +199,15 @@ module.exports = class SettingGateway extends CacheManager {
     return {
       prefix: {
         type: "String",
-        data: this.client.config.prefix,
+        default: this.client.config.prefix,
       },
       modRole: {
         type: "String",
-        data: "Mods",
+        default: "Mods",
       },
       adminRole: {
         type: "String",
-        data: "Devs",
+        default: "Devs",
       },
     };
   }

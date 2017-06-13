@@ -6,5 +6,5 @@ exports.conf = {
 
 // eslint-disable-next-line func-names
 exports.extend = function () {
-  return this.client.configuration.get(this.guild);
+  return this.client.settingGateway.get(this.guild.id);
 };

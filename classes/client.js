@@ -72,7 +72,7 @@ module.exports = class Komada extends Discord.Client {
       escapeMarkdown: Discord.escapeMarkdown,
       splitMessage: Discord.splitMessage,
     };
-    this.configuration = new Setting(this);
+    this.settingGateway = new Setting(this);
     this.application = null;
     this.once("ready", this._ready.bind(this));
   }
@@ -128,7 +128,7 @@ module.exports = class Komada extends Discord.Client {
       if (piece.init) return piece.init(this);
       return true;
     }));
-    await this.configuration.initialize(this);
+    await this.settingGateway.init();
     this.setInterval(this.sweepCommandMessages.bind(this), this.commandMessageLifetime);
     this.ready = true;
     this.emit("log", this.config.readyMessage || `Successfully initialized. Ready to serve ${this.guilds.size} guilds.`);
