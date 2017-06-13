@@ -28,9 +28,9 @@ module.exports = class SettingGateway extends CacheManager {
     if (!(await this.provider.hasTable("guilds"))) this.provider.createTable("guilds");
     const data = await this.provider.getAll("guilds");
     if (data[0]) {
-      for (const key of data) this.data.set(key.id, key);
+      for (const key of data) super.set(key.id, key);
     }
-    this.data.set("default", this.defaults);
+    super.set("default", this.defaults);
   }
 
   /**
@@ -48,6 +48,8 @@ module.exports = class SettingGateway extends CacheManager {
    * @returns {Object}
    */
   get defaults() {
+    const cache = super.get("default");
+    if (cache) return cache;
     const output = {};
     for (const key in this.schema) output[key] = this.schema[key].default;
     return output;
@@ -80,6 +82,7 @@ module.exports = class SettingGateway extends CacheManager {
    * @returns {Object}
    */
   async get(guild) {
+    if (guild === "default") return this.defaults;
     const target = await this.validateGuild(guild);
     const data = await super.get(target.id) || this.defaults;
     return data;
