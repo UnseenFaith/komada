@@ -81,11 +81,9 @@ module.exports = class SettingGateway extends CacheManager {
    * @param {(Guild|Snowflake)} guild The Guild object or snowflake.
    * @returns {Object}
    */
-  async get(guild) {
+  get(guild) {
     if (guild === "default") return this.defaults;
-    const target = await this.validateGuild(guild);
-    const data = await super.get(target.id) || this.defaults;
-    return data;
+    return super.get(guild) || this.defaults;
   }
 
   /**
@@ -107,7 +105,10 @@ module.exports = class SettingGateway extends CacheManager {
   async reset(guild, key) {
     const target = await this.validateGuild(guild);
     if (!(key in this.schema)) throw `The key ${key} does not exist in the current data schema.`;
-    return this.provider.update("guilds", target.id, key, this.schema.key.default);
+    const defaultKey = this.schema[key].default;
+    await this.provider.update("guilds", target.id, { [key]: defaultKey });
+    this.sync(target.id);
+    return defaultKey;
   }
 
   async update(guild, key, data) {
@@ -115,7 +116,8 @@ module.exports = class SettingGateway extends CacheManager {
     if (!(key in this.schema)) throw `The key ${key} does not exist in the current data schema.`;
     const result = await this.parse(target, this.schema[key], data);
     await this.provider.update("guilds", target.id, { [key]: result });
-    return this.sync(target.id);
+    this.sync(target.id);
+    return result;
   }
 
   async parse(guild, { type, min, max }, data) {
@@ -136,7 +138,7 @@ module.exports = class SettingGateway extends CacheManager {
         return result.id;
       }
       case "Role": {
-        const result = await this.resolver.role(data, guild);
+        const result = await this.resolver.role(data, guild) || guild.roles.find("name", data);
         if (!result) throw "This key expects a Role Object or ID.";
         return result.id;
       }
@@ -205,12 +207,12 @@ module.exports = class SettingGateway extends CacheManager {
         default: this.client.config.prefix,
       },
       modRole: {
-        type: "String",
-        default: "Mods",
+        type: "Role",
+        default: null,
       },
       adminRole: {
-        type: "String",
-        default: "Devs",
+        type: "Role",
+        default: null,
       },
     };
   }

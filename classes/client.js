@@ -12,18 +12,17 @@ const defaultPermStructure = new PermLevels()
   .addLevel(0, false, () => true)
   .addLevel(2, false, (client, msg) => {
     if (!msg.guild) return false;
-    const modRole = msg.guild.roles.find("name", msg.guild.conf.modRole);
+    const id = msg.guild.conf.modRole;
+    const modRole = id ? msg.guild.roles.get(id) : false;
     return modRole && msg.member.roles.has(modRole.id);
   })
   .addLevel(3, false, (client, msg) => {
     if (!msg.guild) return false;
-    const adminRole = msg.guild.roles.find("name", msg.guild.conf.adminRole);
+    const id = msg.guild.conf.adminRole;
+    const adminRole = id ? msg.guild.roles.get(id) : false;
     return adminRole && msg.member.roles.has(adminRole.id);
   })
-  .addLevel(4, false, (client, msg) => {
-    if (!msg.guild) return false;
-    return msg.author.id === msg.guild.owner.id;
-  })
+  .addLevel(4, false, (client, msg) => msg.guild && msg.author.id === msg.guild.owner.id)
   .addLevel(9, true, (client, msg) => msg.author.id === client.config.ownerID)
   .addLevel(10, false, (client, msg) => msg.author.id === client.config.ownerID);
 
