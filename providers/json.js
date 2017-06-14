@@ -29,7 +29,9 @@ exports.createTable = table => fs.mkdir(baseDir + sep + table);
    * @param {string} table The directory's name to delete.
    * @returns {Promise<Void>}
    */
-exports.deleteTable = table => fs.emptyDir(baseDir + sep + table + sep).then(() => fs.remove(baseDir + sep + table + sep));
+exports.deleteTable = table => this.hasTable(table)
+  .then(() => fs.emptyDir(baseDir + sep + table)
+    .then(() => fs.remove(baseDir + sep + table)));
 
   /* Document methods */
 
@@ -50,14 +52,14 @@ exports.getAll = (table) => {
    * @param {string} document The document name.
    * @returns {Promise<?Object>}
    */
-exports.get = (table, document) => fs.readJSON(`${baseDir + sep + table + sep + document}.json`).then(d => Object.assign(d, { id: document })).catch(() => null);
+exports.get = (table, document) => fs.readJSON(`${baseDir + sep + table + sep + document}.json`).catch(() => null);
 
   /**
    * Get a random document from a directory.
    * @param {string} table The name of the directory.
    * @returns {Promise<Object>}
    */
-exports.getRandom = table => this.all(table).then(data => data[Math.floor(Math.random() * data.length)]);
+exports.getRandom = table => this.getAll(table).then(data => data[Math.floor(Math.random() * data.length)]);
 
   /**
    * Insert a new document into a directory.
@@ -66,7 +68,7 @@ exports.getRandom = table => this.all(table).then(data => data[Math.floor(Math.r
    * @param {Object} data The object with all properties you want to insert into the document.
    * @returns {Promise<Void>}
    */
-exports.create = (table, document, data) => fs.outputJSON(`${baseDir + sep + table + sep + document}.json`, data);
+exports.create = (table, document, data) => fs.outputJSON(`${baseDir + sep + table + sep + document}.json`, Object.assign(data, { id: document }));
 
   /**
    * Update a document from a directory.

@@ -8,7 +8,6 @@ const regex = {
   snowflake: new RegExp("^(\\d{17,21})$"),
 };
 
-
 /* eslint-disable class-methods-use-this */
 module.exports = class Resolver {
 
