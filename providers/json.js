@@ -3,6 +3,7 @@ const fs = require("fs-nextra");
 
 let baseDir;
 
+/* eslint-disable no-confusing-arrow */
 exports.init = (client) => {
   baseDir = resolve(`${client.clientBaseDir}${sep}bwd${sep}conf`);
   return fs.ensureDir(baseDir).catch(err => client.emit("log", err, "error"));
@@ -30,8 +31,7 @@ exports.createTable = table => fs.mkdir(baseDir + sep + table);
    * @returns {Promise<Void>}
    */
 exports.deleteTable = table => this.hasTable(table)
-  .then(() => fs.emptyDir(baseDir + sep + table)
-    .then(() => fs.remove(baseDir + sep + table)));
+  .then(exists => exists ? fs.emptyDir(baseDir + sep + table).then(() => fs.remove(baseDir + sep + table)) : false);
 
   /* Document methods */
 
@@ -43,7 +43,7 @@ exports.deleteTable = table => this.hasTable(table)
 exports.getAll = (table) => {
   const dir = baseDir + sep + table + sep;
   return fs.readdir(dir)
-    .then(files => Promise.all(files.map(file => fs.readJSON(dir + file).then(d => Object.assign(d, { id: file.replace(/\.json/, "") })))));
+    .then(files => Promise.all(files.map(file => fs.readJSON(dir + file))));
 };
 
   /**
