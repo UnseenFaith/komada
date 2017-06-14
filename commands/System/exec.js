@@ -22,7 +22,7 @@ exports.conf = {
 
 exports.help = {
   name: "exec",
-  description: "Execute Order 66.",
+  description: "Execute commands in the terminal, use with EXTREME CAUTION.",
   usage: "<expression:str>",
   usageDelim: "",
   extendedHelp: "",
