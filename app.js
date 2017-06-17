@@ -51,8 +51,6 @@ exports.start = async (config) => {
     await loadCommands(client);
     await loadCommandInhibitors(client);
     await loadMessageMonitors(client);
-    client.i18n = client.funcs.loadLocalizations;
-    client.i18n.init(client);
     client.destroy = () => "You cannot use this within Komada, use process.exit() instead.";
     client.ready = true;
   });
