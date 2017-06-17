@@ -1,7 +1,7 @@
-const snek = require("snekfetch");
-const fs = require("fs-extra-promise");
+const { get: snek } = require("snekfetch");
+const { ensureDirAsync, writeFileAsync, unlinkAsync } = require("fs-extra-promise");
 const { sep, resolve } = require("path");
-const vm = require("vm");
+const { runInNewContext } = require("vm");
 
 const piecesURL = "https://raw.githubusercontent.com/dirigeants/komada-pieces/master/";
 const types = ["commands", "functions", "monitors", "inhibitors", "providers"];
@@ -38,7 +38,7 @@ exports.help = {
 
 const process = async (client, msg, text, link, folder) => {
   try {
-    vm.runInNewContext(text, { module: mod, exports: mod.exports, require: () => true }, { timeout: 500 });
+    runInNewContext(text, { module: mod, exports: mod.exports, require: () => true }, { timeout: 500 });
   } catch (err) {
     return client.funcs.log(err, "error");
   }
@@ -91,7 +91,7 @@ const process = async (client, msg, text, link, folder) => {
   return true;
 };
 
-const requestAndCheck = async newURL => snek.get(newURL)
+const requestAndCheck = async newURL => snek(newURL)
   .then(d => d.text)
   .catch((error) => {
     if (error.message === "Unexpected token <") throw `An error has occured: **${error.message}** | This typically happens when you try to download a file from a link that isn't raw github information. Try a raw link instead!`;
@@ -127,61 +127,61 @@ const load = {
   commands: async (client, msg, message, type, res, name, category) => {
     const dir = resolve(`${client.clientBaseDir}/commands/${category}/`) + sep;
     await message.edit(`📥 \`Loading ${type} into ${dir}${name}.js...\``);
-    await fs.ensureDirAsync(dir).catch(err => client.funcs.log(err, "error"));
-    await fs.writeFileAsync(`${dir}${name}.js`, res);
+    await ensureDirAsync(dir).catch(err => client.funcs.log(err, "error"));
+    await writeFileAsync(`${dir}${name}.js`, res);
     return client.funcs.reload.command(client, dir, name)
       .then(response => message.edit(`📥 ${response}`))
       .catch((response) => {
         message.edit(`📵 Command load failed ${name}\n\`\`\`${response}\`\`\``);
-        return fs.unlinkAsync(`${dir}${name}.js`);
+        return unlinkAsync(`${dir}${name}.js`);
       });
   },
   functions: async (client, msg, message, type, res, name) => {
     const dir = resolve(`${client.clientBaseDir}/functions/`) + sep;
     await message.edit(`📥 \`Loading ${type} into ${dir}${name}.js...\``);
-    await fs.ensureDirAsync(dir).catch(err => client.funcs.log(err, "error"));
-    await fs.writeFileAsync(`${dir}${name}.js`, res).catch(err => client.funcs.log(err, "error"));
+    await ensureDirAsync(dir).catch(err => client.funcs.log(err, "error"));
+    await writeFileAsync(`${dir}${name}.js`, res).catch(err => client.funcs.log(err, "error"));
     return client.funcs.reload.function(client, dir, name)
       .then(response => message.edit(`📥 ${response}`))
       .catch((response) => {
         message.edit(`📵 Function load failed ${name}\n\`\`\`${response}\`\`\``);
-        return fs.unlinkAsync(`${dir}${name}.js`);
+        return unlinkAsync(`${dir}${name}.js`);
       });
   },
   inhibitors: async (client, msg, message, type, res, name) => {
     const dir = resolve(`${client.clientBaseDir}/inhibitors/`) + sep;
     await message.edit(`📥 \`Loading ${type} into ${dir}${name}.js...\``);
-    await fs.ensureDirAsync(dir).catch(err => client.funcs.log(err, "error"));
-    await fs.writeFileAsync(`${dir}${name}.js`, res).catch(err => client.funcs.log(err, "error"));
+    await ensureDirAsync(dir).catch(err => client.funcs.log(err, "error"));
+    await writeFileAsync(`${dir}${name}.js`, res).catch(err => client.funcs.log(err, "error"));
     return client.funcs.reload.inhibitor(client, dir, name)
       .then(response => message.edit(`📥 ${response}`))
       .catch((response) => {
         message.edit(`📵 Inhibitor load failed ${name}\n\`\`\`${response}\`\`\``);
-        return fs.unlinkAsync(`${dir}${name}.js`);
+        return unlinkAsync(`${dir}${name}.js`);
       });
   },
   monitors: async (client, msg, message, type, res, name) => {
     const dir = resolve(`${client.clientBaseDir}/monitors/`) + sep;
     await message.edit(`📥 \`Loading ${type} into ${dir}${name}.js...\``);
-    await fs.ensureDirAsync(dir).catch(err => client.funcs.log(err, "error"));
-    await fs.writeFileAsync(`${dir}${name}.js`, res).catch(err => client.funcs.log(err, "error"));
+    await ensureDirAsync(dir).catch(err => client.funcs.log(err, "error"));
+    await writeFileAsync(`${dir}${name}.js`, res).catch(err => client.funcs.log(err, "error"));
     return client.funcs.reload.monitor(client, dir, name)
       .then(response => message.edit(`📥 ${response}`))
       .catch((response) => {
         message.edit(`📵 Monitor load failed ${name}\n\`\`\`${response}\`\`\``);
-        return fs.unlinkAsync(`${dir}${name}.js`);
+        return unlinkAsync(`${dir}${name}.js`);
       });
   },
   providers: async (client, msg, message, type, res, name) => {
     const dir = resolve(`${client.clientBaseDir}/providers/`) + sep;
     await message.edit(`📥 \`Loading ${type} into ${dir}${name}.js...\``);
-    await fs.ensureDirAsync(dir).catch(err => client.funcs.log(err, "error"));
-    await fs.writeFileAsync(`${dir}${name}.js`, res).catch(err => client.funcs.log(err, "error"));
+    await ensureDirAsync(dir).catch(err => client.funcs.log(err, "error"));
+    await writeFileAsync(`${dir}${name}.js`, res).catch(err => client.funcs.log(err, "error"));
     return client.funcs.reload.provider(client, dir, name)
       .then(response => message.edit(`📥 ${response}`))
       .catch((response) => {
         message.edit(`📵 Provider load failed ${name}\n\`\`\`${response}\`\`\``);
-        return fs.unlinkAsync(`${dir}${name}.js`);
+        return unlinkAsync(`${dir}${name}.js`);
       });
   },
 };

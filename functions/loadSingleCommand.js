@@ -1,4 +1,4 @@
-const path = require("path");
+const { sep } = require("path");
 
 module.exports = (client, command, reload = false, loadPath = null) => new Promise(async (resolve, reject) => {
   let category;
@@ -34,7 +34,7 @@ module.exports = (client, command, reload = false, loadPath = null) => new Promi
       }
       delete require.cache[require.resolve(loadPath)];
       if (cmd.init) cmd.init(client);
-      let pathParts = loadPath.split(path.sep);
+      let pathParts = loadPath.split(sep);
       pathParts = pathParts.slice(pathParts.indexOf("commands") + 1);
       category = client.funcs.toTitleCase(cmd.help.category ? cmd.help.category : (pathParts[0] && pathParts[0].length > 0 && pathParts[0].indexOf(".") === -1 ? pathParts[0] : "General"));
       subCategory = client.funcs.toTitleCase(cmd.help.subCategory ? cmd.help.subCategory : (pathParts[1] && pathParts[1].length > 0 && pathParts[1].indexOf(".") === -1 ? pathParts[1] : "General"));

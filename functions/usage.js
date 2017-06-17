@@ -1,4 +1,4 @@
-const url = require("url");
+const { parse } = require("url");
 
 exports.conf = {
   enabled: true,
@@ -346,14 +346,14 @@ exports.run = (client, msg, cmd, args = undefined) => new Promise((resolve, reje
           }
           break;
         case "url": // eslint-disable-line no-case-declarations
-          const res = url.parse(args[i]);
+          const res = parse(args[i]);
           if (!res.protocol && !res.hostname) {
             if (currentUsage.type === "optional" && !repeat) {
               args.splice(i, 0, undefined);
               validateArgs(++i);
             } else {
               args.splice(i, 1, null);
-              return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be a valid url.`, 1, args));
+              return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be a valid `, 1, args));
             }
           } else {
             validateArgs(++i);
@@ -562,7 +562,7 @@ exports.run = (client, msg, cmd, args = undefined) => new Promise((resolve, reje
             }
             break;
           case "url": // eslint-disable-line no-case-declarations
-            const res = url.parse(args[i]);
+            const res = parse(args[i]);
             if (res.protocol && res.hostname) {
               validated = true;
               multiPossibles(++p);

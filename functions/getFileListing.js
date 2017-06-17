@@ -1,13 +1,13 @@
-const path = require("path");
-const fs = require("fs-extra");
+const { resolve, parse } = require("path");
+const { walk } = require("fs-extra");
 
-module.exports = (client, baseDir, type) => new Promise((resolve, reject) => {
-  const dir = path.resolve(`${baseDir}/${type}/`);
+module.exports = (client, baseDir, type) => new Promise((res, rej) => {
+  const dir = resolve(`${baseDir}/${type}/`);
   const files = [];
   try {
-    fs.walk(dir)
+    walk(dir)
         .on("data", (item) => {
-          const fileinfo = path.parse(item.path);
+          const fileinfo = parse(item.path);
           if (!fileinfo.ext || fileinfo.ext !== ".js") return;
           files.push({
             path: fileinfo.dir,
@@ -17,7 +17,7 @@ module.exports = (client, baseDir, type) => new Promise((resolve, reject) => {
           });
         })
         .on("end", () => {
-          resolve(files);
+          res(files);
         })
         .on("errors", (root, nodeStatsArray, next) => {
           nodeStatsArray.forEach((n) => {
@@ -27,6 +27,6 @@ module.exports = (client, baseDir, type) => new Promise((resolve, reject) => {
           next();
         });
   } catch (err) {
-    reject(err);
+    rej(err);
   }
 });

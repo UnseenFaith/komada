@@ -1,5 +1,5 @@
-const fs = require("fs-extra-promise");
-const path = require("path");
+const { ensureDirAsync } = require("fs-extra-promise");
+const { resolve, sep } = require("path");
 const getFileListing = require("../functions/getFileListing.js");
 const log = require("../functions/log.js");
 
@@ -7,16 +7,16 @@ let events = require("discord.js/src/util/Constants.js").Events;
 
 events = Object.keys(events).map(k => events[k]);
 
-const loadEvents = (client, baseDir, counts) => new Promise(async (resolve) => {
-  const dir = path.resolve(`${baseDir}./events/`);
-  await fs.ensureDirAsync(dir).catch(err => client.emit("error", err));
+const loadEvents = (client, baseDir, counts) => new Promise(async (res) => {
+  const dir = resolve(`${baseDir}./events/`);
+  await ensureDirAsync(dir).catch(err => client.emit("error", err));
   let files = await getFileListing(client, baseDir, "events").catch(err => client.emit("error", err));
   files = files.filter(f => events.includes(f.name));
   files.forEach((f) => {
-    client.on(f.name, (...args) => require(`${f.path}${path.sep}${f.base}`).run(client, ...args));
+    client.on(f.name, (...args) => require(`${f.path}${sep}${f.base}`).run(client, ...args));
     counts++;
   });
-  resolve(counts);
+  res(counts);
 });
 
 

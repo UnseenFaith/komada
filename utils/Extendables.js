@@ -1,12 +1,4 @@
-const Discord = require("discord.js");
-
-const DMChannel = Discord.DMChannel;
-const GroupDMChannel = Discord.GroupDMChannel;
-const TextChannel = Discord.TextChannel;
-const Message = Discord.Message;
-const GuildMember = Discord.GuildMember;
-const Guild = Discord.Guild;
-const User = Discord.User;
+const { DMChannel, GroupDMChannel, TextChannel, Message, GuildMember, Guild, User } = require("discord.js");
 
 /* A List of Extendables that allows Komada to extend native Discord.js structures to be easier or more efficient when used in Komada */
 class Extendables {

@@ -1,4 +1,4 @@
-const util = require("util").inspect;
+const { inspect: util } = require("util");
 
 exports.run = (client, msg, [action, key, ...value]) => {
   if (action === "list") {
