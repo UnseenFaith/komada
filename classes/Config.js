@@ -113,7 +113,7 @@ class Config {
   /**
    * Checks the guild configuration for a key
    * @param {string} key The key to check the guild configuration for.
-   * @returns {Boolean}
+   * @returns {boolean}
    */
   has(key) {
     if (!key) return "Please supply a key.";
@@ -258,7 +258,7 @@ class Config {
   /**
    * Checks if the guildConfs Map has the specified guild.
    * @param {Guild} guild The guild to check the Map for.
-   * @returns {Boolean}
+   * @returns {boolean}
    * @static
    */
   static has(guild) {
@@ -269,7 +269,7 @@ class Config {
   /**
   * Checks if the default configuration has a specified key.
   * @param {string} key The key for which to check the default configuration for.
-  * @returns {Boolean}
+  * @returns {boolean}
   * @static
   */
   static hasKey(key) {
@@ -326,7 +326,7 @@ class Config {
    * Inserts a guild into the guildConfs map and deletes the configuration JSON. This should never be called by anyone, this is purely for the guildCreate event.
    * @param {Client} client The Discord.js Client
    * @param {Guild} guild The Guild being inserted into the map.
-   * @returns {String}
+   * @returns {string}
    * @static
    */
   static insert(client, guild) {
@@ -339,7 +339,7 @@ class Config {
   /**
    * Removes a guild from the guildConfs map and deletes the configuration JSON. This should never be called by anyone, this is purely for the guildDelete event.
    * @param {Guild} guild The guild being removed from the map.
-   * @returns {String}
+   * @returns {string}
    * @static
    */
   static remove(guild) {
