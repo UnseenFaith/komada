@@ -11,10 +11,10 @@ exports.run = (client, msg, cmd, args = undefined) => new Promise((resolve, reje
   const prefixLength = client.funcs.parseCommand(client, msg, true);
   if (args === undefined) {
     args = msg.content.slice(prefixLength)
-    .split(" ")
-    .slice(1)
-    .join(" ")
-    .split(cmd.help.usageDelim !== "" ? cmd.help.usageDelim : undefined);
+      .split(" ")
+      .slice(1)
+      .join(" ")
+      .split(cmd.help.usageDelim !== "" ? cmd.help.usageDelim : undefined);
   }
   if (args[0] === "") args = [];
   let currentUsage;
@@ -76,19 +76,19 @@ exports.run = (client, msg, cmd, args = undefined) => new Promise((resolve, reje
               });
             } else {
               msg.channel.fetchMessage(args[i])
-                  .then((m) => {
-                    args[i] = m;
+                .then((m) => {
+                  args[i] = m;
+                  validateArgs(++i);
+                })
+                .catch(() => {
+                  if (currentUsage.type === "optional" && !repeat) {
+                    args.splice(i, 0, undefined);
                     validateArgs(++i);
-                  })
-                  .catch(() => {
-                    if (currentUsage.type === "optional" && !repeat) {
-                      args.splice(i, 0, undefined);
-                      validateArgs(++i);
-                    } else {
-                      args.splice(i, 1, null);
-                      return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be a valid message id.`, 1, args));
-                    }
-                  });
+                  } else {
+                    args.splice(i, 1, null);
+                    return reject(client.funcs.newError(`${currentUsage.possibles[0].name} must be a valid message id.`, 1, args));
+                  }
+                });
             }
           } else if (currentUsage.type === "optional" && !repeat) {
             args.splice(i, 0, undefined);
@@ -394,14 +394,14 @@ exports.run = (client, msg, cmd, args = undefined) => new Promise((resolve, reje
           case "message":
             if (/^\d+$/.test(args[i])) {
               msg.channel.fetchMessage(args[i])
-                  .then((m) => {
-                    args[i] = m;
-                    validated = true;
-                    multiPossibles(++p);
-                  })
-                  .catch(() => {
-                    multiPossibles(++p);
-                  });
+                .then((m) => {
+                  args[i] = m;
+                  validated = true;
+                  multiPossibles(++p);
+                })
+                .catch(() => {
+                  multiPossibles(++p);
+                });
             } else {
               multiPossibles(++p);
             }

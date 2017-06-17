@@ -19,10 +19,10 @@ const loadMessageMonitors = (client, baseDir) => new Promise(async (res, rej) =>
     if (e.code === "MODULE_NOT_FOUND") {
       const module = /'[^']+'/g.exec(e.toString());
       await client.funcs.installNPM(module[0].slice(1, -1))
-      .catch((err) => {
-        console.error(err);
-        process.exit();
-      });
+        .catch((err) => {
+          console.error(err);
+          process.exit();
+        });
       loadMessageMonitors(client, baseDir);
     } else {
       rej(e);

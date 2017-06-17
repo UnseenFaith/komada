@@ -42,10 +42,10 @@ module.exports = (client, command, reload = false, loadPath = null) => new Promi
       if (e.code === "MODULE_NOT_FOUND") {
         const module = /'[^']+'/g.exec(e.toString());
         await client.funcs.installNPM(module[0].slice(1, -1))
-            .catch((err) => {
-              console.error(err);
-              process.exit();
-            });
+          .catch((err) => {
+            console.error(err);
+            process.exit();
+          });
         client.funcs.loadSingleCommand(client, command, false, loadPath);
       } else {
         return reject(`Could not load the command: ${e.stack}`);
@@ -53,17 +53,17 @@ module.exports = (client, command, reload = false, loadPath = null) => new Promi
     }
   }
 
-    // complement data from meta
+  // complement data from meta
   cmd.help.category = category;
   cmd.help.subCategory = subCategory;
   cmd.help.filePath = loadPath;
 
-    // Load Aliases
+  // Load Aliases
   cmd.conf.aliases.forEach((alias) => {
     client.aliases.set(alias, cmd.help.name);
   });
 
-    // update help structure
+  // update help structure
   if (!client.helpStructure.has(category)) {
     client.helpStructure.set(category, new Map());
   }

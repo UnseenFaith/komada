@@ -27,7 +27,7 @@ exports.start = async (config) => {
   client.messageMonitors = new Discord.Collection();
   client.providers = new Discord.Collection();
 
-    // Extend Client with Native Discord.js Functions for use in our pieces.
+  // Extend Client with Native Discord.js Functions for use in our pieces.
   client.methods = {};
   client.methods.Collection = Discord.Collection;
   client.methods.Embed = Discord.RichEmbed;

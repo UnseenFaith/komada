@@ -2,7 +2,6 @@ const { DMChannel, GroupDMChannel, TextChannel, Message, GuildMember, Guild, Use
 
 /* A List of Extendables that allows Komada to extend native Discord.js structures to be easier or more efficient when used in Komada */
 class Extendables {
-
   /** TextBasedChannel Extendables - All of these apply to GroupDM, DM, and Guild Text Channels
     * <GroupDMChannel|DMChannel|TextChannel>.readable - Checks if a channel is readable by the client user -> returns {Boolean}
     * <GroupDMChannel|DMChannel|TextChannel>.embedable - Checks if a channel is embedable by the client user -> returns {Boolean}
