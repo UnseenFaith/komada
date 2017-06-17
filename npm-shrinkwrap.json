@@ -1,6 +1,6 @@
 {
   "name": "komada",
-  "version": "0.19.3",
+  "version": "0.19.6",
   "lockfileVersion": 1,
   "dependencies": {
     "acorn": {
