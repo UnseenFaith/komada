@@ -22,7 +22,7 @@ class ArrayConfig {
 
   /**
    * Adds a value(s) to the array. Accepts a single value or an array of values.
-   * @param {String|Array} value The value(s) to add to the array.
+   * @param {string|Array} value The value(s) to add to the array.
    * @returns {ArrayConfig}
    */
   add(value) {
@@ -43,7 +43,7 @@ class ArrayConfig {
 
   /**
    * Deletes a value(s) from the array. Accepts a single value or an array of values.
-   * @param {String|Array} value The value(s) to delete from the array.
+   * @param {string|Array} value The value(s) to delete from the array.
    * @returns {ArrayConfig}
    */
   del(value) {
