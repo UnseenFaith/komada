@@ -53,6 +53,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Removed
 - A bunch of deprecated functions that were moved to utils.
 - runCommandInhibitors no longer necessary.
+- Localisation is now removed
 
 ## [0.18.1] - 2017-03-17
 ### Added
