@@ -21,10 +21,10 @@ const loadFunctions = (client, baseDir) => new Promise(async (res, rej) => {
     if (e.code === "MODULE_NOT_FOUND") {
       const module = /'[^']+'/g.exec(e.toString());
       await client.funcs.installNPM(module[0].slice(1, -1))
-      .catch((error) => {
-        console.error(error);
-        process.exit();
-      });
+        .catch((error) => {
+          console.error(error);
+          process.exit();
+        });
       loadFunctions(client, baseDir);
     } else {
       rej(e);

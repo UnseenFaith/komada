@@ -366,17 +366,17 @@ class Config {
     dataDir = resolve(`${client.clientBaseDir}${sep}bwd${sep}conf`);
     ensureFileAsync(`${dataDir}${sep}${defaultFile}`).catch(err => client.funcs.log(err, "error"));
     readJSONAsync(resolve(`${dataDir}${sep}${defaultFile}`))
-    .then((conf) => {
-      if (conf) defaultConf = conf;
-    })
-    .catch(() => outputJSONAsync(`${dataDir}${sep}${defaultFile}`, defaultConf));
+      .then((conf) => {
+        if (conf) defaultConf = conf;
+      })
+      .catch(() => outputJSONAsync(`${dataDir}${sep}${defaultFile}`, defaultConf));
     client.guilds.forEach((guild) => {
       readJSONAsync(resolve(`${dataDir}${sep}${guild.id}.json`))
-      .then((thisConf) => {
-        guildConfs.set(guild.id, new Config(client, guild.id, thisConf));
-      }).catch(() => {
-        guildConfs.set(guild.id, new Config(client, guild.id, defaultConf));
-      });
+        .then((thisConf) => {
+          guildConfs.set(guild.id, new Config(client, guild.id, thisConf));
+        }).catch(() => {
+          guildConfs.set(guild.id, new Config(client, guild.id, defaultConf));
+        });
     });
     return null;
   }

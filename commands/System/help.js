@@ -39,7 +39,7 @@ exports.run = (client, msg, [cmd]) => {
           }
         } else {
           msg.channel.send(helpMessage, { split: { char: "\u200b" } })
-        .catch(e => client.funcs.log(e, "error"));
+            .catch(e => client.funcs.log(e, "error"));
         }
       });
   } else if (client.commands.has(cmd)) {
