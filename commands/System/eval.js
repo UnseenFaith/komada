@@ -1,4 +1,4 @@
-const inspect = require("util").inspect;
+const { inspect } = require("util");
 
 exports.run = (client, msg, [code]) => {
   try {
@@ -6,11 +6,11 @@ exports.run = (client, msg, [code]) => {
     if (typeof evaled !== "string") {
       evaled = inspect(evaled);
     }
-    msg.channel.sendCode("xl", client.funcs.clean(client, evaled));
+    msg.channel.send(client.funcs.clean(client, evaled), { code: "xl" });
   } catch (err) {
-    msg.channel.sendMessage(`\`ERROR\` \`\`\`xl\n${
+    msg.channel.send(`\`ERROR\` \`\`\`xl\n${
       client.funcs.clean(client, err)
-      }\n\`\`\``);
+    }\n\`\`\``);
     if (err.stack) client.funcs.log(err.stack, "error");
   }
 };

@@ -1,4 +1,4 @@
-const path = require("path");
+const { sep } = require("path");
 
 module.exports = (client, command, reload = false, loadPath = null) => new Promise(async (resolve, reject) => {
   let category;
@@ -34,7 +34,7 @@ module.exports = (client, command, reload = false, loadPath = null) => new Promi
       }
       delete require.cache[require.resolve(loadPath)];
       if (cmd.init) cmd.init(client);
-      let pathParts = loadPath.split(path.sep);
+      let pathParts = loadPath.split(sep);
       pathParts = pathParts.slice(pathParts.indexOf("commands") + 1);
       category = client.funcs.toTitleCase(cmd.help.category ? cmd.help.category : (pathParts[0] && pathParts[0].length > 0 && pathParts[0].indexOf(".") === -1 ? pathParts[0] : "General"));
       subCategory = client.funcs.toTitleCase(cmd.help.subCategory ? cmd.help.subCategory : (pathParts[1] && pathParts[1].length > 0 && pathParts[1].indexOf(".") === -1 ? pathParts[1] : "General"));
@@ -42,10 +42,10 @@ module.exports = (client, command, reload = false, loadPath = null) => new Promi
       if (e.code === "MODULE_NOT_FOUND") {
         const module = /'[^']+'/g.exec(e.toString());
         await client.funcs.installNPM(module[0].slice(1, -1))
-            .catch((err) => {
-              console.error(err);
-              process.exit();
-            });
+          .catch((err) => {
+            console.error(err);
+            process.exit();
+          });
         client.funcs.loadSingleCommand(client, command, false, loadPath);
       } else {
         return reject(`Could not load the command: ${e.stack}`);
@@ -53,17 +53,17 @@ module.exports = (client, command, reload = false, loadPath = null) => new Promi
     }
   }
 
-    // complement data from meta
+  // complement data from meta
   cmd.help.category = category;
   cmd.help.subCategory = subCategory;
   cmd.help.filePath = loadPath;
 
-    // Load Aliases
+  // Load Aliases
   cmd.conf.aliases.forEach((alias) => {
     client.aliases.set(alias, cmd.help.name);
   });
 
-    // update help structure
+  // update help structure
   if (!client.helpStructure.has(category)) {
     client.helpStructure.set(category, new Map());
   }

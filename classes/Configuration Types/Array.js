@@ -1,7 +1,7 @@
 /* eslint-disable no-restricted-syntax, no-underscore-dangle, no-unused-vars */
 
-const fs = require("fs-extra-promise");
-const path = require("path");
+const { outputJSONAsync } = require("fs-extra-promise");
+const { resolve, sep } = require("path");
 
 /** The starting point for creating an Array Configuration key. */
 class ArrayConfig {
@@ -22,7 +22,7 @@ class ArrayConfig {
 
   /**
    * Adds a value(s) to the array. Accepts a single value or an array of values.
-   * @param {String|Array} value The value(s) to add to the array.
+   * @param {string|Array} value The value(s) to add to the array.
    * @returns {ArrayConfig}
    */
   add(value) {
@@ -32,18 +32,18 @@ class ArrayConfig {
         if (!this.data.includes(val)) return "That value is not in the array.";
         return this.data.splice(this.data.indexOf(value), 1);
       });
-      fs.outputJSONAsync(path.resolve(`${this._dataDir}${path.sep}${this._id}.json`), this._client.guildConfs.get(this._id));
+      outputJSONAsync(resolve(`${this._dataDir}${sep}${this._id}.json`), this._client.guildConfs.get(this._id));
       return this;
     }
     if (this.data.includes(value)) return "That value is already in the array.";
     this.data.push(value);
-    fs.outputJSONAsync(path.resolve(`${this._dataDir}${path.sep}${this._id}.json`), this._client.guildConfs.get(this._id));
+    outputJSONAsync(resolve(`${this._dataDir}${sep}${this._id}.json`), this._client.guildConfs.get(this._id));
     return this;
   }
 
   /**
    * Deletes a value(s) from the array. Accepts a single value or an array of values.
-   * @param {String|Array} value The value(s) to delete from the array.
+   * @param {string|Array} value The value(s) to delete from the array.
    * @returns {ArrayConfig}
    */
   del(value) {
@@ -53,12 +53,12 @@ class ArrayConfig {
         if (!this.data.includes(val)) return "That value is not in the array.";
         return this.data.splice(this.data.indexOf(value), 1);
       });
-      fs.outputJSONAsync(path.resolve(`${this._dataDir}${path.sep}${this._id}.json`), this._client.guildConfs.get(this._id));
+      outputJSONAsync(resolve(`${this._dataDir}${sep}${this._id}.json`), this._client.guildConfs.get(this._id));
       return this;
     }
     if (!this.data.includes(value)) return "That value is not in the array.";
     this.data.splice(this.data.indexOf(value), 1);
-    fs.outputJSONAsync(path.resolve(`${this._dataDir}${path.sep}${this._id}.json`), this._client.guildConfs.get(this._id));
+    outputJSONAsync(resolve(`${this._dataDir}${sep}${this._id}.json`), this._client.guildConfs.get(this._id));
     return this;
   }
 }

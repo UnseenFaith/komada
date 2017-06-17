@@ -1,8 +1,8 @@
-const util = require("util").inspect;
+const { inspect: util } = require("util");
 
 exports.run = (client, msg, [action, key, ...value]) => {
   if (action === "list") {
-    msg.channel.sendCode("json", util(msg.guildConf));
+    msg.channel.send(util(msg.guildConf), { code: "js" });
   } else
 
   if (action === "get") {

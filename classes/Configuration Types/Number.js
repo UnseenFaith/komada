@@ -1,7 +1,7 @@
 /* eslint-disable no-restricted-syntax, no-underscore-dangle, no-unused-vars */
 
-const fs = require("fs-extra-promise");
-const path = require("path");
+const { outputJSONAsync } = require("fs-extra-promise");
+const { resolve, sep } = require("path");
 
 
 /** The starting point for creating a Number configuration key. */
@@ -25,7 +25,7 @@ class NumberConfig {
 
   /**
    * Sets the value for a number key, according to the minimum and maximum values if they apply.
-   * @param {Number} value The value you want to set the key as.
+   * @param {number} value The value you want to set the key as.
    * @returns {NumberConfig}
    */
   set(value) {
@@ -33,29 +33,29 @@ class NumberConfig {
     if (this.min && parseInt(value) < this.min) return `Error while setting the value. ${value} is less than ${this.min}`;
     if (this.max && parseInt(value) > this.max) return `Error while setting the value. ${value} is more than ${this.max}`;
     this.data = value;
-    fs.outputJSONAsync(path.resolve(`${this._dataDir}${path.sep}${this._id}.json`), this._client.guildConfs.get(this._id));
+    outputJSONAsync(resolve(`${this._dataDir}${sep}${this._id}.json`), this._client.guildConfs.get(this._id));
     return this;
   }
 
   /**
    * Sets the minimum value a number key can be.
-   * @param {Number} value The value you want to set the minimum as.
+   * @param {number} value The value you want to set the minimum as.
    * @returns {NumberConfig}
    */
   setMin(value) {
     this.min = value;
-    fs.outputJSONAsync(path.resolve(`${this._dataDir}${path.sep}${this._id}.json`), this._client.guildConfs.get(this._id));
+    outputJSONAsync(resolve(`${this._dataDir}${sep}${this._id}.json`), this._client.guildConfs.get(this._id));
     return this;
   }
 
   /**
    * Sets the maximum value a number key can bey.
-   * @param {Number} value The value you want to set the maximum as.
+   * @param {number} value The value you want to set the maximum as.
    * @returns {NumberConfig}
    */
   setMax(value) {
     this.max = value;
-    fs.outputJSONAsync(path.resolve(`${this._dataDir}${path.sep}${this._id}.json`), this._client.guildConfs.get(this._id));
+    outputJSONAsync(resolve(`${this._dataDir}${sep}${this._id}.json`), this._client.guildConfs.get(this._id));
     return this;
   }
 }

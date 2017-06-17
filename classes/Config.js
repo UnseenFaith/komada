@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-syntax, no-underscore-dangle, no-unused-vars */
-const fs = require("fs-extra-promise");
-const path = require("path");
+const { outputJSONAsync, readJSONAsync, ensureFileAsync, removeAsync } = require("fs-extra-promise");
+const { resolve, sep } = require("path");
 const ArrayConfig = require("./Configuration Types/Array.js");
 const BooleanConfig = require("./Configuration Types/Boolean.js");
 const NumberConfig = require("./Configuration Types/Number.js");
@@ -59,9 +59,9 @@ class Config {
 
   /**
    * Allows you to add a key to a guild configuration. Note: This should never be called directly as it could cause unwanted side effects.
-   * @param {String} key The key to add to the configuration.
-   * @param {String|Array|Number|Boolean} defaultValue The value for the key.
-   * @param {String} type The type of key you want to add.
+   * @param {string} key The key to add to the configuration.
+   * @param {string|Array|number|boolean} defaultValue The value for the key.
+   * @param {string} type The type of key you want to add.
    * @returns {Config}
    */
   addKey(key, defaultValue, type) {
@@ -76,24 +76,24 @@ class Config {
     } else {
       console.log(`Invalid Key Type: Type: ${type}`);
     }
-    fs.outputJSONAsync(path.resolve(`${dataDir}${path.sep}${this._id}.json`), guildConfs.get(this._id));
+    outputJSONAsync(resolve(`${dataDir}${sep}${this._id}.json`), guildConfs.get(this._id));
     return this;
   }
 
   /**
    * Deletes a key from the respected guild configuration. This should never be called directly.
-   * @param {String} key The key to delete from the configuration
+   * @param {string} key The key to delete from the configuration
    * @returns {null}
    */
   delKey(key) {
     delete this[key];
-    fs.outputJSONAsync(path.resolve(`${dataDir}${path.sep}${this._id}.json`), guildConfs.get(this._id));
+    outputJSONAsync(resolve(`${dataDir}${sep}${this._id}.json`), guildConfs.get(this._id));
     return null;
   }
 
   /**
    * Resets a key for the respected guild configuration.
-   * @param {String} key The key to reset in the configuration.
+   * @param {string} key The key to reset in the configuration.
    * @returns {Config<Key>}
    */
   reset(key) {
@@ -106,14 +106,14 @@ class Config {
     } else if (this[key].type === "Array") {
       this[key] = new ArrayConfig(this, defaultConf[key].data);
     }
-    fs.outputJSONAsync(path.resolve(`${dataDir}${path.sep}${this._id}.json`), guildConfs.get(this._id));
+    outputJSONAsync(resolve(`${dataDir}${sep}${this._id}.json`), guildConfs.get(this._id));
     return this[key];
   }
 
   /**
    * Checks the guild configuration for a key
-   * @param {String} key The key to check the guild configuration for.
-   * @returns {Boolean}
+   * @param {string} key The key to check the guild configuration for.
+   * @returns {boolean}
    */
   has(key) {
     if (!key) return "Please supply a key.";
@@ -147,8 +147,8 @@ class Config {
 
   /**
    * Set the default value for a key in the default configuration.
-   * @param {String} key The key for which you want to change.
-   * @param {Array|Boolean|Number|String} defaultValue The value you want to set as the default.
+   * @param {string} key The key for which you want to change.
+   * @param {Array|boolean|number|string} defaultValue The value you want to set as the default.
    * @returns {Object} Returns the new default configuration for the key.
    * @static
    */
@@ -159,14 +159,14 @@ class Config {
     if (defaultConf[key].type === "Boolean") this.toggle(key);
     if (defaultConf[key].type === "Number" || defaultConf[key].type === "String") defaultConf[key].data = defaultValue;
     else return "Unsupported Configuration Type! Cannot set the value.";
-    fs.outputJSONAsync(`${dataDir}${path.sep}${defaultFile}`, defaultConf);
+    outputJSONAsync(`${dataDir}${sep}${defaultFile}`, defaultConf);
     return defaultConf[key];
   }
 
   /**
    * Sets the default minimum value for a Number key
-   * @param {String} key The Number key for which you want to set the minimum value for.
-   * @param {Number} defaultMinValue The value you want to set as the "minimum" value.
+   * @param {string} key The Number key for which you want to set the minimum value for.
+   * @param {number} defaultMinValue The value you want to set as the "minimum" value.
    * @returns {Object} Returns the new default configuration for the key.
    * @static
    */
@@ -177,14 +177,14 @@ class Config {
     guildConfs.forEach((config) => {
       config[key].setMin(defaultMinValue);
     });
-    fs.outputJSONAsync(`${dataDir}${path.sep}${defaultFile}`, defaultConf);
+    outputJSONAsync(`${dataDir}${sep}${defaultFile}`, defaultConf);
     return defaultConf[key];
   }
 
   /**
    * Sets the default maximum value for a Number key
-   * @param {String} key The Number key for which you want to set the maximum value for.
-   * @param {Number} defaultMaxValue The value you want to set as the "maximum" value.
+   * @param {string} key The Number key for which you want to set the maximum value for.
+   * @param {number} defaultMaxValue The value you want to set as the "maximum" value.
    * @returns {Object} Returns the new default configuration for the key.
    * @static
    */
@@ -195,14 +195,14 @@ class Config {
     guildConfs.forEach((config) => {
       config[key].setMax(defaultMaxValue);
     });
-    fs.outputJSONAsync(`${dataDir}${path.sep}${defaultFile}`, defaultConf);
+    outputJSONAsync(`${dataDir}${sep}${defaultFile}`, defaultConf);
     return defaultConf[key];
   }
 
   /**
    * Adds a value to the data array for an Array key.
-   * @param {String} key The Array key for which you want to add value(s) for.
-   * @param {String} defaultValue The value for which you want to add to the array.
+   * @param {string} key The Array key for which you want to add value(s) for.
+   * @param {string} defaultValue The value for which you want to add to the array.
    * @returns {Object} Returns the new default configuration for the key.
    * @static
    */
@@ -214,14 +214,14 @@ class Config {
     guildConfs.forEach((config) => {
       config[key].add(defaultValue);
     });
-    fs.outputJSONAsync(`${dataDir}${path.sep}${defaultFile}`, defaultConf);
+    outputJSONAsync(`${dataDir}${sep}${defaultFile}`, defaultConf);
     return defaultConf[key];
   }
 
   /**
    * Deletes a value from the data array for an Array key.
-   * @param {String} key The array key for which you want to delete value(s) from.
-   * @param {String} defaultValue The value for which you want to remove from the array.
+   * @param {string} key The array key for which you want to delete value(s) from.
+   * @param {string} defaultValue The value for which you want to remove from the array.
    * @returns {Object} Returns the new default configuration for the key.
    * @static
    */
@@ -233,13 +233,13 @@ class Config {
     guildConfs.forEach((config) => {
       config[key].del(defaultValue);
     });
-    fs.outputJSONAsync(`${dataDir}${path.sep}${defaultFile}`, defaultConf);
+    outputJSONAsync(`${dataDir}${sep}${defaultFile}`, defaultConf);
     return defaultConf[key];
   }
 
   /**
    * Toggles the true/false statement for a Boolean key
-   * @param {String} key The boolean key for which you want to toggle the statement for.
+   * @param {string} key The boolean key for which you want to toggle the statement for.
    * @returns {Object} Returns the new default configuration for the key.
    * @static
    */
@@ -251,14 +251,14 @@ class Config {
     guildConfs.forEach((config) => {
       config[key].toggle();
     });
-    fs.outputJSONAsync(`${dataDir}${path.sep}${defaultFile}`, defaultConf);
+    outputJSONAsync(`${dataDir}${sep}${defaultFile}`, defaultConf);
     return defaultConf[key];
   }
 
   /**
    * Checks if the guildConfs Map has the specified guild.
    * @param {Guild} guild The guild to check the Map for.
-   * @returns {Boolean}
+   * @returns {boolean}
    * @static
    */
   static has(guild) {
@@ -268,8 +268,8 @@ class Config {
 
   /**
   * Checks if the default configuration has a specified key.
-  * @param {String} key The key for which to check the default configuration for.
-  * @returns {Boolean}
+  * @param {string} key The key for which to check the default configuration for.
+  * @returns {boolean}
   * @static
   */
   static hasKey(key) {
@@ -279,9 +279,9 @@ class Config {
 
   /**
    * Adds a key to the default configuration, and every guilds configuration.
-   * @param {String} key The key for which to add to the default and all guild configurations.
-   * @param {String|Number|Boolean|Array} defaultValue The value for which you want to set as the default value.
-   * @param {String} [type] The type of key this will be. This can currently be Strings, Numbers, Arrays, or Booleans.
+   * @param {string} key The key for which to add to the default and all guild configurations.
+   * @param {string|number|boolean|Array} defaultValue The value for which you want to set as the default value.
+   * @param {string} [type] The type of key this will be. This can currently be Strings, Numbers, Arrays, or Booleans.
    * @returns {Object} Returns the entire default configuration
    * @static
    */
@@ -298,13 +298,13 @@ class Config {
     guildConfs.forEach((config) => {
       config.addKey(key, defaultValue, type);
     });
-    fs.outputJSONAsync(path.resolve(`${dataDir}${path.sep}${defaultFile}`), defaultConf);
+    outputJSONAsync(resolve(`${dataDir}${sep}${defaultFile}`), defaultConf);
     return defaultConf;
   }
 
   /**
    * Deletes a key from the default configuration, and every guilds configuration.
-   * @param {String} key The key for which to add to the default and all guild configurations.
+   * @param {string} key The key for which to add to the default and all guild configurations.
    * @returns {Object} Returns the new default configuration
    * @static
    */
@@ -315,7 +315,7 @@ class Config {
       return `The key ${key} is core and cannot be deleted.`;
     }
     delete defaultConf[key];
-    fs.outputJSONAsync(`${dataDir}${path.sep}${defaultFile}`, defaultConf);
+    outputJSONAsync(`${dataDir}${sep}${defaultFile}`, defaultConf);
     this.guildConfs.forEach((config) => {
       config.delKey(key);
     });
@@ -326,26 +326,26 @@ class Config {
    * Inserts a guild into the guildConfs map and deletes the configuration JSON. This should never be called by anyone, this is purely for the guildCreate event.
    * @param {Client} client The Discord.js Client
    * @param {Guild} guild The Guild being inserted into the map.
-   * @returns {String}
+   * @returns {string}
    * @static
    */
   static insert(client, guild) {
     if (!guild) return "Please specify a guild to remove.";
     guildConfs.set(guild.id, new Config(client, guild.id, defaultConf));
-    fs.outputJSONAsync(`${dataDir}${path.sep}${guild.id}.json`, guildConfs.get(guild.id));
+    outputJSONAsync(`${dataDir}${sep}${guild.id}.json`, guildConfs.get(guild.id));
     return `Inserted ${guild.name} succesfully.`;
   }
 
   /**
    * Removes a guild from the guildConfs map and deletes the configuration JSON. This should never be called by anyone, this is purely for the guildDelete event.
    * @param {Guild} guild The guild being removed from the map.
-   * @returns {String}
+   * @returns {string}
    * @static
    */
   static remove(guild) {
     if (!guild) return "Please specify a guild to remove.";
     guildConfs.delete(guild.id);
-    fs.removeAsync(path.resolve(`${dataDir}${path.sep}${guild.id}.json`));
+    removeAsync(resolve(`${dataDir}${sep}${guild.id}.json`));
     return `Removed ${guild.name} succesfully.`;
   }
 
@@ -363,20 +363,20 @@ class Config {
       adminRole: { type: "String", data: "Devs" },
       lang: { type: "String", data: "en" },
     };
-    dataDir = path.resolve(`${client.clientBaseDir}${path.sep}bwd${path.sep}conf`);
-    fs.ensureFileAsync(`${dataDir}${path.sep}${defaultFile}`).catch(err => client.funcs.log(err, "error"));
-    fs.readJSONAsync(path.resolve(`${dataDir}${path.sep}${defaultFile}`))
-    .then((conf) => {
-      if (conf) defaultConf = conf;
-    })
-    .catch(() => fs.outputJSONAsync(`${dataDir}${path.sep}${defaultFile}`, defaultConf));
+    dataDir = resolve(`${client.clientBaseDir}${sep}bwd${sep}conf`);
+    ensureFileAsync(`${dataDir}${sep}${defaultFile}`).catch(err => client.funcs.log(err, "error"));
+    readJSONAsync(resolve(`${dataDir}${sep}${defaultFile}`))
+      .then((conf) => {
+        if (conf) defaultConf = conf;
+      })
+      .catch(() => outputJSONAsync(`${dataDir}${sep}${defaultFile}`, defaultConf));
     client.guilds.forEach((guild) => {
-      fs.readJSONAsync(path.resolve(`${dataDir}${path.sep}${guild.id}.json`))
-      .then((thisConf) => {
-        guildConfs.set(guild.id, new Config(client, guild.id, thisConf));
-      }).catch(() => {
-        guildConfs.set(guild.id, new Config(client, guild.id, defaultConf));
-      });
+      readJSONAsync(resolve(`${dataDir}${sep}${guild.id}.json`))
+        .then((thisConf) => {
+          guildConfs.set(guild.id, new Config(client, guild.id, thisConf));
+        }).catch(() => {
+          guildConfs.set(guild.id, new Config(client, guild.id, defaultConf));
+        });
     });
     return null;
   }

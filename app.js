@@ -27,7 +27,7 @@ exports.start = async (config) => {
   client.messageMonitors = new Discord.Collection();
   client.providers = new Discord.Collection();
 
-    // Extend Client with Native Discord.js Functions for use in our pieces.
+  // Extend Client with Native Discord.js Functions for use in our pieces.
   client.methods = {};
   client.methods.Collection = Discord.Collection;
   client.methods.Embed = Discord.RichEmbed;
@@ -51,8 +51,6 @@ exports.start = async (config) => {
     await loadCommands(client);
     await loadCommandInhibitors(client);
     await loadMessageMonitors(client);
-    client.i18n = client.funcs.loadLocalizations;
-    client.i18n.init(client);
     client.destroy = () => "You cannot use this within Komada, use process.exit() instead.";
     client.ready = true;
   });
