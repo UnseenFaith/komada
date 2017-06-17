@@ -54,7 +54,7 @@ komada.start({
 Then, run the following in your folder:
 
 ```
-npm install
+npm install --production
 node --harmony app.js
 ```
 
