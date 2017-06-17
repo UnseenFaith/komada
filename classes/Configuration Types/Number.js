@@ -25,7 +25,7 @@ class NumberConfig {
 
   /**
    * Sets the value for a number key, according to the minimum and maximum values if they apply.
-   * @param {Number} value The value you want to set the key as.
+   * @param {number} value The value you want to set the key as.
    * @returns {NumberConfig}
    */
   set(value) {
@@ -39,7 +39,7 @@ class NumberConfig {
 
   /**
    * Sets the minimum value a number key can be.
-   * @param {Number} value The value you want to set the minimum as.
+   * @param {number} value The value you want to set the minimum as.
    * @returns {NumberConfig}
    */
   setMin(value) {
@@ -50,7 +50,7 @@ class NumberConfig {
 
   /**
    * Sets the maximum value a number key can bey.
-   * @param {Number} value The value you want to set the maximum as.
+   * @param {number} value The value you want to set the maximum as.
    * @returns {NumberConfig}
    */
   setMax(value) {

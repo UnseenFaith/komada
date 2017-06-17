@@ -24,7 +24,7 @@ class StringConfig {
 
   /**
    * Sets the value of a string configurations possibles. This takes into account the list of acceptable answers from the possibles array.
-   * @param {String} value The value you want to set this key to.
+   * @param {string} value The value you want to set this key to.
    * @returns {StringConfig}
    */
   set(value) {
@@ -37,7 +37,7 @@ class StringConfig {
 
   /**
    * Adds a value(s) to list of acceptable answers for this key. Accepts one item or an array of items.
-   * @param {String|Array} value The value(s) you want to add to this key.
+   * @param {string|Array} value The value(s) you want to add to this key.
    * @returns {StringConfig}
    */
   add(value) {
@@ -58,7 +58,7 @@ class StringConfig {
 
   /**
    * Deletes a value(s) from the string configurations possibles. Accepts one item or an array of items.
-   * @param {String|Array} value The value(s) you want to delete from this key.
+   * @param {string|Array} value The value(s) you want to delete from this key.
    * @returns {StringConfig}
    */
   del(value) {
