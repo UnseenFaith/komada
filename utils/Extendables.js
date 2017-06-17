@@ -1,13 +1,4 @@
-const Discord = require("discord.js");
-const ReactionCollector = require("./ReactionCollector.js");
-
-const DMChannel = Discord.DMChannel;
-const GroupDMChannel = Discord.GroupDMChannel;
-const TextChannel = Discord.TextChannel;
-const Message = Discord.Message;
-const GuildMember = Discord.GuildMember;
-const Guild = Discord.Guild;
-const User = Discord.User;
+const { DMChannel, GroupDMChannel, TextChannel, Message, GuildMember, Guild, User } = require("discord.js");
 
 /* A List of Extendables that allows Komada to extend native Discord.js structures to be easier or more efficient when used in Komada */
 class Extendables {
@@ -40,30 +31,11 @@ class Extendables {
 
   /** Message Extendables - Apply to all messages
     * <Message>.reatable - Checks if a message is reactable by the client user -> returns a boolean.
-    * <Message>.createCollector - Creates a ReactionCollector on the message. Takes the same filter and options as MessageCollectors -> returns {ReactionCollector}
-    * <Message>.awaitReactions - Same as createCollector for messages, except returns a promise with the collection of reactions collected. -> returns {Collection<EmojiName, Reaction>}
     * <Message>.guildConf - Returns a guild configuration (or default if no guild) containing proper configuration settings. -> returns {Object}
     */
   get reactable() {
     if (!this.guild) return true;
     return this.readable && this.permissionsFor(this.guild.member(this.client.user)).hasPermission("ADD_REACTIONS");
-  }
-
-  createCollector(filter, options = {}) {
-    return new ReactionCollector(this, filter, options);
-  }
-
-  awaitReactions(filter, options = {}) {
-    return new Promise((resolve, reject) => {
-      const collector = this.createCollector(filter, options);
-      collector.on("end", (collection, reason) => {
-        if (options.errors && options.errors.includes(reason)) {
-          reject(collection);
-        } else {
-          resolve(collection);
-        }
-      });
-    });
   }
 
   get guildConf() {
@@ -96,7 +68,7 @@ const applyToClass = (structure, props) => {
 applyToClass(GroupDMChannel, ["embedable", "postable", "attachable", "readable"]);
 applyToClass(DMChannel, ["embedable", "postable", "attachable", "readable"]);
 applyToClass(TextChannel, ["embedable", "postable", "attachable", "readable"]);
-applyToClass(Message, ["guildConf", "reactable", "createCollector", "awaitReactions"]);
+applyToClass(Message, ["guildConf", "reactable"]);
 applyToClass(GuildMember, ["permLevel"]);
 applyToClass(Guild, ["conf"]);
 applyToClass(User, ["permLevel"]);

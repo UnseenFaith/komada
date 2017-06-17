@@ -5,8 +5,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+- Refer to dirigeants/komada#indev branch
 
-## [0.19.0]
+## [0.19.x]
 ### Added
 - Readded ParseTags function due to Komada Provider dependency,
 - Added Websocket Heartbeat ping to ping command.
@@ -19,6 +20,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Extendables Added (postable, attachable, embedable, etc.)
 
 ### Changed
+- Now the download command can load pieces with `require`s outside module exports.
 - Usage now gets the prefix from parseCommand, to reduce errors when using commands and escaped prefixes.
 - [Cache optimization] After a piece is reloaded, the cache from the `require` gets deleted.
 - [Cache optimization] After a piece is loaded inside the collection, the cache from the `require` gets deleted.
@@ -51,6 +53,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Removed
 - A bunch of deprecated functions that were moved to utils.
 - runCommandInhibitors no longer necessary.
+- Localisation is now removed
 
 ## [0.18.1] - 2017-03-17
 ### Added
@@ -328,11 +331,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Various Confs fixes from [UnseenFaith]
 - Usage Addition/ParseUsage fix from [UnseenFaith]
 
-[Unreleased]: https://github.com/dirigeants/komada/compare/0.19.0...indev
+[Unreleased]: https://github.com/dirigeants/komada/compare/0.19.3...indev
 [0.10.0]: https://github.com/dirigeants/komada/compare/1627e6deb1d8c352d83e52ccd590f2330f5f8bb2...0.10.0
 [0.11.0]: https://github.com/dirigeants/komada/compare/0.10.0...0.11.0
 [0.12.0]: https://github.com/dirigeants/komada/compare/0.11.0...0.12.0
 [0.12.4]: https://github.com/dirigeants/komada/compare/0.12.0...0.12.4
 [0.18.0]: https://github.com/dirigeants/komada/compare/0.12.4...0.18
 [0.18.1]: https://github.com/dirigeants/komada/compare/0.12.4...0.18.1
-[0.19.0]: https://github.com/dirigeants/komada/compare/0.18.1...0.19.0
+[0.19.x]: https://github.com/dirigeants/komada/compare/0.18.1...0.19.3

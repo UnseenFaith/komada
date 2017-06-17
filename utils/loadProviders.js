@@ -1,20 +1,20 @@
-const fs = require("fs-extra-promise");
-const path = require("path");
+const { ensureDirAsync } = require("fs-extra-promise");
+const { resolve, sep } = require("path");
 
-const loadProviders = (client, baseDir) => new Promise(async (resolve, reject) => {
-  const dir = path.resolve(`${baseDir}./providers/`);
-  await fs.ensureDirAsync(dir).catch(err => client.emit("error", client.funcs.newError(err)));
+const loadProviders = (client, baseDir) => new Promise(async (res, rej) => {
+  const dir = resolve(`${baseDir}./providers/`);
+  await ensureDirAsync(dir).catch(err => client.emit("error", client.funcs.newError(err)));
   let files = await client.funcs.getFileListing(client, baseDir, "providers").catch(err => client.emit("error", client.funcs.newError(err)));
   files = files.filter(file => !client.providers.get(file.name));
   try {
     const fn = files.map(f => new Promise((res) => {
-      const props = require(`${f.path}${path.sep}${f.base}`);
+      const props = require(`${f.path}${sep}${f.base}`);
       if (props.init) props.init(client);
       client.providers.set(f.name, props);
-      res(delete require.cache[require.resolve(`${f.path}${path.sep}${f.base}`)]);
+      res(delete require.cache[require.resolve(`${f.path}${sep}${f.base}`)]);
     }));
     await Promise.all(fn).catch(e => client.funcs.log(e, "error"));
-    resolve();
+    res();
   } catch (e) {
     if (e.code === "MODULE_NOT_FOUND") {
       const module = /'[^']+'/g.exec(e.toString());
@@ -25,7 +25,7 @@ const loadProviders = (client, baseDir) => new Promise(async (resolve, reject) =
       });
       loadProviders(client, baseDir);
     } else {
-      reject(e);
+      rej(e);
     }
   }
 });

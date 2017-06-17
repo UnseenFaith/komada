@@ -1,7 +1,7 @@
 /* eslint-disable no-restricted-syntax, no-underscore-dangle, no-unused-vars */
 
-const fs = require("fs-extra-promise");
-const path = require("path");
+const { outputJSONAsync } = require("fs-extra-promise");
+const { resolve, sep } = require("path");
 
 /** The starting point for creating a Boolean configuration key. */
 class BooleanConfig {
@@ -27,7 +27,7 @@ class BooleanConfig {
   toggle() {
     if (this.data === true) this.data = false;
     else this.data = true;
-    fs.outputJSONAsync(path.resolve(`${this._dataDir}${path.sep}${this._id}.json`), this._client.guildConfs.get(this._id));
+    outputJSONAsync(resolve(`${this._dataDir}${sep}${this._id}.json`), this._client.guildConfs.get(this._id));
     return this;
   }
 }
