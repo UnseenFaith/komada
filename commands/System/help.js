@@ -57,7 +57,7 @@ exports.buildHelp = (client, msg) => {
       if (!help[cat].hasOwnProperty(subcat)) help[cat][subcat] = [];
       help[cat][subcat].push(`${msg.guildConf.prefix}${command.help.name.padEnd(longest)} :: ${command.help.description}`);
     }
-  });
+  };
 
   return help;
 };
