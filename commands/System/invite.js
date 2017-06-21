@@ -13,13 +13,6 @@ exports.run = async (client, msg) => {
   ]);
 };
 
-exports.help = {
-  name: "invite",
-  description: "Displays the join server link of the bot.",
-  usage: "",
-  usageDelim: "",
-};
-
 exports.conf = {
   enabled: true,
   runIn: ["text"],
@@ -27,4 +20,11 @@ exports.conf = {
   permLevel: 0,
   botPerms: [],
   requiredFuncs: [],
+};
+
+exports.help = {
+  name: "invite",
+  description: "Displays the join server link of the bot.",
+  usage: "",
+  usageDelim: "",
 };

@@ -13,5 +13,11 @@ exports.run = (client, msg, cmd) => {
   if (!instance) return false;
 
   const remaining = ((cmd.conf.cooldown * 1000) - (Date.now() - instance)) / 1000;
+
+  if (remaining < 0) {
+    cmd.cooldown.delete(msg.author.id);
+    return false;
+  }
+
   return `You have just used this command. You can use this command again in ${Math.ceil(remaining)} seconds.`;
 };
