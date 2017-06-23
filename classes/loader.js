@@ -20,8 +20,8 @@ const coreProtected = {
 module.exports = class Loader {
   constructor(client) {
     Object.defineProperty(this, "client", { value: client });
-    this.coreDirs = Loader.makeDirsObject(this.client.coreBaseDir);
-    this.clientDirs = Loader.makeDirsObject(this.client.clientBaseDir);
+    this.coreDirs = this.makeDirsObject(this.client.coreBaseDir);
+    this.clientDirs = this.makeDirsObject(this.client.clientBaseDir);
   }
 
   makeDirsObject(dir) {
