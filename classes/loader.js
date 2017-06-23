@@ -20,7 +20,12 @@ const coreProtected = {
 module.exports = class Loader {
   constructor(client) {
     Object.defineProperty(this, "client", { value: client });
-    const makeDirsObject = dir => ({
+    this.coreDirs = Loader.makeDirsObject(this.client.coreBaseDir);
+    this.clientDirs = Loader.makeDirsObject(this.client.clientBaseDir);
+  }
+
+  makeDirsObject(dir) {
+    return {
       functions: resolve(dir, "functions"),
       commands: resolve(dir, "commands"),
       inhibitors: resolve(dir, "inhibitors"),
@@ -29,9 +34,7 @@ module.exports = class Loader {
       monitors: resolve(dir, "monitors"),
       providers: resolve(dir, "providers"),
       extendables: resolve(dir, "extendables"),
-    });
-    this.coreDirs = makeDirsObject(this.client.coreBaseDir);
-    this.clientDirs = makeDirsObject(this.client.clientBaseDir);
+    };
   }
 
   async loadAll() {
