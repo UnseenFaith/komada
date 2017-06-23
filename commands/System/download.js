@@ -38,7 +38,7 @@ exports.help = {
 
 const process = async (client, msg, text, link, folder) => {
   try {
-    runInNewContext(text, { module: mod, exports: mod.exports, require: () => true }, { timeout: 500 });
+    runInNewContext(text, { module: mod, exports: mod.exports, require }, { timeout: 500 });
   } catch (err) {
     return client.funcs.log(err, "error");
   }
