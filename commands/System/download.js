@@ -40,9 +40,6 @@ const process = async (client, msg, text, link, folder) => {
   try {
     vm.runInNewContext(text, { module: mod, exports: mod.exports, require }, { timeout: 500 });
   } catch (err) {
-    if (err.message === "require is not defined") {
-      msg.sendMessage(`${msg.author} | An error has occured: **${err.message}** | This typically happens when you try to download a file that has a require outside of an \`exports\`. Ask the Developer to fix it or download it as a file and then load it.`);
-    }
     return client.emit("log", err, "error");
   }
 
