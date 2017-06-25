@@ -1,7 +1,7 @@
 const { inspect } = require("util");
 
 exports.run = async (client, msg, [action, key, ...value]) => {
-  const configs = msg.guild.conf;
+  const configs = msg.guild.settings;
 
   switch (action) {
     case "set": {

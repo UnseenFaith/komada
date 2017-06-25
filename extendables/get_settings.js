@@ -1,6 +1,6 @@
 exports.conf = {
   type: "get",
-  method: "conf",
+  method: "settings",
   appliesTo: ["Guild"],
 };
 

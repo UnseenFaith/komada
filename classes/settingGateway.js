@@ -30,7 +30,6 @@ module.exports = class SettingGateway extends CacheManager {
     if (data[0]) {
       for (const key of data) super.set(key.id, key);
     }
-    super.set("default", this.schemaManager.defaults);
   }
 
   /**
@@ -48,11 +47,7 @@ module.exports = class SettingGateway extends CacheManager {
    * @returns {Object}
    */
   get defaults() {
-    const cache = super.get("default");
-    if (cache) return cache;
-    const output = {};
-    for (const key of Object.keys(this.schema)) output[key] = this.schema[key].default;
-    return output;
+    return this.schemaManager.defaults;
   }
 
   /**

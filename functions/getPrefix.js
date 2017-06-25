@@ -1,6 +1,6 @@
 module.exports = async (client, msg) => {
   if (client.config.prefixMention.test(msg.content)) return client.config.prefixMention;
-  const config = await msg.guildConf;
+  const config = await msg.guildSettings;
   let { prefix } = config;
   const escape = client.funcs.regExpEsc;
   if (prefix instanceof Array) {
