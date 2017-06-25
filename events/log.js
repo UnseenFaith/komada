@@ -30,8 +30,8 @@ exports.run = (client, data, type = "log") => {
           break;
           // no default
       }
-      timestamp += " ";
     }
+    timestamp += " ";
   }
 
   if (type === "debug") type = "log";
