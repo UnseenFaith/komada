@@ -69,7 +69,7 @@ class SchemaManager {
     if (!validTypes.includes(options.type)) throw `The type ${options.type} is not supported.`;
     if ("min" in options && isNaN(options.min)) throw "The option min must be a number.";
     if ("max" in options && isNaN(options.max)) throw "The option max must be a number.";
-    if ("array" in options) {
+    if (options.array) {
       if (options.array.constructor.name !== "Boolean") throw "The option array must be an array.";
       if (!options.default) options.default = [];
       else if (!(options.default instanceof Array)) throw "The option default must be an array if the array option is set to true.";
