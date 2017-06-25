@@ -81,6 +81,15 @@ exports.update = (table, document, data) => this.get(table, document)
   .then(current => fs.outputJSON(`${baseDir + sep + table + sep + document}.json`, Object.assign(current, data)));
 
   /**
+   * Replace all the data from a document.
+   * @param {string} table The name of the directory.
+   * @param {string} document The document name.
+   * @param {Object} data The new data for the document.
+   * @returns {Promise<Void>}
+   */
+exports.replace = (table, document, data) => fs.outputJSON(`${baseDir + sep + table + sep + document}.json`, data);
+
+  /**
    * Delete a document from the table.
    * @param {string} table The name of the directory.
    * @param {string} document The document name.

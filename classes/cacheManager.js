@@ -1,7 +1,7 @@
 module.exports = class CacheManager {
   constructor(client) {
     this.cacheEngine = client.config.provider.cache || "js";
-    this.data = this.cacheEngine === "js" ? new Map() : client.providers.get(this.cacheEngine);
+    this.data = this.cacheEngine === "js" ? new client.methods.Collection() : client.providers.get(this.cacheEngine);
   }
 
   get(guild) {

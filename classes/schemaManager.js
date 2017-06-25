@@ -47,7 +47,7 @@ class SchemaManager {
     }
   }
 
-  add(key, options) {
+  add(key, options, force = false) {
     if (key in this.schema) throw `The key ${key} already exists in the current schema.`;
     if (!options.type) throw "The option type is required.";
     if (!validTypes.includes(options.type)) throw `The type ${options.type} is not supported.`;
@@ -55,25 +55,30 @@ class SchemaManager {
     if ("min" in options && isNaN(options.min)) throw "The option min must be a number.";
     if ("max" in options && isNaN(options.max)) throw "The option max must be a number.";
     this.schema[key] = options;
+    this.defaults[key] = options.default;
+    if (force) this.force("add", key);
     return fs.outputJSON(this.filePath, this.schema);
   }
 
-  remove(key) {
+  remove(key, force = false) {
     if (key === "prefix") throw "You can't remove the prefix.";
     delete this.schema[key];
+    if (force) this.force("delete", key);
     return fs.outputJSON(this.filePath, this.schema);
   }
 
-  force(action, key) {
+  async force(action, key) {
     const data = this.client.settingGateway.getAll();
     let value;
     if (action === "reset" || action === "add") value = this.defaults[key];
-    Promise.all(data.map((obj) => {
+    await Promise.all(data.map(async (obj) => {
       const object = obj;
       if (action === "delete") delete object[key];
       else object[key] = value;
-      return this.client.settingGateway.provider.replace("guilds", obj.id, object);
+      if (obj.id) await this.client.settingGateway.provider.replace("guilds", obj.id, object);
+      return true;
     }));
+    return this.client.settingGateway.sync();
   }
 
   /**
