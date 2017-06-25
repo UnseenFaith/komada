@@ -4,7 +4,6 @@ const fs = require("fs-nextra");
 const validTypes = ["User", "Channel", "Guild", "Role", "Boolean", "String", "Integer", "Float", "url", "Command"];
 
 class SchemaManager {
-
   constructor(client) {
     this.client = client;
     this.schema = {};
