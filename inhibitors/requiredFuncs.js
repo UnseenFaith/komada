@@ -7,10 +7,7 @@ exports.conf = {
 /* eslint-disable no-prototype-builtins */
 exports.run = (client, msg, cmd) => {
   if (!cmd.conf.requiredFuncs) return false;
-  const funcs = [];
-  cmd.conf.requiredFuncs.forEach((func) => {
-    if (!client.funcs.hasOwnProperty(func)) funcs.push(func);
-  });
+  const funcs = cmd.conf.requiredFuncs.filter(func => client.funcs.hasOwnProperty(func));
   if (funcs.length > 0) return `The client is missing the **${funcs.join(", ")}** function${funcs.length > 1 ? "s" : ""} and cannot run.`;
   return false;
 };
