@@ -10,13 +10,13 @@ const SettingGateway = require("./settingGateway");
 const defaultPermStructure = new PermLevels()
   .addLevel(0, false, () => true)
   .addLevel(2, false, (client, msg) => {
-    if (!msg.guild) return false;
-    const modRole = msg.guild.conf.modRole ? msg.guild.roles.get(msg.guild.conf.modRole) : false;
+    if (!msg.guild || !msg.guild.conf.modRole) return false;
+    const modRole = msg.guild.roles.get(msg.guild.conf.modRole);
     return modRole && msg.member.roles.has(modRole.id);
   })
   .addLevel(3, false, (client, msg) => {
-    if (!msg.guild) return false;
-    const adminRole = msg.guild.conf.adminRole ? msg.guild.roles.get(msg.guild.conf.adminRole) : false;
+    if (!msg.guild || !msg.guild.conf.adminRole) return false;
+    const adminRole = msg.guild.roles.get(msg.guild.conf.adminRole);
     return adminRole && msg.member.roles.has(adminRole.id);
   })
   .addLevel(4, false, (client, msg) => msg.guild && msg.author.id === msg.guild.owner.id)
