@@ -15,7 +15,7 @@
   },
   "scripts": {
     "lint": "npm run test -- --fix",
-    "test": "eslint classes commands finalizers functions inhibitors events extendables client.js"
+    "test": "eslint classes commands finalizers functions inhibitors events extendables"
   },
   "dependencies": {
     "chalk": "^1.1.3",

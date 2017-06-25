@@ -4,7 +4,7 @@ exports.run = async (client, msg) => {
   if (!client.ready) return;
   await this.runMessageMonitors(client, msg);
   if (!this.handleMessage(client, msg)) return;
-  const res = this.parseCommand(client, msg);
+  const res = await this.parseCommand(client, msg);
   if (!res.command) return;
   this.handleCommand(client, msg, res);
 };
@@ -31,8 +31,8 @@ exports.handleMessage = (client, msg) => {
   return true;
 };
 
-exports.parseCommand = (client, msg, usage = false) => {
-  const prefix = client.funcs.getPrefix(client, msg);
+exports.parseCommand = async (client, msg, usage = false) => {
+  const prefix = await client.funcs.getPrefix(client, msg);
   if (!prefix) return false;
   const prefixLength = this.getLength(client, msg, prefix);
   if (usage) return prefixLength;
