@@ -125,12 +125,34 @@ module.exports = class SettingGateway extends CacheManager {
    * @returns {any}
    */
   async update(guild, key, data) {
-    const target = await this.validateGuild(guild);
     if (!(key in this.schema)) throw `The key ${key} does not exist in the current data schema.`;
+    const target = await this.validateGuild(guild);
     const result = await this.parse(target, this.schema[key], data);
     await this.provider.update("guilds", target.id, { [key]: result });
-    this.sync(target.id);
+    await this.sync(target.id);
     return result;
+  }
+
+  async updateArray(guild, type, key, data) {
+    if (!["add", "remove"].includes(type)) throw "The type parameter must be either add or remove.";
+    if (!(key in this.schema)) throw `The key ${key} does not exist in the current data schema.`;
+    if (!this.schema[key].array) throw `The key ${key} is not an Array.`;
+    if (data === undefined) throw "You must specify the value to add or filter.";
+    const target = await this.validateGuild(guild);
+    const result = await this.parse(target, this.schema[key], data);
+    const cache = this.get(target.id);
+    if (type === "add") {
+      if (cache[key].includes(result)) throw `The value ${data} for the key ${key} already exists.`;
+      cache[key].push(result);
+      await this.provider.update("guilds", target.id, { [key]: cache[key] });
+      await this.sync(target.id);
+      return result;
+    }
+    if (!cache[key].includes(result)) throw `The value ${data} for the key ${key} already exists.`;
+    cache[key] = cache[key].filter(v => v !== result);
+    await this.provider.update("guilds", target.id, { [key]: cache[key] });
+    await this.sync(target.id);
+    return true;
   }
 
   async parse(guild, { type, min, max }, data) {
@@ -181,6 +203,11 @@ module.exports = class SettingGateway extends CacheManager {
         const result = await this.resolver.url(data);
         if (!result) throw "This key expects an URL (Uniform Resource Locator).";
         return result;
+      }
+      case "Command": {
+        const command = this.client.commands.get(data.toLowerCase()) || this.client.commands.get(this.client.aliases.get(data.toLowerCase()));
+        if (!command) throw "This key expects a Command.";
+        return command.help.name;
       }
       // no default
     }
