@@ -1,7 +1,8 @@
 const Resolver = require("./Resolver.js");
 const CacheManager = require("./cacheManager.js");
+const SchemaManager = require("./schemaManager.js");
 
-/* eslint-disable no-restricted-syntax, guard-for-in */
+/* eslint-disable no-restricted-syntax */
 module.exports = class SettingGateway extends CacheManager {
   constructor(client) {
     super(client);
@@ -12,8 +13,8 @@ module.exports = class SettingGateway extends CacheManager {
     /** @type {string} */
     this.engine = client.config.provider.engine || "json";
 
-    /** @type {Resolver} */
     this.resolver = new Resolver(client);
+    this.schemaManager = new SchemaManager(client);
   }
 
   /**
@@ -23,14 +24,14 @@ module.exports = class SettingGateway extends CacheManager {
   async init() {
     this.provider = this.client.providers.get(this.engine);
     if (!this.provider) throw `This provider (${this.engine}) does not exist in your system.`;
-    if (!this.schema || !this.schema.prefix) throw "There must be a valid schema with at least the prefix config.";
+    await this.schemaManager.init();
     await this.provider.init(this.client);
     if (!(await this.provider.hasTable("guilds"))) this.provider.createTable("guilds");
     const data = await this.provider.getAll("guilds");
     if (data[0]) {
       for (const key of data) super.set(key.id, key);
     }
-    super.set("default", this.defaults);
+    super.set("default", this.schemaManager.defaults);
   }
 
   /**
@@ -39,7 +40,7 @@ module.exports = class SettingGateway extends CacheManager {
    * @returns {Object}
    */
   get schema() {
-    return this.client.config.provider.schema || this.defaultDataSchema;
+    return this.schemaManager.schema;
   }
 
   /**
@@ -51,7 +52,7 @@ module.exports = class SettingGateway extends CacheManager {
     const cache = super.get("default");
     if (cache) return cache;
     const output = {};
-    for (const key in this.schema) output[key] = this.schema[key].default;
+    for (const key of Object.keys(this.schema)) output[key] = this.schema[key].default;
     return output;
   }
 
@@ -62,8 +63,8 @@ module.exports = class SettingGateway extends CacheManager {
    */
   async create(guild) {
     const target = await this.validateGuild(guild);
-    await this.provider.create("guilds", target.id, this.defaults);
-    super.set(target.id, this.defaults);
+    await this.provider.create("guilds", target.id, this.schemaManager.defaults);
+    super.set(target.id, this.schemaManager.defaults);
   }
 
   /**
@@ -82,8 +83,8 @@ module.exports = class SettingGateway extends CacheManager {
    * @returns {Object}
    */
   get(guild) {
-    if (guild === "default") return this.defaults;
-    return super.get(guild) || this.defaults;
+    if (guild === "default") return this.schemaManager.defaults;
+    return super.get(guild) || this.schemaManager.defaults;
   }
 
   /**
@@ -102,6 +103,12 @@ module.exports = class SettingGateway extends CacheManager {
     await super.set(target.id, data);
   }
 
+  /**
+   * Reset a key's value to default from a Guild configuration.
+   * @param {(Guild|Snowflake)} guild The Guild object or snowflake.
+   * @param {string} key The key to reset.
+   * @returns {*}
+   */
   async reset(guild, key) {
     const target = await this.validateGuild(guild);
     if (!(key in this.schema)) throw `The key ${key} does not exist in the current data schema.`;
@@ -111,6 +118,13 @@ module.exports = class SettingGateway extends CacheManager {
     return defaultKey;
   }
 
+  /**
+   * Update the configuration from a Guild configuration.
+   * @param {(Guild|Snowflake)} guild The Guild object or snowflake.
+   * @param {string} key The key to update.
+   * @param {any} data The new value for the key.
+   * @returns {any}
+   */
   async update(guild, key, data) {
     const target = await this.validateGuild(guild);
     if (!(key in this.schema)) throw `The key ${key} does not exist in the current data schema.`;
@@ -174,6 +188,14 @@ module.exports = class SettingGateway extends CacheManager {
     return null;
   }
 
+  /**
+   * Check if the input is valid with min and/or max values.
+   * @static
+   * @param {any} value The value to check.
+   * @param {?number} min Min value.
+   * @param {?number} max Max value.
+   * @returns {?boolean}
+   */
   static async maxOrMin(value, min, max) {
     if (min && max) {
       if (value >= min && value <= max) return true;
@@ -191,29 +213,12 @@ module.exports = class SettingGateway extends CacheManager {
 
   /**
    * Checks if a Guild is valid.
-   * @param {Guild|string} guild The Guild object or ID.
+   * @param {(Guild|Snowflake)} guild The Guild object or snowflake.
    * @returns {Guild}
    */
   async validateGuild(guild) {
     const result = await this.resolver.guild(guild);
     if (!result) throw "The parameter <Guild> expects either a Guild or a Guild Object.";
     return result;
-  }
-
-  get defaultDataSchema() {
-    return {
-      prefix: {
-        type: "String",
-        default: this.client.config.prefix,
-      },
-      modRole: {
-        type: "Role",
-        default: null,
-      },
-      adminRole: {
-        type: "Role",
-        default: null,
-      },
-    };
   }
 };

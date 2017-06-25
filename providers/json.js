@@ -31,7 +31,7 @@ exports.createTable = table => fs.mkdir(baseDir + sep + table);
    * @returns {Promise<Void>}
    */
 exports.deleteTable = table => this.hasTable(table)
-  .then(exists => exists ? fs.emptyDir(baseDir + sep + table).then(() => fs.remove(baseDir + sep + table)) : false);
+  .then(exists => exists ? fs.emptyDir(baseDir + sep + table).then(() => fs.remove(baseDir + sep + table)) : null);
 
   /* Document methods */
 

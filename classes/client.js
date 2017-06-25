@@ -1,12 +1,11 @@
 const Discord = require("discord.js");
 const path = require("path");
 const now = require("performance-now");
-const CommandMessage = require("./commandMessage.js");
-const Loader = require("./loader.js");
-const ArgResolver = require("./argResolver.js");
-const PermLevels = require("./permLevels.js");
- /* Will Change this later */
-const Setting = require("./settingGateway.js");
+const CommandMessage = require("./commandMessage");
+const Loader = require("./loader");
+const ArgResolver = require("./argResolver");
+const PermLevels = require("./permLevels");
+const SettingGateway = require("./settingGateway");
 
 const defaultPermStructure = new PermLevels()
   .addLevel(0, false, () => true)
@@ -69,7 +68,7 @@ module.exports = class Komada extends Discord.Client {
       escapeMarkdown: Discord.escapeMarkdown,
       splitMessage: Discord.splitMessage,
     };
-    this.settingGateway = new Setting(this);
+    this.settingGateway = new SettingGateway(this);
     this.application = null;
     this.once("ready", this._ready.bind(this));
   }
