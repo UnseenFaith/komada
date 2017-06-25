@@ -20,26 +20,18 @@ const coreProtected = {
 module.exports = class Loader {
   constructor(client) {
     Object.defineProperty(this, "client", { value: client });
-    this.coreDirs = {
-      functions: resolve(this.client.coreBaseDir, "functions"),
-      commands: resolve(this.client.coreBaseDir, "commands"),
-      inhibitors: resolve(this.client.coreBaseDir, "inhibitors"),
-      finalizers: resolve(this.client.coreBaseDir, "finalizers"),
-      events: resolve(this.client.coreBaseDir, "events"),
-      monitors: resolve(this.client.coreBaseDir, "monitors"),
-      providers: resolve(this.client.coreBaseDir, "providers"),
-      extendables: resolve(this.client.coreBaseDir, "extendables"),
-    };
-    this.clientDirs = {
-      functions: resolve(this.client.clientBaseDir, "functions"),
-      commands: resolve(this.client.clientBaseDir, "commands"),
-      inhibitors: resolve(this.client.clientBaseDir, "inhibitors"),
-      finalizers: resolve(this.client.clientBaseDir, "finalizers"),
-      events: resolve(this.client.clientBaseDir, "events"),
-      monitors: resolve(this.client.clientBaseDir, "monitors"),
-      providers: resolve(this.client.clientBaseDir, "providers"),
-      extendables: resolve(this.client.clientBaseDir, "extendables"),
-    };
+    const makeDirsObject = dir => ({
+      functions: resolve(dir, "functions"),
+      commands: resolve(dir, "commands"),
+      inhibitors: resolve(dir, "inhibitors"),
+      finalizers: resolve(dir, "finalizers"),
+      events: resolve(dir, "events"),
+      monitors: resolve(dir, "monitors"),
+      providers: resolve(dir, "providers"),
+      extendables: resolve(dir, "extendables"),
+    });
+    this.coreDirs = makeDirsObject(this.client.coreBaseDir);
+    this.clientDirs = makeDirsObject(this.client.clientBaseDir);
   }
 
   async loadAll() {

@@ -11,7 +11,7 @@ module.exports = class ParsedUsage {
   }
 
   fullUsage(msg) {
-    const prefix = msg.guildConf.prefix;
+    const prefix = msg.guildSettings.prefix;
     return `${prefix.length !== 1 ? `${prefix} ` : prefix}${this.nearlyFullUsage}`;
   }
 
