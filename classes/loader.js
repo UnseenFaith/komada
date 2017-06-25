@@ -353,7 +353,7 @@ module.exports = class Loader {
   async reloadProvider(name) {
     const file = name.endsWith(".js") ? name : `${name}.js`;
     if (name.endsWith(".js")) name = name.slice(0, -3);
-    const provider = client.providers.get(name);
+    const provider = this.client.providers.get(name);
     if (provider && provider.shutdown) await provider.shutdown();
     const files = await fs.readdir(this.clientDirs.providers);
     if (!files.includes(file)) throw `Could not find a reloadable file named ${file}`;
