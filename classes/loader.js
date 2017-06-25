@@ -33,7 +33,7 @@ module.exports = class Loader {
     this.coreDirs = makeDirsObject(this.client.coreBaseDir);
     this.clientDirs = makeDirsObject(this.client.clientBaseDir);
   }
- 
+
   async loadAll() {
     const [funcs, [commands, aliases], inhibitors, finalizers, events, monitors, providers, extendables] = await Promise.all([
       this.loadFunctions(),
