@@ -105,7 +105,7 @@ class SchemaManager {
   async force(action, key) {
     const data = this.client.settingGateway.getAll();
     let value;
-    if (action === "reset" || action === "add") value = this.defaults[key];
+    if (action === "add") value = this.defaults[key];
     await Promise.all(data.map(async (obj) => {
       const object = obj;
       if (action === "delete") delete object[key];
