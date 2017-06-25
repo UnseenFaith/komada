@@ -1,32 +1,45 @@
 const { inspect } = require("util");
 
 exports.run = async (client, msg, [action, key, ...value]) => {
+  const configs = msg.guild.settings;
+
   switch (action) {
-    case "list": {
-      return msg.sendCode("json", inspect(msg.guildConf));
+    case "set": {
+      if (!key) return msg.sendMessage("You must provide a key");
+      if (!value[0]) return msg.sendMessage("You must provide a value");
+      if (!configs.id) await client.settingGateway.create(msg.guild);
+      if (client.settingGateway.schemaManager.schema[key].array) {
+        await client.settingGateway.updateArray(msg.guild, "add", key, value.join(" "));
+        return msg.sendMessage(`Successfully added the value \`${value.join(" ")}\` to the key: **${key}**`);
+      }
+      const response = await client.settingGateway.update(msg.guild, key, value.join(" "));
+      return msg.sendMessage(`Successfully updated the key **${key}**: \`${response}\``);
+    }
+    case "remove": {
+      if (!key) return msg.sendMessage("You must provide a key");
+      if (!value[0]) return msg.sendMessage("You must provide a value");
+      if (!configs.id) await client.settingGateway.create(msg.guild);
+      if (!client.settingGateway.schemaManager.schema[key].array) return msg.sendMessage("This key is not array type. Use the action 'reset' instead.");
+      return client.settingGateway.updateArray(msg.guild, "remove", key, value.join(" "))
+        .then(() => msg.sendMessage(`Successfully removed the value \`${value.join(" ")}\` from the key: **${key}**`))
+        .catch(e => msg.sendMessage(e));
     }
     case "get": {
-      if (!key) return msg.sendMessage("Please provide a key you wish to view");
-      return msg.sendMessage(`The value for ${key} is currently: ${msg.guildConf[key]}`);
-    }
-    case "set": {
-      if (!key || value[0] === undefined) return msg.sendMessage("Please provide both a key and value!");
-      const conf = client.guildConfs.get(msg.guild.id);
-      if (conf[key].type === "Boolean") conf[key].toggle();
-      if (conf[key].type === "String") conf[key].set(value.join(" "));
-      if (conf[key].type === "Number") conf[key].set(parseInt(value.join("")));
-      if (conf[key].type === "Array") conf[key].add(value);
-      return msg.sendMessage(`The new value for ${key} is: ${conf[key].data}`);
+      if (!key) return msg.sendMessage("You must provide a key");
+      if (!(key in configs)) return msg.sendMessage(`The key **${key}** does not seem to exist.`);
+      return msg.sendMessage(`The value for the key **${key}** is: \`${inspect(configs[key])}\``);
     }
     case "reset": {
-      if (!key) return msg.sendMessage("Please provide a key you wish to reset");
-      client.guildConfs.get(msg.guild.id).reset(key);
-      return msg.sendMessage("The key has been reset.");
+      if (!key) return msg.sendMessage("You must provide a key");
+      if (!configs.id) await client.settingGateway.create(msg.guild);
+      const response = await client.settingGateway.reset(msg.guild, key);
+      return msg.sendMessage(`The key **${key}** has been reset to: \`${response}\``);
     }
-    default: {
-      return msg.sendMessage("This will never happen");
-    }
+    case "list": return msg.sendCode("js", inspect(configs));
+    // no default
   }
+
+  return null;
 };
 
 exports.conf = {
@@ -41,6 +54,6 @@ exports.conf = {
 exports.help = {
   name: "conf",
   description: "Define per-server configuration.",
-  usage: "<set|get|reset|list> [key:str] [boolean:boolean|channel:channel|user:user|role:role|int:int|str:str]",
+  usage: "<set|get|reset|list|remove> [key:string] [value:string]",
   usageDelim: " ",
 };

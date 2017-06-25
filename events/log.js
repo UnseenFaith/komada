@@ -13,7 +13,7 @@ exports.run = (client, data, type = "log") => {
 
   let timestamp = "";
   if (!client.config.disableLogTimestamps) {
-    timestamp = `[${moment().format("YYYY-MM-DD HH:mm:ss")}] `;
+    timestamp = `[${moment().format("YYYY-MM-DD HH:mm:ss")}]`;
     if (!client.config.disableLogColor) {
       switch (type) {
         case "debug":
@@ -31,6 +31,7 @@ exports.run = (client, data, type = "log") => {
           // no default
       }
     }
+    timestamp += " ";
   }
 
   if (type === "debug") type = "log";
