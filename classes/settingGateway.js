@@ -25,6 +25,7 @@ module.exports = class SettingGateway extends CacheManager {
     if (!this.provider) throw `This provider (${this.engine}) does not exist in your system.`;
     this.schemaManager = new SchemaManager(this.client);
     await this.schemaManager.init();
+    if (this.provider.init) this.provider.init(this.client);
     if (!(await this.provider.hasTable("guilds"))) this.provider.createTable("guilds");
     const data = await this.provider.getAll("guilds");
     if (data[0]) {
