@@ -1,4 +1,4 @@
-const { sep, resolve } = require("path");
+const { resolve } = require("path");
 const fs = require("fs-nextra");
 
 const validTypes = ["User", "Channel", "Guild", "Role", "Boolean", "String", "Integer", "Float", "url", "Command"];
@@ -15,9 +15,9 @@ class SchemaManager {
    * @returns {void}
    */
   async init() {
-    const baseDir = resolve(`${this.client.clientBaseDir}${sep}bwd`);
+    const baseDir = resolve(this.client.clientBaseDir, "bwd");
     await fs.ensureDir(baseDir);
-    this.filePath = `${baseDir + sep}schema.json`;
+    this.filePath = resolve(baseDir, "schema.json");
     const schema = await fs.readJSON(this.filePath)
       .catch(() => fs.outputJSON(this.filePath, this.defaultDataSchema).then(() => this.defaultDataSchema));
     return this.validate(schema);
@@ -102,7 +102,7 @@ class SchemaManager {
    * @returns {void}
    */
   async force(action, key) {
-    const data = this.client.settingGateway.getAll();
+    const data = this.client.settingGateway.getAll("guilds");
     let value;
     if (action === "add") value = this.defaults[key];
     await Promise.all(data.map(async (obj) => {
