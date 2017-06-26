@@ -3,9 +3,8 @@ const fs = require("fs-nextra");
 
 let baseDir;
 
-/* eslint-disable no-confusing-arrow */
 exports.init = (client) => {
-  baseDir = resolve(`${client.clientBaseDir}${sep}bwd${sep}conf`);
+  baseDir = resolve(client.clientBaseDir, "bwd", "provider", "json");
   return fs.ensureDir(baseDir).catch(err => client.emit("log", err, "error"));
 };
 
@@ -31,7 +30,7 @@ exports.createTable = table => fs.mkdir(baseDir + sep + table);
  * @returns {Promise<Void>}
  */
 exports.deleteTable = table => this.hasTable(table)
-  .then(exists => exists ? fs.emptyDir(baseDir + sep + table).then(() => fs.remove(baseDir + sep + table)) : null);
+  .then(exists => (exists ? fs.emptyDir(baseDir + sep + table).then(() => fs.remove(baseDir + sep + table)) : null));
 
 /* Document methods */
 
@@ -100,7 +99,7 @@ exports.delete = (table, document) => fs.unlink(`${baseDir + sep + table + sep +
 exports.conf = {
   moduleName: "json",
   enabled: true,
-  requiredModules: [],
+  requiredModules: ["fs-nextra"],
 };
 
 exports.help = {
