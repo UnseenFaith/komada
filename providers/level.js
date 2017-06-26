@@ -9,14 +9,14 @@ let loaded;
 /* eslint-disable no-confusing-arrow */
 exports.init = (client) => {
   baseDir = resolve(client.clientBaseDir, "bwd", "provider", "level");
-  loaded = new client.method.Collection();
+  loaded = new client.methods.Collection();
+  fs.ensureDir(baseDir).catch(err => client.emit("log", err, "error"));
   fs.readdir(baseDir)
     .then(files => Promise.all(files.map(async (file) => {
       const db = await promisify(level(baseDir + sep + file));
       loaded.set(file, db);
       return file;
     })));
-  fs.ensureDir(baseDir).catch(err => client.emit("log", err, "error"));
 };
 
 /* Table methods */
@@ -83,23 +83,15 @@ exports.getAll = async (table) => {
 exports.get = async (table, document) => loaded.get(table)[document];
 
 /**
- * Get a random document from a directory.
- * NOT IMPLEMTABLE IN THIS PROVIDER!
- * @param {string} table The name of the directory.
- * @returns {Promise<Object>}
- */
-exports.getRandom = () => null;
-
-exports.set = (...args) => this.create(...args);
-exports.insert = (...args) => this.create(...args);
-/**
- * Insert a new document into a directory.
+ * Insert a new document into a directory. Aliases: set, insert.
  * @param {string} table The name of the directory.
  * @param {string} document The document name.
  * @param {Object} data The object with all properties you want to insert into the document.
  * @returns {Promise<Void>}
  */
 exports.create = (table, document, data) => loaded.get(table).set(document, data);
+exports.set = (...args) => this.create(...args);
+exports.insert = (...args) => this.create(...args);
 
 /**
  * Update a document from a directory.
@@ -129,12 +121,14 @@ exports.replace = (table, document, data) => this.set(table, document, data);
 exports.delete = (table, document) => this.get(table, document)
   .then(db => db.delete(document));
 
-exports.shutdown = async () => {
-  await loaded.forEach(async db => db.close());
-};
+/**
+ * Closes all open database connections.
+ * @returns {Array<Promise>}
+ */
+exports.shutdown = () => loaded.forEach(db => db.close());
 
 exports.conf = {
-  moduleName: "json",
+  moduleName: "level",
   enabled: true,
   requiredModules: [],
 };
