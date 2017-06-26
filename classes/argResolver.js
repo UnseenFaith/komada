@@ -3,8 +3,8 @@ const Resolver = require("./Resolver");
 /* eslint-disable no-throw-literal, class-methods-use-this */
 module.exports = class ArgResolver extends Resolver {
 
-  async message(arg, currentUsage, possible, repeat, msg) {
-    return this.msg(arg, currentUsage, possible, repeat, msg);
+  message(...args) {
+    return this.msg(...args);
   }
 
   async msg(arg, currentUsage, possible, repeat, msg) {
@@ -14,8 +14,8 @@ module.exports = class ArgResolver extends Resolver {
     throw `${currentUsage.possibles[possible].name} must be a valid message id.`;
   }
 
-  async mention(arg, currentUsage, possible, repeat) {
-    return this.user(arg, currentUsage, possible, repeat);
+  mention(...args) {
+    return this.user(...args);
   }
 
   async user(arg, currentUsage, possible, repeat) {
@@ -62,8 +62,8 @@ module.exports = class ArgResolver extends Resolver {
     ].join("\n");
   }
 
-  async bool(arg, currentUsage, possible, repeat) {
-    return this.boolean(arg, currentUsage, possible, repeat);
+  bool(...args) {
+    return this.boolean(...args);
   }
 
   async boolean(arg, currentUsage, possible, repeat) {
@@ -73,8 +73,8 @@ module.exports = class ArgResolver extends Resolver {
     throw `${currentUsage.possibles[possible].name} must be true or false.`;
   }
 
-  async str(arg, currentUsage, possible, repeat) {
-    return this.string(arg, currentUsage, possible, repeat);
+  str(...args) {
+    return this.string(...args);
   }
 
   async string(arg, currentUsage, possible, repeat) {
@@ -96,8 +96,8 @@ module.exports = class ArgResolver extends Resolver {
     return arg;
   }
 
-  async int(arg, currentUsage, possible, repeat) {
-    return this.integer(arg, currentUsage, possible, repeat);
+  int(...args) {
+    return this.integer(...args);
   }
 
   async integer(arg, currentUsage, possible, repeat) {
@@ -123,12 +123,12 @@ module.exports = class ArgResolver extends Resolver {
     return arg;
   }
 
-  async num(arg, currentUsage, possible, repeat) {
-    return this.float(arg, currentUsage, possible, repeat);
+  num(...args) {
+    return this.float(...args);
   }
 
-  async number(arg, currentUsage, possible, repeat) {
-    return this.float(arg, currentUsage, possible, repeat);
+  number(...args) {
+    return this.float(...args);
   }
 
   async float(arg, currentUsage, possible, repeat) {
