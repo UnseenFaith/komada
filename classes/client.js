@@ -99,6 +99,7 @@ module.exports = class Komada extends Discord.Client {
   async _ready() {
     this.config.prefixMention = new RegExp(`^<@!?${this.user.id}>`);
     if (this.user.bot) this.application = await super.fetchApplication();
+    await this.settingGateway.init();
     await Promise.all(Object.keys(this.funcs).map((key) => {
       if (this.funcs[key].init) return this.funcs[key].init(this);
       return true;
@@ -123,7 +124,6 @@ module.exports = class Komada extends Discord.Client {
       if (piece.init) return piece.init(this);
       return true;
     }));
-    await this.settingGateway.init();
     this.setInterval(this.sweepCommandMessages.bind(this), this.commandMessageLifetime);
     this.ready = true;
     this.emit("log", this.config.readyMessage || `Successfully initialized. Ready to serve ${this.guilds.size} guilds.`);
