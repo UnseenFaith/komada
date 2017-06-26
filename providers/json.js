@@ -1,4 +1,4 @@
-const { sep, resolve } = require("path");
+const { resolve } = require("path");
 const fs = require("fs-nextra");
 
 let baseDir;
@@ -15,14 +15,14 @@ exports.init = (client) => {
  * @param {string} table The name of the table you want to check.
  * @returns {Promise<boolean>}
  */
-exports.hasTable = table => fs.pathExists(baseDir + sep + table);
+exports.hasTable = table => fs.pathExists(resolve(baseDir, table));
 
 /**
  * Creates a new directory.
  * @param {string} table The name for the new directory.
  * @returns {Promise<Void>}
  */
-exports.createTable = table => fs.mkdir(baseDir + sep + table);
+exports.createTable = table => fs.mkdir(resolve(baseDir, table));
 
 /**
  * Recursively deletes a directory.
@@ -30,7 +30,7 @@ exports.createTable = table => fs.mkdir(baseDir + sep + table);
  * @returns {Promise<Void>}
  */
 exports.deleteTable = table => this.hasTable(table)
-  .then(exists => (exists ? fs.emptyDir(baseDir + sep + table).then(() => fs.remove(baseDir + sep + table)) : null));
+  .then(exists => (exists ? fs.emptyDir(resolve(baseDir, table)).then(() => fs.remove(resolve(baseDir, table))) : null));
 
 /* Document methods */
 
@@ -40,9 +40,9 @@ exports.deleteTable = table => this.hasTable(table)
  * @returns {Promise<Object[]>}
  */
 exports.getAll = (table) => {
-  const dir = baseDir + sep + table + sep;
+  const dir = resolve(baseDir, table);
   return fs.readdir(dir)
-    .then(files => Promise.all(files.map(file => fs.readJSON(dir + file))));
+    .then(files => Promise.all(files.map(file => fs.readJSON(resolve(dir, file)))));
 };
 
 /**
@@ -51,7 +51,7 @@ exports.getAll = (table) => {
  * @param {string} document The document name.
  * @returns {Promise<?Object>}
  */
-exports.get = (table, document) => fs.readJSON(`${baseDir + sep + table + sep + document}.json`).catch(() => null);
+exports.get = (table, document) => fs.readJSON(resolve(baseDir, table, `${document}.json`)).catch(() => null);
 
 /**
  * Get a random document from a directory.
@@ -67,7 +67,9 @@ exports.getRandom = table => this.getAll(table).then(data => data[Math.floor(Mat
  * @param {Object} data The object with all properties you want to insert into the document.
  * @returns {Promise<Void>}
  */
-exports.create = (table, document, data) => fs.outputJSON(`${baseDir + sep + table + sep + document}.json`, Object.assign(data, { id: document }));
+exports.create = (table, document, data) => fs.outputJSON(resolve(baseDir, table, `${document}.json`), Object.assign(data, { id: document }));
+exports.set = (...args) => this.create(...args);
+exports.insert = (...args) => this.create(...args);
 
 /**
  * Update a document from a directory.
@@ -77,7 +79,7 @@ exports.create = (table, document, data) => fs.outputJSON(`${baseDir + sep + tab
  * @returns {Promise<Void>}
  */
 exports.update = (table, document, data) => this.get(table, document)
-  .then(current => fs.outputJSON(`${baseDir + sep + table + sep + document}.json`, Object.assign(current, data)));
+  .then(current => fs.outputJSON(resolve(baseDir, table, `${document}.json`), Object.assign(current, data)));
 
 /**
  * Replace all the data from a document.
@@ -86,7 +88,7 @@ exports.update = (table, document, data) => this.get(table, document)
  * @param {Object} data The new data for the document.
  * @returns {Promise<Void>}
  */
-exports.replace = (table, document, data) => fs.outputJSON(`${baseDir + sep + table + sep + document}.json`, data);
+exports.replace = (table, document, data) => fs.outputJSON(resolve(baseDir, table, `${document}.json`), data);
 
 /**
  * Delete a document from the table.
@@ -94,7 +96,7 @@ exports.replace = (table, document, data) => fs.outputJSON(`${baseDir + sep + ta
  * @param {string} document The document name.
  * @returns {Promise<Void>}
  */
-exports.delete = (table, document) => fs.unlink(`${baseDir + sep + table + sep + document}.json`);
+exports.delete = (table, document) => fs.unlink(resolve(baseDir, table, `${document}.json`));
 
 exports.conf = {
   moduleName: "json",
