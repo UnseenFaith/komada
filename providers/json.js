@@ -60,9 +60,7 @@ exports.get = (table, document) => fs.readJSON(resolve(baseDir, table, `${docume
  * @param {string} document The document name.
  * @returns {Promise<boolean>}
  */
-exports.has = (table, document) => fs.access(resolve(baseDir, table, `${document}.json`))
-  .then(() => true)
-  .catch(() => false);
+exports.has = (table, document) => fs.pathExists(resolve(baseDir, table, `${document}.json`));
 
 /**
  * Get a random document from a directory.
