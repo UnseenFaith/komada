@@ -159,7 +159,7 @@ module.exports = class Loader {
     if (fullCommand) {
       file = `${fullCommand.help.fullCategory.length !== 0 ? `${fullCommand.help.fullCategory.join(sep)}${sep}` : ""}${fullCommand.help.name}.js`;
       fileToCheck = file.split(sep)[file.split(sep).length - 1];
-      dirToCheck = resolve(dir, fullCommand.help.fullCategory ? `${fullCommand.help.fullCategory.join(sep)}${sep}` : "");
+      dirToCheck = resolve(dir, fullCommand.help.fullCategory ? `${fullCommand.help.fullCategory.join(sep)}` : "");
     } else {
       file = `${name}.js`;
       fileToCheck = file.split(sep)[file.split(sep).length - 1];
@@ -172,7 +172,8 @@ module.exports = class Loader {
     });
     await this.loadFiles([file], dir, this.loadNewCommand, this.reloadCommand)
       .catch((err) => { throw err; });
-    if (this.client.commands.get(name.split(sep)[name.split(sep).length - 1]).init) this.client.commands.get(name.split(sep)[name.split(sep).length - 1]).init(this.client);
+    const newCommand = this.client.commands.get(name.split(sep)[name.split(sep).length - 1]) || this.client.commands.get(this.client.aliases.get(name.split(sep)[name.split(sep).length - 1]));
+    if (newCommand.init) newCommand.init(this.client);
     return `Successfully reloaded the command ${name}.`;
   }
 
