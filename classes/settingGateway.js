@@ -26,7 +26,7 @@ module.exports = class SettingGateway extends CacheManager {
     if (!this.provider) throw `This provider (${this.engine}) does not exist in your system.`;
     await this.schemaManager.init();
     if (!(await this.provider.hasTable("guilds"))) {
-      const SQLCreate = ["id TEXT NOT NULL UNIQUE", `prefix TEXT NOT NULL DEFAULT '${this.defaults.prefix}'`, "adminRole TEXT", "modRole TEXT", "disabledCommands TEXT DEFAULT '[]'"];
+      const SQLCreate = this.buildSQLSchema(this.schema);
       await this.provider.createTable("guilds", SQLCreate);
     }
     const data = await this.provider.getAll("guilds");
@@ -56,6 +56,26 @@ module.exports = class SettingGateway extends CacheManager {
   deserializer(data) {
     const deserialize = this.deserializeKeys;
     for (let i = 0; i < deserialize.length; i++) data[deserialize[i]] = JSON.parse(data[deserialize[i]]);
+  }
+
+  buildSQLSchema(schema) {
+    const constants = this.provider.CONSTANTS;
+    if (!constants) {
+      this.client.emit("log", "This SQL Provider does not seem to have a CONSTANTS exports. Using built-in schema.", "error");
+      return ["id TEXT NOT NULL UNIQUE", `prefix TEXT NOT NULL DEFAULT '${this.defaults.prefix}'`, "adminRole TEXT", "modRole TEXT", "disabledCommands TEXT DEFAULT '[]'"];
+    }
+    const output = ["id TEXT NOT NULL UNIQUE"];
+    const selectType = value => constants[value.type] || "TEXT";
+    let sanitize = this.provider.sanitize;
+    if (!this.provider.sanitize) {
+      this.client.emit("log", "This SQL Provider does not seem to have a sanitize exports. It might corrupt.", "error");
+      sanitize = value => value;
+    }
+    for (const [key, value] of Object.entries(schema)) {
+      output.push(`${key} ${selectType(value.type)}${value.default ? ` NOT NULL DEFAULT ${sanitize(value.default)}` : ""}`);
+    }
+
+    return output;
   }
 
   /**
