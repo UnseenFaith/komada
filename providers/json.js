@@ -4,6 +4,7 @@ const fs = require("fs-nextra");
 let baseDir;
 
 exports.init = (client) => {
+  if (baseDir) return null;
   baseDir = resolve(client.clientBaseDir, "bwd", "provider", "json");
   return fs.ensureDir(baseDir).catch(err => client.emit("log", err, "error"));
 };
@@ -52,6 +53,16 @@ exports.getAll = (table) => {
  * @returns {Promise<?Object>}
  */
 exports.get = (table, document) => fs.readJSON(resolve(baseDir, table, `${document}.json`)).catch(() => null);
+
+/**
+ * Check if the document exists.
+ * @param {string} table The name of the directory.
+ * @param {string} document The document name.
+ * @returns {Promise<boolean>}
+ */
+exports.has = (table, document) => fs.access(resolve(baseDir, table, `${document}.json`))
+  .then(() => true)
+  .catch(() => false);
 
 /**
  * Get a random document from a directory.
