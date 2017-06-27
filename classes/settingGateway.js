@@ -171,7 +171,7 @@ module.exports = class SettingGateway extends CacheManager {
       await this.sync(target.id);
       return result;
     }
-    if (!cache[key].includes(result)) throw `The value ${data} for the key ${key} already exists.`;
+    if (!cache[key].includes(result)) throw `The value ${data} for the key ${key} does not exist.`;
     cache[key] = cache[key].filter(v => v !== result);
     await this.provider.update("guilds", target.id, { [key]: cache[key] });
     await this.sync(target.id);

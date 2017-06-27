@@ -1,5 +1,12 @@
 const { inspect } = require("util");
 
+const handle = (value) => {
+  if (typeof value !== "object") return value;
+  if (value === null) return "Not set";
+  if (value instanceof Array) return value[0] ? `[ ${value.join(" | ")} ]` : "None";
+  return value;
+};
+
 exports.run = async (client, msg, [action, key, ...value]) => {
   const configs = msg.guild.settings;
 
@@ -19,7 +26,7 @@ exports.run = async (client, msg, [action, key, ...value]) => {
       if (!key) return msg.sendMessage("You must provide a key");
       if (!value[0]) return msg.sendMessage("You must provide a value");
       if (!configs.id) await client.settingGateway.create(msg.guild);
-      if (!client.settingGateway.schemaManager.schema[key].array) return msg.sendMessage("This key is not array type. Use the action 'reset' instead.");
+      if (!client.settingGateway.schema[key].array) return msg.sendMessage("This key is not array type. Use the action 'reset' instead.");
       return client.settingGateway.updateArray(msg.guild, "remove", key, value.join(" "))
         .then(() => msg.sendMessage(`Successfully removed the value \`${value.join(" ")}\` from the key: **${key}**`))
         .catch(e => msg.sendMessage(e));
@@ -35,7 +42,16 @@ exports.run = async (client, msg, [action, key, ...value]) => {
       const response = await client.settingGateway.reset(msg.guild, key);
       return msg.sendMessage(`The key **${key}** has been reset to: \`${response}\``);
     }
-    case "list": return msg.sendCode("js", inspect(configs));
+    case "list": {
+      const longest = Object.keys(configs).sort((a, b) => a.length < b.length)[0].length;
+      const output = ["= Guild Settings ="];
+      const entries = Object.entries(configs);
+      for (let i = 0; i < entries.length; i++) {
+        if (entries[i][0] === "id") continue;
+        output.push(`${entries[i][0].padEnd(longest)} :: ${handle(entries[i][1])}`);
+      }
+      return msg.sendCode("asciidoc", output);
+    }
     // no default
   }
 
