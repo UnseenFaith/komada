@@ -25,11 +25,37 @@ module.exports = class SettingGateway extends CacheManager {
     this.provider = this.client.providers.get(this.engine);
     if (!this.provider) throw `This provider (${this.engine}) does not exist in your system.`;
     await this.schemaManager.init();
-    if (!(await this.provider.hasTable("guilds"))) this.provider.createTable("guilds");
-    const data = await this.provider.getAll("guilds");
-    if (data[0]) {
-      for (const key of data) super.set(key.id, key);
+    if (!(await this.provider.hasTable("guilds"))) {
+      const SQLCreate = ["id TEXT NOT NULL UNIQUE", `prefix TEXT NOT NULL DEFAULT '${this.defaults.prefix}'`, "adminRole TEXT", "modRole TEXT", "disabledCommands TEXT DEFAULT '[]'"];
+      await this.provider.createTable("guilds", SQLCreate);
     }
+    const data = await this.provider.getAll("guilds");
+    if (this.provider.conf.sql) {
+      this.initDeserialize();
+      for (let i = 0; i < data.length; i++) this.deserializer(data[i]);
+    }
+    if (data[0]) for (const key of data) super.set(key.id, key);
+  }
+
+  /**
+   * [SQL ONLY] Init the deserialization keys for SQL providers.
+   * @returns {void}
+   */
+  initDeserialize() {
+    this.deserializeKeys = [];
+    for (const [key, value] of Object.entries(this.schema)) {
+      if (value.array === true) this.deserializeKeys.push(key);
+    }
+  }
+
+  /**
+   * [SQL ONLY] Deserialize stringified objects.
+   * @param {Object} data The GuildSettings object.
+   * @return {void}
+   */
+  deserializer(data) {
+    const deserialize = this.deserializeKeys;
+    for (let i = 0; i < deserialize.length; i++) data[deserialize[i]] = JSON.parse(data[deserialize[i]]);
   }
 
   /**
@@ -89,11 +115,13 @@ module.exports = class SettingGateway extends CacheManager {
   async sync(guild = null) {
     if (!guild) {
       const data = await this.provider.getAll("guilds");
+      if (this.provider.conf.sql) for (let i = 0; i < data.length; i++) this.deserializer(data[i]);
       for (const key of data) super.set(key.id, key);
       return;
     }
     const target = await this.validateGuild(guild);
     const data = await this.provider.get("guilds", target.id);
+    if (this.provider.conf.sql) this.deserializer(data);
     await super.set(target.id, data);
   }
 
