@@ -159,7 +159,7 @@ module.exports = class Loader {
     if (fullCommand) {
       file = `${fullCommand.help.fullCategory.length !== 0 ? `${fullCommand.help.fullCategory.join(sep)}${sep}` : ""}${fullCommand.help.name}.js`;
       fileToCheck = file.split(sep)[file.split(sep).length - 1];
-      dirToCheck = resolve(dir, fullCommand.help.fullCategory ? `${fullCommand.help.fullCategory.join(sep)}` : "");
+      dirToCheck = resolve(dir, ...fullCommand.help.fullCategory);
     } else {
       file = `${name}.js`;
       fileToCheck = file.split(sep)[file.split(sep).length - 1];
