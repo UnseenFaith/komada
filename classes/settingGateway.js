@@ -1,6 +1,7 @@
 const SettingResolver = require("./settingResolver.js");
 const CacheManager = require("./cacheManager.js");
 const SchemaManager = require("./schemaManager.js");
+const SQL = require("./sql");
 
 /* eslint-disable no-restricted-syntax */
 module.exports = class SettingGateway extends CacheManager {
@@ -25,58 +26,17 @@ module.exports = class SettingGateway extends CacheManager {
     this.provider = this.client.providers.get(this.engine);
     if (!this.provider) throw `This provider (${this.engine}) does not exist in your system.`;
     await this.schemaManager.init();
-    this.sql = this.provider.conf.sql;
+    this.sql = this.provider.conf.sql ? new SQL(this.client, this.provider) : false;
     if (!(await this.provider.hasTable("guilds"))) {
-      const SQLCreate = this.sql ? this.buildSQLSchema(this.schema) : undefined;
+      const SQLCreate = this.sql ? this.sql.buildSQLSchema(this.schema) : undefined;
       await this.provider.createTable("guilds", SQLCreate);
     }
     const data = await this.provider.getAll("guilds");
     if (this.sql) {
-      this.initDeserialize();
-      for (let i = 0; i < data.length; i++) this.deserializer(data[i]);
+      this.sql.initDeserialize();
+      for (let i = 0; i < data.length; i++) this.sql.deserializer(data[i]);
     }
     if (data[0]) for (const key of data) super.set(key.id, key);
-  }
-
-  /**
-   * [SQL ONLY] Init the deserialization keys for SQL providers.
-   * @returns {void}
-   */
-  initDeserialize() {
-    this.deserializeKeys = [];
-    for (const [key, value] of Object.entries(this.schema)) {
-      if (value.array === true) this.deserializeKeys.push(key);
-    }
-  }
-
-  /**
-   * [SQL ONLY] Deserialize stringified objects.
-   * @param {Object} data The GuildSettings object.
-   * @return {void}
-   */
-  deserializer(data) {
-    const deserialize = this.deserializeKeys;
-    for (let i = 0; i < deserialize.length; i++) data[deserialize[i]] = JSON.parse(data[deserialize[i]]);
-  }
-
-  buildSQLSchema(schema) {
-    const constants = this.provider.CONSTANTS;
-    if (!constants) {
-      this.client.emit("log", "This SQL Provider does not seem to have a CONSTANTS exports. Using built-in schema.", "error");
-      return ["id TEXT NOT NULL UNIQUE", `prefix TEXT NOT NULL DEFAULT '${this.defaults.prefix}'`, "adminRole TEXT", "modRole TEXT", "disabledCommands TEXT DEFAULT '[]'"];
-    }
-    const output = ["id TEXT NOT NULL UNIQUE"];
-    const selectType = value => constants[value.type] || "TEXT";
-    let sanitize = this.provider.sanitize;
-    if (!this.provider.sanitize) {
-      this.client.emit("log", "This SQL Provider does not seem to have a sanitize exports. It might corrupt.", "error");
-      sanitize = value => value;
-    }
-    for (const [key, value] of Object.entries(schema)) {
-      output.push(`${key} ${selectType(value.type)}${value.default ? ` NOT NULL DEFAULT ${sanitize(value.default)}` : ""}`);
-    }
-
-    return output;
   }
 
   /**
@@ -151,13 +111,13 @@ module.exports = class SettingGateway extends CacheManager {
   async sync(guild = null) {
     if (!guild) {
       const data = await this.provider.getAll("guilds");
-      if (this.sql) for (let i = 0; i < data.length; i++) this.deserializer(data[i]);
+      if (this.sql) for (let i = 0; i < data.length; i++) this.sql.deserializer(data[i]);
       for (const key of data) super.set(key.id, key);
       return;
     }
     const target = await this.validateGuild(guild);
     const data = await this.provider.get("guilds", target.id);
-    if (this.sql) this.deserializer(data);
+    if (this.sql) this.sql.deserializer(data);
     await super.set(target.id, data);
   }
 
@@ -177,7 +137,7 @@ module.exports = class SettingGateway extends CacheManager {
   }
 
   /**
-   * Update the configuration from a Guild configuration.
+   * Update a Guild's configuration.
    * @param {(Guild|Snowflake)} guild The Guild object or snowflake.
    * @param {string} key The key to update.
    * @param {any} data The new value for the key.
@@ -193,6 +153,14 @@ module.exports = class SettingGateway extends CacheManager {
     return result;
   }
 
+  /**
+   * Update an array from the a Guild's configuration.
+   * @param {(Guild|Snowflake)} guild The Guild object or snowflake.
+   * @param {string} type Either 'add' or 'remove'.
+   * @param {string} key The key from the Schema.
+   * @param {any} data The value to be added or removed.
+   * @returns {boolean}
+   */
   async updateArray(guild, type, key, data) {
     if (!["add", "remove"].includes(type)) throw "The type parameter must be either add or remove.";
     if (!(key in this.schema)) throw `The key ${key} does not exist in the current data schema.`;

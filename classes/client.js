@@ -30,7 +30,6 @@ module.exports = class Komada extends Discord.Client {
     super(config.clientOptions);
     this.config = config;
     this.config.provider = config.provider || {};
-    this.config.disabled = config.disabled || {};
     this.config.disabled = {
       commands: config.disabled.commands || [],
       events: config.disabled.events || [],
