@@ -102,7 +102,20 @@ class SchemaManager {
    * @returns {void}
    */
   async force(action, key) {
-    const data = this.client.settingGateway.getAll("guilds");
+    if (this.settingGateway.sql) {
+      if (!this.settingGateway.provider.updateColumns) {
+        this.client.emit("log", "This SQL Provider does not seem to have a updateColumns exports. Force action cancelled.", "error");
+        return null;
+      }
+      const tuplify = s => [s.split(" ")[0], s.split(" ").slice(1).join(" ")];
+      const newSQLSchema = this.settingGateway.buildSQLSchema(this.schema).map(tuplify);
+      const keys = Object.keys(this.defaults);
+      if (!keys.includes("id")) keys.push("id");
+      const columns = keys.filter(k => k !== key);
+      await this.settingGateway.provider.updateColumns("guilds", columns, newSQLSchema);
+      this.settingGateway.initDeserialize();
+    }
+    const data = this.settingGateway.getAll("guilds");
     let value;
     if (action === "add") value = this.defaults[key];
     await Promise.all(data.map(async (obj) => {
@@ -112,7 +125,16 @@ class SchemaManager {
       if (obj.id) await this.client.settingGateway.provider.replace("guilds", obj.id, object);
       return true;
     }));
-    return this.client.settingGateway.sync();
+    return this.settingGateway.sync();
+  }
+
+  /**
+   * Shortcut for settingGateway
+   * @readonly
+   * @memberof SchemaManager
+   */
+  get settingGateway() {
+    return this.client.settingGateway;
   }
 
   /**

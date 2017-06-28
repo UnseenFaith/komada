@@ -25,12 +25,13 @@ module.exports = class SettingGateway extends CacheManager {
     this.provider = this.client.providers.get(this.engine);
     if (!this.provider) throw `This provider (${this.engine}) does not exist in your system.`;
     await this.schemaManager.init();
+    this.sql = this.provider.conf.sql;
     if (!(await this.provider.hasTable("guilds"))) {
-      const SQLCreate = this.buildSQLSchema(this.schema);
+      const SQLCreate = this.sql ? this.buildSQLSchema(this.schema) : undefined;
       await this.provider.createTable("guilds", SQLCreate);
     }
     const data = await this.provider.getAll("guilds");
-    if (this.provider.conf.sql) {
+    if (this.sql) {
       this.initDeserialize();
       for (let i = 0; i < data.length; i++) this.deserializer(data[i]);
     }
@@ -135,13 +136,13 @@ module.exports = class SettingGateway extends CacheManager {
   async sync(guild = null) {
     if (!guild) {
       const data = await this.provider.getAll("guilds");
-      if (this.provider.conf.sql) for (let i = 0; i < data.length; i++) this.deserializer(data[i]);
+      if (this.sql) for (let i = 0; i < data.length; i++) this.deserializer(data[i]);
       for (const key of data) super.set(key.id, key);
       return;
     }
     const target = await this.validateGuild(guild);
     const data = await this.provider.get("guilds", target.id);
-    if (this.provider.conf.sql) this.deserializer(data);
+    if (this.sql) this.deserializer(data);
     await super.set(target.id, data);
   }
 

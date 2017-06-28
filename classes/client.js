@@ -96,6 +96,10 @@ module.exports = class Komada extends Discord.Client {
     super.login(token);
   }
 
+  get schemaManager() {
+    return this.settingGateway.schemaManager;
+  }
+
   async _ready() {
     this.config.prefixMention = new RegExp(`^<@!?${this.user.id}>`);
     if (this.user.bot) this.application = await super.fetchApplication();
