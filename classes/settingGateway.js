@@ -1,6 +1,6 @@
-const SettingResolver = require("./settingResolver.js");
-const CacheManager = require("./cacheManager.js");
-const SchemaManager = require("./schemaManager.js");
+const SettingResolver = require("./settingResolver");
+const CacheManager = require("./cacheManager");
+const SchemaManager = require("./schemaManager");
 const SQL = require("./sql");
 
 /* eslint-disable no-restricted-syntax */
