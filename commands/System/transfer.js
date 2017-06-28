@@ -1,7 +1,6 @@
 const fs = require("fs-nextra");
 const { resolve } = require("path");
 
-/* eslint-disable no-throw-literal */
 exports.run = async (client, msg, [type, name]) => {
   const coreDir = client.coreBaseDir;
   const clientDir = client.clientBaseDir;
@@ -14,7 +13,9 @@ exports.run = async (client, msg, [type, name]) => {
     monitor: client.funcs.reloadMessageMonitor,
   };
   if (type === "command") name = `System/${name}`;
-  return fs.copy(resolve(`${coreDir}/${type}s/${name}.js`), resolve(`${clientDir}/${type}s/${name}.js`))
+  const fileLocation = resolve(coreDir, `${type}s`, `${name}.js`);
+  await fs.access(fileLocation).catch(() => { throw "❌ That file has been transfered already or never existed."; });
+  return fs.copy(fileLocation, resolve(clientDir, `${type}s`, `${name}.js`))
     .then(() => {
       reload[type].call(client.funcs, `${name}`).catch((response) => { throw `❌ ${response}`; });
       return msg.sendMessage(`✅ Successfully Transferred ${type}: ${name}`);

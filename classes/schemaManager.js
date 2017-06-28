@@ -1,4 +1,4 @@
-const { sep, resolve } = require("path");
+const { resolve } = require("path");
 const fs = require("fs-nextra");
 
 const validTypes = ["User", "Channel", "Guild", "Role", "Boolean", "String", "Integer", "Float", "url", "Command"];
@@ -15,9 +15,9 @@ class SchemaManager {
    * @returns {void}
    */
   async init() {
-    const baseDir = resolve(`${this.client.clientBaseDir}${sep}bwd`);
+    const baseDir = resolve(this.client.clientBaseDir, "bwd");
     await fs.ensureDir(baseDir);
-    this.filePath = `${baseDir + sep}schema.json`;
+    this.filePath = resolve(baseDir, "schema.json");
     const schema = await fs.readJSON(this.filePath)
       .catch(() => fs.outputJSON(this.filePath, this.defaultDataSchema).then(() => this.defaultDataSchema));
     return this.validate(schema);
@@ -76,6 +76,7 @@ class SchemaManager {
       if (!options.default) options.default = null;
       options.array = false;
     }
+    if (this.settingGateway.sql) options.sql = this.settingGateway.sql.buildSingleSQLSchema(options);
     this.schema[key] = options;
     this.defaults[key] = options.default;
     if (force) this.force("add", key);
@@ -102,7 +103,10 @@ class SchemaManager {
    * @returns {void}
    */
   async force(action, key) {
-    const data = this.client.settingGateway.getAll();
+    if (this.settingGateway.sql) {
+      await this.settingGateway.sql.updateColumns(this.schema, this.defaults, key);
+    }
+    const data = this.settingGateway.getAll("guilds");
     let value;
     if (action === "add") value = this.defaults[key];
     await Promise.all(data.map(async (obj) => {
@@ -112,7 +116,16 @@ class SchemaManager {
       if (obj.id) await this.client.settingGateway.provider.replace("guilds", obj.id, object);
       return true;
     }));
-    return this.client.settingGateway.sync();
+    return this.settingGateway.sync();
+  }
+
+  /**
+   * Shortcut for settingGateway
+   * @readonly
+   * @memberof SchemaManager
+   */
+  get settingGateway() {
+    return this.client.settingGateway;
   }
 
   /**
@@ -126,21 +139,25 @@ class SchemaManager {
         type: "String",
         default: this.client.config.prefix,
         array: false,
+        sql: `TEXT NOT NULL DEFAULT '${this.client.config.prefix}'`,
       },
       modRole: {
         type: "Role",
         default: null,
         array: false,
+        sql: "TEXT",
       },
       adminRole: {
         type: "Role",
         default: null,
         array: false,
+        sql: "TEXT",
       },
       disabledCommands: {
         type: "Command",
         default: [],
         array: true,
+        sql: "TEXT DEFAULT '[]'",
       },
     };
   }
