@@ -134,7 +134,7 @@ module.exports = class SettingGateway extends CacheManager {
    * @returns {Object}
    */
   async getResolved(guild) {
-    guild = await this.resolver.guild(guild).catch((err) => { throw err; });
+    guild = await this.validateGuild(guild);
     const settings = this.get(guild);
     const resolved = await Promise.all(Object.entries(settings).map(([key, data]) => {
       if (this.schema[key] && this.schema[key].array) return Promise.all(data.map(entry => this.resolver[this.schema[key].type.toLowerCase()](guild, this.schema[key], entry)));
