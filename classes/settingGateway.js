@@ -122,7 +122,7 @@ module.exports = class SettingGateway extends CacheManager {
   }
 
   /**
-   * Update the configuration from a Guild configuration.
+   * Update a Guild's configuration.
    * @param {(Guild|Snowflake)} guild The Guild object or snowflake.
    * @param {string} key The key to update.
    * @param {any} data The new value for the key.
@@ -137,6 +137,14 @@ module.exports = class SettingGateway extends CacheManager {
     return result;
   }
 
+  /**
+   * Update an array from the a Guild's configuration.
+   * @param {(Guild|Snowflake)} guild The Guild object or snowflake.
+   * @param {string} type Either 'add' or 'remove'.
+   * @param {string} key The key from the Schema.
+   * @param {any} data The value to be added or removed.
+   * @returns {boolean}
+   */
   async updateArray(guild, type, key, data) {
     if (!["add", "remove"].includes(type)) throw "The type parameter must be either add or remove.";
     if (!(key in this.schema)) throw `The key ${key} does not exist in the current data schema.`;
