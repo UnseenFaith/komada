@@ -1,3 +1,3 @@
 exports.run = (client, msgs) => {
-  msgs.forEach(msg => client.emit("messageDelete", msg));
+  for (const msg of msgs.values()) client.emit("messageDelete", msg); // eslint-disable-line no-restricted-syntax
 };

@@ -1,6 +1,6 @@
 {
   "name": "komada",
-  "version": "0.20.1",
+  "version": "0.20.2",
   "lockfileVersion": 1,
   "dependencies": {
     "acorn": {
@@ -82,15 +82,15 @@
       "dev": true
     },
     "balanced-match": {
-      "version": "0.4.2",
-      "resolved": "https://registry.npmjs.org/balanced-match/-/balanced-match-0.4.2.tgz",
-      "integrity": "sha1-yz8+PHMtwPAe5wtAPzAuYddwmDg=",
+      "version": "1.0.0",
+      "resolved": "https://registry.npmjs.org/balanced-match/-/balanced-match-1.0.0.tgz",
+      "integrity": "sha1-ibTRmasr7kneFk6gK4nORi1xt2c=",
       "dev": true
     },
     "brace-expansion": {
-      "version": "1.1.7",
-      "resolved": "https://registry.npmjs.org/brace-expansion/-/brace-expansion-1.1.7.tgz",
-      "integrity": "sha1-Pv/DxQ4ABTH7cg6v+A8K6O8jz1k=",
+      "version": "1.1.8",
+      "resolved": "https://registry.npmjs.org/brace-expansion/-/brace-expansion-1.1.8.tgz",
+      "integrity": "sha1-wHshHHyVLsH479Uad+8NHTmQopI=",
       "dev": true
     },
     "builtin-modules": {
@@ -195,7 +195,7 @@
       "dev": true
     },
     "discord.js": {
-      "version": "github:hydrabolt/discord.js#b694ab1b8098f1f6664d350248e8f9008414f5ba"
+      "version": "github:hydrabolt/discord.js#0a337a4646c2b906a195182bddfcdf4a774fbcbf"
     },
     "doctrine": {
       "version": "2.0.0",
@@ -275,29 +275,15 @@
       "dev": true
     },
     "eslint-module-utils": {
-      "version": "2.0.0",
-      "resolved": "https://registry.npmjs.org/eslint-module-utils/-/eslint-module-utils-2.0.0.tgz",
-      "integrity": "sha1-pvjCHZATWHWc3DXbrBmCrh7li84=",
-      "dev": true,
-      "dependencies": {
-        "debug": {
-          "version": "2.2.0",
-          "resolved": "https://registry.npmjs.org/debug/-/debug-2.2.0.tgz",
-          "integrity": "sha1-+HBX6ZWxofauaklgZkE3vFbwOdo=",
-          "dev": true
-        },
-        "ms": {
-          "version": "0.7.1",
-          "resolved": "https://registry.npmjs.org/ms/-/ms-0.7.1.tgz",
-          "integrity": "sha1-nNE8A62/8ltl7/3nzoZO6VIBcJg=",
-          "dev": true
-        }
-      }
+      "version": "2.1.1",
+      "resolved": "https://registry.npmjs.org/eslint-module-utils/-/eslint-module-utils-2.1.1.tgz",
+      "integrity": "sha512-jDI/X5l/6D1rRD/3T43q8Qgbls2nq5km5KSqiwlyUbGo5+04fXhMKdCPhjwbqAa6HXWaMxj8Q4hQDIh7IadJQw==",
+      "dev": true
     },
     "eslint-plugin-import": {
-      "version": "2.3.0",
-      "resolved": "https://registry.npmjs.org/eslint-plugin-import/-/eslint-plugin-import-2.3.0.tgz",
-      "integrity": "sha1-N8gB4K2g4pbL3yDD85OstbUq82s=",
+      "version": "2.6.0",
+      "resolved": "https://registry.npmjs.org/eslint-plugin-import/-/eslint-plugin-import-2.6.0.tgz",
+      "integrity": "sha512-JdkYDmMMjhxW6X/IVclD+vQXO6e2nJJT4cKcyTw95mvBCWkr8THXKFhc+WCvGvOscjGuLQzUB7tBeJddrg2jig==",
       "dev": true,
       "dependencies": {
         "doctrine": {
@@ -327,18 +313,10 @@
       "dev": true
     },
     "esrecurse": {
-      "version": "4.1.0",
-      "resolved": "https://registry.npmjs.org/esrecurse/-/esrecurse-4.1.0.tgz",
-      "integrity": "sha1-RxO2U2rffyrE8yfVWed1a/9kgiA=",
-      "dev": true,
-      "dependencies": {
-        "estraverse": {
-          "version": "4.1.1",
-          "resolved": "https://registry.npmjs.org/estraverse/-/estraverse-4.1.1.tgz",
-          "integrity": "sha1-9srKcokzqFDvkGYdDheYK6RxEaI=",
-          "dev": true
-        }
-      }
+      "version": "4.2.0",
+      "resolved": "https://registry.npmjs.org/esrecurse/-/esrecurse-4.2.0.tgz",
+      "integrity": "sha1-+pVo2Y04I/mkHZHpAtyrnqblsWM=",
+      "dev": true
     },
     "estraverse": {
       "version": "4.2.0",
@@ -848,10 +826,18 @@
       }
     },
     "readable-stream": {
-      "version": "2.2.11",
-      "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-2.2.11.tgz",
-      "integrity": "sha512-h+8+r3MKEhkiVrwdKL8aWs1oc1VvBu33ueshOvS26RsZQ3Amhx/oO3TKe4lApSV9ueY6as8EAh7mtuFjdlhg9Q==",
-      "dev": true
+      "version": "2.3.2",
+      "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-2.3.2.tgz",
+      "integrity": "sha1-WgTfBeT1f+Pw3Gj90R3FyXx+b00=",
+      "dev": true,
+      "dependencies": {
+        "safe-buffer": {
+          "version": "5.1.1",
+          "resolved": "https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.1.1.tgz",
+          "integrity": "sha512-kKvNJn6Mm93gAczWVJg7wH+wGYWNrDHdWvpUmHyEsgCtIwwo3bqPtV4tR5tuPaUhTOo/kvhVwd8XwwOllGYkbg==",
+          "dev": true
+        }
+      }
     },
     "readline2": {
       "version": "1.0.1",
@@ -931,9 +917,9 @@
       "dev": true
     },
     "snekfetch": {
-      "version": "3.1.8",
-      "resolved": "https://registry.npmjs.org/snekfetch/-/snekfetch-3.1.8.tgz",
-      "integrity": "sha512-hRXeasaRhCNxgtEbrRN6F7MvyvtdaJ6yHI37TkjXJIwMcFOaeK2LQxzfPHTqhyOYL+ZIyq49/Hdxo4SXfmkbPg=="
+      "version": "3.1.11",
+      "resolved": "https://registry.npmjs.org/snekfetch/-/snekfetch-3.1.11.tgz",
+      "integrity": "sha512-jC00Es/N1thVDpIV12Esfv7Ya0dfgwsWy7SILFB9oiHthARDcqmc5VX5bdNoWBci2M05Z0ZweGNt2Oue8YD3qQ=="
     },
     "spdx-correct": {
       "version": "1.0.2",
@@ -960,10 +946,18 @@
       "dev": true
     },
     "string_decoder": {
-      "version": "1.0.2",
-      "resolved": "https://registry.npmjs.org/string_decoder/-/string_decoder-1.0.2.tgz",
-      "integrity": "sha1-sp4fThEl+pehA4K4pTNze3SR4Xk=",
-      "dev": true
+      "version": "1.0.3",
+      "resolved": "https://registry.npmjs.org/string_decoder/-/string_decoder-1.0.3.tgz",
+      "integrity": "sha512-4AH6Z5fzNNBcH+6XDMfA/BTt87skxqJlO0lAh3Dker5zThcAxG6mKz+iGu308UKoPPQ8Dcqx/4JhujzltRa+hQ==",
+      "dev": true,
+      "dependencies": {
+        "safe-buffer": {
+          "version": "5.1.1",
+          "resolved": "https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.1.1.tgz",
+          "integrity": "sha512-kKvNJn6Mm93gAczWVJg7wH+wGYWNrDHdWvpUmHyEsgCtIwwo3bqPtV4tR5tuPaUhTOo/kvhVwd8XwwOllGYkbg==",
+          "dev": true
+        }
+      }
     },
     "string-width": {
       "version": "1.0.2",

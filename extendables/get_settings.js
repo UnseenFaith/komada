@@ -1,10 +1,10 @@
 exports.conf = {
   type: "get",
-  method: "conf",
+  method: "settings",
   appliesTo: ["Guild"],
 };
 
 // eslint-disable-next-line func-names
 exports.extend = function () {
-  return this.client.configuration.get(this);
+  return this.client.settingGateway.get(this.id);
 };

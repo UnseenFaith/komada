@@ -1,39 +1,35 @@
 const Discord = require("discord.js");
 const path = require("path");
 const now = require("performance-now");
-const CommandMessage = require("./commandMessage.js");
-const Loader = require("./loader.js");
-const ArgResolver = require("./argResolver.js");
-const PermLevels = require("./permLevels.js");
- /* Will Change this later */
-const Config = require("./Configuration Types/Config.js");
+const CommandMessage = require("./commandMessage");
+const Loader = require("./loader");
+const ArgResolver = require("./argResolver");
+const PermLevels = require("./permLevels");
+const SettingGateway = require("./settingGateway");
 
 const defaultPermStructure = new PermLevels()
   .addLevel(0, false, () => true)
   .addLevel(2, false, (client, msg) => {
-    if (!msg.guild) return false;
-    const modRole = msg.guild.roles.find("name", msg.guild.conf.modRole);
+    if (!msg.guild || !msg.guild.settings.modRole) return false;
+    const modRole = msg.guild.roles.get(msg.guild.settings.modRole);
     return modRole && msg.member.roles.has(modRole.id);
   })
   .addLevel(3, false, (client, msg) => {
-    if (!msg.guild) return false;
-    const adminRole = msg.guild.roles.find("name", msg.guild.conf.adminRole);
+    if (!msg.guild || !msg.guild.settings.adminRole) return false;
+    const adminRole = msg.guild.roles.get(msg.guild.settings.adminRole);
     return adminRole && msg.member.roles.has(adminRole.id);
   })
-  .addLevel(4, false, (client, msg) => {
-    if (!msg.guild) return false;
-    return msg.author.id === msg.guild.owner.id;
-  })
+  .addLevel(4, false, (client, msg) => msg.guild && msg.author.id === msg.guild.owner.id)
   .addLevel(9, true, (client, msg) => msg.author.id === client.config.ownerID)
   .addLevel(10, false, (client, msg) => msg.author.id === client.config.ownerID);
 
 /* eslint-disable no-throw-literal, no-use-before-define, no-restricted-syntax, no-underscore-dangle */
 module.exports = class Komada extends Discord.Client {
-
   constructor(config = {}) {
     if (typeof config !== "object") throw new TypeError("Configuration for Komada must be an object.");
     super(config.clientOptions);
     this.config = config;
+    this.config.provider = config.provider || {};
     this.config.disabled = config.disabled || {};
     this.config.disabled = {
       commands: config.disabled.commands || [],
@@ -74,8 +70,7 @@ module.exports = class Komada extends Discord.Client {
       escapeMarkdown: Discord.escapeMarkdown,
       splitMessage: Discord.splitMessage,
     };
-    this.guildConfs = Config.guildConfs;
-    this.configuration = Config;
+    this.settingGateway = new SettingGateway(this);
     this.application = null;
     this.once("ready", this._ready.bind(this));
   }
@@ -131,7 +126,7 @@ module.exports = class Komada extends Discord.Client {
       if (piece.init) return piece.init(this);
       return true;
     }));
-    await this.configuration.initialize(this);
+    await this.settingGateway.init();
     this.setInterval(this.sweepCommandMessages.bind(this), this.commandMessageLifetime);
     this.ready = true;
     this.emit("log", this.config.readyMessage || `Successfully initialized. Ready to serve ${this.guilds.size} guilds.`);
@@ -155,7 +150,6 @@ module.exports = class Komada extends Discord.Client {
     this.emit("debug", `Swept ${messages - this.commandMessages.size} commandMessages older than ${lifetime} seconds.`);
     return messages - this.commandMessages.size;
   }
-
 };
 
 process.on("unhandledRejection", (err) => {

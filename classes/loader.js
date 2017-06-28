@@ -161,6 +161,7 @@ module.exports = class Loader {
     if (!files) return false;
     await this.loadFiles(files.filter(file => file.endsWith(".js")
       && (coreProtected.commands.includes(file.split(".")[0]) || !this.client.config.disabled.commands.includes(file.split(".")[0])))
+      .map(file => [file])
       , dir, this.loadNewCommand, this.loadCommands)
       .catch((err) => { throw err; });
     const subfolders = [];
@@ -170,7 +171,7 @@ module.exports = class Loader {
       subFiles.filter(file => !file.includes(".")).forEach(subfolder => subfolders.push({ folder, subfolder }));
       return this.loadFiles(subFiles.filter(file => file.endsWith(".js")
         && (coreProtected.commands.includes(file.split(".")[0]) || !this.client.config.disabled.commands.includes(file.split(".")[0])))
-        .map(file => join(folder, file)), dir, this.loadNewCommand, this.loadCommands)
+        .map(file => [folder, file]), dir, this.loadNewCommand, this.loadCommands)
         .catch((err) => { throw err; });
     });
     await Promise.all(mps1).catch((err) => { throw err; });
@@ -179,16 +180,16 @@ module.exports = class Loader {
       if (!subSubFiles) return true;
       return this.loadFiles(subSubFiles.filter(file => file.endsWith(".js")
         && (coreProtected.commands.includes(file.split(".")[0]) || !this.client.config.disabled.commands.includes(file.split(".")[0])))
-        .map(file => join(subfolder.folder, subfolder.subfolder, file)), dir, this.loadNewCommand, this.loadCommands)
+        .map(file => [subfolder.folder, subfolder.subfolder, file]), dir, this.loadNewCommand, this.loadCommands)
         .catch((err) => { throw err; });
     });
     return Promise.all(mps2).catch((err) => { throw err; });
   }
 
   loadNewCommand(file, dir) {
-    const path = join(dir, file);
+    const path = join(dir, ...file);
     const cmd = require(path);
-    cmd.help.fullCategory = file.split(sep).slice(0, -1);
+    cmd.help.fullCategory = file.slice(0, -1);
     cmd.help.subCategory = cmd.help.fullCategory[1] || "General";
     cmd.help.category = cmd.help.fullCategory[0] || "General";
     cmd.help.codeLang = "JS";
@@ -205,29 +206,21 @@ module.exports = class Loader {
 
   async reloadCommand(name) {
     if (name.endsWith(".js")) name = name.slice(0, -3);
-    name = name.split("/").join(sep);
+    name = join(...name.split("/"));
     const fullCommand = this.client.commands.get(name) || this.client.commands.get(this.client.aliases.get(name));
     const dir = this.clientDirs.commands;
-    let file;
-    let fileToCheck;
-    let dirToCheck;
-    if (fullCommand) {
-      file = `${fullCommand.help.fullCategory.length !== 0 ? `${fullCommand.help.fullCategory.join(sep)}${sep}` : ""}${fullCommand.help.name}.js`;
-      fileToCheck = file.split(sep)[file.split(sep).length - 1];
-      dirToCheck = resolve(dir, fullCommand.help.fullCategory ? `${fullCommand.help.fullCategory.join(sep)}${sep}` : "");
-    } else {
-      file = `${name}.js`;
-      fileToCheck = file.split(sep)[file.split(sep).length - 1];
-      dirToCheck = resolve(dir, ...file.split(sep).slice(0, -1));
-    }
-    const files = await fs.readdir(dirToCheck);
-    if (!files.includes(fileToCheck)) throw `Could not find a reloadable file named ${file}`;
+    const file = fullCommand ? [...fullCommand.help.fullCategory, `${fullCommand.help.name}.js`] : `${name}.js`.split(sep);
+    const fileToCheck = file[file.length - 1];
+    const dirToCheck = resolve(dir, ...file.slice(0, -1));
+    const files = await fs.readdir(dirToCheck).catch(() => { throw "A user directory path could not be found. Only user commands may be reloaded."; });
+    if (!files.includes(fileToCheck)) throw `Could not find a reloadable file named ${file.join(sep)}`;
     this.client.aliases.forEach((cmd, alias) => {
       if (cmd === name) this.client.aliases.delete(alias);
     });
     await this.loadFiles([file], dir, this.loadNewCommand, this.reloadCommand)
       .catch((err) => { throw err; });
-    if (this.client.commands.get(name.split(sep)[name.split(sep).length - 1]).init) this.client.commands.get(name.split(sep)[name.split(sep).length - 1]).init(this.client);
+    const newCommand = this.client.commands.get(fileToCheck.slice(0, -3));
+    if (newCommand.init) newCommand.init(this.client);
     return `Successfully reloaded the command ${name}.`;
   }
 
@@ -503,6 +496,8 @@ module.exports = class Loader {
   async reloadProvider(name) {
     const file = name.endsWith(".js") ? name : `${name}.js`;
     if (name.endsWith(".js")) name = name.slice(0, -3);
+    const provider = this.client.providers.get(name);
+    if (provider && provider.shutdown) await provider.shutdown();
     const files = await fs.readdir(this.clientDirs.providers);
     if (!files.includes(file)) throw `Could not find a reloadable file named ${file}`;
     await this.loadFiles([file], this.clientDirs.providers, this.loadNewProvider, this.reloadProvider)
@@ -618,7 +613,7 @@ module.exports = class Loader {
 
   async installNPM(missingModule) {
     console.log(`Installing: ${missingModule}`);
-    const { stdout, stderr } = await exec(`npm i ${missingModule}`).catch((err) => {
+    const { stdout, stderr } = await exec(`npm i ${missingModule}`, { cwd: this.client.clientBaseDir }).catch((err) => {
       console.error("=====NEW DEPENDANCY INSTALL FAILED HORRIBLY=====");
       throw err;
     });

@@ -1,5 +1,5 @@
 const fs = require("fs-nextra");
-const path = require("path");
+const { resolve } = require("path");
 
 /* eslint-disable no-throw-literal */
 exports.run = async (client, msg, [type, name]) => {
@@ -14,7 +14,7 @@ exports.run = async (client, msg, [type, name]) => {
     monitor: client.funcs.reloadMessageMonitor,
   };
   if (type === "command") name = `System/${name}`;
-  return fs.copy(path.resolve(`${coreDir}/${type}s/${name}.js`), path.resolve(`${clientDir}/${type}s/${name}.js`))
+  return fs.copy(resolve(`${coreDir}/${type}s/${name}.js`), resolve(`${clientDir}/${type}s/${name}.js`))
     .then(() => {
       reload[type].call(client.funcs, `${name}`).catch((response) => { throw `❌ ${response}`; });
       return msg.sendMessage(`✅ Successfully Transferred ${type}: ${name}`);
@@ -32,11 +32,12 @@ exports.conf = {
   permLevel: 10,
   botPerms: [],
   requiredFuncs: [],
+  requiredSettings: [],
 };
 
 exports.help = {
   name: "transfer",
-  description: "Transfers a core piece to its respected folder",
+  description: "Transfers a core piece to its respective folder",
   usage: "<command|function|inhibitor|event|monitor|finalizer> <name:str>",
   usageDelim: " ",
 };
