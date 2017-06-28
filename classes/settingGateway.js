@@ -135,7 +135,7 @@ module.exports = class SettingGateway extends CacheManager {
    */
   async getResolved(guild) {
     const settings = this.get(guild);
-    const resolved = await Promise.all(Object.entries(settings).map(([key, data]) => ({ [key]: this.resolver[this.schema[key].type.toLowerCase()](guild, this.schema[key], data) })));
+    const resolved = await Promise.all(Object.entries(settings).map(([key, data]) => ({ [key]: this.schema[key] ? this.resolver[this.schema[key].type.toLowerCase()](guild, this.schema[key], data) : data })));
     return Object.assign({}, ...resolved);
   }
 
