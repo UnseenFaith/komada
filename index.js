@@ -11,4 +11,5 @@ module.exports = {
   CacheManager: require("./classes/cacheManager"),
   SchemaManager: require("./classes/schemaManager"),
   SQL: require("./classes/sql"),
+  settingResolver: require("./classes/settingResolver"),
 };

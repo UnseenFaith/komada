@@ -1,6 +1,7 @@
-exports.run = async (client, msg) => msg.sendMessage("Rebooting...")
-    .then(() => process.exit())
-    .catch(err => client.emit("error", err));
+exports.run = async (client, msg) => {
+  await msg.sendMessage("Rebooting...").catch(err => client.emit("error", err));
+  process.exit();
+};
 
 exports.conf = {
   enabled: true,
