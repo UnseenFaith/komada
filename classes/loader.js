@@ -154,18 +154,9 @@ module.exports = class Loader {
     name = join(...name.split("/"));
     const fullCommand = this.client.commands.get(name) || this.client.commands.get(this.client.aliases.get(name));
     const dir = this.clientDirs.commands;
-    let file;
-    let fileToCheck;
-    let dirToCheck;
-    if (fullCommand) {
-      file = [...fullCommand.help.fullCategory, `${fullCommand.help.name}.js`];
-      fileToCheck = file.split(sep)[file.split(sep).length - 1];
-      dirToCheck = resolve(dir, ...fullCommand.help.fullCategory);
-    } else {
-      file = `${name}.js`.split(sep);
-      fileToCheck = file[file.length - 1];
-      dirToCheck = resolve(dir, ...file.slice(0, -1));
-    }
+    const file = fullCommand ? [...fullCommand.help.fullCategory, `${fullCommand.help.name}.js`] : `${name}.js`.split(sep);
+    const fileToCheck = file[file.length - 1];
+    const dirToCheck = resolve(dir, ...file.slice(0, -1));
     const files = await fs.readdir(dirToCheck);
     if (!files.includes(fileToCheck)) throw `Could not find a reloadable file named ${file}`;
     this.client.aliases.forEach((cmd, alias) => {
