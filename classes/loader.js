@@ -120,7 +120,7 @@ module.exports = class Loader {
       subFiles.filter(file => !file.includes(".")).forEach(subfolder => subfolders.push({ folder, subfolder }));
       return this.loadFiles(subFiles.filter(file => file.endsWith(".js")
         && (coreProtected.commands.includes(file.split(".")[0]) || !this.client.config.disabled.commands.includes(file.split(".")[0])))
-        .map(file => join(folder, file)), dir, this.loadNewCommand, this.loadCommands)
+        .map(file => [folder, file]), dir, this.loadNewCommand, this.loadCommands)
         .catch((err) => { throw err; });
     });
     await Promise.all(mps1).catch((err) => { throw err; });
@@ -129,15 +129,15 @@ module.exports = class Loader {
       if (!subSubFiles) return true;
       return this.loadFiles(subSubFiles.filter(file => file.endsWith(".js")
         && (coreProtected.commands.includes(file.split(".")[0]) || !this.client.config.disabled.commands.includes(file.split(".")[0])))
-        .map(file => join(subfolder.folder, subfolder.subfolder, file)), dir, this.loadNewCommand, this.loadCommands)
+        .map(file => [subfolder.folder, subfolder.subfolder, file]), dir, this.loadNewCommand, this.loadCommands)
         .catch((err) => { throw err; });
     });
     return Promise.all(mps2).catch((err) => { throw err; });
   }
 
   loadNewCommand(file, dir) {
-    const cmd = require(join(dir, file));
-    cmd.help.fullCategory = file.split(sep).slice(0, -1);
+    const cmd = require(join(dir, ...file));
+    cmd.help.fullCategory = file.slice(0, -1);
     cmd.help.subCategory = cmd.help.fullCategory[1] || "General";
     cmd.help.category = cmd.help.fullCategory[0] || "General";
     cmd.cooldown = new Map();
@@ -145,25 +145,25 @@ module.exports = class Loader {
     cmd.conf.aliases = cmd.conf.aliases || [];
     cmd.conf.aliases.forEach(alias => this.client.aliases.set(alias, cmd.help.name));
     cmd.usage = new ParsedUsage(this.client, cmd);
-    delete require.cache[join(dir, file)];
+    delete require.cache[join(dir, ...file)];
   }
 
   async reloadCommand(name) {
     if (name.endsWith(".js")) name = name.slice(0, -3);
-    name = name.split("/").join(sep);
+    name = join(name.split("/"));
     const fullCommand = this.client.commands.get(name) || this.client.commands.get(this.client.aliases.get(name));
     const dir = this.clientDirs.commands;
     let file;
     let fileToCheck;
     let dirToCheck;
     if (fullCommand) {
-      file = `${fullCommand.help.fullCategory.length !== 0 ? `${fullCommand.help.fullCategory.join(sep)}${sep}` : ""}${fullCommand.help.name}.js`;
+      file = [...fullCommand.help.fullCategory, `${fullCommand.help.name}.js`];
       fileToCheck = file.split(sep)[file.split(sep).length - 1];
       dirToCheck = resolve(dir, ...fullCommand.help.fullCategory);
     } else {
-      file = `${name}.js`;
-      fileToCheck = file.split(sep)[file.split(sep).length - 1];
-      dirToCheck = resolve(dir, ...file.split(sep).slice(0, -1));
+      file = `${name}.js`.split(sep);
+      fileToCheck = file[file.length - 1];
+      dirToCheck = resolve(dir, ...file.slice(0, -1));
     }
     const files = await fs.readdir(dirToCheck);
     if (!files.includes(fileToCheck)) throw `Could not find a reloadable file named ${file}`;
@@ -172,7 +172,7 @@ module.exports = class Loader {
     });
     await this.loadFiles([file], dir, this.loadNewCommand, this.reloadCommand)
       .catch((err) => { throw err; });
-    const newCommand = this.client.commands.get(name.split(sep)[name.split(sep).length - 1]) || this.client.commands.get(this.client.aliases.get(name.split(sep)[name.split(sep).length - 1]));
+    const newCommand = this.client.commands.get(fileToCheck.slice(0, -3));
     if (newCommand.init) newCommand.init(this.client);
     return `Successfully reloaded the command ${name}.`;
   }
@@ -426,7 +426,7 @@ module.exports = class Loader {
 
   async installNPM(missingModule) {
     console.log(`Installing: ${missingModule}`);
-    const { stdout, stderr } = await exec(`npm i ${missingModule}`).catch((err) => {
+    const { stdout, stderr } = await exec(`npm i ${missingModule}`, { cwd: this.client.clientBaseDir }).catch((err) => {
       console.error("=====NEW DEPENDANCY INSTALL FAILED HORRIBLY=====");
       throw err;
     });
