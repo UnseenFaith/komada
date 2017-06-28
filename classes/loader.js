@@ -157,7 +157,7 @@ module.exports = class Loader {
     const file = fullCommand ? [...fullCommand.help.fullCategory, `${fullCommand.help.name}.js`] : `${name}.js`.split(sep);
     const fileToCheck = file[file.length - 1];
     const dirToCheck = resolve(dir, ...file.slice(0, -1));
-    const files = await fs.readdir(dirToCheck);
+    const files = await fs.readdir(dirToCheck).catch(() => { throw `Client Core commands cannot be reloaded.`; });
     if (!files.includes(fileToCheck)) throw `Could not find a reloadable file named ${file}`;
     this.client.aliases.forEach((cmd, alias) => {
       if (cmd === name) this.client.aliases.delete(alias);
