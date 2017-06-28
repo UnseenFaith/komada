@@ -32,11 +32,12 @@ exports.conf = {
   permLevel: 10,
   botPerms: [],
   requiredFuncs: [],
+  requiredSettings: [],
 };
 
 exports.help = {
   name: "transfer",
-  description: "Transfers a core piece to its respected folder",
+  description: "Transfers a core piece to its respective folder",
   usage: "<command|function|inhibitor|event|monitor|finalizer> <name:str>",
   usageDelim: " ",
 };
