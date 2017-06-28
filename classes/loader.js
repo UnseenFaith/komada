@@ -111,6 +111,7 @@ module.exports = class Loader {
     if (!files) return false;
     await this.loadFiles(files.filter(file => file.endsWith(".js")
       && (coreProtected.commands.includes(file.split(".")[0]) || !this.client.config.disabled.commands.includes(file.split(".")[0])))
+      .map(file => [file])
       , dir, this.loadNewCommand, this.loadCommands)
       .catch((err) => { throw err; });
     const subfolders = [];
