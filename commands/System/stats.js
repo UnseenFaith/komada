@@ -1,7 +1,7 @@
 const { version: discordVersion } = require("discord.js");
 const moment = require("moment");
 require("moment-duration-format");
-const { version: komadaVersion } = require("../../index.js");
+const { version: komadaVersion } = require("komada");
 
 exports.run = async (client, msg) => {
   const duration = moment.duration(client.uptime).format(" D [days], H [hrs], m [mins], s [secs]");
