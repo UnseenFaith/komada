@@ -151,7 +151,7 @@ module.exports = class Loader {
 
   async reloadCommand(name) {
     if (name.endsWith(".js")) name = name.slice(0, -3);
-    name = join(name.split("/"));
+    name = join(...name.split("/"));
     const fullCommand = this.client.commands.get(name) || this.client.commands.get(this.client.aliases.get(name));
     const dir = this.clientDirs.commands;
     let file;
