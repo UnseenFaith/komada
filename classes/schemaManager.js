@@ -76,6 +76,7 @@ class SchemaManager {
       if (!options.default) options.default = null;
       options.array = false;
     }
+    if (this.settingGateway.sql) options.sql = this.settingGateway.sql.buildSingleSQLSchema(options);
     this.schema[key] = options;
     this.defaults[key] = options.default;
     if (force) this.force("add", key);
@@ -103,17 +104,7 @@ class SchemaManager {
    */
   async force(action, key) {
     if (this.settingGateway.sql) {
-      if (!this.settingGateway.provider.updateColumns) {
-        this.client.emit("log", "This SQL Provider does not seem to have a updateColumns exports. Force action cancelled.", "error");
-        return null;
-      }
-      const tuplify = s => [s.split(" ")[0], s.split(" ").slice(1).join(" ")];
-      const newSQLSchema = this.settingGateway.buildSQLSchema(this.schema).map(tuplify);
-      const keys = Object.keys(this.defaults);
-      if (!keys.includes("id")) keys.push("id");
-      const columns = keys.filter(k => k !== key);
-      await this.settingGateway.provider.updateColumns("guilds", columns, newSQLSchema);
-      this.settingGateway.initDeserialize();
+      await this.settingGateway.sql.updateColumns(this.schema, this.defaults, key);
     }
     const data = this.settingGateway.getAll("guilds");
     let value;
@@ -148,21 +139,25 @@ class SchemaManager {
         type: "String",
         default: this.client.config.prefix,
         array: false,
+        sql: `TEXT NOT NULL DEFAULT '${this.client.config.prefix}'`,
       },
       modRole: {
         type: "Role",
         default: null,
         array: false,
+        sql: "TEXT",
       },
       adminRole: {
         type: "Role",
         default: null,
         array: false,
+        sql: "TEXT",
       },
       disabledCommands: {
         type: "Command",
         default: [],
         array: true,
+        sql: "TEXT DEFAULT '[]'",
       },
     };
   }

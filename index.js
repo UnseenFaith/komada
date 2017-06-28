@@ -10,4 +10,5 @@ module.exports = {
   SettingsGateway: require("./classes/settingGateway"),
   CacheManager: require("./classes/cacheManager"),
   SchemaManager: require("./classes/schemaManager"),
+  SQL: require("./classes/sql"),
 };
