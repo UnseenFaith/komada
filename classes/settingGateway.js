@@ -137,8 +137,8 @@ module.exports = class SettingGateway extends CacheManager {
     const settings = this.get(guild);
     guild = await this.validateGuild(guild);
     const resolved = await Promise.all(Object.entries(settings).map(([key, data]) => {
-      if (this.schema[key] && this.schema[key].array) return Promise.all(data.map(entry => this.resolver[this.schema[key].type.toLowerCase()](guild, this.schema[key], entry)));
-      return { [key]: this.schema[key] ? this.resolver[this.schema[key].type.toLowerCase()](guild, this.schema[key], data) : data };
+      if (this.schema[key] && this.schema[key].array) return Promise.all(data.map(entry => this.resolver[this.schema[key].type.toLowerCase()](entry, guild, this.schema[key])));
+      return { [key]: this.schema[key] ? this.resolver[this.schema[key].type.toLowerCase()](data, guild, this.schema[key]) : data };
     }));
     return Object.assign({}, ...resolved);
   }
@@ -186,7 +186,7 @@ module.exports = class SettingGateway extends CacheManager {
   async update(guild, key, data) {
     if (!(key in this.schema)) throw `The key ${key} does not exist in the current data schema.`;
     const target = await this.validateGuild(guild);
-    let result = await this.resolver[this.schema[key].type.toLowerCase()](target, this.schema[key], data);
+    let result = await this.resolver[this.schema[key].type.toLowerCase()](data, target, this.schema[key]);
     if (result.id) result = result.id;
     await this.provider.update("guilds", target.id, { [key]: result });
     await this.sync(target.id);
@@ -199,7 +199,7 @@ module.exports = class SettingGateway extends CacheManager {
     if (!this.schema[key].array) throw `The key ${key} is not an Array.`;
     if (data === undefined) throw "You must specify the value to add or filter.";
     const target = await this.validateGuild(guild);
-    let result = await this.resolver[type.toLowerCase()](target, this.schema[key], data);
+    let result = await this.resolver[type.toLowerCase()](data, target, this.schema[key]);
     if (result.id) result = result.id;
     const cache = this.get(target.id);
     if (type === "add") {

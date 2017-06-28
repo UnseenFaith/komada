@@ -3,63 +3,63 @@ const Resolver = require("./Resolver");
 /* eslint-disable no-throw-literal, class-methods-use-this */
 module.exports = class SettingResolver extends Resolver {
 
-  async user(guild, { type, min, max }, data) {
+  async user(data) {
     const result = await super.user(data);
     if (!result) throw "This key expects a User Object or ID.";
     return result;
   }
 
-  async channel(guild, { type, min, max }, data) {
+  async channel(data) {
     const result = await super.channel(data);
     if (!result) throw "This key expects a Channel Object or ID.";
     return result;
   }
 
-  async guild(guild, { type, min, max }, data) {
+  async guild(data) {
     const result = await super.guild(data);
     if (!result) throw "This key expects a Guild ID.";
     return result;
   }
 
-  async role(guild, { type, min, max }, data) {
+  async role(data, guild) {
     const result = await super.role(data, guild) || guild.roles.find("name", data);
     if (!result) throw "This key expects a Role Object or ID.";
     return result;
   }
 
-  async boolean(guild, { type, min, max }, data) {
+  async boolean(data) {
     const result = await super.boolean(data);
     if (!result) throw "This key expects a Boolean.";
     return result;
   }
 
-  async string(guild, { type, min, max }, data) {
+  async string(data, guild, { min, max }) {
     const result = await super.string(data);
     SettingResolver.maxOrMin(result.length, min, max).catch((e) => { throw `The string length must be ${e} characters.`; });
     return result;
   }
 
-  async integer(guild, { type, min, max }, data) {
+  async integer(data, guild, { min, max }) {
     const result = await super.integer(data);
     if (!result) throw "This key expects an Integer value.";
     SettingResolver.maxOrMin(result, min, max).catch((e) => { throw `The integer value must be ${e}.`; });
     return result;
   }
 
-  async float(guild, { type, min, max }, data) {
+  async float(data, guild, { min, max }) {
     const result = await super.float(data);
     if (!result) throw "This key expects a Float value.";
     SettingResolver.maxOrMin(result, min, max).catch((e) => { throw `The float value must be ${e}.`; });
     return result;
   }
 
-  async url(guild, { type, min, max }, data) {
+  async url(data) {
     const result = await super.url(data);
     if (!result) throw "This key expects an URL (Uniform Resource Locator).";
     return result;
   }
 
-  async command(guild, { type, min, max }, data) {
+  async command(data) {
     const command = this.client.commands.get(data.toLowerCase()) || this.client.commands.get(this.client.aliases.get(data.toLowerCase()));
     if (!command) throw "This key expects a Command.";
     return command.help.name;
