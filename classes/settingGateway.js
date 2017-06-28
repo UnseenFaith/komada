@@ -1,4 +1,4 @@
-const Resolver = require("./Resolver.js");
+const SettingResolver = require("./settingResolver.js");
 const CacheManager = require("./cacheManager.js");
 const SchemaManager = require("./schemaManager.js");
 
@@ -13,7 +13,7 @@ module.exports = class SettingGateway extends CacheManager {
     /** @type {string} */
     this.engine = client.config.provider.engine || "json";
 
-    this.resolver = new Resolver(client);
+    this.resolver = new SettingResolver(client);
     this.schemaManager = new SchemaManager(this.client);
   }
 
@@ -129,6 +129,17 @@ module.exports = class SettingGateway extends CacheManager {
   }
 
   /**
+   * Get a Resolved Guild entry from the configuration.
+   * @param {(Guild|Snowflake)} guild The Guild object or snowflake.
+   * @returns {Object}
+   */
+  async getResolved(guild) {
+    const settings = this.get(guild);
+    const resolved = await Promise.all(Object.entries(settings).map(([key, data]) => ({ [key]: this.resolver[this.schema[key].type.toLowerCase()](guild, this.schema[key], data) })));
+    return Object.assign({}, ...resolved);
+  }
+
+  /**
    * Sync either all Guild entries from the configuration, or a single one.
    * @param {(Guild|Snowflake)} [guild=null] The configuration for the selected Guild, if specified.
    * @returns {void}
@@ -171,7 +182,8 @@ module.exports = class SettingGateway extends CacheManager {
   async update(guild, key, data) {
     if (!(key in this.schema)) throw `The key ${key} does not exist in the current data schema.`;
     const target = await this.validateGuild(guild);
-    const result = await this.parse(target, this.schema[key], data);
+    let result = await this.resolver[this.schema[key].type.toLowerCase()](target, this.schema[key], data);
+    if (result.id) result = result.id;
     await this.provider.update("guilds", target.id, { [key]: result });
     await this.sync(target.id);
     return result;
@@ -183,7 +195,8 @@ module.exports = class SettingGateway extends CacheManager {
     if (!this.schema[key].array) throw `The key ${key} is not an Array.`;
     if (data === undefined) throw "You must specify the value to add or filter.";
     const target = await this.validateGuild(guild);
-    const result = await this.parse(target, this.schema[key], data);
+    let result = await this.resolver[type.toLowerCase()](target, this.schema[key], data);
+    if (result.id) result = result.id;
     const cache = this.get(target.id);
     if (type === "add") {
       if (cache[key].includes(result)) throw `The value ${data} for the key ${key} already exists.`;
@@ -197,88 +210,6 @@ module.exports = class SettingGateway extends CacheManager {
     await this.provider.update("guilds", target.id, { [key]: cache[key] });
     await this.sync(target.id);
     return true;
-  }
-
-  async parse(guild, { type, min, max }, data) {
-    switch (type) {
-      case "User": {
-        const result = await this.resolver.user(data);
-        if (!result) throw "This key expects a User Object or ID.";
-        return result.id;
-      }
-      case "Channel": {
-        const result = await this.resolver.channel(data);
-        if (!result) throw "This key expects a Channel Object or ID.";
-        return result.id;
-      }
-      case "Guild": {
-        const result = await this.resolver.guild(data);
-        if (!result) throw "This key expects a Guild ID.";
-        return result.id;
-      }
-      case "Role": {
-        const result = await this.resolver.role(data, guild) || guild.roles.find("name", data);
-        if (!result) throw "This key expects a Role Object or ID.";
-        return result.id;
-      }
-      case "Boolean": {
-        const result = await this.resolver.boolean(data);
-        if (!result) throw "This key expects a Boolean.";
-        return result;
-      }
-      case "String": {
-        const result = await this.resolver.string(data);
-        SettingGateway.maxOrMin(result.length, min, max).catch((e) => { throw `The string length must be ${e} characters.`; });
-        return result;
-      }
-      case "Integer": {
-        const result = await this.resolver.integer(data);
-        if (!result) throw "This key expects an Integer value.";
-        SettingGateway.maxOrMin(result, min, max).catch((e) => { throw `The integer value must be ${e}.`; });
-        return result;
-      }
-      case "Float": {
-        const result = await this.resolver.float(data);
-        if (!result) throw "This key expects a Float value.";
-        SettingGateway.maxOrMin(result, min, max).catch((e) => { throw `The float value must be ${e}.`; });
-        return result;
-      }
-      case "url": {
-        const result = await this.resolver.url(data);
-        if (!result) throw "This key expects an URL (Uniform Resource Locator).";
-        return result;
-      }
-      case "Command": {
-        const command = this.client.commands.get(data.toLowerCase()) || this.client.commands.get(this.client.aliases.get(data.toLowerCase()));
-        if (!command) throw "This key expects a Command.";
-        return command.help.name;
-      }
-      // no default
-    }
-    return null;
-  }
-
-  /**
-   * Check if the input is valid with min and/or max values.
-   * @static
-   * @param {any} value The value to check.
-   * @param {?number} min Min value.
-   * @param {?number} max Max value.
-   * @returns {?boolean}
-   */
-  static async maxOrMin(value, min, max) {
-    if (min && max) {
-      if (value >= min && value <= max) return true;
-      if (min === max) throw `exactly ${min}`;
-      throw `between ${min} and ${max}`;
-    } else if (min) {
-      if (value >= min) return true;
-      throw `longer than ${min}`;
-    } else if (max) {
-      if (value <= max) return true;
-      throw `shorter than ${max}`;
-    }
-    return null;
   }
 
   /**
