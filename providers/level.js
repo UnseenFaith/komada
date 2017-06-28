@@ -33,11 +33,8 @@ exports.hasTable = async table => loaded.has(table);
  * @param {string} table The name for the new directory.
  * @returns {Promise<Void>}
  */
-exports.createTable = async (table) => {
-  const db = await promisify(level(baseDir + sep + table));
-  loaded.set(table, db);
-  return null;
-};
+exports.createTable = table => promisify(level(baseDir + sep + table))
+   .then(db => loaded.set(table, db));
 
 /**
  * Recursively deletes a directory.
@@ -58,15 +55,11 @@ exports.getAll = async (table) => {
   if (!loaded.has(table)) return {};
   return new Promise((res) => {
     const db = loaded.get(table);
-    const returnValues = {};
+    const returnValues = [];
     const stream = db.keyStream();
     stream.on("data", async (key) => {
       const value = await db.get(key);
-      try {
-        returnValues[key] = JSON.parse(value);
-      } catch (e) {
-        returnValues[key] = value;
-      }
+      returnValues[key] = JSON.parse(value);
     });
     stream.on("end", () => {
       res(returnValues);
@@ -89,7 +82,7 @@ exports.get = async (table, document) => loaded.get(table)[document];
  * @param {Object} data The object with all properties you want to insert into the document.
  * @returns {Promise<Void>}
  */
-exports.create = (table, document, data) => loaded.get(table).set(document, data);
+exports.create = (table, document, data) => loaded.get(table).set(document, JSON.stringify(Object.assign(data, { id: document })));
 exports.set = (...args) => this.create(...args);
 exports.insert = (...args) => this.create(...args);
 
@@ -130,7 +123,7 @@ exports.shutdown = () => loaded.forEach(db => db.close());
 exports.conf = {
   moduleName: "level",
   enabled: true,
-  requiredModules: [],
+  requiredModules: ["fs-nextra", "level", "then-level"],
 };
 
 exports.help = {
