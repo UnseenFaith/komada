@@ -167,7 +167,7 @@ module.exports = class SettingGateway extends CacheManager {
     if (!this.schema[key].array) throw `The key ${key} is not an Array.`;
     if (data === undefined) throw "You must specify the value to add or filter.";
     const target = await this.validateGuild(guild);
-    let result = await this.resolver[type.toLowerCase()](data, target, this.schema[key]);
+    let result = await this.resolver[this.schema[key].type.toLowerCase()](data, target, this.schema[key]);
     if (result.id) result = result.id;
     const cache = this.get(target.id);
     if (type === "add") {
