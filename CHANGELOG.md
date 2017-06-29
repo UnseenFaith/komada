@@ -106,9 +106,9 @@ now log anything by running `client.emit("log", data, type);`
 core event.
 - [[#197](https://github.com/dirigeants/komada/pull/197)] **[Dependencies]** `dotenv` dependancy has been changed to a
 **peerdep**.
-- [[#197](https://github.com/dirigeants/komada/pull/197)] **[Internal]**Remaining **Utils** have been moved to the
+- [[#197](https://github.com/dirigeants/komada/pull/197)] **[Internal]** Remaining **Utils** have been moved to the
 **classes folder**.
-- [[#197](https://github.com/dirigeants/komada/pull/197)] **[Internal]**Use Discord.Permissions to generate and keep
+- [[#197](https://github.com/dirigeants/komada/pull/197)] **[Internal]** Use Discord.Permissions to generate and keep
 cached an implied permissions object, instead of generating a new object every time a command is run.
 
 ### Fixed
