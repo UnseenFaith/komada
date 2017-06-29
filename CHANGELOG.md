@@ -6,175 +6,109 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased] - Classbased | Staged for 0.20.3
 ### Added
-- [#291] `getResolved` method, which returns the resolved configuration from a
-Guild.
-- [#289] Added SQL compatibility.
-- [#289] SQL property for Schema.
-- [#289] SQL Class.
-- [#289] `schema` getter for `SettingGateway`, as a shortcut of
-`SettingGateway.SchemaManager.schema`.
-- [#289] `schemaManager` getter for `Client`, as a shortcut of
-`Client.SettingGateway.SchemaManager`.
-- [#289] Added `SQL` and `settingResolver`classes to `index.js`.
-- [#284] Added `Provider#shutdown()`, for providers that need to close the
-connection before re-initing.
-- [#283] Added `CMD.conf.requiredSettings`, to prevent commands from being
-executed if the Guild's configuration misses a key.
-- [#258] Added version - `require("komada").version`.
-- [#257] Added `config.disableLogTimestamps`. If `true`, all logs from Komada's
-logger will not longer print messages with timestamps.
-- [#257] Added `config.disableLogColor`. If `true`, all logs from Komada's
-logger will not longer print messages with colours.
-- [#255] [BREAKING] Added... **SettingGateway**. A centralized setting system
-which parses and handles everything. Relies on **Providers**.
-- [#255] Added support to use any data provider as Setting's provider.
-- [#255] [BREAKING] Added `schemaManager`.
-- [#255] Added `CommandMessage`, `ArgResolver`, `Resolver`, `Loader`,
-`parsedUsage`, `SettingsGateway`, `CacheManager` and `SchemaManager` classes to
-`index.js`.
-- [#255] Added **json** provider.
-- [#254] Added **finalizers** to the `download.js` command.
-- [#253] Added a `client.emit("log", ...);` to the ready event to tell the
-developer when the bot has fired the `ready` event.
-- [#253] Added `config.readyMessage` to make the bot send a custom log in the
-ready event.
-- [#236] Added **extendables** pieces.
-- [#234] Added aliases for `Message#sendMessage`.
-- [#231] Added a helper class for generating permission levels. It can be
-accessed via `require("komada").PermLevels`, and is used via
-`permlevels.addLevel(level, break, checkFunction)`. Once you have all levels
-added, simply pass `permlevels.structure;` to your `client.config` as the
-**permStructure** property.
-- [#220] Added `client.invite` getter.
-- [#218] Added option to disable core functions. Now you can skip load of core
-functions instead of override it.
-- [#197] Command Editing is now possible via setting config.cmdEditing to true.
-You will need to make a few changes to your code to make it work though:
-- [#197] A new messageUpdate core event.
-- [#197] New methods attached to the Discord.js message object to enable command
-editing: message.send, message.sendMessage, message.sendCode, message.sendEmbed.
-These methods will cache the command message and the response message, and edit
-the response message if the command message is found in the cache.
-- [#197] With the new command cache, you also have access to commandMessage
-sweeping. These are 2 new komada configs as integers in seconds:
-`config.commandMessageLifetime` and `config.commandMessageSweep`.
-- [#197] Added a timer to the loading.
-- [#197] Finalizers: Functions which are run on after a successful command.
-Please Note: All command files must return an Object Promise. You can achieve
-that by adding the `async` keyword. `exports.run = __async__ (client, msg,
-[...args])`.
-- [#197] Command Cooldowns are now available through a new inhibitor/finalizer
-combo. Simply set `command.conf.cooldown` to an integer in seconds to put a
-cooldown on that command.
+- [[#291](https://github.com/dirigeants/komada/pull/291)] `getResolved` method, which returns the resolved configuration from a Guild.
+- [[#289](https://github.com/dirigeants/komada/pull/289)] Added SQL compatibility.
+- [[#289](https://github.com/dirigeants/komada/pull/289)] SQL property for Schema.
+- [[#289](https://github.com/dirigeants/komada/pull/289)] SQL Class.
+- [[#289](https://github.com/dirigeants/komada/pull/289)] `schema` getter for `SettingGateway`, as a shortcut of `SettingGateway.SchemaManager.schema`.
+- [[#289](https://github.com/dirigeants/komada/pull/289)] `schemaManager` getter for `Client`, as a shortcut of `Client.SettingGateway.SchemaManager`.
+- [[#289](https://github.com/dirigeants/komada/pull/289)] Added `SQL` and `settingResolver`classes to `index.js`.
+- [[#284](https://github.com/dirigeants/komada/pull/284)] Added `Provider#shutdown()`, for providers that need to close the connection before re-initing.
+- [[#283](https://github.com/dirigeants/komada/pull/283)] Added `CMD.conf.requiredSettings`, to prevent commands from being executed if the Guild's configuration misses a key.
+- [[#258](https://github.com/dirigeants/komada/pull/258)] Added version - `require("komada").version`.
+- [[#257](https://github.com/dirigeants/komada/pull/257)] Added `config.disableLogTimestamps`. If `true`, all logs from Komada's logger will not longer print messages with timestamps.
+- [[#257](https://github.com/dirigeants/komada/pull/257)] Added `config.disableLogColor`. If `true`, all logs from Komada's logger will not longer print messages with colours.
+- [[#255](https://github.com/dirigeants/komada/pull/255)] [BREAKING] Added... **SettingGateway**. A centralized setting system which parses and handles everything. Relies on **Providers**.
+- [[#255](https://github.com/dirigeants/komada/pull/255)] Added support to use any data provider as Setting's provider.
+- [[#255](https://github.com/dirigeants/komada/pull/255)] [BREAKING] Added `schemaManager`.
+- [[#255](https://github.com/dirigeants/komada/pull/255)] Added `CommandMessage`, `ArgResolver`, `Resolver`, `Loader`, `parsedUsage`, `SettingsGateway`, `CacheManager` and `SchemaManager` classes to `index.js`.
+- [[#255](https://github.com/dirigeants/komada/pull/255)] Added **json** provider.
+- [[#254](https://github.com/dirigeants/komada/pull/254)] Added **finalizers** to the `download.js` command.
+- [[#253](https://github.com/dirigeants/komada/pull/253)] Added a `client.emit("log", ...);` to the ready event to tell the developer when the bot has fired the `ready` event.
+- [[#253](https://github.com/dirigeants/komada/pull/253)] Added `config.readyMessage` to make the bot send a custom log in the ready event.
+- [[#236](https://github.com/dirigeants/komada/pull/236)] Added **extendables** pieces.
+- [[#234](https://github.com/dirigeants/komada/pull/234)] Added aliases for `Message#sendMessage`.
+- [[#231](https://github.com/dirigeants/komada/pull/231)] Added a helper class for generating permission levels. It can be accessed via `require("komada").PermLevels`, and is used via `permlevels.addLevel(level, break, checkFunction)`. Once you have all levels added, simply pass `permlevels.structure;` to your `client.config` as the **permStructure** property.
+- [[#220](https://github.com/dirigeants/komada/pull/220)] Added `client.invite` getter.
+- [[#218](https://github.com/dirigeants/komada/pull/218)] Added option to disable core functions. Now you can skip load of core functions instead of override it.
+- [[#197](https://github.com/dirigeants/komada/pull/197)] Command Editing is now possible via setting config.cmdEditing to true. You will need to make a few changes to your code to make it work though:
+- [[#197](https://github.com/dirigeants/komada/pull/197)] A new messageUpdate core event.
+- [[#197](https://github.com/dirigeants/komada/pull/197)] New methods attached to the Discord.js message object to enable command editing: message.send, message.sendMessage, message.sendCode, message.sendEmbed. These methods will cache the command message and the response message, and edit the response message if the command message is found in the cache.
+- [[#197](https://github.com/dirigeants/komada/pull/197)] With the new command cache, you also have access to commandMessage sweeping. These are 2 new komada configs as integers in seconds: `config.commandMessageLifetime` and `config.commandMessageSweep`.
+- [[#197](https://github.com/dirigeants/komada/pull/197)] Added a timer to the loading.
+- [[#197](https://github.com/dirigeants/komada/pull/197)] Finalizers: Functions which are run on after a successful command. Please Note: All command files must return an Object Promise. You can achieve that by adding the `async` keyword. `exports.run = __async__ (client, msg, [...args])`.
+- [[#197](https://github.com/dirigeants/komada/pull/197)] Command Cooldowns are now available through a new inhibitor/finalizer combo. Simply set `command.conf.cooldown` to an integer in seconds to put a cooldown on that command.
 
 ### Changed
-- [#262] [Performance && Cleanup] Refactored several pieces.
-- [#262] [Documentation] Updated the information from the command `info.js`.
-- [#259] [Performance && Cleanup] The `checkPerms.js` function now returns
-`false` if it finds a break. As oposed from breaking the loop and return it at
-the end of the function.
-- [#257] [Refactor && Cleanup] Tweaked `package.json`, and `requiredFuncs`
-inhibitor.
-- [#255] [BREAKING] The way Komada handles configurations.
-- [#255] [BREAKING] `Message#guildSettings` instead of `Message#guildConfs`.
-- [#255] [BREAKING] `Guild#settings` instead of `Guild#conf`.
-- [#255] [Refactor && Cleanup] Modified `conf.js` command to work with
-*SettingGateway*.
-- [#248] [Cleanup] Download.js v2.
-- [#246] [Update] The command `eval.js` now awaits promises.
-- [#244] [Dependencies] Dropped support for `fs-extra-promise` in favor to
-`fs-nextra`.
-- [#241] [Dependencies] Dropped **Node.js v7.x** support in favor to **8.x**.
-- [#239] [Update] Automate the permLevel structure getter.
-- [#237] [Refactor && Cleanup] Added `resolver.js`, cleaned up `argResolver.js`.
-- [#225] [Update] Changed fetchMessages to fetchMessage (backend change).
-- [#223] [Update] Move `handleError` out from the **message** event to a
-function.
-- [#197] [BREAKING] Backend is now class based. Users main files will need to be
-updated. The interface is the same as creating a discord.js client, only using
-Komada, and with komada config. No more use of start, but `client.login(token);`
-is now required.
-- [#197] Usage will no longer be calculated everytime a command is run, but
-instead stored in `command.usage`.
-- [#197] [Internal] Usage has been refactored into a **ParsedUsage** and an
-**argResolver** class.
-- [#197] The command loading and reload has been completely refactored for speed.
-You should be able to load everything in approximatly 10% of the time it used to
-take.
-- [#197] Refactored: Disconnect, Error, Warn, Message; into core events rather
-than in the `app.js` file.
-- [#197] [BREAKING] Changed core log func, into an event. You can now log
-anything by running `client.emit("log", data, type);`
-- [#197] **runMessageMonitors** has been moved into the new Message core event.
-- [#197] `dotenv` dependancy has been changed to a **peerdep**.
-- [#197] Remaining **Utils** have been moved to the **classes folder**.
-- [#197] Use Discord.Permissions to generate and keep cached an implied
-permissions object, instead of generating a new object every time a command is
-run.
+- [[#262](https://github.com/dirigeants/komada/pull/262)] [Performance && Cleanup] Refactored several pieces.
+- [[#262](https://github.com/dirigeants/komada/pull/262)] [Documentation] Updated the information from the command `info.js`.
+- [[#259](https://github.com/dirigeants/komada/pull/259)] [Performance && Cleanup] The `checkPerms.js` function now returns `false` if it finds a break. As oposed from breaking the loop and return it at the end of the function.
+- [[#257](https://github.com/dirigeants/komada/pull/257)] [Refactor && Cleanup] Tweaked `package.json`, and `requiredFuncs` inhibitor.
+- [[#255](https://github.com/dirigeants/komada/pull/255)] [BREAKING] The way Komada handles configurations.
+- [[#255](https://github.com/dirigeants/komada/pull/255)] [BREAKING] `Message#guildSettings` instead of `Message#guildConfs`.
+- [[#255](https://github.com/dirigeants/komada/pull/255)] [BREAKING] `Guild#settings` instead of `Guild#conf`.
+- [[#255](https://github.com/dirigeants/komada/pull/255)] [Refactor && Cleanup] Modified `conf.js` command to work with *SettingGateway*.
+- [[#248](https://github.com/dirigeants/komada/pull/248)] [Cleanup] Download.js v2.
+- [[#246](https://github.com/dirigeants/komada/pull/246)] [Update] The command `eval.js` now awaits promises.
+- [[#244](https://github.com/dirigeants/komada/pull/244)] [Dependencies] Dropped support for `fs-extra-promise` in favor to `fs-nextra`.
+- [[#241](https://github.com/dirigeants/komada/pull/241)] [Dependencies] Dropped **Node.js v7.x** support in favor to **8.x**.
+- [[#239](https://github.com/dirigeants/komada/pull/239)] [Update] Automate the permLevel structure getter.
+- [[#237](https://github.com/dirigeants/komada/pull/237)] [Refactor && Cleanup] Added `resolver.js`, cleaned up `argResolver.js`.
+- [[#225](https://github.com/dirigeants/komada/pull/225)] [Update] Changed fetchMessages to fetchMessage (backend change).
+- [[#223](https://github.com/dirigeants/komada/pull/223)] [Update] Move `handleError` out from the **message** event to a function.
+- [[#197](https://github.com/dirigeants/komada/pull/197)] [BREAKING] Backend is now class based. Users main files will need to be updated. The interface is the same as creating a discord.js client, only using Komada, and with komada config. No more use of start, but `client.login(token);` is now required.
+- [[#197](https://github.com/dirigeants/komada/pull/197)] Usage will no longer be calculated everytime a command is run, but instead stored in `command.usage`.
+- [[#197](https://github.com/dirigeants/komada/pull/197)] [Internal] Usage has been refactored into a **ParsedUsage** and an **argResolver** class.
+- [[#197](https://github.com/dirigeants/komada/pull/197)] The command loading and reload has been completely refactored for speed. You should be able to load everything in approximatly 10% of the time it used to take.
+- [[#197](https://github.com/dirigeants/komada/pull/197)] Refactored: Disconnect, Error, Warn, Message; into core events rather than in the `app.js` file.
+- [[#197](https://github.com/dirigeants/komada/pull/197)] [BREAKING] Changed core log func, into an event. You can now log anything by running `client.emit("log", data, type);`
+- [[#197](https://github.com/dirigeants/komada/pull/197)] **runMessageMonitors** has been moved into the new Message core event.
+- [[#197](https://github.com/dirigeants/komada/pull/197)] `dotenv` dependancy has been changed to a **peerdep**.
+- [[#197](https://github.com/dirigeants/komada/pull/197)] Remaining **Utils** have been moved to the **classes folder**.
+- [[#197](https://github.com/dirigeants/komada/pull/197)] Use Discord.Permissions to generate and keep cached an implied permissions object, instead of generating a new object every time a command is run.
 
 ### Fixed
-- [#290] [BugFix] Fixed reload commands.
-- [#289] [BugFix] If the bot was unable to send a message, the **reboot**
-command would never call `process.exit()`.
-- [#289] [BugFix] Raceconditions (Functions initing before Providers and
-SettingGateway).
-- [#289] [BugFix] A few Unhandled Promise Errors.
-- [#282] [Misc] A typo in `transfer.js` command.
-- [#277] [BugFix] The `download.js` can now identify `require`s accurately.
-- [#274] [Performance] Changed the loops Komada used to build the help command.
-- [#269] [BugFix] Loaders now use `path.resolve` rather than Template Literals.
-- [#269] [BugFix] `sweepCommandMessages` was never running.
-- [#268] [BugFix] Fixed `sensitivePattern` being undefined.
-- [#267] [BugFix] Fixed the extendables `Message#send` and `Message#sendMessage`
-to have arguments handled by `Discord.js`.
-- [#264] [BugFix] Fixed an edgecase `cooldown.js` inhibitor wouldn't remove
-the entry from the cooldown list, returning negative cooldowns.
-- [#262] [Misc] The `runIn.js` inhibitor will now return a more accurate message
-when the array is empty.
-- [#256] [Misc] Added a couple of dots in the loader's logs.
-- [#255] [BugFix] GuildSettings works, again.
-- [#255] [Misc] The colourized space from the timestamps. It's now gone.
-- [#235] [BugFix] Handle file attachments on command editing.
-- [#230] [Deprecations] Fixed (more) Discord.js deprecations.
-- [#227] [Deprecations] Fixed Discord.js deprecated permissions.
-- [#226] [BugFix] Added `finalizer` in the literal argument from `transfer.js`
-command.
-- [#207] [Misc] The ping from the `ping.js` command is now rounded.
-- [#205] [Deprecations] Fixed a lot of Discord.js deprecations.
+- [[#290](https://github.com/dirigeants/komada/pull/290)] [BugFix] Fixed reload commands.
+- [[#289](https://github.com/dirigeants/komada/pull/289)] [BugFix] If the bot was unable to send a message, the **reboot** command would never call `process.exit()`.
+- [[#289](https://github.com/dirigeants/komada/pull/289)] [BugFix] Raceconditions (Functions initing before Providers and SettingGateway).
+- [[#289](https://github.com/dirigeants/komada/pull/289)] [BugFix] A few Unhandled Promise Errors.
+- [[#282](https://github.com/dirigeants/komada/pull/282)] [Misc] A typo in `transfer.js` command.
+- [[#277](https://github.com/dirigeants/komada/pull/277)] [BugFix] The `download.js` can now identify `require`s accurately.
+- [[#274](https://github.com/dirigeants/komada/pull/274)] [Performance] Changed the loops Komada used to build the help command.
+- [[#269](https://github.com/dirigeants/komada/pull/269)] [BugFix] Loaders now use `path.resolve` rather than Template Literals.
+- [[#269](https://github.com/dirigeants/komada/pull/269)] [BugFix] `sweepCommandMessages` was never running.
+- [[#268](https://github.com/dirigeants/komada/pull/268)] [BugFix] Fixed `sensitivePattern` being undefined.
+- [[#267](https://github.com/dirigeants/komada/pull/267)] [BugFix] Fixed the extendables `Message#send` and `Message#sendMessage` to have arguments handled by `Discord.js`.
+- [[#264](https://github.com/dirigeants/komada/pull/264)] [BugFix] Fixed an edgecase `cooldown.js` inhibitor wouldn't remove the entry from the cooldown list, returning negative cooldowns.
+- [[#262](https://github.com/dirigeants/komada/pull/262)] [Misc] The `runIn.js` inhibitor will now return a more accurate message when the array is empty.
+- [[#256](https://github.com/dirigeants/komada/pull/256)] [Misc] Added a couple of dots in the loader's logs.
+- [[#255](https://github.com/dirigeants/komada/pull/255)] [BugFix] GuildSettings works, again.
+- [[#255](https://github.com/dirigeants/komada/pull/255)] [Misc] The colourized space from the timestamps. It's now gone.
+- [[#235](https://github.com/dirigeants/komada/pull/235)] [BugFix] Handle file attachments on command editing.
+- [[#230](https://github.com/dirigeants/komada/pull/230)] [Deprecations] Fixed (more) Discord.js deprecations.
+- [[#227](https://github.com/dirigeants/komada/pull/227)] [Deprecations] Fixed Discord.js deprecated permissions.
+- [[#226](https://github.com/dirigeants/komada/pull/226)] [BugFix] Added `finalizer` in the literal argument from `transfer.js` command.
+- [[#207](https://github.com/dirigeants/komada/pull/207)] [Misc] The ping from the `ping.js` command is now rounded.
+- [[#205](https://github.com/dirigeants/komada/pull/205)] [Deprecations] Fixed a lot of Discord.js deprecations.
 
 ### Removed
-- [#255] [Misc] Removed any reference from the old configuration system.
-- [#255] [Misc] Removed `confs.js` function.
-- [#247] [Misc] Removed `config.clientID`, as it's retrieved from the API.
-- Removed `config.selfbot`, as Komada detects if either the ClientUser instance
-is a bot or not.
-- [#197] [BREAKING] generateInvite.js core function in favor of the Discord.JS
-generateInvite.
-- [#197] [BREAKING] botpermissions.js core function which was only used by the
-generateInvite core
-function.
-- [#197] [BREAKING] fullUsage.js core function which is now available in
-command.usage.fullUsage(msg).
-- [#197] [BREAKING] addCommmas.js core function. Should use .toLocaleString()
-instead.
-- [#197] [BREAKING] getFileListing.js core function in favor of the new loading
-refactor.
-- [#197] [BREAKING] loadSingleCommand.js core function in favor of the new
-loading refactor.
-- [#197] [BREAKING] reload.js core function in favor of the new loading refactor.
-- [#197] [BREAKING] parseUsage.js core function in favor of the new parsedUsage
-class refactor.
-- [#197] [BREAKING] log.js core function in favor of the new log event.
+- [[#255](https://github.com/dirigeants/komada/pull/255)] [Misc] Removed any reference from the old configuration system.
+- [[#255](https://github.com/dirigeants/komada/pull/255)] [Misc] Removed `confs.js` function.
+- [[#247](https://github.com/dirigeants/komada/pull/247)] [Misc] Removed `config.clientID`, as it's retrieved from the API. - Removed `config.selfbot`, as Komada detects if either the ClientUser instance is a bot or not.
+- [[#197](https://github.com/dirigeants/komada/pull/197)] [BREAKING] generateInvite.js core function in favor of the Discord.JS generateInvite.
+- [[#197](https://github.com/dirigeants/komada/pull/197)] [BREAKING] botpermissions.js core function which was only used by the generateInvite core function.
+- [[#197](https://github.com/dirigeants/komada/pull/197)] [BREAKING] fullUsage.js core function which is now available in command.usage.fullUsage(msg).
+- [[#197](https://github.com/dirigeants/komada/pull/197)] [BREAKING] addCommmas.js core function. Should use **.toLocaleString()** instead.
+- [[#197](https://github.com/dirigeants/komada/pull/197)] [BREAKING] getFileListing.js core function in favor of the new loading refactor.
+- [[#197](https://github.com/dirigeants/komada/pull/197)] [BREAKING] loadSingleCommand.js core function in favor of the new loading refactor.
+- [[#197](https://github.com/dirigeants/komada/pull/197)] [BREAKING] reload.js core function in favor of the new loading refactor.
+- [[#197](https://github.com/dirigeants/komada/pull/197)] [BREAKING] parseUsage.js core function in favor of the new parsedUsage class refactor.
+- [[#197](https://github.com/dirigeants/komada/pull/197)] [BREAKING] log.js core function in favor of the new log event.
 - exports.getCommand in handleCommand.js in favor of more efficient code.
-- [#197] [BREAKING] Localizations, and all references to them (per Faith)
-- [#197] [BREAKING] Due to the class rewrite, the module can no-longer be used
-stand alone. So the start script has been removed from the package.json. You can
-however add your own start file (as you would if you were using the package as a
-dependancy) as a work around for using the repo as a stand alone if you really
-need to.
-- [#197] loading utils have been removed in favor of the new loading refactor.
-- [#197] Implied Permissions has been removed in favor of an internal discord.js
-class.
+- [[#197](https://github.com/dirigeants/komada/pull/197)] [BREAKING] Localizations, and all references to them (per Faith)
+- [[#197](https://github.com/dirigeants/komada/pull/197)] [BREAKING] Due to the class rewrite, the module can no-longer be used stand alone. So the start script has been removed from the package.json. You can however add your own start file (as you would if you were using the package as a dependancy) as a work around for using the repo as a stand alone if you really need to.
+- [[#197](https://github.com/dirigeants/komada/pull/197)] loading utils have been removed in favor of the new loading refactor.
+- [[#197](https://github.com/dirigeants/komada/pull/197)] Implied Permissions has been removed in favor of an internal discord.js class.
 
 ## [0.19.0]
 ### Added
