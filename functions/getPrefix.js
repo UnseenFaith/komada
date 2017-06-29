@@ -3,7 +3,7 @@ module.exports = async (client, msg) => {
   const { prefix } = msg.guildSettings;
   const { regExpEsc } = client.funcs;
   if (prefix instanceof Array) {
-    for (let i = prefix.length; i >= 0; i--) {
+    for (let i = prefix.length - 1; i >= 0; i--) {
       if (!msg.content.startsWith(prefix[i])) continue;
       return new RegExp(`^${regExpEsc(prefix[i])}`);
     }
