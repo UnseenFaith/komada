@@ -63,6 +63,8 @@ keyword. `exports.run = __async__ (client, msg, [...args])`.
 command.
 
 ### Changed
+- [[#293](https://github.com/dirigeants/komada/pull/293)] **[Performance]** Faster prefix check and resolve for prefixes
+stored inside an Array.
 - [[#262](https://github.com/dirigeants/komada/pull/262)] **[Performance && Cleanup]** Refactored several pieces.
 - [[#262](https://github.com/dirigeants/komada/pull/262)] **[Documentation]** Updated the information from the command
 `info.js`.
