@@ -4,10 +4,8 @@ module.exports = async (client, msg) => {
   const { regExpEsc } = client.funcs;
   if (prefix instanceof Array) {
     for (let i = prefix.length - 1; i >= 0; i--) {
-      if (!msg.content.startsWith(prefix[i])) continue;
-      return new RegExp(`^${regExpEsc(prefix[i])}`);
+      if (msg.content.startsWith(prefix[i])) return new RegExp(`^${regExpEsc(prefix[i])}`);
     }
-  }
-  if (prefix && msg.content.startsWith(prefix)) return new RegExp(`^${regExpEsc(prefix)}`);
+  } else if (prefix && msg.content.startsWith(prefix)) return new RegExp(`^${regExpEsc(prefix)}`);
   return false;
 };
