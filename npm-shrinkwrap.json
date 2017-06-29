@@ -373,9 +373,9 @@
       "dev": true
     },
     "fs-nextra": {
-      "version": "0.1.1",
-      "resolved": "https://registry.npmjs.org/fs-nextra/-/fs-nextra-0.1.1.tgz",
-      "integrity": "sha512-WBNNVm2dIT4DfCMtf7aocyp3aZC+IowOe+53cARh6QtfjhOZ8hrJ2+HeoOvwi+Yq3et9FSVN/g5zYRtyRaoJPg=="
+      "version": "0.1.2",
+      "resolved": "https://registry.npmjs.org/fs-nextra/-/fs-nextra-0.1.2.tgz",
+      "integrity": "sha512-v9nYPCI26zurCivzLSkSzoyMMWXfkLhHAKg1YozoZzyrJm2dqc+w+U8EM791Hyqju5CWGwwvKr5R+bFnMVaSZg=="
     },
     "fs.realpath": {
       "version": "1.0.0",
