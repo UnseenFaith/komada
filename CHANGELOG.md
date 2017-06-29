@@ -4,54 +4,177 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased] - Classbased | Staged for 0.20.0
+## [Unreleased] - Classbased | Staged for 0.20.3
 ### Added
-- Added version - require('komada').version
-- Added option to disable core functions. Now you can skip load of core functions instead of override it.
-- Command Editing is now possible via setting config.cmdEditing to true. You will need to make a few changes to your code to make it work though:
-- A new messageUpdate core event.
-- New methods attached to the Discord.js message object to enable command editing: message.send, message.sendMessage, message.sendCode, message.sendEmbed. These methods will cache the command message and the response message, and edit the response message if the command message is found in the cache.
-- With the new command cache, you also have access to commandMessage sweeping. These are 2 new komada configs as integers in seconds: config.commandMessageLifetime, config.commandMessageSweep
-- Added a timer to the loading.
-- Finalizers: Functions which are run on after a successful command. *Please Note: All command files must be defined as async. `exports.run = __async__ (client, msg, ...`*
-- Command Cooldowns are now available through a new inhibitor/finalizer combo. Simply set command.conf.cooldown to an integer in seconds to put a cooldown on that command.
-- A helper class for generating permission levels. It can be accessed via require('komada').PermLevels, and is used via permlevels.addLevel(level, break, checkFunction). Once you have all levels added, simply pass permlevels.structure to your client.config as the "permStructure" property.
+- [#291] `getResolved` method, which returns the resolved configuration from a
+Guild.
+- [#289] Added SQL compatibility.
+- [#289] SQL property for Schema.
+- [#289] SQL Class.
+- [#289] `schema` getter for `SettingGateway`, as a shortcut of
+`SettingGateway.SchemaManager.schema`.
+- [#289] `schemaManager` getter for `Client`, as a shortcut of
+`Client.SettingGateway.SchemaManager`.
+- [#289] Added `SQL` and `settingResolver`classes to `index.js`.
+- [#284] Added `Provider#shutdown()`, for providers that need to close the
+connection before re-initing.
+- [#283] Added `CMD.conf.requiredSettings`, to prevent commands from being
+executed if the Guild's configuration misses a key.
+- [#258] Added version - `require("komada").version`.
+- [#257] Added `config.disableLogTimestamps`. If `true`, all logs from Komada's
+logger will not longer print messages with timestamps.
+- [#257] Added `config.disableLogColor`. If `true`, all logs from Komada's
+logger will not longer print messages with colours.
+- [#255] [BREAKING] Added... **SettingGateway**. A centralized setting system
+which parses and handles everything. Relies on **Providers**.
+- [#255] Added support to use any data provider as Setting's provider.
+- [#255] [BREAKING] Added `schemaManager`.
+- [#255] Added `CommandMessage`, `ArgResolver`, `Resolver`, `Loader`,
+`parsedUsage`, `SettingsGateway`, `CacheManager` and `SchemaManager` classes to
+`index.js`.
+- [#255] Added **json** provider.
+- [#254] Added **finalizers** to the `download.js` command.
+- [#253] Added a `client.emit("log", ...);` to the ready event to tell the
+developer when the bot has fired the `ready` event.
+- [#253] Added `config.readyMessage` to make the bot send a custom log in the
+ready event.
+- [#236] Added **extendables** pieces.
+- [#234] Added aliases for `Message#sendMessage`.
+- [#231] Added a helper class for generating permission levels. It can be
+accessed via `require("komada").PermLevels`, and is used via
+`permlevels.addLevel(level, break, checkFunction)`. Once you have all levels
+added, simply pass `permlevels.structure;` to your `client.config` as the
+**permStructure** property.
+- [#220] Added `client.invite` getter.
+- [#218] Added option to disable core functions. Now you can skip load of core
+functions instead of override it.
+- [#197] Command Editing is now possible via setting config.cmdEditing to true.
+You will need to make a few changes to your code to make it work though:
+- [#197] A new messageUpdate core event.
+- [#197] New methods attached to the Discord.js message object to enable command
+editing: message.send, message.sendMessage, message.sendCode, message.sendEmbed.
+These methods will cache the command message and the response message, and edit
+the response message if the command message is found in the cache.
+- [#197] With the new command cache, you also have access to commandMessage
+sweeping. These are 2 new komada configs as integers in seconds:
+`config.commandMessageLifetime` and `config.commandMessageSweep`.
+- [#197] Added a timer to the loading.
+- [#197] Finalizers: Functions which are run on after a successful command.
+Please Note: All command files must return an Object Promise. You can achieve
+that by adding the `async` keyword. `exports.run = __async__ (client, msg,
+[...args])`.
+- [#197] Command Cooldowns are now available through a new inhibitor/finalizer
+combo. Simply set `command.conf.cooldown` to an integer in seconds to put a
+cooldown on that command.
 
 ### Changed
-- Dropped support for fs-extra-promise in favor to fs-nextra.
-- Changed fetchMessages to fetchMessage (backend change)
-- Backend is now class based. Users main files will need to be updated. The interface is the same as creating a discord.js client, only using komada, and with komada config. No more use of start, but client.login(token) is needed now.
-- Usage will no longer be calculated everytime a command is run, but instead stored in command.usage.
-- Usage has been refactored into a ParsedUsage class, and an argResolver class. (internal)
-- The command loading and reload has been completely refactored for speed. You should be able to load everything in approximatly 10% of the time it used to take.
-- Refactored: Disconnect, Error, Warn, Message; into core events rather than in the app.js file.
-- Changed core log func, into an event. You can now log anything by running client.emit('log', data, type);
-- runMessageMonitors has been moved into the new Message core event.
-- dotenv dependancy has been changed to a peerdep.
-- Minimum node version is now v7.6.x
-- Remaining Utils have been moved to the classes folder.
-- Use Discord.Permissions to generate and keep cached an implied permissions object, instead of generating a new object every time a command is run.
-- client.config.selfbot config is no longer needed for selfbot mode. Komada now detects if it is being run as a user, and takes all selbot precautions.
+- [#262] [Performance && Cleanup] Refactored several pieces.
+- [#262] [Documentation] Updated the information from the command `info.js`.
+- [#259] [Performance && Cleanup] The `checkPerms.js` function now returns
+`false` if it finds a break. As oposed from breaking the loop and return it at
+the end of the function.
+- [#257] [Refactor && Cleanup] Tweaked `package.json`, and `requiredFuncs`
+inhibitor.
+- [#255] [BREAKING] The way Komada handles configurations.
+- [#255] [BREAKING] `Message#guildSettings` instead of `Message#guildConfs`.
+- [#255] [BREAKING] `Guild#settings` instead of `Guild#conf`.
+- [#255] [Refactor && Cleanup] Modified `conf.js` command to work with
+*SettingGateway*.
+- [#248] [Cleanup] Download.js v2.
+- [#246] [Update] The command `eval.js` now awaits promises.
+- [#244] [Dependencies] Dropped support for `fs-extra-promise` in favor to
+`fs-nextra`.
+- [#241] [Dependencies] Dropped **Node.js v7.x** support in favor to **8.x**.
+- [#239] [Update] Automate the permLevel structure getter.
+- [#237] [Refactor && Cleanup] Added `resolver.js`, cleaned up `argResolver.js`.
+- [#225] [Update] Changed fetchMessages to fetchMessage (backend change).
+- [#223] [Update] Move `handleError` out from the **message** event to a
+function.
+- [#197] [BREAKING] Backend is now class based. Users main files will need to be
+updated. The interface is the same as creating a discord.js client, only using
+Komada, and with komada config. No more use of start, but `client.login(token);`
+is now required.
+- [#197] Usage will no longer be calculated everytime a command is run, but
+instead stored in `command.usage`.
+- [#197] [Internal] Usage has been refactored into a **ParsedUsage** and an
+**argResolver** class.
+- [#197] The command loading and reload has been completely refactored for speed.
+You should be able to load everything in approximatly 10% of the time it used to
+take.
+- [#197] Refactored: Disconnect, Error, Warn, Message; into core events rather
+than in the `app.js` file.
+- [#197] [BREAKING] Changed core log func, into an event. You can now log
+anything by running `client.emit("log", data, type);`
+- [#197] **runMessageMonitors** has been moved into the new Message core event.
+- [#197] `dotenv` dependancy has been changed to a **peerdep**.
+- [#197] Remaining **Utils** have been moved to the **classes folder**.
+- [#197] Use Discord.Permissions to generate and keep cached an implied
+permissions object, instead of generating a new object every time a command is
+run.
 
 ### Fixed
--
+- [#290] [BugFix] Fixed reload commands.
+- [#289] [BugFix] If the bot was unable to send a message, the **reboot**
+command would never call `process.exit()`.
+- [#289] [BugFix] Raceconditions (Functions initing before Providers and
+SettingGateway).
+- [#289] [BugFix] A few Unhandled Promise Errors.
+- [#282] [Misc] A typo in `transfer.js` command.
+- [#277] [BugFix] The `download.js` can now identify `require`s accurately.
+- [#274] [Performance] Changed the loops Komada used to build the help command.
+- [#269] [BugFix] Loaders now use `path.resolve` rather than Template Literals.
+- [#269] [BugFix] `sweepCommandMessages` was never running.
+- [#268] [BugFix] Fixed `sensitivePattern` being undefined.
+- [#267] [BugFix] Fixed the extendables `Message#send` and `Message#sendMessage`
+to have arguments handled by `Discord.js`.
+- [#264] [BugFix] Fixed an edgecase `cooldown.js` inhibitor wouldn't remove
+the entry from the cooldown list, returning negative cooldowns.
+- [#262] [Misc] The `runIn.js` inhibitor will now return a more accurate message
+when the array is empty.
+- [#256] [Misc] Added a couple of dots in the loader's logs.
+- [#255] [BugFix] GuildSettings works, again.
+- [#255] [Misc] The colourized space from the timestamps. It's now gone.
+- [#235] [BugFix] Handle file attachments on command editing.
+- [#230] [Deprecations] Fixed (more) Discord.js deprecations.
+- [#227] [Deprecations] Fixed Discord.js deprecated permissions.
+- [#226] [BugFix] Added `finalizer` in the literal argument from `transfer.js`
+command.
+- [#207] [Misc] The ping from the `ping.js` command is now rounded.
+- [#205] [Deprecations] Fixed a lot of Discord.js deprecations.
 
 ### Removed
-- generateInvite.js core function in favor of the Discord.JS generateInvite.
-- botpermissions.js core function which was only used by the generateInvite core function.
-- fullUsage.js core function which is now available in command.usage.fullUsage(msg).
-- addCommmas.js core function. Should use .toLocaleString() instead.
-- getFileListing.js core function in favor of the new loading refactor.
-- loadSingleCommand.js core function in favor of the new loading refactor.
-- reload.js core function in favor of the new loading refactor.
-- parseUsage.js core function in favor of the new parsedUsage class refactor.
-- log.js core function in favor of the new log event.
+- [#255] [Misc] Removed any reference from the old configuration system.
+- [#255] [Misc] Removed `confs.js` function.
+- [#247] [Misc] Removed `config.clientID`, as it's retrieved from the API.
+- Removed `config.selfbot`, as Komada detects if either the ClientUser instance
+is a bot or not.
+- [#197] [BREAKING] generateInvite.js core function in favor of the Discord.JS
+generateInvite.
+- [#197] [BREAKING] botpermissions.js core function which was only used by the
+generateInvite core
+function.
+- [#197] [BREAKING] fullUsage.js core function which is now available in
+command.usage.fullUsage(msg).
+- [#197] [BREAKING] addCommmas.js core function. Should use .toLocaleString()
+instead.
+- [#197] [BREAKING] getFileListing.js core function in favor of the new loading
+refactor.
+- [#197] [BREAKING] loadSingleCommand.js core function in favor of the new
+loading refactor.
+- [#197] [BREAKING] reload.js core function in favor of the new loading refactor.
+- [#197] [BREAKING] parseUsage.js core function in favor of the new parsedUsage
+class refactor.
+- [#197] [BREAKING] log.js core function in favor of the new log event.
 - exports.getCommand in handleCommand.js in favor of more efficient code.
-- Localizations, and all references to them (per Faith)
-- fs-extra dependancy. All use of fs, is done through fs-extra-promise now.
-- Due to the class rewrite, the module can no-longer be used stand alone. So the start script has been removed from the package.json. You can however add your own start file (as you would if you were using the package as a dependancy) as a work around for using the repo as a stand alone if you really need to.
-- loading utils have been removed in favor of the new loading refactor.
-- Implied Permissions has been removed in favor of an internal discord.js class.
+- [#197] [BREAKING] Localizations, and all references to them (per Faith)
+- [#197] [BREAKING] Due to the class rewrite, the module can no-longer be used
+stand alone. So the start script has been removed from the package.json. You can
+however add your own start file (as you would if you were using the package as a
+dependancy) as a work around for using the repo as a stand alone if you really
+need to.
+- [#197] loading utils have been removed in favor of the new loading refactor.
+- [#197] Implied Permissions has been removed in favor of an internal discord.js
+class.
 
 ## [0.19.0]
 ### Added
@@ -62,19 +185,25 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Message.reactable added to extendables
 - Monitors can customize whether to run the monitor on a bot or self now.
 - Added readable to make postable, embedable, and attachable more accurate.
-- postable, embedable, attachable now apply to any Text Channel for simplicity and to prevent errors down the road.
+- postable, embedable, attachable now apply to any Text Channel for simplicity
+and to prevent errors down the road.
 - Extendables Added (postable, attachable, embedable, etc.)
 
 ### Changed
-- Usage now gets the prefix from parseCommand, to reduce errors when using commands and escaped prefixes.
-- [Cache optimization] After a piece is reloaded, the cache from the `require` gets deleted.
-- [Cache optimization] After a piece is loaded inside the collection, the cache from the `require` gets deleted.
+- Usage now gets the prefix from parseCommand, to reduce errors when using
+commands and escaped prefixes.
+- [Cache optimization] After a piece is reloaded, the cache from the `require`
+gets deleted.
+- [Cache optimization] After a piece is loaded inside the collection, the cache
+from the `require` gets deleted.
 - Pieces are now loaded on client side, then core side. (Without duplicating it).
 - Komada loads much faster now.
 - The function `log` should never display `[object Object]` now.
 - When a command fails at load, it should provide full stack error now.
-- Changed permissions inhibitor and permissionLevel function to use new Extendables.
-- Help command now no longer requires runCommandInhibitors and uses new Extendables.
+- Changed permissions inhibitor and permissionLevel function to use new
+Extendables.
+- Help command now no longer requires runCommandInhibitors and uses new
+Extendables.
 - Removed several useless lines of code in app.js made redundant by Extendables.
 
 
@@ -85,15 +214,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Some other minor fixes for confs and download
 - Fixed many issues with double negatives in configuration
 - Fixed Multiple Prefixes
-- "`client.funcs.log` is not a function" when something was wrong at startup (events not working or faulty configurations).
+- "`client.funcs.log` is not a function" when something was wrong at startup
+(events not working or faulty configurations).
 - Fixed HandleCommand not passing Arguments to awaitMessage properly.
 - Fixed AwaitMessage - Kyra
 - Fixed Float Usage not correctly determining if NaN (finally)
 - Fixed Usage for the 603rd time. Maybe? Probably not.
 - TypeError in awaitMessage.js function, issue #158
 - (Hot fix) Fixed help command (was returning BadRequest) on 0.18.5
-- (Hot fix) Fixed permissions on DMs (running msg.member.permLevel when the user DMs a command that doesn't have permissions for).
-- Several bugs that would have occurred if loading anything contained a NPM module error.
+- (Hot fix) Fixed permissions on DMs (running msg.member.permLevel when the user
+DMs a command that doesn't have permissions for).
+- Several bugs that would have occurred if loading anything contained a NPM
+module error.
 
 ### Removed
 - A bunch of deprecated functions that were moved to utils.
@@ -101,16 +233,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [0.18.1] - 2017-03-17
 ### Added
-- Added the new utils from `Discord.js#master`: escapeMarkdown and splitMessage are now in `client.methods`.
+- Added the new utils from `Discord.js#master`: escapeMarkdown and splitMessage
+are now in `client.methods`.
 - Added support for silent inhibitors (if `return true`, it won't send a reply).
 - Added Environmental Variable support for clientDir.
 - Added regExpEscape function.
 
 ### Changed
 - Add error.stack to the function log.js to avoid [object Object].
-- Disconnect event should now prints a more human readable error instead of `[object Object]`.
+- Disconnect event should now prints a more human readable error instead of
+`[object Object]`.
 - error and warn event errors are now inspected with depth 0, for better debug.
-- loading Functions are removed from Functions folder and moved to a Utils folder. (This folder will be there for future features as well.)
+- loading Functions are removed from Functions folder and moved to a Utils
+folder. (This folder will be there for future features as well.)
 
 ### Fixed
 - Reloading pieces should now return the error stack in a codeblock.
@@ -126,7 +261,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [0.18.0] - 2017-03-16
 ### Added
 - Added a bunch of unusable configuration options that'll make their debut soon.
-- All Bad Requests/Forbiddens.. etc, now properly give a human readable error in console or chat, depending on the error. (Not as of (0.17.0).. must be fixed) ***
+- All Bad Requests/Forbiddens.. etc, now properly give a human readable error in
+console or chat, depending on the error. *(Not as of (0.17.0)... must be fixed)*
 - New Error Creator
 - New CommandHandler (Removed it from message event)
 - New Core Command "Transfer"
@@ -137,28 +273,37 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - New Download Command
 
 ### Changed
-- ~~All pieces now initialize upon being loaded, in order.~~ ~~Reverted in 0.17.3~~ Reimplemented in 0.17.4 within `client.on("ready")`
-- Changed Emojis to unicode variants in Reload.js
+- ~~All pieces now initialize upon being loaded, in order.~~ ~~Reverted in
+0.17.3~~ Reimplemented in 0.17.4 within `client.on("ready")`.
+- Changed Emojis to unicode variants in Reload.js.
 - Broke down App.js Message Event into several smaller, changeable parts.
-- newError changed to send arguments to awaitMessage when errors are from usage
-- awaitMessage changed to work perfectly with the new system
-- msg.author.permLevel is now available immediately on a message, instead of after inhibitors run correctly.
-- Usage Inhibitor is now a function instead, which will help issues with racing and prompts.
-- All Inhibitors now return values instead of using promises to resolve or reject. (Change will be reflected on Documentation soon)
+- newError changed to send arguments to awaitMessage when errors are from usage.
+- awaitMessage changed to work perfectly with the new system.
+- msg.author.permLevel is now available immediately on a message, instead of
+after inhibitors run correctly.
+- Usage Inhibitor is now a function instead, which will help issues with racing
+and prompts.
+- All Inhibitors now return values instead of using promises to resolve or
+reject. (Change will be reflected on Documentation soon).
 - Reverted Log function for the time being.
-- Many Files to use the new Error creator
+- Many Files to use the new Error constructor.
 - guildOnly Inhibitor is now a `runIn` Inhibitor.
 - Inhibitors now use .some() to determine if more inhibitors should be ran.
-- Stats command now uses `<Collection>.reduce` to correctly determine User Count when fetchAllMembers is false
-- Changed info to no longer mention Evie because she said she was tired of it.. kek
-- New runCommandInhibitors should be much faster and prioritizes inhibitors via a prioritiy configuration setting.
-- Old Configuration system now points to the new configuration system, to ease the trouble of updating to newer versions of Komada
-- Pieces now have  specific order they load in. (Functions, Providers, Commands, Inhibitors, Monitors, Events)
-- Confs.js uses new configuration system now
+- Stats command now uses `<Collection>.reduce` to correctly determine User Count
+when fetchAllMembers is false.
+- Changed info to no longer mention Evie because she said she was tired of it..
+kek.
+- New runCommandInhibitors should be much faster and prioritizes inhibitors via
+a prioritiy configuration setting.
+- Old Configuration system now points to the new configuration system, to ease
+the trouble of updating to newer versions of Komada.
+- Pieces now have  specific order they load in. (Functions, Providers, Commands,
+Inhibitors, Monitors, Events).
+- Confs.js uses new configuration system now.
 - Configuration now split into smaller parts as requested.
 - Help command is now a Direct Message.
-- Async/Await for all pieces && app.js
-- dataProviders renamed to Providers
+- Async/Await for all pieces && `app.js`.
+- dataProviders renamed to Providers.
 
 ### Fixed
 - Fixed validateData Booleans.
@@ -169,44 +314,49 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Unchanged Package.json links to the repository
 - App.js uncaughtWarnings reverted (for now)
 - Download.js Fix && Reload.js typo fix.
-- Inhibitors now run one by one until one of them fails or all succeed. Fixes race conditions permanently.
+- Inhibitors now run one by one until one of them fails or all succeed. Fixes
+race conditions permanently.
 - Empty Message errors
 - CmdPrompts should now be fixed completely (as of 0.17.0)
 - Inhibitors now await
 - Usage typos fixed
-- LoadFunctions now calls itself when installing a new dependency in a client function
-- Fixed Default configuration not being read before guild configurations are created
+- LoadFunctions now calls itself when installing a new dependency in a client
+function.
+- Fixed Default configuration not being read before guild configurations are
+created.
 - Inhibitors now are correctly 'disabled' when set to be.
 - Events.... now should be fixed
 - Inhibitors now running in the correct order
 - Fixed Prompts sending an extra message.
-- Help command back to msg.author...
+- Help command back to `msg.author`...
 - Help command is now working. `msg.author.permlvl => msg.member.permlvl`.
-- Bunch of fixes for Inhibitors/Commands
-- Fixed Typo in disable
-- Fixed Help Command sending extra message when DMed
+- Bunch of fixes for Inhibitors/Commands.
+- Fixed Typo in disable.
+- Fixed Help Command sending extra message when DMed.
 - New Configuration system fixed and outputs files correctly now.
-- No longer able to kill komada with Client.destroy()
+- No longer able to kill komada with `Client.destroy()`.
 - All Pieces should now initialize in the correct order.
 - loadCommands no longer counts/loads "Ghost" commands.
-- DMs throwing errors with new Config System && permLevel
-- Fixed Reload not erroring on new commands that aren't found
-- Fixed Bug on Selfbot mentions introduced with the new Argument Prompts
-- Fixed Bug on Help not showing all commands with new Argument System
-- Fixed another bug introduced with the new Argument System where Permissions weren't finalized before Prompts
-- Fixed Bug within reload.js that prevented new commands from being loaded
-- More Selfbot Bugs Fixed
-- More Reload function fixes for commands
+- DMs throwing errors with new Config System && permLevel.
+- Fixed Reload not erroring on new commands that aren't found.
+- Fixed Bug on Selfbot mentions introduced with the new Argument Prompts.
+- Fixed Bug on Help not showing all commands with new Argument System.
+- Fixed another bug introduced with the new Argument System where Permissions
+weren't finalized before Prompts.
+- Fixed Bug within reload.js that prevented new commands from being loaded.
+- More Selfbot Bugs Fixed.
+- More Reload function fixes for commands.
 
 ### Removed
-- Old initialize system (Was borked)
-- Old Configuration System
-- Selfbot Inhibitor
+- Old initialize system (Was borked).
+- Old Configuration System.
+- Selfbot Inhibitor.
 
 ## [0.18.0] - 2017-03-16
 ### Added
 - Added a bunch of unusable configuration options that'll make their debut soon.
-- All Bad Requests/Forbiddens.. etc, now properly give a human readable error in console or chat, depending on the error. (Not as of (0.17.0).. must be fixed) ***
+- All Bad Requests/Forbiddens.. etc, now properly give a human readable error in
+console or chat, depending on the error. *(Not as of (0.17.0).. must be fixed)*
 - New Error Creator
 - New CommandHandler (Removed it from message event)
 - New Core Command "Transfer"
@@ -217,28 +367,37 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - New Download Command
 
 ### Changed
-- ~~All pieces now initialize upon being loaded, in order.~~ ~~Reverted in 0.17.3~~ Reimplemented in 0.17.4 within `client.on("ready")`
+- ~~All pieces now initialize upon being loaded, in order.~~ ~~Reverted in
+0.17.3~~ Reimplemented in 0.17.4 within `client.on("ready")`.
 - Changed Emojis to unicode variants in Reload.js
 - Broke down App.js Message Event into several smaller, changeable parts.
 - newError changed to send arguments to awaitMessage when errors are from usage
 - awaitMessage changed to work perfectly with the new system
-- msg.author.permLevel is now available immediately on a message, instead of after inhibitors run correctly.
-- Usage Inhibitor is now a function instead, which will help issues with racing and prompts.
-- All Inhibitors now return values instead of using promises to resolve or reject. (Change will be reflected on Documentation soon)
+- msg.author.permLevel is now available immediately on a message, instead of
+after inhibitors run correctly.
+- Usage Inhibitor is now a function instead, which will help issues with racing
+and prompts.
+- All Inhibitors now return values instead of using promises to resolve or
+reject.
 - Reverted Log function for the time being.
-- Many Files to use the new Error creator
+- Many Files to use the new Error creator.
 - guildOnly Inhibitor is now a `runIn` Inhibitor.
 - Inhibitors now use .some() to determine if more inhibitors should be ran.
-- Stats command now uses `<Collection>.reduce` to correctly determine User Count when fetchAllMembers is false
-- Changed info to no longer mention Evie because she said she was tired of it.. kek
-- New runCommandInhibitors should be much faster and prioritizes inhibitors via a prioritiy configuration setting.
-- Old Configuration system now points to the new configuration system, to ease the trouble of updating to newer versions of Komada
-- Pieces now have  specific order they load in. (Functions, Providers, Commands, Inhibitors, Monitors, Events)
-- Confs.js uses new configuration system now
+- Stats command now uses `<Collection>.reduce` to correctly determine User Count
+when fetchAllMembers is `false`.
+- Changed info to no longer mention Evie because she said she was tired of it..
+kek.
+- New runCommandInhibitors should be much faster and prioritizes inhibitors via
+a prioritiy configuration setting.
+- Old Configuration system now points to the new configuration system, to ease
+the trouble of updating to newer versions of Komada.
+- Pieces now have  specific order they load in. (Functions, Providers, Commands,
+Inhibitors, Monitors, Events).
+- Confs.js uses new configuration system now.
 - Configuration now split into smaller parts as requested.
 - Help command is now a Direct Message.
-- Async/Await for all pieces && app.js
-- dataProviders renamed to Providers
+- Async/Await for all pieces && `app.js`.
+- dataProviders renamed to Providers.
 
 ### Fixed
 - Fixed validateData Booleans.
@@ -249,13 +408,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Unchanged Package.json links to the repository
 - App.js uncaughtWarnings reverted (for now)
 - Download.js Fix && Reload.js typo fix.
-- Inhibitors now run one by one until one of them fails or all succeed. Fixes race conditions permanently.
+- Inhibitors now run one by one until one of them fails or all succeed. Fixes
+race conditions permanently.
 - Empty Message errors
 - CmdPrompts should now be fixed completely (as of 0.17.0)
 - Inhibitors now await
 - Usage typos fixed
-- LoadFunctions now calls itself when installing a new dependency in a client function
-- Fixed Default configuration not being read before guild configurations are created
+- LoadFunctions now calls itself when installing a new dependency in a client
+function
+- Fixed Default configuration not being read before guild configurations are
+created
 - Inhibitors now are correctly 'disabled' when set to be.
 - Events.... now should be fixed
 - Inhibitors now running in the correct order
@@ -273,7 +435,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Fixed Reload not erroring on new commands that aren't found
 - Fixed Bug on Selfbot mentions introduced with the new Argument Prompts
 - Fixed Bug on Help not showing all commands with new Argument System
-- Fixed another bug introduced with the new Argument System where Permissions weren't finalized before Prompts
+- Fixed another bug introduced with the new Argument System where Permissions
+weren't finalized before Prompts.
 - Fixed Bug within reload.js that prevented new commands from being loaded
 - More Selfbot Bugs Fixed
 - More Reload function fixes for commands
@@ -288,7 +451,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - confs.getRaw(<Guild>) returns the entire configuration for developers.
 
 ### Changed
-- confs.addKey(key, defaultValue, min value, max value) and .setKey() and .set() changed to account for integers. This is backwards compatible with older versions.
+- confs.addKey(key, defaultValue, min value, max value) and .setKey() and .set()
+changed to account for integers. This is backwards compatible with older
+versions.
 
 ### Fixed
 - Dependecy Issue with Upstream Dependency changing repo structure.
@@ -296,16 +461,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Tons of Confs fixes and changes to be more consistent.
 
 ### Removed
-- Removed `client.methods.Shard` aka `ShardingManager` due to how Sharding works (ie. Needs an additional file to spawn the ShardingManager)
+- Removed `client.methods.Shard` aka `ShardingManager` due to how Sharding works
+(ie. Needs an additional file to spawn the ShardingManager)
 
 ## [0.12.0] - 2016-12-15
 ### Added
 - client.methods.MethodName
 
 ### Changed
-- ownerid is now following camelCase (ownerID). If this not changed in your client app.js. Your permissions **WILL** Break.
-- Disable Command changed to allow Inhibitors, Monitors and Commands to be disabled
-- Enable Command Changed to allow Inhibitors, Monitors and Commands to be disabled
+- ownerid is now following camelCase (ownerID). If this not changed in your
+client app.js. Your permissions **WILL** Break.
+- Disable Command changed to allow Inhibitors, Monitors and Commands to be
+disabled
+- Enable Command Changed to allow Inhibitors, Monitors and Commands to be
+disabled
 - commandMonitors renamed to messageMonitors
 - Help no longer placing un-catergorised commands in its own "catergory"
 
@@ -313,7 +482,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Wrong Discord Invite link in README.md
 - Accidently tried to pass an object to .get instead of a string
 - User && Member usage types now correctly work when given IDs
-- MessageMonitor function now actually called MessageMonitor instead of commandMonitor
+- MessageMonitor function now actually called MessageMonitor instead of
+commandMonitor
 - guildConfs not being in sync after file operation + Better error handling
 
 
@@ -323,8 +493,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 - All pieces will now initialize their .init() function if available.
-- Permissions. guild.member is now guild.fetchMember (Allows invisible users). This is Evie's addition.
-- Changed `if (msg.author.bot && msg.author.id !== client.user.id) return;` back to `if (msg.author.bot) return;`
+- Permissions. guild.member is now guild.fetchMember (Allows invisible users).
+This is Evie's addition.
+- Changed `if (msg.author.bot && msg.author.id !== client.user.id) return;` back
+to `if (msg.author.bot) return;`
 - Various Changes to commands (by Evie)
 - Usage URL Tag has been changed from Regex to Native Node `URL` Module.
 - confs.js is back to Async (Critical Performance bug fixed)
