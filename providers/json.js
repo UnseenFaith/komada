@@ -76,7 +76,7 @@ exports.getRandom = table => this.getAll(table).then(data => data[Math.floor(Mat
  * @param {Object} data The object with all properties you want to insert into the document.
  * @returns {Promise<Void>}
  */
-exports.create = (table, document, data) => fs.outputJSON(resolve(baseDir, table, `${document}.json`), Object.assign(data, { id: document }));
+exports.create = (table, document, data) => fs.writeJSONAtomic(resolve(baseDir, table, `${document}.json`), Object.assign(data, { id: document }));
 exports.set = (...args) => this.create(...args);
 exports.insert = (...args) => this.create(...args);
 
@@ -88,7 +88,7 @@ exports.insert = (...args) => this.create(...args);
  * @returns {Promise<Void>}
  */
 exports.update = (table, document, data) => this.get(table, document)
-  .then(current => fs.outputJSON(resolve(baseDir, table, `${document}.json`), Object.assign(current, data)));
+  .then(current => fs.writeJSONAtomic(resolve(baseDir, table, `${document}.json`), Object.assign(current, data)));
 
 /**
  * Replace all the data from a document.
@@ -97,7 +97,7 @@ exports.update = (table, document, data) => this.get(table, document)
  * @param {Object} data The new data for the document.
  * @returns {Promise<Void>}
  */
-exports.replace = (table, document, data) => fs.outputJSON(resolve(baseDir, table, `${document}.json`), data);
+exports.replace = (table, document, data) => fs.writeJSONAtomic(resolve(baseDir, table, `${document}.json`), data);
 
 /**
  * Delete a document from the table.
