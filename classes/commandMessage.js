@@ -43,6 +43,10 @@ module.exports = class CommandMessage {
     } else if (this._currentUsage.possibles.length === 1) {
       if (this.client.argResolver[this._currentUsage.possibles[0].type]) {
         return this.client.argResolver[this._currentUsage.possibles[0].type](this.args[this.params.length], this._currentUsage, 0, this._repeat, this.msg)
+          .catch((err) => {
+            this.args.splice(this.params.length, 1, null);
+            throw this.client.funcs.newError(err, 1);
+          })
           .then((res) => {
             if (res !== null) {
               this.params.push(res);
@@ -51,10 +55,6 @@ module.exports = class CommandMessage {
             this.args.splice(this.params.length, 0, undefined);
             this.params.push(undefined);
             return this.validateArgs();
-          })
-          .catch((err) => {
-            this.args.splice(this.params.length, 1, null);
-            throw this.client.funcs.newError(err, 1);
           });
       }
       this.client.emit("log", "Unknown Argument Type encountered", "warn");
