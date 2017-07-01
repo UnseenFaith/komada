@@ -1,6 +1,6 @@
 {
   "name": "komada",
-  "version": "0.20.2",
+  "version": "0.20.3",
   "lockfileVersion": 1,
   "dependencies": {
     "acorn": {
@@ -195,7 +195,7 @@
       "dev": true
     },
     "discord.js": {
-      "version": "github:hydrabolt/discord.js#0a337a4646c2b906a195182bddfcdf4a774fbcbf"
+      "version": "github:hydrabolt/discord.js#62537b7debb004eb4bcd26a562f8204d0323439a"
     },
     "doctrine": {
       "version": "2.0.0",
@@ -370,12 +370,12 @@
       "version": "1.2.2",
       "resolved": "https://registry.npmjs.org/flat-cache/-/flat-cache-1.2.2.tgz",
       "integrity": "sha1-+oZxTnLCHbiGAXYezy9VXRq8a5Y=",
-      "dev": true
+      "dev": true 
     },
     "fs-nextra": {
-      "version": "0.1.2",
-      "resolved": "https://registry.npmjs.org/fs-nextra/-/fs-nextra-0.1.2.tgz",
-      "integrity": "sha512-v9nYPCI26zurCivzLSkSzoyMMWXfkLhHAKg1YozoZzyrJm2dqc+w+U8EM791Hyqju5CWGwwvKr5R+bFnMVaSZg=="
+      "version": "0.1.4",
+      "resolved": "https://registry.npmjs.org/fs-nextra/-/fs-nextra-0.1.4.tgz",
+      "integrity": "sha512-bMqvWg+8b3mHhOZKx1UtSh0/l9KOXHqAEl/E9NgElYjmGZi2lkA6g9VZE6hDgvVBuUPp0qCBLzqd9NbgfVecgQ=="
     },
     "fs.realpath": {
       "version": "1.0.0",
