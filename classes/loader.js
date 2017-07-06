@@ -142,7 +142,7 @@ module.exports = class Loader {
       .catch((err) => { throw err; });
     await this.walkCommandDirectories(this.clientDirs.commands)
       .catch((err) => { throw err; });
-    await this.walkCommandDirectories(this.client.outDirs.commands)
+    await this.walkCommandDirectories(this.outDirs.commands)
       .catch((err) => { throw err; });
 
     const langCountsObj = {};
