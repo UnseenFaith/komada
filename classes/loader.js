@@ -60,9 +60,14 @@ module.exports = class Loader {
     });
     const countMsg = (langs) => {
       if (Object.keys(langs).length >= 2) {
-        return ` (${langs.reduce((acc, [lang, count]) =>
-          `${acc ? `${acc}, ` : ""}~${count} ${lang}`,
-          "")})`;
+        const str = langs.reduce(
+          (acc, [lang, count]) => {
+            acc = acc ? `${acc}, ` : "";
+            return `${acc}~${count} ${lang}`;
+          },
+          "",
+        );
+        return ` (${str})`;
       }
       return "";
     };
