@@ -5,7 +5,7 @@ const CommandMessage = require("./commandMessage");
 const Loader = require("./loader");
 const ArgResolver = require("./argResolver");
 const PermLevels = require("./permLevels");
-const GuildSettings = require("./GuildSettings");
+const GuildSettings = require("./guildSettings");
 
 const defaultPermStructure = new PermLevels()
   .addLevel(0, false, () => true)
