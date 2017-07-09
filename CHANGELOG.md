@@ -64,6 +64,7 @@ keyword. `exports.run = __async__ (client, msg, [...args])`.
 command.
 
 ### Changed
+- [[#300](https://github.com/dirigeants/komada/pull/300)] **[Update]** `client.methods.Embed` changed to use Discord.js MessageEmbed.
 - [[#296](https://github.com/dirigeants/komada/pull/296)] **[Update]** The JSON provider and schemaManager now uses atomics.
 - [[#293](https://github.com/dirigeants/komada/pull/293)] **[Performance]** Faster prefix check and resolve for prefixes
 stored inside an Array.

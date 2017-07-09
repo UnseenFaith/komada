@@ -61,7 +61,7 @@ module.exports = class Komada extends Discord.Client {
     this.ready = false;
     this.methods = {
       Collection: Discord.Collection,
-      Embed: Discord.RichEmbed,
+      Embed: Discord.MessageEmbed,
       MessageCollector: Discord.MessageCollector,
       Webhook: Discord.WebhookClient,
       escapeMarkdown: Discord.escapeMarkdown,
