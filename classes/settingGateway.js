@@ -27,7 +27,7 @@ module.exports = class SettingGateway extends SchemaManager {
     this.provider = this.client.providers.get(this.engine);
     if (!this.provider) throw `This provider (${this.engine}) does not exist in your system.`;
     await this.initSchema();
-    this.sql = this.provider.conf.sql ? new SQL(this.client, this.provider) : false;
+    this.sql = this.provider.conf.sql ? new SQL(this.client, this, this.provider) : false;
     if (!(await this.provider.hasTable(this.type))) {
       const SQLCreate = this.sql ? this.sql.buildSQLSchema(this.schema) : undefined;
       await this.provider.createTable(this.type, SQLCreate);
