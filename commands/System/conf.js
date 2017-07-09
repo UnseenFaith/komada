@@ -9,7 +9,7 @@ const handle = (value) => {
 
 exports.run = async (client, msg, [action, key, ...value]) => {
   const configs = msg.guild.settings;
-
+  console.log(value);
   switch (action) {
     case "set": {
       if (!key) return msg.sendMessage("You must provide a key");
@@ -71,6 +71,6 @@ exports.conf = {
 exports.help = {
   name: "conf",
   description: "Define per-server configuration.",
-  usage: "<set|get|reset|list|remove> [key:string] [value:string]",
+  usage: "<set|get|reset|list|remove> [key:string] [value:string] [...]",
   usageDelim: " ",
 };
