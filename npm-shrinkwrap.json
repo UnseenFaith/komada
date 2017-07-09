@@ -213,7 +213,7 @@
       "dev": true
     },
     "discord.js": {
-      "version": "github:hydrabolt/discord.js#4e5556ba09e3c41a3a572abfb98521a2fd1918bf",
+      "version": "github:hydrabolt/discord.js#4e5556ba09e3c41a3a572abfb98521a2fd1918bf"
     },
     "doctrine": {
       "version": "2.0.0",
