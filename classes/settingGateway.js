@@ -5,11 +5,14 @@ const SQL = require("./sql");
 
 /* eslint-disable no-restricted-syntax */
 module.exports = class SettingGateway extends CacheManager {
-  constructor(client) {
+  constructor(client, type) {
     super(client);
 
     /** @type {Client} */
     this.client = client;
+
+    /** @type {string} */
+    this.type = type;
 
     /** @type {string} */
     this.engine = client.config.provider.engine || "json";
@@ -27,11 +30,11 @@ module.exports = class SettingGateway extends CacheManager {
     if (!this.provider) throw `This provider (${this.engine}) does not exist in your system.`;
     await this.schemaManager.init();
     this.sql = this.provider.conf.sql ? new SQL(this.client, this.provider) : false;
-    if (!(await this.provider.hasTable("guilds"))) {
+    if (!(await this.provider.hasTable(this.type))) {
       const SQLCreate = this.sql ? this.sql.buildSQLSchema(this.schema) : undefined;
-      await this.provider.createTable("guilds", SQLCreate);
+      await this.provider.createTable(this.type, SQLCreate);
     }
-    const data = await this.provider.getAll("guilds");
+    const data = await this.provider.getAll(this.type);
     if (this.sql) {
       this.sql.initDeserialize();
       for (let i = 0; i < data.length; i++) this.sql.deserializer(data[i]);
@@ -64,7 +67,7 @@ module.exports = class SettingGateway extends CacheManager {
    */
   async create(guild) {
     const target = await this.validateGuild(guild);
-    await this.provider.create("guilds", target.id, this.schemaManager.defaults);
+    await this.provider.create(this.type, target.id, this.schemaManager.defaults);
     super.set(target.id, this.schemaManager.defaults);
   }
 
@@ -74,8 +77,8 @@ module.exports = class SettingGateway extends CacheManager {
    * @returns {void}
    */
   async destroy(guild) {
-    await this.provider.delete("guilds", guild);
-    super.delete("guilds", guild);
+    await this.provider.delete(this.type, guild);
+    super.delete(this.type, guild);
   }
 
   /**
@@ -94,7 +97,7 @@ module.exports = class SettingGateway extends CacheManager {
    * @returns {Object}
    */
   async getResolved(guild) {
-    guild = await this.validateGuild(guild);
+    guild = await this.validate(guild);
     const settings = this.get(guild.id);
     const resolved = await Promise.all(Object.entries(settings).map(([key, data]) => {
       if (this.schema[key] && this.schema[key].array) return { [key]: Promise.all(data.map(entry => this.resolver[this.schema[key].type.toLowerCase()](entry, guild, this.schema[key]))) };
@@ -110,13 +113,13 @@ module.exports = class SettingGateway extends CacheManager {
    */
   async sync(guild = null) {
     if (!guild) {
-      const data = await this.provider.getAll("guilds");
+      const data = await this.provider.getAll(this.type);
       if (this.sql) for (let i = 0; i < data.length; i++) this.sql.deserializer(data[i]);
       for (const key of data) super.set(key.id, key);
       return;
     }
     const target = await this.validateGuild(guild);
-    const data = await this.provider.get("guilds", target.id);
+    const data = await this.provider.get(this.type, target.id);
     if (this.sql) this.sql.deserializer(data);
     await super.set(target.id, data);
   }
@@ -131,7 +134,7 @@ module.exports = class SettingGateway extends CacheManager {
     const target = await this.validateGuild(guild);
     if (!(key in this.schema)) throw `The key ${key} does not exist in the current data schema.`;
     const defaultKey = this.schema[key].default;
-    await this.provider.update("guilds", target.id, { [key]: defaultKey });
+    await this.provider.update(this.type, target.id, { [key]: defaultKey });
     this.sync(target.id);
     return defaultKey;
   }
@@ -148,7 +151,7 @@ module.exports = class SettingGateway extends CacheManager {
     const target = await this.validateGuild(guild);
     let result = await this.resolver[this.schema[key].type.toLowerCase()](data, target, this.schema[key]);
     if (result.id) result = result.id;
-    await this.provider.update("guilds", target.id, { [key]: result });
+    await this.provider.update(this.type, target.id, { [key]: result });
     await this.sync(target.id);
     return result;
   }
@@ -166,32 +169,21 @@ module.exports = class SettingGateway extends CacheManager {
     if (!(key in this.schema)) throw `The key ${key} does not exist in the current data schema.`;
     if (!this.schema[key].array) throw `The key ${key} is not an Array.`;
     if (data === undefined) throw "You must specify the value to add or filter.";
-    const target = await this.validateGuild(guild);
+    const target = await this.validate(guild);
     let result = await this.resolver[this.schema[key].type.toLowerCase()](data, target, this.schema[key]);
     if (result.id) result = result.id;
     const cache = this.get(target.id);
     if (type === "add") {
       if (cache[key].includes(result)) throw `The value ${data} for the key ${key} already exists.`;
       cache[key].push(result);
-      await this.provider.update("guilds", target.id, { [key]: cache[key] });
+      await this.provider.update(this.type, target.id, { [key]: cache[key] });
       await this.sync(target.id);
       return result;
     }
     if (!cache[key].includes(result)) throw `The value ${data} for the key ${key} does not exist.`;
     cache[key] = cache[key].filter(v => v !== result);
-    await this.provider.update("guilds", target.id, { [key]: cache[key] });
+    await this.provider.update(this.type, target.id, { [key]: cache[key] });
     await this.sync(target.id);
     return true;
-  }
-
-  /**
-   * Checks if a Guild is valid.
-   * @param {(Guild|Snowflake)} guild The Guild object or snowflake.
-   * @returns {Guild}
-   */
-  async validateGuild(guild) {
-    const result = await this.resolver.guild(guild);
-    if (!result) throw "The parameter <Guild> expects either a Guild or a Guild Object.";
-    return result;
   }
 };

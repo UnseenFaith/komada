@@ -17,7 +17,7 @@ class SchemaManager {
   async init() {
     const baseDir = resolve(this.client.clientBaseDir, "bwd");
     await fs.ensureDir(baseDir);
-    this.filePath = resolve(baseDir, "schema.json");
+    this.filePath = resolve(baseDir, `${this.settingGateway.type}Schema.json`);
     const schema = await fs.readJSON(this.filePath)
       .catch(() => fs.outputJSON(this.filePath, this.defaultDataSchema).then(() => this.defaultDataSchema));
     return this.validate(schema);
@@ -106,14 +106,14 @@ class SchemaManager {
     if (this.settingGateway.sql) {
       await this.settingGateway.sql.updateColumns(this.schema, this.defaults, key);
     }
-    const data = this.settingGateway.getAll("guilds");
+    const data = this.settingGateway.getAll(this.settingGateway.type);
     let value;
     if (action === "add") value = this.defaults[key];
     await Promise.all(data.map(async (obj) => {
       const object = obj;
       if (action === "delete") delete object[key];
       else object[key] = value;
-      if (obj.id) await this.client.settingGateway.provider.replace("guilds", obj.id, object);
+      if (obj.id) await this.client.settingGateway.provider.replace(this.settingGateway.type, obj.id, object);
       return true;
     }));
     return this.settingGateway.sync();
@@ -134,32 +134,7 @@ class SchemaManager {
    * @returns {Object}
    */
   get defaultDataSchema() {
-    return {
-      prefix: {
-        type: "String",
-        default: this.client.config.prefix,
-        array: false,
-        sql: `TEXT NOT NULL DEFAULT '${this.client.config.prefix}'`,
-      },
-      modRole: {
-        type: "Role",
-        default: null,
-        array: false,
-        sql: "TEXT",
-      },
-      adminRole: {
-        type: "Role",
-        default: null,
-        array: false,
-        sql: "TEXT",
-      },
-      disabledCommands: {
-        type: "Command",
-        default: [],
-        array: true,
-        sql: "TEXT DEFAULT '[]'",
-      },
-    };
+    return this.settingGateway.defaultDataSchema;
   }
 }
 
