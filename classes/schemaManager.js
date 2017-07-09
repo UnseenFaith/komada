@@ -19,7 +19,7 @@ class SchemaManager {
     await fs.ensureDir(baseDir);
     this.filePath = resolve(baseDir, "schema.json");
     const schema = await fs.readJSON(this.filePath)
-      .catch(() => fs.writeJSONAtomic(this.filePath, this.defaultDataSchema).then(() => this.defaultDataSchema));
+      .catch(() => fs.outputJSONAtomic(this.filePath, this.defaultDataSchema).then(() => this.defaultDataSchema));
     return this.validate(schema);
   }
 
@@ -80,7 +80,7 @@ class SchemaManager {
     this.schema[key] = options;
     this.defaults[key] = options.default;
     if (force) await this.force("add", key);
-    return fs.writeJSONAtomic(this.filePath, this.schema);
+    return fs.outputJSONAtomic(this.filePath, this.schema);
   }
 
   /**
@@ -93,7 +93,7 @@ class SchemaManager {
     if (key === "prefix") throw "You can't remove the prefix key.";
     delete this.schema[key];
     if (force) await this.force("delete", key);
-    return fs.writeJSONAtomic(this.filePath, this.schema);
+    return fs.outputJSONAtomic(this.filePath, this.schema);
   }
 
   /**
