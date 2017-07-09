@@ -66,7 +66,7 @@ module.exports = class SettingGateway extends CacheManager {
    * @returns {void}
    */
   async create(guild) {
-    const target = await this.validateGuild(guild);
+    const target = await this.validate(guild);
     await this.provider.create(this.type, target.id, this.schemaManager.defaults);
     super.set(target.id, this.schemaManager.defaults);
   }
@@ -118,7 +118,7 @@ module.exports = class SettingGateway extends CacheManager {
       for (const key of data) super.set(key.id, key);
       return;
     }
-    const target = await this.validateGuild(guild);
+    const target = await this.validate(guild);
     const data = await this.provider.get(this.type, target.id);
     if (this.sql) this.sql.deserializer(data);
     await super.set(target.id, data);
@@ -131,7 +131,7 @@ module.exports = class SettingGateway extends CacheManager {
    * @returns {*}
    */
   async reset(guild, key) {
-    const target = await this.validateGuild(guild);
+    const target = await this.validate(guild);
     if (!(key in this.schema)) throw `The key ${key} does not exist in the current data schema.`;
     const defaultKey = this.schema[key].default;
     await this.provider.update(this.type, target.id, { [key]: defaultKey });
@@ -148,7 +148,7 @@ module.exports = class SettingGateway extends CacheManager {
    */
   async update(guild, key, data) {
     if (!(key in this.schema)) throw `The key ${key} does not exist in the current data schema.`;
-    const target = await this.validateGuild(guild);
+    const target = await this.validate(guild);
     let result = await this.resolver[this.schema[key].type.toLowerCase()](data, target, this.schema[key]);
     if (result.id) result = result.id;
     await this.provider.update(this.type, target.id, { [key]: result });
