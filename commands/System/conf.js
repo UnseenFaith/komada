@@ -9,7 +9,6 @@ const handle = (value) => {
 
 exports.run = async (client, msg, [action, key, ...value]) => {
   const configs = msg.guild.settings;
-  console.log(value);
   switch (action) {
     case "set": {
       if (!key) return msg.sendMessage("You must provide a key");
