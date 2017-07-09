@@ -1,11 +1,12 @@
 const { resolve } = require("path");
 const fs = require("fs-nextra");
+const CacheManager = require("./cacheManager");
 
 const validTypes = ["User", "Channel", "Guild", "Role", "Boolean", "String", "Integer", "Float", "url", "Command"];
 
-class SchemaManager {
+class SchemaManager extends CacheManager {
   constructor(client) {
-    this.client = client;
+    super(client);
     this.schema = {};
     this.defaults = {};
   }
@@ -14,13 +15,13 @@ class SchemaManager {
    * Initialize the SchemaManager.
    * @returns {void}
    */
-  async init() {
+  async initSchema() {
     const baseDir = resolve(this.client.clientBaseDir, "bwd");
     await fs.ensureDir(baseDir);
-    this.filePath = resolve(baseDir, `${this.settingGateway.type}Schema.json`);
+    this.filePath = resolve(baseDir, `${this.type}Schema.json`);
     const schema = await fs.readJSON(this.filePath)
       .catch(() => fs.outputJSON(this.filePath, this.defaultDataSchema).then(() => this.defaultDataSchema));
-    return this.validate(schema);
+    return this.validateSchema(schema);
   }
 
   /**
@@ -28,7 +29,7 @@ class SchemaManager {
    * @param {Object} schema The Schema object that will be used for the configuration system.
    * @returns {void}
    */
-  validate(schema) {
+  validateSchema(schema) {
     if (!("prefix" in schema)) {
       this.client.emit("log", "The key 'prefix' is obligatory", "error");
       schema.prefix = {
@@ -76,7 +77,7 @@ class SchemaManager {
       if (!options.default) options.default = null;
       options.array = false;
     }
-    if (this.settingGateway.sql) options.sql = this.settingGateway.sql.buildSingleSQLSchema(options);
+    if (this.sql) options.sql = this.sql.buildSingleSQLSchema(options);
     this.schema[key] = options;
     this.defaults[key] = options.default;
     if (force) this.force("add", key);
@@ -103,38 +104,20 @@ class SchemaManager {
    * @returns {void}
    */
   async force(action, key) {
-    if (this.settingGateway.sql) {
-      await this.settingGateway.sql.updateColumns(this.schema, this.defaults, key);
+    if (this.sql) {
+      await this.sql.updateColumns(this.schema, this.defaults, key);
     }
-    const data = this.settingGateway.getAll(this.settingGateway.type);
+    const data = this.getAll(this.type);
     let value;
     if (action === "add") value = this.defaults[key];
     await Promise.all(data.map(async (obj) => {
       const object = obj;
       if (action === "delete") delete object[key];
       else object[key] = value;
-      if (obj.id) await this.client.settingGateway.provider.replace(this.settingGateway.type, obj.id, object);
+      if (obj.id) await this.provider.replace(this.type, obj.id, object);
       return true;
     }));
-    return this.settingGateway.sync();
-  }
-
-  /**
-   * Shortcut for settingGateway
-   * @readonly
-   * @memberof SchemaManager
-   */
-  get settingGateway() {
-    return this.client.settingGateway;
-  }
-
-  /**
-   * Get the default DataSchema from Komada.
-   * @readonly
-   * @returns {Object}
-   */
-  get defaultDataSchema() {
-    return this.settingGateway.defaultDataSchema;
+    return this.sync();
   }
 }
 

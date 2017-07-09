@@ -1,10 +1,9 @@
 const SettingResolver = require("./settingResolver");
-const CacheManager = require("./cacheManager");
 const SchemaManager = require("./schemaManager");
 const SQL = require("./sql");
 
 /* eslint-disable no-restricted-syntax */
-module.exports = class SettingGateway extends CacheManager {
+module.exports = class SettingGateway extends SchemaManager {
   constructor(client, type) {
     super(client);
 
@@ -18,7 +17,6 @@ module.exports = class SettingGateway extends CacheManager {
     this.engine = client.config.provider.engine || "json";
 
     this.resolver = new SettingResolver(client);
-    this.schemaManager = new SchemaManager(client);
   }
 
   /**
@@ -28,7 +26,7 @@ module.exports = class SettingGateway extends CacheManager {
   async init() {
     this.provider = this.client.providers.get(this.engine);
     if (!this.provider) throw `This provider (${this.engine}) does not exist in your system.`;
-    await this.schemaManager.init();
+    await this.initSchema();
     this.sql = this.provider.conf.sql ? new SQL(this.client, this.provider) : false;
     if (!(await this.provider.hasTable(this.type))) {
       const SQLCreate = this.sql ? this.sql.buildSQLSchema(this.schema) : undefined;
@@ -43,32 +41,14 @@ module.exports = class SettingGateway extends CacheManager {
   }
 
   /**
-   * Get the current DataSchema.
-   * @readonly
-   * @returns {Object}
-   */
-  get schema() {
-    return this.schemaManager.schema;
-  }
-
-  /**
-   * Get the default values from the current DataSchema.
-   * @readonly
-   * @returns {Object}
-   */
-  get defaults() {
-    return this.schemaManager.defaults;
-  }
-
-  /**
    * Create a new Guild entry for the configuration.
    * @param {Guild|Snowflake} guild The Guild object or snowflake.
    * @returns {void}
    */
   async create(guild) {
     const target = await this.validate(guild);
-    await this.provider.create(this.type, target.id, this.schemaManager.defaults);
-    super.set(target.id, this.schemaManager.defaults);
+    await this.provider.create(this.type, target.id, this.defaults);
+    super.set(target.id, this.defaults);
   }
 
   /**
@@ -87,8 +67,8 @@ module.exports = class SettingGateway extends CacheManager {
    * @returns {Object}
    */
   get(guild) {
-    if (guild === "default") return this.schemaManager.defaults;
-    return super.get(guild) || this.schemaManager.defaults;
+    if (guild === "default") return this.defaults;
+    return super.get(guild) || this.defaults;
   }
 
   /**
