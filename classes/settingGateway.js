@@ -18,7 +18,7 @@ module.exports = class SettingGateway extends CacheManager {
     this.engine = client.config.provider.engine || "json";
 
     this.resolver = new SettingResolver(client);
-    this.schemaManager = new SchemaManager(this.client);
+    this.schemaManager = new SchemaManager(client);
   }
 
   /**
