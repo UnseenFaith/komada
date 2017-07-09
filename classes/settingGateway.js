@@ -2,7 +2,7 @@ const SettingResolver = require("./settingResolver");
 const SchemaManager = require("./schemaManager");
 const SQL = require("./sql");
 
-/* eslint-disable no-restricted-syntax */
+/* eslint-disable no-restricted-syntax, class-methods-use-this */
 module.exports = class SettingGateway extends SchemaManager {
   constructor(client, type) {
     super(client);
@@ -165,5 +165,9 @@ module.exports = class SettingGateway extends SchemaManager {
     await this.provider.update(this.type, target.id, { [key]: cache[key] });
     await this.sync(target.id);
     return true;
+  }
+
+  validate(something) {
+    return something;
   }
 };
