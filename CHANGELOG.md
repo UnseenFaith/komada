@@ -64,6 +64,7 @@ keyword. `exports.run = __async__ (client, msg, [...args])`.
 command.
 
 ### Changed
+- [[#296](https://github.com/dirigeants/komada/pull/296)] **[Update]** The JSON provider and schemaManager now uses atomics.
 - [[#293](https://github.com/dirigeants/komada/pull/293)] **[Performance]** Faster prefix check and resolve for prefixes
 stored inside an Array.
 - [[#262](https://github.com/dirigeants/komada/pull/262)] **[Performance && Cleanup]** Refactored several pieces.
