@@ -44,6 +44,9 @@ client.login("your-bot-token");
 
 - **botToken**: The MFA token for your bot. To get this, please see [This discord.js Getting Started Guide](https://anidiotsguide.gitbooks.io/discord-js-bot-guide/getting-started/the-long-version.html), which explains how to create the bot and get the token.
 - **ownerID**: The User ID of the bot owner - you. This gives you the highest possible access to the bot's default commands, including eval! To obtain it, enable Developer Mode in Discord, right-click your name and do "Copy ID".
+
+> As of Komada 0.20.4, the owner of the bot/application is automatically fetched for you. Supplying this option will no longer do anything.
+
 - **prefix**: The default prefix when the bot first boots up. This option becomes useless after first boot, since the prefix is written to the default configuration system.
 - **clientOptions**: These are passed directly to the discord.js library. They are optional. For more information on which options are available, see [ClientOptions in the discord.js docs](https://discord.js.org/#/docs/main/stable/typedef/ClientOptions).
 - **permStructure**: It allows you to configure the permission levels from Komada, with a range of 0-10. You can also use `Komada.PermLevels` constructor.

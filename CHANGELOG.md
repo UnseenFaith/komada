@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased] - Classbased | Staged for 0.20.3
 ### Added
+- [[#298](https://github.com/dirigeants/komada/pull/298)] `config.ownerID` is automatically detected now.
 - [[#291](https://github.com/dirigeants/komada/pull/291)] `getResolved` method, which returns the resolved configuration
 from a Guild.
 - [[#289](https://github.com/dirigeants/komada/pull/289)] Added SQL compatibility.
