@@ -119,6 +119,14 @@ class SchemaManager extends CacheManager {
     }));
     return this.sync();
   }
+
+/**
+  * Return a blank object if no default is set.
+  * @readonly
+  */
+  get defaultDataSchema() {
+    return {};
+  }
 }
 
 module.exports = SchemaManager;
