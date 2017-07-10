@@ -14,7 +14,7 @@ exports.run = async (client, msg, [action, key, ...value]) => {
       if (!key) return msg.sendMessage("You must provide a key");
       if (!value[0]) return msg.sendMessage("You must provide a value");
       if (!configs.id) await client.settingGateway.create(msg.guild);
-      if (client.settingGateway.schemaManager.schema[key].array) {
+      if (client.settingGateway.schema[key].array) {
         await client.settingGateway.updateArray(msg.guild, "add", key, value.join(" "));
         return msg.sendMessage(`Successfully added the value \`${value.join(" ")}\` to the key: **${key}**`);
       }
