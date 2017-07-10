@@ -64,6 +64,7 @@ keyword. `exports.run = __async__ (client, msg, [...args])`.
 command.
 
 ### Changed
+- [[#300](https://github.com/dirigeants/komada/pull/300)] **[Update]** `client.methods.Embed` changed to use Discord.js MessageEmbed.
 - [[#296](https://github.com/dirigeants/komada/pull/296)] **[Update]** The JSON provider and schemaManager now uses atomics.
 - [[#293](https://github.com/dirigeants/komada/pull/293)] **[Performance]** Faster prefix check and resolve for prefixes
 stored inside an Array.
@@ -71,7 +72,7 @@ stored inside an Array.
 - [[#262](https://github.com/dirigeants/komada/pull/262)] **[Documentation]** Updated the information from the command
 `info.js`.
 - [[#259](https://github.com/dirigeants/komada/pull/259)] **[Performance && Cleanup]** The `checkPerms.js` function now
-returns `false` if it finds a break. As oposed from breaking the loop and return it at the end of the function.
+returns `false` if it finds a break. As opposed from breaking the loop and return it at the end of the function.
 - [[#257](https://github.com/dirigeants/komada/pull/257)] **[Refactor && Cleanup]** Tweaked `package.json`, and
 `requiredFuncs` inhibitor.
 - [[#255](https://github.com/dirigeants/komada/pull/255)] **[BREAKING]** The way Komada handles configurations.
@@ -101,14 +102,14 @@ a command is run, but instead stored in `command.usage`.
 - [[#197](https://github.com/dirigeants/komada/pull/197)] **[Internal]** Usage has been refactored into a **ParsedUsage**
 and an **argResolver** class.
 - [[#197](https://github.com/dirigeants/komada/pull/197)] **[Refactor]** The command loading and reload has been
-completely refactored for speed. You should be able to load everything in approximatly 10% of the time it used to take.
+completely refactored for speed. You should be able to load everything in approximately 10% of the time it used to take.
 - [[#197](https://github.com/dirigeants/komada/pull/197)] **[Refactor]** Disconnect, Error, Warn, Message; into core
 events rather than in the `app.js` file.
 - [[#197](https://github.com/dirigeants/komada/pull/197)] **[BREAKING]** Changed core log func, into an event. You can
 now log anything by running `client.emit("log", data, type);`
 - [[#197](https://github.com/dirigeants/komada/pull/197)] **runMessageMonitors** has been moved into the new Message
 core event.
-- [[#197](https://github.com/dirigeants/komada/pull/197)] **[Dependencies]** `dotenv` dependancy has been changed to a
+- [[#197](https://github.com/dirigeants/komada/pull/197)] **[Dependencies]** `dotenv` dependency has been changed to a
 **peerdep**.
 - [[#197](https://github.com/dirigeants/komada/pull/197)] **[Internal]** Remaining **Utils** have been moved to the
 **classes folder**.
@@ -139,7 +140,7 @@ would not remove the entry from the cooldown list, returning negative cooldowns.
 accurate message when the array is empty.
 - [[#256](https://github.com/dirigeants/komada/pull/256)] **[Misc]** Added a couple of dots in the loader's logs.
 - [[#255](https://github.com/dirigeants/komada/pull/255)] **[BugFix]** GuildSettings works, again.
-- [[#255](https://github.com/dirigeants/komada/pull/255)] **[Misc]** The colourized space from the timestamps. It's now
+- [[#255](https://github.com/dirigeants/komada/pull/255)] **[Misc]** The colorized space from the timestamps. It's now
 gone.
 - [[#235](https://github.com/dirigeants/komada/pull/235)] **[BugFix]** Handle file attachments on command editing.
 - [[#230](https://github.com/dirigeants/komada/pull/230)] **[Deprecations]** Fixed (more) Discord.js deprecations.

@@ -1,6 +1,6 @@
 {
   "name": "komada",
-  "version": "0.20.3",
+  "version": "0.20.5",
   "lockfileVersion": 1,
   "dependencies": {
     "acorn": {
@@ -213,7 +213,7 @@
       "dev": true
     },
     "discord.js": {
-      "version": "github:hydrabolt/discord.js#62537b7debb004eb4bcd26a562f8204d0323439a"
+      "version": "github:hydrabolt/discord.js#4e5556ba09e3c41a3a572abfb98521a2fd1918bf"
     },
     "doctrine": {
       "version": "2.0.0",
