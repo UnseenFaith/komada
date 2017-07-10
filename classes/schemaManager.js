@@ -30,13 +30,6 @@ class SchemaManager extends CacheManager {
    * @returns {void}
    */
   validateSchema(schema) {
-    if (!("prefix" in schema)) {
-      this.client.emit("log", "The key 'prefix' is obligatory", "error");
-      schema.prefix = {
-        type: "String",
-        default: this.client.config.prefix,
-      };
-    }
     for (const [key, value] of Object.entries(schema)) { // eslint-disable-line no-restricted-syntax
       if (value instanceof Object && "type" in value && "default" in value) {
         if (value.array && !(value.default instanceof Array)) {
@@ -91,7 +84,6 @@ class SchemaManager extends CacheManager {
    * @returns {void}
    */
   remove(key, force = false) {
-    if (key === "prefix") throw "You can't remove the prefix key.";
     delete this.schema[key];
     if (force) this.force("delete", key);
     return fs.outputJSON(this.filePath, this.schema);
