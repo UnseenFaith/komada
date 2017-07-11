@@ -33,7 +33,7 @@ const client = new komada.Client({
   ownerID : "your-user-id",
   prefix: "+",
   clientOptions: {
-    fetchAllMembers: true,
+    fetchAllMembers: false,
   },
 });
 
