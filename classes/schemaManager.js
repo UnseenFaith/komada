@@ -112,11 +112,11 @@ class SchemaManager extends CacheManager {
     return this.sync();
   }
 
-/**
-  * Return a blank object if no default is set.
-  * @readonly
-  */
-  get defaultDataSchema() {
+  /**
+   * Return a blank object if no default is set.
+   * @readonly
+   */
+  get defaultDataSchema() { // eslint-disable-line 
     return {};
   }
 }
