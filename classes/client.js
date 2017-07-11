@@ -103,7 +103,7 @@ module.exports = class Komada extends Discord.Client {
   async _ready() {
     this.config.prefixMention = new RegExp(`^<@!?${this.user.id}>`);
     if (this.user.bot) this.application = await super.fetchApplication();
-    if (this.application && !this.config.ownerID) this.config.ownerID = this.application.owner.id;
+    if (!this.config.ownerID) this.config.ownerID = this.user.bot ? this.application.owner.id : this.user.id;
     await Promise.all(this.providers.map((piece) => {
       if (piece.init) return piece.init(this);
       return true;
