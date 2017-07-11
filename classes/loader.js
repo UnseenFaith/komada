@@ -63,7 +63,7 @@ module.exports = class Loader {
         const str = langs.reduce(
           (acc, [lang, count]) => {
             acc = acc ? `${acc}, ` : "";
-            return `${acc}~${count} ${lang}`;
+            return `${acc}${count} ${lang}`;
           },
           "",
         );
@@ -106,11 +106,12 @@ module.exports = class Loader {
     }
 
     const langCountsObj = {};
-    Object.values(this.client.funcs).forEach((f) => {
-      const lang = f.codeLang;
+    await Promise.all(Object.values(this.client.funcs).map(async (f) => {
+      const lang = await f.codeLang;
+      if (!lang) return;
       langCountsObj[lang] = langCountsObj[lang] || 0;
       langCountsObj[lang]++;
-    });
+    }));
     const langCounts = Object.entries(langCountsObj).sort(this.sortLangs);
     return [(coreFiles ? coreFiles.length : 0) +
       (userFiles1 ? userFiles1.length : 0) +
@@ -120,10 +121,7 @@ module.exports = class Loader {
   loadNewFunction(file, dir) {
     const path = join(dir, file);
     const fn = require(path);
-    fn.codeLang = "JS";
-    this.getFileLang(path).then((lang) => {
-      fn.codeLang = lang;
-    });
+    fn.codeLang = this.getFileLang(path); // returns a promise
     this[file.split(".")[0]] = fn;
     delete require.cache[path];
   }
@@ -151,11 +149,12 @@ module.exports = class Loader {
       .catch((err) => { throw err; });
 
     const langCountsObj = {};
-    this.client.commands.forEach((c) => {
-      const lang = c.help.codeLang;
+    await Promise.all(this.client.commands.map(async (c) => {
+      const lang = await c.help.codeLang;
+      if (!lang) return;
       langCountsObj[lang] = langCountsObj[lang] || 0;
       langCountsObj[lang]++;
-    });
+    }));
     const langCounts = Object.entries(langCountsObj).sort(this.sortLangs);
     return [this.client.commands.size, this.client.aliases.size, langCounts];
   }
@@ -197,10 +196,7 @@ module.exports = class Loader {
     cmd.help.fullCategory = file.slice(0, -1);
     cmd.help.subCategory = cmd.help.fullCategory[1] || "General";
     cmd.help.category = cmd.help.fullCategory[0] || "General";
-    cmd.help.codeLang = "JS";
-    this.getFileLang(path).then((lang) => {
-      cmd.help.codeLang = lang;
-    });
+    cmd.help.codeLang = this.getFileLang(path); // returns a promise
     cmd.cooldown = new Map();
     this.client.commands.set(cmd.help.name, cmd);
     cmd.conf.aliases = cmd.conf.aliases || [];
@@ -254,11 +250,12 @@ module.exports = class Loader {
     this.sortInhibitors();
 
     const langCountsObj = {};
-    this.client.commandInhibitors.forEach((i) => {
-      const lang = i.codeLang;
+    await Promise.all(this.client.commandInhibitors.map(async (i) => {
+      const lang = await i.codeLang;
+      if (!lang) return;
       langCountsObj[lang] = langCountsObj[lang] || 0;
       langCountsObj[lang]++;
-    });
+    }));
     const langCounts = Object.entries(langCountsObj).sort(this.sortLangs);
     return [this.client.commandInhibitors.size, langCounts];
   }
@@ -266,10 +263,7 @@ module.exports = class Loader {
   loadNewInhibitor(file, dir) {
     const path = join(dir, file);
     const inhib = require(path);
-    inhib.codeLang = "JS";
-    this.getFileLang(path).then((lang) => {
-      inhib.codeLang = lang;
-    });
+    inhib.codeLang = this.getFileLang(path); // returns a promise
     this.client.commandInhibitors.set(file.split(".")[0], inhib);
     delete require.cache[path];
   }
@@ -314,11 +308,12 @@ module.exports = class Loader {
     }
 
     const langCountsObj = {};
-    this.client.commandFinalizers.forEach((final) => {
-      const lang = final.codeLang;
+    await Promise.all(this.client.commandFinalizers.map(async (final) => {
+      const lang = await final.codeLang;
+      if (!lang) return;
       langCountsObj[lang] = langCountsObj[lang] || 0;
       langCountsObj[lang]++;
-    });
+    }));
     const langCounts = Object.entries(langCountsObj).sort(this.sortLangs);
     return [this.client.commandFinalizers.size, langCounts];
   }
@@ -326,10 +321,7 @@ module.exports = class Loader {
   loadNewFinalizer(file, dir) {
     const path = join(dir, file);
     const final = require(path);
-    final.codeLang = "JS";
-    this.getFileLang(path).then((lang) => {
-      final.codeLang = lang;
-    });
+    final.codeLang = this.getFileLang(path); // returns a promise
     this.client.commandFinalizers.set(file.split(".")[0], final);
     delete require.cache[path];
   }
@@ -370,11 +362,12 @@ module.exports = class Loader {
     }
 
     const langCountsObj = {};
-    this.client.eventHandlers.forEach((i) => {
+    await Promise.all(this.client.eventHandlers.map(async (i) => {
       const lang = i.codeLang;
+      if (!lang) return;
       langCountsObj[lang] = langCountsObj[lang] || 0;
       langCountsObj[lang]++;
-    });
+    }));
     const langCounts = Object.entries(langCountsObj).sort(this.sortLangs);
     return [this.client.eventHandlers.size, langCounts];
   }
@@ -423,11 +416,12 @@ module.exports = class Loader {
     }
 
     const langCountsObj = {};
-    this.client.messageMonitors.forEach((m) => {
-      const lang = m.codeLang;
+    await Promise.all(this.client.messageMonitors.map(async (m) => {
+      const lang = await m.codeLang;
+      if (!lang) return;
       langCountsObj[lang] = langCountsObj[lang] || 0;
       langCountsObj[lang]++;
-    });
+    }));
     const langCounts = Object.entries(langCountsObj).sort(this.sortLangs);
     return [this.client.messageMonitors.size, langCounts];
   }
@@ -435,10 +429,7 @@ module.exports = class Loader {
   loadNewMessageMonitor(file, dir) {
     const path = join(dir, file);
     const mon = require(path);
-    mon.codeLang = "JS";
-    this.getFileLang(path).then((lang) => {
-      mon.codeLang = lang;
-    });
+    mon.codeLang = this.getFileLang(path); // returns a promise
     this.client.messageMonitors.set(file.split(".")[0], mon);
     delete require.cache[path];
   }
@@ -478,11 +469,12 @@ module.exports = class Loader {
     }
 
     const langCountsObj = [];
-    this.client.providers.forEach((p) => {
-      const lang = p.codeLang;
+    await Promise.all(this.client.providers.map(async (p) => {
+      const lang = await p.codeLang;
+      if (!lang) return;
       langCountsObj[lang] = langCountsObj[lang] || 0;
       langCountsObj[lang]++;
-    });
+    }));
     const langCounts = Object.entries(langCountsObj).sort(this.sortLangs);
     return [this.client.providers.size, langCounts];
   }
@@ -490,10 +482,7 @@ module.exports = class Loader {
   loadNewProvider(file, dir) {
     const path = join(dir, file);
     const prov = require(path);
-    prov.codeLang = "JS";
-    this.getFileLang(path).then((lang) => {
-      prov.codeLang = lang;
-    });
+    prov.codeLang = this.getFileLang(path); // returns a promise
     this.client.providers.set(file.split(".")[0], prov);
     delete require.cache[path];
   }
@@ -512,7 +501,7 @@ module.exports = class Loader {
   }
 
   async loadExtendables() {
-    this.extendableLanguages = {};
+    this.extendableLanguages = [];
 
     const coreFiles = await fs.readdir(this.coreDirs.extendables)
       .catch(() => { fs.ensureDir(this.coreDirs.extendables).catch(err => this.client.emit("error", err)); });
@@ -535,7 +524,14 @@ module.exports = class Loader {
         .catch((err) => { throw err; });
     }
 
-    const langCounts = Object.entries(this.extendableLanguages).sort(this.sortLangs);
+    const langCountsObj = [];
+    await Promise.all(this.extendableLanguages.map(async (lang) => {
+      lang = await lang;
+      if (!lang) return;
+      langCountsObj[lang] = langCountsObj[lang] || 0;
+      langCountsObj[lang]++;
+    }));
+    const langCounts = Object.entries(langCountsObj).sort(this.sortLangs);
     delete this.extendableLanguages;
     return [(coreFiles ? coreFiles.length : 0) +
       (userFiles1 ? userFiles1.length : 0) +
@@ -545,12 +541,10 @@ module.exports = class Loader {
   loadNewExtendable(file, dir) {
     const path = join(dir, file);
     const extendable = require(path);
-    this.extendableLanguages.JS = this.extendableLanguages.JS || 0;
-    this.extendableLanguages.JS++;
-    this.getFileLang(path).then((lang) => {
-      this.extendableLanguages.JS--;
-      this.extendableLanguages[lang]++;
-    });
+    if (this.extendableLanguages) {
+      // This array is made up of promises
+      this.extendableLanguages.push(this.getFileLang(path));
+    }
     let myExtend;
     switch (extendable.conf.type.toLowerCase()) {
       case "set":
@@ -583,18 +577,19 @@ module.exports = class Loader {
   }
 
   async getFileLang(path) {
-    const langs = (await Promise.all(this.client.compiledLangs.map(async (lang) => {
+    const langs2 = (await Promise.all(this.client.compiledLangs.map(async (lang) => {
       // Remove the ".js" extension, if there is one, since it's optional.
       const compiledPath = `${path.replace(/\.js$/, "")}.${lang.toLowerCase()}`;
       // If there's an equivalent file that ends with the lang, it's a code
       // file that was compiled into JS.
       try {
-        await fs.accessAsync(compiledPath);
+        await fs.access(compiledPath);
         return lang.toUpperCase();
       } catch (e) {
         return false;
       }
-    }))).filter(Boolean);
+    })));
+    const langs = langs2.filter(Boolean);
     return langs.length > 0 ? langs[langs.length - 1] : "JS";
   }
 
