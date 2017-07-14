@@ -108,6 +108,7 @@ module.exports = class Loader {
     const langCountsObj = {};
     await Promise.all(Object.values(this.client.funcs).map(async (f) => {
       const lang = await f.codeLang;
+      f.codeLang = lang;
       if (!lang) return;
       langCountsObj[lang] = langCountsObj[lang] || 0;
       langCountsObj[lang]++;
@@ -151,6 +152,7 @@ module.exports = class Loader {
     const langCountsObj = {};
     await Promise.all(this.client.commands.map(async (c) => {
       const lang = await c.help.codeLang;
+      c.help.codeLang = lang;
       if (!lang) return;
       langCountsObj[lang] = langCountsObj[lang] || 0;
       langCountsObj[lang]++;
@@ -252,6 +254,7 @@ module.exports = class Loader {
     const langCountsObj = {};
     await Promise.all(this.client.commandInhibitors.map(async (i) => {
       const lang = await i.codeLang;
+      i.codeLang = lang;
       if (!lang) return;
       langCountsObj[lang] = langCountsObj[lang] || 0;
       langCountsObj[lang]++;
@@ -310,6 +313,7 @@ module.exports = class Loader {
     const langCountsObj = {};
     await Promise.all(this.client.commandFinalizers.map(async (final) => {
       const lang = await final.codeLang;
+      final.codeLang = lang;
       if (!lang) return;
       langCountsObj[lang] = langCountsObj[lang] || 0;
       langCountsObj[lang]++;
@@ -362,8 +366,9 @@ module.exports = class Loader {
     }
 
     const langCountsObj = {};
-    await Promise.all(this.client.eventHandlers.map(async (i) => {
-      const lang = i.codeLang;
+    await Promise.all(this.client.eventHandlers.map(async (e) => {
+      const lang = e.codeLang;
+      e.codeLang = lang;
       if (!lang) return;
       langCountsObj[lang] = langCountsObj[lang] || 0;
       langCountsObj[lang]++;
@@ -418,6 +423,7 @@ module.exports = class Loader {
     const langCountsObj = {};
     await Promise.all(this.client.messageMonitors.map(async (m) => {
       const lang = await m.codeLang;
+      m.codeLang = lang;
       if (!lang) return;
       langCountsObj[lang] = langCountsObj[lang] || 0;
       langCountsObj[lang]++;
@@ -471,6 +477,7 @@ module.exports = class Loader {
     const langCountsObj = [];
     await Promise.all(this.client.providers.map(async (p) => {
       const lang = await p.codeLang;
+      p.codeLang = lang;
       if (!lang) return;
       langCountsObj[lang] = langCountsObj[lang] || 0;
       langCountsObj[lang]++;
