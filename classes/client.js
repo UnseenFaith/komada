@@ -28,6 +28,7 @@ module.exports = class Komada extends Discord.Client {
   constructor(config = {}) {
     if (typeof config !== "object") throw new TypeError("Configuration for Komada must be an object.");
     super(config.clientOptions);
+    this.actions.register(require("./classes/Actions/CommandMessage"));
     this.config = config;
     this.config.provider = config.provider || {};
     if (!config.disabled) config.disabled = {};

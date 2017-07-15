@@ -1,13 +1,9 @@
-module.exports = class CommandMessage {
+const { Message } = require("discord.js");
 
 /* eslint-disable no-underscore-dangle, no-throw-literal, newline-per-chained-call */
-  constructor(msg, cmd, prefix, prefixLength) {
-    Object.defineProperty(this, "client", { value: msg.client });
-    this.msg = msg;
-    this.cmd = cmd;
-    this.prefix = prefix;
-    this.prefixLength = prefixLength;
-    this.args = this.constructor.getArgs(this);
+class CommandMessage extends Message {
+  constructor(...args) {
+    super(...args);
     this.params = [];
     this.reprompted = false;
     this._currentUsage = {};
@@ -91,12 +87,24 @@ module.exports = class CommandMessage {
     }
   }
 
-
-  static getArgs(cmdMsg) {
-    const args = cmdMsg.msg.content.slice(cmdMsg.prefixLength).trim().split(" ").slice(1).join(" ").split(cmdMsg.cmd.help.usageDelim !== "" ? cmdMsg.cmd.help.usageDelim : undefined);
-    if (args[0] === "") return [];
-    return args;
+  get args() { return this.arguments; }
+  get arguments() {
+    const args = this.content.slice(this.prefixLength).trim().split(" ").slice(1)
+                 .join(" ")
+                 .split(this.command.help.usageDelim !== "" ? this.command.usageDelim : undefined);
+    if (args[0] === "") return []; return args;
   }
 
+  get prefix() {
+    return this.client.funcs.getPrefix(this.client, this) || null;
+  }
 
-};
+  get prefixLength() {
+    return this.prefix ? this.client.config.prefixMention === this.prefix ? this.prefix.exec(this.content)[0] + 1 : this.prefix.exec(this.content)[0].length : null;
+  }
+
+  get cmd() { return this.command; }
+  get command() {
+    return this.client.commands.get(this.content.slice(this.prefixLength).split(" ")[0].toLowerCase()) || this.client.commands.get(this.aliases.get(this.content.slice(this.prefixLength).split(" ")[0].toLowerCase())) || null;
+  }
+}
