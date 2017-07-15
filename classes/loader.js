@@ -143,7 +143,9 @@ module.exports = class Loader {
       console.warn(e);
       await reload(this.outDirs.functions); // Let it throw
     }
-    if (this.client.funcs[name].init) this.client.funcs[name].init(this.client);
+    const newFunction = this.client.funcs[name];
+    newFunction.codeLang = await newFunction.codeLang;
+    if (newFunction.init) newFunction.init(this.client);
     return `Successfully reloaded the function ${name}.`;
   }
 
@@ -239,6 +241,7 @@ module.exports = class Loader {
       await reload(dirs[1]); // Let it throw
     }
     const newCommand = this.client.commands.get(fileToCheck.slice(0, -3));
+    newCommand.help.codeLang = await newCommand.help.codeLang;
     if (newCommand.init) newCommand.init(this.client);
     return `Successfully reloaded the command ${name}.`;
   }
@@ -303,7 +306,9 @@ module.exports = class Loader {
       await reload(this.outDirs.inhibitors); // Let it throw
     }
     this.sortInhibitors();
-    if (this.client.commandInhibitors.get(name).init) this.client.commandInhibitors.get(name).init(this.client);
+    const newInhibitor = this.client.commandInhibitors.get(name);
+    newInhibitor.codeLang = await newInhibitor.codeLang;
+    if (newInhibitor.init) newInhibitor.init(this.client);
     return `Successfully reloaded the inhibitor ${name}.`;
   }
 
@@ -369,7 +374,9 @@ module.exports = class Loader {
       console.warn(e);
       await reload(this.outDirs.finalizers); // Let it throw
     }
-    if (this.client.commandFinalizers.get(name).init) this.client.commandFinalizers.get(name).init(this.client);
+    const newFinalizer = this.client.commandFinalizers.get(name);
+    newFinalizer.codeLang = await newFinalizer.codeLang;
+    if (newFinalizer.init) newFinalizer.init(this.client);
     return `Successfully reloaded the finalizer ${name}.`;
   }
 
@@ -399,7 +406,7 @@ module.exports = class Loader {
 
     const langCountsObj = {};
     await Promise.all(this.client.eventHandlers.map(async (e) => {
-      const lang = e.codeLang;
+      const lang = await e.codeLang;
       e.codeLang = lang;
       if (!lang) return;
       langCountsObj[lang] = langCountsObj[lang] || 0;
@@ -412,7 +419,9 @@ module.exports = class Loader {
   loadNewEvent(file, dir) {
     const eventName = file.split(".")[0];
     const path = join(dir, file);
-    this.client.eventHandlers.set(eventName, (...args) => require(path).run(this.client, ...args));
+    const event = (...args) => require(path).run(this.client, ...args);
+    event.codeLang = this.getFileLang(path); // returns a promise
+    this.client.eventHandlers.set(eventName, event);
     this.client.on(eventName, this.client.eventHandlers.get(eventName));
     delete require.cache[path];
   }
@@ -434,6 +443,8 @@ module.exports = class Loader {
       console.warn(e);
       await reload(this.outDirs.events); // Let it throw
     }
+    const newEvent = this.client.eventHandlers.get(name);
+    newEvent.codeLang = await newEvent.codeLang;
     return `Successfully reloaded the event ${name}.`;
   }
 
@@ -495,7 +506,9 @@ module.exports = class Loader {
       console.warn(e);
       await reload(this.outDirs.monitors); // Let it throw
     }
-    if (this.client.messageMonitors.get(name).init) this.client.messageMonitors.get(name).init(this.client);
+    const newMonitor = this.client.messageMonitors.get(name);
+    newMonitor.codeLang = await newMonitor.codeLang;
+    if (newMonitor.init) newMonitor.init(this.client);
     return `Successfully reloaded the monitor ${name}.`;
   }
 
@@ -559,7 +572,9 @@ module.exports = class Loader {
       console.warn(e);
       await reload(this.outDirs.providers); // Let it throw
     }
-    if (this.client.providers.get(name).init) this.client.providers.get(name).init(this.client);
+    const newProvider = this.client.providers.get(name);
+    newProvider.codeLang = await newProvider.codeLang;
+    if (newProvider.init) newProvider.init(this.client);
     return `Successfully reloaded the provider ${name}.`;
   }
 
