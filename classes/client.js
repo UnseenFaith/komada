@@ -30,7 +30,7 @@ module.exports = class Komada extends Discord.Client {
     super(config.clientOptions);
     this.config = config;
     this.config.provider = config.provider || {};
-    this.config.disabled = config.disabled || {};
+    if (!config.disabled) config.disabled = {};
     this.config.disabled = {
       commands: config.disabled.commands || [],
       events: config.disabled.events || [],
@@ -64,7 +64,7 @@ module.exports = class Komada extends Discord.Client {
     this.ready = false;
     this.methods = {
       Collection: Discord.Collection,
-      Embed: Discord.RichEmbed,
+      Embed: Discord.MessageEmbed,
       MessageCollector: Discord.MessageCollector,
       Webhook: Discord.WebhookClient,
       escapeMarkdown: Discord.escapeMarkdown,
@@ -99,15 +99,21 @@ module.exports = class Komada extends Discord.Client {
     super.login(token);
   }
 
+  get schemaManager() {
+    return this.settingGateway.schemaManager;
+  }
+
   async _ready() {
     this.config.prefixMention = new RegExp(`^<@!?${this.user.id}>`);
     if (this.user.bot) this.application = await super.fetchApplication();
-    await Promise.all(Object.keys(this.funcs).map((key) => {
-      if (this.funcs[key].init) return this.funcs[key].init(this);
-      return true;
-    }));
+    if (!this.config.ownerID) this.config.ownerID = this.user.bot ? this.application.owner.id : this.user.id;
     await Promise.all(this.providers.map((piece) => {
       if (piece.init) return piece.init(this);
+      return true;
+    }));
+    await this.settingGateway.init();
+    await Promise.all(Object.keys(this.funcs).map((key) => {
+      if (this.funcs[key].init) return this.funcs[key].init(this);
       return true;
     }));
     await Promise.all(this.commands.map((piece) => {
@@ -126,7 +132,6 @@ module.exports = class Komada extends Discord.Client {
       if (piece.init) return piece.init(this);
       return true;
     }));
-    await this.settingGateway.init();
     this.setInterval(this.sweepCommandMessages.bind(this), this.commandMessageLifetime);
     this.ready = true;
     this.emit("log", this.config.readyMessage || `Successfully initialized. Ready to serve ${this.guilds.size} guilds.`);

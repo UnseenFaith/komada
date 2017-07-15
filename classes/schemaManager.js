@@ -1,4 +1,4 @@
-const { sep, resolve } = require("path");
+const { resolve } = require("path");
 const fs = require("fs-nextra");
 
 const validTypes = ["User", "Channel", "Guild", "Role", "Boolean", "String", "Integer", "Float", "url", "Command"];
@@ -15,11 +15,11 @@ class SchemaManager {
    * @returns {void}
    */
   async init() {
-    const baseDir = resolve(`${this.client.clientBaseDir}${sep}bwd`);
+    const baseDir = resolve(this.client.clientBaseDir, "bwd");
     await fs.ensureDir(baseDir);
-    this.filePath = `${baseDir + sep}schema.json`;
+    this.filePath = resolve(baseDir, "schema.json");
     const schema = await fs.readJSON(this.filePath)
-      .catch(() => fs.outputJSON(this.filePath, this.defaultDataSchema).then(() => this.defaultDataSchema));
+      .catch(() => fs.outputJSONAtomic(this.filePath, this.defaultDataSchema).then(() => this.defaultDataSchema));
     return this.validate(schema);
   }
 
@@ -60,9 +60,9 @@ class SchemaManager {
    * @param {number} options.min The min value for the key (String.length for String, value for number).
    * @param {number} options.max The max value for the key (String.length for String, value for number).
    * @param {boolean} [force=false] Whether this change should modify all configurations or not.
-   * @returns {void}
+   * @returns {Promise<void>}
    */
-  add(key, options, force = false) {
+  async add(key, options, force = false) {
     if (key in this.schema) throw `The key ${key} already exists in the current schema.`;
     if (!options.type) throw "The option type is required.";
     if (!validTypes.includes(options.type)) throw `The type ${options.type} is not supported.`;
@@ -76,23 +76,24 @@ class SchemaManager {
       if (!options.default) options.default = null;
       options.array = false;
     }
+    if (this.settingGateway.sql) options.sql = this.settingGateway.sql.buildSingleSQLSchema(options);
     this.schema[key] = options;
     this.defaults[key] = options.default;
-    if (force) this.force("add", key);
-    return fs.outputJSON(this.filePath, this.schema);
+    if (force) await this.force("add", key);
+    return fs.outputJSONAtomic(this.filePath, this.schema);
   }
 
   /**
    * Remove a key from the schema.
    * @param {string} key The key to remove.
    * @param {boolean} [force=false] Whether this change should modify all configurations or not.
-   * @returns {void}
+   * @returns {Promise<void>}
    */
-  remove(key, force = false) {
+  async remove(key, force = false) {
     if (key === "prefix") throw "You can't remove the prefix key.";
     delete this.schema[key];
-    if (force) this.force("delete", key);
-    return fs.outputJSON(this.filePath, this.schema);
+    if (force) await this.force("delete", key);
+    return fs.outputJSONAtomic(this.filePath, this.schema);
   }
 
   /**
@@ -102,7 +103,10 @@ class SchemaManager {
    * @returns {void}
    */
   async force(action, key) {
-    const data = this.client.settingGateway.getAll();
+    if (this.settingGateway.sql) {
+      await this.settingGateway.sql.updateColumns(this.schema, this.defaults, key);
+    }
+    const data = this.settingGateway.getAll("guilds");
     let value;
     if (action === "add") value = this.defaults[key];
     await Promise.all(data.map(async (obj) => {
@@ -112,7 +116,16 @@ class SchemaManager {
       if (obj.id) await this.client.settingGateway.provider.replace("guilds", obj.id, object);
       return true;
     }));
-    return this.client.settingGateway.sync();
+    return this.settingGateway.sync();
+  }
+
+  /**
+   * Shortcut for settingGateway
+   * @readonly
+   * @memberof SchemaManager
+   */
+  get settingGateway() {
+    return this.client.settingGateway;
   }
 
   /**
@@ -126,21 +139,25 @@ class SchemaManager {
         type: "String",
         default: this.client.config.prefix,
         array: false,
+        sql: `TEXT NOT NULL DEFAULT '${this.client.config.prefix}'`,
       },
       modRole: {
         type: "Role",
         default: null,
         array: false,
+        sql: "TEXT",
       },
       adminRole: {
         type: "Role",
         default: null,
         array: false,
+        sql: "TEXT",
       },
       disabledCommands: {
         type: "Command",
         default: [],
         array: true,
+        sql: "TEXT DEFAULT '[]'",
       },
     };
   }
