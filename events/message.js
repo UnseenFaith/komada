@@ -4,9 +4,8 @@ exports.run = async (client, msg) => {
   if (!client.ready) return;
   await this.runMessageMonitors(client, msg);
   if (!this.handleMessage(client, msg)) return;
-  const res = await this.parseCommand(client, msg);
-  if (!res.command) return;
-  this.handleCommand(client, msg, res);
+  if (!msg.prefix || !msg.cmd) return;
+  this.handleCommand(client, msg);
 };
 
 exports.runMessageMonitors = (client, msg) => {
@@ -31,40 +30,20 @@ exports.handleMessage = (client, msg) => {
   return true;
 };
 
-exports.parseCommand = async (client, msg, usage = false) => {
-  const prefix = await client.funcs.getPrefix(client, msg);
-  if (!prefix) return false;
-  const prefixLength = this.getLength(client, msg, prefix);
-  if (usage) return prefixLength;
-  return {
-    command: msg.content.slice(prefixLength).split(" ")[0].toLowerCase(),
-    prefix,
-    prefixLength,
-  };
-};
-
-exports.getLength = (client, msg, prefix) => {
-  if (client.config.prefixMention === prefix) return prefix.exec(msg.content)[0].length + 1;
-  return prefix.exec(msg.content)[0].length;
-};
-
-exports.handleCommand = (client, msg, { command, prefix, prefixLength }) => {
-  const validCommand = client.commands.get(command) || client.commands.get(client.aliases.get(command));
-  if (!validCommand) return;
+exports.handleCommand = (client, msg) => {
   const start = now();
-  const response = this.runInhibitors(client, msg, validCommand);
+  const response = this.runInhibitors(client, msg);
   if (response) {
     if (typeof response === "string") msg.reply(response);
     return;
   }
-  msg.cmdMsg = new client.CommandMessage(msg, validCommand, prefix, prefixLength);
   this.runCommand(client, msg, start);
 };
 
 exports.runCommand = (client, msg, start) => {
-  msg.cmdMsg.validateArgs()
+  msg.validateArgs()
     .then((params) => {
-      msg.cmdMsg.cmd.run(client, msg, params)
+      msg.cmd.run(client, msg, params)
         .then(mes => this.runFinalizers(client, msg, mes, start))
         .catch(error => client.funcs.handleError(client, msg, error));
     })
@@ -84,19 +63,19 @@ exports.awaitMessage = async (client, msg, start, error) => {
 
   const param = await msg.channel.awaitMessages(response => response.member.id === msg.author.id && response.id !== message.id, { max: 1, time: 30000, errors: ["time"] });
   if (param.first().content.toLowerCase() === "abort") throw "Aborted";
-  msg.cmdMsg.args[msg.cmdMsg.args.lastIndexOf(null)] = param.first().content;
-  msg.cmdMsg.reprompted = true;
+  msg.args[msg.args.lastIndexOf(null)] = param.first().content;
+  msg.reprompted = true;
 
   if (message.deletable) message.delete();
 
   return this.runCommand(client, msg, start);
 };
 
-exports.runInhibitors = (client, msg, command) => {
+exports.runInhibitors = (client, msg) => {
   let response;
   client.commandInhibitors.some((inhibitor) => {
     if (inhibitor.conf.enabled) {
-      response = inhibitor.run(client, msg, command);
+      response = inhibitor.run(client, msg, msg.cmd);
       if (response) return true;
     }
     return false;
