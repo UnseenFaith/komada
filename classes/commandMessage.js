@@ -1,7 +1,7 @@
 const { Message } = require("discord.js");
 
 /* eslint-disable no-underscore-dangle, no-throw-literal, newline-per-chained-call */
-class CommandMessage extends Message {
+module.exports = class CommandMessage extends Message {
   constructor(...args) {
     super(...args);
     this.params = [];
