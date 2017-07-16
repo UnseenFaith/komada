@@ -5,7 +5,7 @@ exports.run = async (client, msg) => {
   await this.runMessageMonitors(client, msg);
   if (!this.handleMessage(client, msg)) return;
   const res = await this.parseCommand(client, msg);
-  if (!res.command) return;
+  if (!res) return;
   this.handleCommand(client, msg, res);
 };
 
@@ -36,11 +36,7 @@ exports.parseCommand = async (client, msg, usage = false) => {
   if (!prefix) return false;
   const prefixLength = this.getLength(client, msg, prefix);
   if (usage) return prefixLength;
-  return {
-    command: msg.content.slice(prefixLength).split(" ")[0].toLowerCase(),
-    prefix,
-    prefixLength,
-  };
+  return msg.content.slice(prefixLength).split(" ")[0].toLowerCase();
 };
 
 exports.getLength = (client, msg, prefix) => {
@@ -48,7 +44,7 @@ exports.getLength = (client, msg, prefix) => {
   return prefix.exec(msg.content)[0].length;
 };
 
-exports.handleCommand = (client, msg, { command, prefix, prefixLength }) => {
+exports.handleCommand = (client, msg, command) => {
   const validCommand = client.commands.get(command) || client.commands.get(client.aliases.get(command));
   if (!validCommand) return;
   const start = now();
@@ -57,14 +53,13 @@ exports.handleCommand = (client, msg, { command, prefix, prefixLength }) => {
     if (typeof response === "string") msg.reply(response);
     return;
   }
-  msg.cmdMsg = new client.CommandMessage(msg, validCommand, prefix, prefixLength);
   this.runCommand(client, msg, start);
 };
 
 exports.runCommand = (client, msg, start) => {
-  msg.cmdMsg.validateArgs()
+  msg.validateArgs()
     .then((params) => {
-      msg.cmdMsg.cmd.run(client, msg, params)
+      msg.cmd.run(client, msg, params)
         .then(mes => this.runFinalizers(client, msg, mes, start))
         .catch(error => client.funcs.handleError(client, msg, error));
     })
