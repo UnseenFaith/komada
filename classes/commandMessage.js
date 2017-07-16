@@ -2,8 +2,8 @@ const { Message } = require("discord.js");
 
 /* eslint-disable no-underscore-dangle, no-throw-literal, newline-per-chained-call */
 module.exports = class CommandMessage extends Message {
-  constructor(channel, data, client) {
-    super(channel, data, client);
+  constructor(...args) {
+    super(...args);
     this.params = [];
     this.reprompted = false;
     this._currentUsage = {};
