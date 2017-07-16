@@ -1,7 +1,6 @@
 const Discord = require("discord.js");
 const path = require("path");
 const now = require("performance-now");
-const CommandMessage = require("./commandMessage");
 const Loader = require("./loader");
 const ArgResolver = require("./argResolver");
 const PermLevels = require("./permLevels");
@@ -54,7 +53,6 @@ module.exports = class Komada extends Discord.Client {
     this.providers = new Discord.Collection();
     this.eventHandlers = new Discord.Collection();
     this.permStructure = this.validatePermStructure();
-    this.CommandMessage = CommandMessage;
     this.commandMessages = new Discord.Collection();
     this.commandMessageLifetime = config.commandMessageLifetime || 1800;
     this.commandMessageSweep = config.commandMessageSweep || 900;
