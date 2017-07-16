@@ -1,7 +1,6 @@
 module.exports = {
   Client: require("./classes/client"),
   PermLevels: require("./classes/permLevels"),
-  CommandMessage: require("./classes/commandMessage"),
   ArgResolver: require("./classes/argResolver"),
   Resolver: require("./classes/Resolver"),
   Loader: require("./classes/loader"),
