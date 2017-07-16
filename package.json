@@ -1,6 +1,6 @@
 {
   "name": "komada",
-  "version": "0.20.3",
+  "version": "0.20.5",
   "description": "Komada: Croatian for 'pieces', is a modular bot system including reloading modules and easy to use custom commands.",
   "homepage": "https://github.com/dirigeants/komada#readme",
   "bugs": {
@@ -18,9 +18,9 @@
     "test": "eslint classes commands finalizers functions inhibitors events extendables"
   },
   "dependencies": {
-    "chalk": "^1.1.3",
-    "discord.js": "hydrabolt/discord.js",
-    "fs-nextra": "^0.1.2",
+    "chalk": "^2.0.1",
+    "discord.js": "github:hydrabolt/discord.js#master",
+    "fs-nextra": "^0.1.4",
     "moment": "^2.18.1",
     "moment-duration-format": "^1.3.0",
     "performance-now": "^2.1.0"

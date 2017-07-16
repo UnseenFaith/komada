@@ -20,8 +20,8 @@ class SchemaManager extends CacheManager {
     await fs.ensureDir(baseDir);
     this.filePath = resolve(baseDir, `${this.type}Schema.json`);
     const schema = await fs.readJSON(this.filePath)
-      .catch(() => fs.outputJSON(this.filePath, this.defaultDataSchema).then(() => this.defaultDataSchema));
-    return this.validateSchema(schema);
+      .catch(() => fs.outputJSONAtomic(this.filePath, this.defaultDataSchema).then(() => this.defaultDataSchema));
+    return this.validate(schema);
   }
 
   /**
@@ -54,9 +54,9 @@ class SchemaManager extends CacheManager {
    * @param {number} options.min The min value for the key (String.length for String, value for number).
    * @param {number} options.max The max value for the key (String.length for String, value for number).
    * @param {boolean} [force=false] Whether this change should modify all configurations or not.
-   * @returns {void}
+   * @returns {Promise<void>}
    */
-  add(key, options, force = false) {
+  async add(key, options, force = false) {
     if (key in this.schema) throw `The key ${key} already exists in the current schema.`;
     if (!options.type) throw "The option type is required.";
     if (!validTypes.includes(options.type)) throw `The type ${options.type} is not supported.`;
@@ -73,20 +73,21 @@ class SchemaManager extends CacheManager {
     if (this.sql) options.sql = this.sql.buildSingleSQLSchema(options);
     this.schema[key] = options;
     this.defaults[key] = options.default;
-    if (force) this.force("add", key);
-    return fs.outputJSON(this.filePath, this.schema);
+    if (force) await this.force("add", key);
+    return fs.outputJSONAtomic(this.filePath, this.schema);
   }
 
   /**
    * Remove a key from the schema.
    * @param {string} key The key to remove.
    * @param {boolean} [force=false] Whether this change should modify all configurations or not.
-   * @returns {void}
+   * @returns {Promise<void>}
    */
-  remove(key, force = false) {
+  async remove(key, force = false) {
+    if (key === "prefix") throw "You can't remove the prefix key.";
     delete this.schema[key];
-    if (force) this.force("delete", key);
-    return fs.outputJSON(this.filePath, this.schema);
+    if (force) await this.force("delete", key);
+    return fs.outputJSONAtomic(this.filePath, this.schema);
   }
 
   /**
