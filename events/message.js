@@ -5,7 +5,7 @@ exports.run = async (client, msg) => {
   await this.runMessageMonitors(client, msg);
   if (!this.handleMessage(client, msg)) return;
   const res = await this.parseCommand(client, msg);
-  if (!res.command) return;
+  if (!res) return;
   this.handleCommand(client, msg, res);
 };
 
