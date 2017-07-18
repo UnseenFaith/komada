@@ -32,7 +32,7 @@ exports.handleMessage = (client, msg) => {
 };
 
 exports.parseCommand = async (client, msg, usage = false) => {
-  const prefix = await client.funcs.getPrefix(client, msg);
+  const prefix = client.funcs.getPrefix(client, msg);
   if (!prefix) return false;
   const prefixLength = this.getLength(client, msg, prefix);
   if (usage) return prefixLength;
