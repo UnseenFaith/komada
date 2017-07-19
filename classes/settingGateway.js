@@ -11,7 +11,7 @@ module.exports = class SettingGateway extends SchemaManager {
     this.client = client;
 
     /** @type {string} */
-    this.type = type;
+    this.type = `${type}_`;
 
     /** @type {string} */
     this.engine = client.config.provider.engine || "json";
