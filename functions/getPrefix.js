@@ -1,4 +1,4 @@
-module.exports = async (client, msg) => {
+module.exports = (client, msg) => {
   if (client.config.prefixMention.test(msg.content)) return client.config.prefixMention;
   const prefix = msg.guildSettings.prefix || client.config.prefix;
   const { regExpEsc } = client.funcs;
