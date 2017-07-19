@@ -6,21 +6,21 @@ module.exports = class CacheManager {
 
   get(guild) {
     if (this.cacheEngine === "js") return this.data.get(guild);
-    return this.data.get("guilds", guild);
+    return this.data.get(this.type, guild);
   }
 
   getAll() {
     if (this.cacheEngine === "js") return this.data;
-    return this.data.getAll("guilds");
+    return this.data.getAll(this.type);
   }
 
   set(guild, data) {
     if (this.cacheEngine === "js") return this.data.set(guild, data);
-    return this.data.set("guilds", guild, data);
+    return this.data.set(this.type, guild, data);
   }
 
   delete(guild) {
     if (this.cacheEngine === "js") return this.data.delete(guild);
-    return this.data.delete("guilds", guild);
+    return this.data.delete(this.type, guild);
   }
 };

@@ -9,13 +9,12 @@ const handle = (value) => {
 
 exports.run = async (client, msg, [action, key, ...value]) => {
   const configs = msg.guild.settings;
-
   switch (action) {
     case "set": {
       if (!key) return msg.sendMessage("You must provide a key");
       if (!value[0]) return msg.sendMessage("You must provide a value");
       if (!configs.id) await client.settingGateway.create(msg.guild);
-      if (client.settingGateway.schemaManager.schema[key].array) {
+      if (client.settingGateway.schema[key].array) {
         await client.settingGateway.updateArray(msg.guild, "add", key, value.join(" "));
         return msg.sendMessage(`Successfully added the value \`${value.join(" ")}\` to the key: **${key}**`);
       }
@@ -71,6 +70,6 @@ exports.conf = {
 exports.help = {
   name: "conf",
   description: "Define per-server configuration.",
-  usage: "<set|get|reset|list|remove> [key:string] [value:string]",
+  usage: "<set|get|reset|list|remove> [key:string] [value:string] [...]",
   usageDelim: " ",
 };

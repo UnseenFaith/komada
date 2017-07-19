@@ -1,11 +1,12 @@
 const { resolve } = require("path");
 const fs = require("fs-nextra");
+const CacheManager = require("./cacheManager");
 
 const validTypes = ["User", "Channel", "Guild", "Role", "Boolean", "String", "Integer", "Float", "url", "Command"];
 
-class SchemaManager {
+class SchemaManager extends CacheManager {
   constructor(client) {
-    this.client = client;
+    super(client);
     this.schema = {};
     this.defaults = {};
   }
@@ -14,10 +15,10 @@ class SchemaManager {
    * Initialize the SchemaManager.
    * @returns {void}
    */
-  async init() {
+  async initSchema() {
     const baseDir = resolve(this.client.clientBaseDir, "bwd");
     await fs.ensureDir(baseDir);
-    this.filePath = resolve(baseDir, "schema.json");
+    this.filePath = resolve(baseDir, `${this.type}Schema.json`);
     const schema = await fs.readJSON(this.filePath)
       .catch(() => fs.outputJSONAtomic(this.filePath, this.defaultDataSchema).then(() => this.defaultDataSchema));
     return this.validate(schema);
@@ -28,14 +29,7 @@ class SchemaManager {
    * @param {Object} schema The Schema object that will be used for the configuration system.
    * @returns {void}
    */
-  validate(schema) {
-    if (!("prefix" in schema)) {
-      this.client.emit("log", "The key 'prefix' is obligatory", "error");
-      schema.prefix = {
-        type: "String",
-        default: this.client.config.prefix,
-      };
-    }
+  validateSchema(schema) {
     for (const [key, value] of Object.entries(schema)) { // eslint-disable-line no-restricted-syntax
       if (value instanceof Object && "type" in value && "default" in value) {
         if (value.array && !(value.default instanceof Array)) {
@@ -76,7 +70,7 @@ class SchemaManager {
       if (!options.default) options.default = null;
       options.array = false;
     }
-    if (this.settingGateway.sql) options.sql = this.settingGateway.sql.buildSingleSQLSchema(options);
+    if (this.sql) options.sql = this.sql.buildSingleSQLSchema(options);
     this.schema[key] = options;
     this.defaults[key] = options.default;
     if (force) await this.force("add", key);
@@ -103,63 +97,28 @@ class SchemaManager {
    * @returns {void}
    */
   async force(action, key) {
-    if (this.settingGateway.sql) {
-      await this.settingGateway.sql.updateColumns(this.schema, this.defaults, key);
+    if (this.sql) {
+      await this.sql.updateColumns(this.schema, this.defaults, key);
     }
-    const data = this.settingGateway.getAll("guilds");
+    const data = this.getAll(this.type);
     let value;
     if (action === "add") value = this.defaults[key];
     await Promise.all(data.map(async (obj) => {
       const object = obj;
       if (action === "delete") delete object[key];
       else object[key] = value;
-      if (obj.id) await this.client.settingGateway.provider.replace("guilds", obj.id, object);
+      if (obj.id) await this.provider.replace(this.type, obj.id, object);
       return true;
     }));
-    return this.settingGateway.sync();
+    return this.sync();
   }
 
   /**
-   * Shortcut for settingGateway
+   * Return a blank object if no default is set.
    * @readonly
-   * @memberof SchemaManager
    */
-  get settingGateway() {
-    return this.client.settingGateway;
-  }
-
-  /**
-   * Get the default DataSchema from Komada.
-   * @readonly
-   * @returns {Object}
-   */
-  get defaultDataSchema() {
-    return {
-      prefix: {
-        type: "String",
-        default: this.client.config.prefix,
-        array: false,
-        sql: `TEXT NOT NULL DEFAULT '${this.client.config.prefix}'`,
-      },
-      modRole: {
-        type: "Role",
-        default: null,
-        array: false,
-        sql: "TEXT",
-      },
-      adminRole: {
-        type: "Role",
-        default: null,
-        array: false,
-        sql: "TEXT",
-      },
-      disabledCommands: {
-        type: "Command",
-        default: [],
-        array: true,
-        sql: "TEXT DEFAULT '[]'",
-      },
-    };
+  get defaultDataSchema() { // eslint-disable-line 
+    return {};
   }
 }
 

@@ -65,6 +65,7 @@ command.
 
 ### Changed
 - [[#300](https://github.com/dirigeants/komada/pull/300)] **[Update]** `client.methods.Embed` changed to use Discord.js MessageEmbed.
+- [[#297](https://github.com/dirigeants/komada/pull/297)] **[Update]** Abstraction of Settings and slight refactor so its easier to use.
 - [[#296](https://github.com/dirigeants/komada/pull/296)] **[Update]** The JSON provider and schemaManager now uses atomics.
 - [[#293](https://github.com/dirigeants/komada/pull/293)] **[Performance]** Faster prefix check and resolve for prefixes
 stored inside an Array.
