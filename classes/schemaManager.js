@@ -21,7 +21,7 @@ class SchemaManager extends CacheManager {
     this.filePath = resolve(baseDir, `${this.type}Schema.json`);
     const schema = await fs.readJSON(this.filePath)
       .catch(() => fs.outputJSONAtomic(this.filePath, this.defaultDataSchema).then(() => this.defaultDataSchema));
-    return this.validate(schema);
+    return this.validateSchema(schema);
   }
 
   /**
@@ -117,7 +117,7 @@ class SchemaManager extends CacheManager {
    * Return a blank object if no default is set.
    * @readonly
    */
-  get defaultDataSchema() { // eslint-disable-line 
+  get defaultDataSchema() { // eslint-disable-line
     return {};
   }
 }
