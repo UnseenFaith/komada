@@ -22,7 +22,7 @@ module.exports = class GuildSettings extends SettingGateway {
         type: "String",
         default: this.client.config.prefix,
         array: this.client.config.constructor.name === "Array",
-        sql: `TEXT NOT NULL DEFAULT '${this.client.config.prefix}'`,
+        sql: `TEXT NOT NULL DEFAULT '${this.client.config.constructor.name === "Array" ? JSON.stringify(this.client.config.prefix) : this.client.config.prefix}'`,
       },
       modRole: {
         type: "Role",
