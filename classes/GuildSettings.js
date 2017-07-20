@@ -19,10 +19,10 @@ module.exports = class GuildSettings extends SettingGateway {
   get defaultDataSchema() {
     return {
       prefix: {
-        type: this.client.config.prefix.constructor ? this.client.config.prefix.constructor.name : "String",
-        default: this.client.config.prefix || "?",
+        type: this.client.config.prefix.constructor.name,
+        default: this.client.config.prefix,
         array: false,
-        sql: `TEXT NOT NULL DEFAULT '${this.client.config.prefix || "?"}'`,
+        sql: `TEXT NOT NULL DEFAULT '${this.client.config.prefix}'`,
       },
       modRole: {
         type: "Role",
