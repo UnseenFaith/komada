@@ -5,7 +5,7 @@ const CommandMessage = require("./commandMessage");
 const Loader = require("./loader");
 const ArgResolver = require("./argResolver");
 const PermLevels = require("./permLevels");
-const GuildSettings = require("./GuildSettings");
+const Settings = require("./settingsCache");
 
 const defaultPermStructure = new PermLevels()
   .addLevel(0, false, () => true)
@@ -68,7 +68,7 @@ module.exports = class Komada extends Discord.Client {
       escapeMarkdown: Discord.escapeMarkdown,
       splitMessage: Discord.splitMessage,
     };
-    this.settingGateway = new GuildSettings(this);
+    this.settings = new Settings(this);
     this.application = null;
     this.once("ready", this._ready.bind(this));
   }
@@ -95,10 +95,6 @@ module.exports = class Komada extends Discord.Client {
     await this.funcs.loadAll(this);
     this.emit("log", `Loaded in ${(now() - start).toFixed(2)}ms.`);
     super.login(token);
-  }
-
-  get schemaManager() {
-    return this.settingGateway.schemaManager;
   }
 
   async _ready() {
