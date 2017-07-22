@@ -5,7 +5,7 @@ const CommandMessage = require("./commandMessage");
 const Loader = require("./loader");
 const ArgResolver = require("./argResolver");
 const PermLevels = require("./permLevels");
-const GuildSettings = require("./guildSettings");
+const GuildSettings = require("./GuildSettings");
 
 const defaultPermStructure = new PermLevels()
   .addLevel(0, false, () => true)
@@ -29,6 +29,7 @@ module.exports = class Komada extends Discord.Client {
     if (typeof config !== "object") throw new TypeError("Configuration for Komada must be an object.");
     super(config.clientOptions);
     this.config = config;
+    if (!("prefix" in config)) this.config.prefix = "?";
     this.config.provider = config.provider || {};
     if (!config.disabled) config.disabled = {};
     this.config.disabled = {
