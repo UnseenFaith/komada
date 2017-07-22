@@ -10,7 +10,7 @@ module.exports = class SettingGateway extends SchemaManager {
     Object.defineProperty(this, "store", { value: store });
 
     /** @type {string} */
-    this.type = `${type}_`;
+    this.type = type;
 
     /** @type {string} */
     this.engine = this.client.config.provider.engine || "json";
