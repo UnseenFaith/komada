@@ -69,7 +69,7 @@ module.exports = class Komada extends Discord.Client {
       escapeMarkdown: Discord.escapeMarkdown,
       splitMessage: Discord.splitMessage,
     };
-    this.settings = new Settings(this);
+    this.settings = null;
     this.application = null;
     this.once("ready", this._ready.bind(this));
   }
@@ -102,6 +102,7 @@ module.exports = class Komada extends Discord.Client {
   async login(token) {
     const start = now();
     await this.funcs.loadAll(this);
+    this.settings = new Settings(this);
     this.emit("log", `Loaded in ${(now() - start).toFixed(2)}ms.`);
     super.login(token);
   }
@@ -114,7 +115,10 @@ module.exports = class Komada extends Discord.Client {
       if (piece.init) return piece.init(this);
       return true;
     }));
-    await this.settingGateway.init();
+    await Promise.all(Object.keys(this.settings).map((key) => {
+      if (this.settings[key].init) return this.settings[key].init();
+      return true;
+    }))
     await Promise.all(Object.keys(this.funcs).map((key) => {
       if (this.funcs[key].init) return this.funcs[key].init(this);
       return true;
