@@ -18,7 +18,7 @@ class SchemaManager extends CacheManager {
   async initSchema() {
     const baseDir = resolve(this.client.clientBaseDir, "bwd");
     await fs.ensureDir(baseDir);
-    this.filePath = resolve(baseDir, `${this.type}Schema.json`);
+    this.filePath = resolve(baseDir, `${this.type}_Schema.json`);
     const schema = await fs.readJSON(this.filePath)
       .catch(() => fs.outputJSONAtomic(this.filePath, this.defaultDataSchema).then(() => this.defaultDataSchema));
     return this.validateSchema(schema);
