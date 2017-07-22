@@ -57,14 +57,20 @@ exports.handleCommand = (client, msg, { command, prefix, prefixLength }) => {
     if (typeof response === "string") msg.reply(response);
     return;
   }
-  msg.cmdMsg = new client.CommandMessage(msg, validCommand, prefix, prefixLength);
-  this.runCommand(client, msg, start);
+  const proxy = this.createProxy(msg, new client.CommandMessage(msg, validCommand, prefix, prefixLength));
+  this.runCommand(client, proxy, start);
 };
 
+exports.createProxy = (msg, cmdMsg) => new Proxy(msg, {
+  get: function handler(target, param) {
+    return param in msg ? msg[param] : cmdMsg[param];
+  },
+});
+
 exports.runCommand = (client, msg, start) => {
-  msg.cmdMsg.validateArgs()
+  msg.validateArgs()
     .then((params) => {
-      msg.cmdMsg.cmd.run(client, msg, params)
+      msg.cmd.run(client, msg, params)
         .then(mes => this.runFinalizers(client, msg, mes, start))
         .catch(error => client.funcs.handleError(client, msg, error));
     })
@@ -84,8 +90,8 @@ exports.awaitMessage = async (client, msg, start, error) => {
 
   const param = await msg.channel.awaitMessages(response => response.member.id === msg.author.id && response.id !== message.id, { max: 1, time: 30000, errors: ["time"] });
   if (param.first().content.toLowerCase() === "abort") throw "Aborted";
-  msg.cmdMsg.args[msg.cmdMsg.args.lastIndexOf(null)] = param.first().content;
-  msg.cmdMsg.reprompted = true;
+  msg.args[msg.args.lastIndexOf(null)] = param.first().content;
+  msg.reprompted = true;
 
   if (message.deletable) message.delete();
 
