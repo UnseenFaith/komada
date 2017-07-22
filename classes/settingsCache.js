@@ -17,7 +17,6 @@ class SettingsCache {
     if (!hasPrototype) throw "You did not create a valid validate function. You must use the function keyword or constructor, and may not use arrow functions.";
     if (schema.constructor.name !== "Object") throw "Schema must be a valid Schema object or left undefined for an empty object.";
     this[name] = new SettingGateway(this, name, validateFunction, schema);
-    await this[name].init();
     return this[name];
   }
 
