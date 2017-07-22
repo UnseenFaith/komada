@@ -14,6 +14,17 @@ module.exports = class ArgResolver extends Resolver {
     throw `${currentUsage.possibles[possible].name} must be a valid message id.`;
   }
 
+  messages(...args) {
+    return this.msgs(...args);
+  }
+
+  async msgs(arg, currentUsage, possible, repeat, msg) {
+    const messages = await super.messages(arg, msg.channel, currentUsage.possibles[possible].min);
+    if (messages.size > 0) return messages;
+    if (currentUsage.type === "optional" && !repeat) return null;
+    throw `${currentUsage.possibles[possible].name} must be a valid message id.`;
+  }
+
   mention(...args) {
     return this.user(...args);
   }

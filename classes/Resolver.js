@@ -26,6 +26,11 @@ module.exports = class Resolver {
     return regex.snowflake.test(message) ? channel.fetchMessage(message).catch(() => null) : undefined;
   }
 
+  async msgs(message, channel, limit = 100) {
+    if (message instanceof Message) message = message.id;
+    return regex.snowflake.test(message) ? channel.fetchMessages(message, { limit, around: message }).catch(() => null) : undefined;
+  }
+
   /**
    * Resolve a User object by its instance of User, GuildMember, or by its Snowflake.
    * @param {User} user The user to validate.
