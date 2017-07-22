@@ -118,7 +118,7 @@ module.exports = class Komada extends Discord.Client {
     await Promise.all(Object.keys(this.settings).map((key) => {
       if (this.settings[key].init) return this.settings[key].init();
       return true;
-    }))
+    }));
     await Promise.all(Object.keys(this.funcs).map((key) => {
       if (this.funcs[key].init) return this.funcs[key].init(this);
       return true;
