@@ -20,7 +20,7 @@ module.exports = class SettingGateway extends SchemaManager {
 
     this.sql = this.provider.conf.sql ? new SQL(this.client, this, this.provider) : false;
 
-    Object.defineProperty(this.prototype, "validate", { value: validateFunction });
+    this.validate = validateFunction;
 
     this.defaultDataSchema = schema;
   }
