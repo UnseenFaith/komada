@@ -10,8 +10,9 @@ const DefaultDataTypes = {
 
 /* eslint-disable no-restricted-syntax */
 class SQL {
-  constructor(client, provider) {
+  constructor(client, gateway, provider) {
     this.client = client;
+    this.gateway = gateway;
     this.provider = provider;
   }
 
@@ -98,7 +99,7 @@ class SQL {
    * @readonly
    */
   get schema() {
-    return this.client.schemaManager.schema;
+    return this.gateway.schema;
   }
 
   /**
@@ -106,7 +107,7 @@ class SQL {
    * @readonly
    */
   get defaults() {
-    return this.client.schemaManager.defaults;
+    return this.gateway.defaults;
   }
 }
 

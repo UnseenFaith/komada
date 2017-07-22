@@ -46,6 +46,7 @@ exports.help = {
 /* eslint-disable no-restricted-syntax, no-prototype-builtins */
 exports.buildHelp = (client, msg) => {
   const help = {};
+  const prefix = msg.guildSettings.prefix || client.config.prefix;
 
   const commandNames = Array.from(client.commands.keys());
   const longest = commandNames.reduce((long, str) => Math.max(long, str.length), 0);
@@ -56,7 +57,7 @@ exports.buildHelp = (client, msg) => {
       const subcat = command.help.subCategory;
       if (!help.hasOwnProperty(cat)) help[cat] = {};
       if (!help[cat].hasOwnProperty(subcat)) help[cat][subcat] = [];
-      help[cat][subcat].push(`${msg.guildSettings.prefix}${command.help.name.padEnd(longest)} :: ${command.help.description}`);
+      help[cat][subcat].push(`${prefix}${command.help.name.padEnd(longest)} :: ${command.help.description}`);
     }
   }
 

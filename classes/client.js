@@ -5,7 +5,7 @@ const CommandMessage = require("./commandMessage");
 const Loader = require("./loader");
 const ArgResolver = require("./argResolver");
 const PermLevels = require("./permLevels");
-const SettingGateway = require("./settingGateway");
+const GuildSettings = require("./GuildSettings");
 
 const defaultPermStructure = new PermLevels()
   .addLevel(0, false, () => true)
@@ -29,6 +29,7 @@ module.exports = class Komada extends Discord.Client {
     if (typeof config !== "object") throw new TypeError("Configuration for Komada must be an object.");
     super(config.clientOptions);
     this.config = config;
+    if (!("prefix" in config)) this.config.prefix = "?";
     this.config.provider = config.provider || {};
     if (!config.disabled) config.disabled = {};
     this.config.disabled = {
@@ -67,7 +68,7 @@ module.exports = class Komada extends Discord.Client {
       escapeMarkdown: Discord.escapeMarkdown,
       splitMessage: Discord.splitMessage,
     };
-    this.settingGateway = new SettingGateway(this);
+    this.settingGateway = new GuildSettings(this);
     this.application = null;
     this.once("ready", this._ready.bind(this));
   }
