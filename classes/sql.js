@@ -10,6 +10,7 @@ const DefaultDataTypes = {
 
 /* eslint-disable no-restricted-syntax */
 class SQL {
+
   constructor(client, gateway, provider) {
     this.client = client;
     this.gateway = gateway;
@@ -109,6 +110,7 @@ class SQL {
   get defaults() {
     return this.gateway.defaults;
   }
+
 }
 
 module.exports = SQL;

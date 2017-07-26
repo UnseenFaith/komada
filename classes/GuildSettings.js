@@ -1,6 +1,7 @@
 const SettingGateway = require("./settingGateway");
 
 module.exports = class GuildSettings extends SettingGateway {
+
   constructor(client) {
     super(client, "guilds");
   }
@@ -44,4 +45,5 @@ module.exports = class GuildSettings extends SettingGateway {
       },
     };
   }
+
 };
