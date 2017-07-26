@@ -25,6 +25,7 @@ const defaultPermStructure = new PermLevels()
 
 /* eslint-disable no-throw-literal, no-use-before-define, no-restricted-syntax, no-underscore-dangle */
 module.exports = class Komada extends Discord.Client {
+
   constructor(config = {}) {
     if (typeof config !== "object") throw new TypeError("Configuration for Komada must be an object.");
     super(config.clientOptions);
@@ -157,6 +158,7 @@ module.exports = class Komada extends Discord.Client {
     this.emit("debug", `Swept ${messages - this.commandMessages.size} commandMessages older than ${lifetime} seconds.`);
     return messages - this.commandMessages.size;
   }
+
 };
 
 process.on("unhandledRejection", (err) => {

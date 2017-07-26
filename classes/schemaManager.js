@@ -5,6 +5,7 @@ const CacheManager = require("./cacheManager");
 const validTypes = ["User", "Channel", "Guild", "Role", "Boolean", "String", "Integer", "Float", "url", "Command"];
 
 class SchemaManager extends CacheManager {
+
   constructor(client) {
     super(client);
     this.schema = {};
@@ -120,6 +121,7 @@ class SchemaManager extends CacheManager {
   get defaultDataSchema() { // eslint-disable-line
     return {};
   }
+
 }
 
 module.exports = SchemaManager;
