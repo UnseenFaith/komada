@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased] - Classbased | Staged for 0.20.3
 ### Added
+- [[#313](https://github.com/dirigeants/komada/pull/317)] Added `client.settings`, to handle multiple
+instances of SettingGateway.
 - [[#317](https://github.com/dirigeants/komada/pull/317)] `client.owner` is now a thing.
 - [[#298](https://github.com/dirigeants/komada/pull/298)] `config.ownerID` is automatically detected now.
 - [[#291](https://github.com/dirigeants/komada/pull/291)] `getResolved` method, which returns the resolved configuration
@@ -65,6 +67,8 @@ keyword. `exports.run = __async__ (client, msg, [...args])`.
 command.
 
 ### Changed
+- [[#313](https://github.com/dirigeants/komada/pull/317)] **[BREAKING]** `client.settingGateway` has been changed to 
+`client.settings`, which is able to handle multiple instances of SettingGateway.
 - [[#300](https://github.com/dirigeants/komada/pull/300)] **[Update]** `client.methods.Embed` changed to use Discord.js MessageEmbed.
 - [[#297](https://github.com/dirigeants/komada/pull/297)] **[Update]** Abstraction of Settings and slight refactor so its easier to use.
 - [[#296](https://github.com/dirigeants/komada/pull/296)] **[Update]** The JSON provider and schemaManager now uses atomics.

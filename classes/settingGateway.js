@@ -16,7 +16,6 @@ module.exports = class SettingGateway extends SchemaManager {
     /** @type {string} */
     this.engine = this.client.config.provider.engine || "json";
 
-    this.provider = this.client.providers.get(this.engine);
     if (!this.provider) throw `This provider (${this.engine}) does not exist in your system.`;
 
     this.sql = this.provider.conf.sql ? new SQL(this.client, this, this.provider) : false;
@@ -177,6 +176,10 @@ module.exports = class SettingGateway extends SchemaManager {
 
   get resolver() {
     return this.store.resolver;
+  }
+
+  get provider() {
+    return this.client.providers.get(this.engine);
   }
 
 };
