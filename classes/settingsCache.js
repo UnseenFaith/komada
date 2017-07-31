@@ -2,6 +2,7 @@ const SettingGateway = require("./settingGateway");
 const SettingResolver = require("./settingResolver");
 
 class SettingsCache {
+
   constructor(client) {
     Object.defineProperty(this, "client", { value: client });
     this.resolver = new SettingResolver(client);
@@ -59,6 +60,7 @@ class SettingsCache {
       },
     };
   }
+
 }
 
 module.exports = SettingsCache;

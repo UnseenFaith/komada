@@ -3,6 +3,7 @@ const SQL = require("./sql");
 
 /* eslint-disable no-restricted-syntax, class-methods-use-this */
 module.exports = class SettingGateway extends SchemaManager {
+
   constructor(store, type, validateFunction, schema) {
     super(store.client);
 
@@ -177,4 +178,5 @@ module.exports = class SettingGateway extends SchemaManager {
   get resolver() {
     return this.store.resolver;
   }
+
 };
