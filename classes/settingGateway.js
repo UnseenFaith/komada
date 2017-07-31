@@ -1,23 +1,28 @@
-const SettingResolver = require("./settingResolver");
 const SchemaManager = require("./schemaManager");
 const SQL = require("./sql");
 
 /* eslint-disable no-restricted-syntax, class-methods-use-this */
 module.exports = class SettingGateway extends SchemaManager {
 
-  constructor(client, type) {
-    super(client);
+  constructor(store, type, validateFunction, schema) {
+    super(store.client);
 
-    /** @type {Client} */
-    this.client = client;
-
-    /** @type {string} */
-    this.type = `${type}_`;
+    /** @type {SettingCache} */
+    Object.defineProperty(this, "store", { value: store });
 
     /** @type {string} */
-    this.engine = client.config.provider.engine || "json";
+    this.type = type;
 
-    this.resolver = new SettingResolver(client);
+    /** @type {string} */
+    this.engine = this.client.config.provider.engine || "json";
+
+    if (!this.provider) throw `This provider (${this.engine}) does not exist in your system.`;
+
+    this.sql = this.provider.conf.sql ? new SQL(this.client, this, this.provider) : false;
+
+    this.validate = validateFunction;
+
+    this.defaultDataSchema = schema;
   }
 
   /**
@@ -25,10 +30,7 @@ module.exports = class SettingGateway extends SchemaManager {
    * @returns {void}
    */
   async init() {
-    this.provider = this.client.providers.get(this.engine);
-    if (!this.provider) throw `This provider (${this.engine}) does not exist in your system.`;
     await this.initSchema();
-    this.sql = this.provider.conf.sql ? new SQL(this.client, this, this.provider) : false;
     if (!(await this.provider.hasTable(this.type))) {
       const SQLCreate = this.sql ? this.sql.buildSQLSchema(this.schema) : undefined;
       await this.provider.createTable(this.type, SQLCreate);
@@ -168,8 +170,16 @@ module.exports = class SettingGateway extends SchemaManager {
     return true;
   }
 
-  validate(something) {
-    return something;
+  get client() {
+    return this.store.client;
+  }
+
+  get resolver() {
+    return this.store.resolver;
+  }
+
+  get provider() {
+    return this.client.providers.get(this.engine);
   }
 
 };

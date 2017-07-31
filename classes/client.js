@@ -5,7 +5,7 @@ const CommandMessage = require("./commandMessage");
 const Loader = require("./loader");
 const ArgResolver = require("./argResolver");
 const PermLevels = require("./permLevels");
-const GuildSettings = require("./GuildSettings");
+const Settings = require("./settingsCache");
 
 const defaultPermStructure = new PermLevels()
   .addLevel(0, false, () => true)
@@ -69,7 +69,7 @@ module.exports = class Komada extends Discord.Client {
       escapeMarkdown: Discord.escapeMarkdown,
       splitMessage: Discord.splitMessage,
     };
-    this.settingGateway = new GuildSettings(this);
+    this.settings = null;
     this.application = null;
     this.once("ready", this._ready.bind(this));
   }
@@ -78,10 +78,6 @@ module.exports = class Komada extends Discord.Client {
     if (!this.user.bot) throw "Why would you need an invite link for a selfbot...";
     const permissions = Discord.Permissions.resolve([...new Set(this.commands.reduce((a, b) => a.concat(b.conf.botPerms), ["READ_MESSAGES", "SEND_MESSAGES"]))]);
     return `https://discordapp.com/oauth2/authorize?client_id=${this.application.id}&permissions=${permissions}&scope=bot`;
-  }
-
-  get schemaManager() {
-    return this.settingGateway.schemaManager;
   }
 
   get owner() {
@@ -102,6 +98,7 @@ module.exports = class Komada extends Discord.Client {
   async login(token) {
     const start = now();
     await this.funcs.loadAll(this);
+    this.settings = new Settings(this);
     this.emit("log", `Loaded in ${(now() - start).toFixed(2)}ms.`);
     super.login(token);
   }
@@ -114,7 +111,10 @@ module.exports = class Komada extends Discord.Client {
       if (piece.init) return piece.init(this);
       return true;
     }));
-    await this.settingGateway.init();
+    await Promise.all(Object.keys(this.settings).map((key) => {
+      if (this.settings[key].init) return this.settings[key].init();
+      return true;
+    }));
     await Promise.all(Object.keys(this.funcs).map((key) => {
       if (this.funcs[key].init) return this.funcs[key].init(this);
       return true;
