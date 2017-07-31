@@ -1,6 +1,9 @@
 const SettingGateway = require("./settingGateway");
 const SettingResolver = require("./settingResolver");
 
+const { resolve } = require("path");
+const fs = require("fs-nextra");
+
 class SettingsCache {
 
   constructor(client) {
@@ -10,11 +13,12 @@ class SettingsCache {
     this.guilds = new SettingGateway(this, "guilds", this.validate.bind(null, this.resolver), this.defaultDataSchema);
   }
 
-  async add(name, validateFunction, schema = {}) {
+  async add(name, validateFunction, schema = null) {
     if (!name || typeof name !== "string") throw "You must pass a name for your new gateway and it must be a string.";
     if (name in this) throw "There is already a Gateway with that name.";
     if (typeof validateFunction !== "function") throw "You must pass a validate function.";
     validateFunction = validateFunction.bind(null, this.resolver);
+    if (schema === null) schema = await fs.readJSON(resolve(this.client.clientBaseDir, "bwd", `${name}_Schema.json`)).catch(() => ({}));
     if (schema.constructor.name !== "Object") throw "Schema must be a valid object or left undefined for an empty object.";
     this[name] = new SettingGateway(this, name, validateFunction, schema);
     await this[name].init();
