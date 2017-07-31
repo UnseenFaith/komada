@@ -79,10 +79,6 @@ module.exports = class Komada extends Discord.Client {
     return `https://discordapp.com/oauth2/authorize?client_id=${this.application.id}&permissions=${permissions}&scope=bot`;
   }
 
-  get schemaManager() {
-    return this.settingGateway.schemaManager;
-  }
-
   get owner() {
     return this.users.get(this.config.ownerID);
   }
