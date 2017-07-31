@@ -113,6 +113,7 @@ class SchemaManager extends CacheManager {
     }));
     return this.sync();
   }
+
 }
 
 module.exports = SchemaManager;
