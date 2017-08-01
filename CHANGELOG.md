@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased] - Classbased | Staged for 0.20.3
+## [Unreleased] - Classbased | Staged for 0.20.6
 ### Added
 - [[#322](https://github.com/dirigeants/komada/pull/322)] SettingGateway is now capable to handle asynchronous cache for internal parsing.
 - [[#313](https://github.com/dirigeants/komada/pull/317)] Added `client.settings`, to handle multiple
