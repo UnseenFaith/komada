@@ -171,7 +171,8 @@ module.exports = class SettingGateway extends SchemaManager {
     const target = await this.validate(input).then(output => (output.id || output));
     let result = await this.resolver[this.schema[key].type.toLowerCase()](data, this.client.guilds.get(target), this.schema[key]);
     if (result.id) result = result.id;
-    const cache = this.get(target);
+    let cache = this.get(target);
+    if (cache instanceof Promise) cache = await cache;
     if (type === "add") {
       if (cache[key].includes(result)) throw `The value ${data} for the key ${key} already exists.`;
       cache[key].push(result);
