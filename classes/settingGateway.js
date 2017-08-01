@@ -81,7 +81,8 @@ module.exports = class SettingGateway extends SchemaManager {
    */
   async getResolved(guild) {
     guild = await this.validate(guild);
-    const settings = this.get(guild.id);
+    let settings = this.get(guild.id);
+    if (settings instanceof Promise) settings = await settings;
     const resolved = await Promise.all(Object.entries(settings).map(([key, data]) => {
       if (this.schema[key] && this.schema[key].array) return { [key]: Promise.all(data.map(entry => this.resolver[this.schema[key].type.toLowerCase()](entry, guild, this.schema[key]))) };
       return { [key]: this.schema[key] && data ? this.resolver[this.schema[key].type.toLowerCase()](data, guild, this.schema[key]) : data };
