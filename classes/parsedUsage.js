@@ -29,22 +29,23 @@ module.exports = class ParsedUsage {
       fromto: "",
     };
 
-    this.usageString.split("").forEach((com, i) => {
+    for (let i = 0; i < this.usageString.length; i++) {
+      const char = this.usageString[i];
       usage.char = i + 1;
       usage.from = usage.char - usage.current.length;
-      usage.at = `at char #${usage.char} '${com}'`;
+      usage.at = `at char #${usage.char} '${char}'`;
       usage.fromto = `from char #${usage.from} to #${usage.char} '${usage.current}'`;
 
-      if (usage.last && com !== " ") {
+      if (usage.last && char !== " ") {
         throw `${usage.at}: there can't be anything else after the repeat tag.`;
       }
 
-      if (this[com]) {
-        usage = this[com](usage);
+      if (this[char]) {
+        usage = this[char](usage);
       } else {
-        usage.current += com;
+        usage.current += char;
       }
-    });
+    }
 
     if (usage.opened) throw `from char #${this.usageString.length - usage.current.length} '${this.usageString.substr(-usage.current.length - 1)}' to end: a tag was left open`;
     if (usage.current) throw `from char #${(this.usageString.length + 1) - usage.current.length} to end '${usage.current}' a literal was found outside a tag.`;
@@ -118,10 +119,10 @@ module.exports = class ParsedUsage {
 
     const members = tag.split("|");
 
-    members.forEach((elemet, i) => {
+    for (let i = 0; i < members.length; i++) {
       const current = `at tag #${count} at bound #${i + 1}`;
 
-      const result = /^([^:]+)(?::([^{}]+))?(?:{([^,]+)?(?:,(.+))?})?$/i.exec(elemet);
+      const result = /^([^:]+)(?::([^{}]+))?(?:{([^,]+)?(?:,(.+))?})?$/i.exec(members[i]);
 
       if (!result) throw `${current}: invalid syntax, non specific`;
 
@@ -166,7 +167,7 @@ module.exports = class ParsedUsage {
       }
 
       toRet.push(fill);
-    });
+    }
 
     return toRet;
   }
