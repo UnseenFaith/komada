@@ -102,7 +102,7 @@ module.exports = class SettingGateway extends SchemaManager {
       return;
     }
     const target = await this.validate(input).then(output => (output.id || output));
-    const data = await this.provider.get(this.type, target.id);
+    const data = await this.provider.get(this.type, target);
     if (this.sql) this.sql.deserializer(data);
     await super.set(target, data);
   }
@@ -125,18 +125,34 @@ module.exports = class SettingGateway extends SchemaManager {
   /**
    * Updates an entry.
    * @param {Object|string} input An object containing a id property, like discord.js objects, or a string.
-   * @param {string} key The key to update.
-   * @param {any} data The new value for the key.
-   * @returns {any}
+   * @param {Object} object An object with pairs of key/value to update.
+   * @param {Object|string} [guild=null] A Guild resolvable, useful for when the instance of SG doesn't aim for Guild settings.
+   * @returns {Object}
    */
-  async update(input, key, data) {
-    if (!(key in this.schema)) throw `The key ${key} does not exist in the current data schema.`;
-    const target = await this.validate(input).then(output => (output.id || output));
-    let result = await this.resolver[this.schema[key].type.toLowerCase()](data, this.client.guilds.get(target), this.schema[key]);
-    if (result.id) result = result.id;
-    await this.provider.update(this.type, target, { [key]: result });
-    await this.sync(target.id);
+  async update(input, object, guild = null) {
+    const target = await this.validate(input).then(output => output.id || output);
+    guild = await this.resolver.guild(guild || target);
+
+    const resolved = await Promise.all(Object.entries(object).map(async ([key, value]) => {
+      if (!(key in this.schema)) throw `The key ${key} does not exist in the current data schema.`;
+      return this.resolver[this.schema[key].type.toLowerCase()](value, guild, this.schema[key])
+        .then(res => ({ [key]: res.id || res }));
+    }));
+
+    const result = Object.assign({}, ...resolved);
+
+    await this.ensureCreate(target);
+    await this.provider.update(this.type, target, result);
+    await this.sync(target);
     return result;
+  }
+
+  async ensureCreate(target) {
+    if (typeof target !== "string") throw `Expected input type string, got ${typeof target}`;
+    let cache = this.get(target);
+    if (cache instanceof Promise) cache = await cache;
+    if (!("id" in cache)) return this.create(target);
+    return true;
   }
 
   /**
@@ -160,11 +176,13 @@ module.exports = class SettingGateway extends SchemaManager {
       if (cache[key].includes(result)) throw `The value ${data} for the key ${key} already exists.`;
       cache[key].push(result);
       await this.provider.update(this.type, target, { [key]: cache[key] });
-      await this.sync(target.id);
+      await this.sync(target);
       return result;
     }
     if (!cache[key].includes(result)) throw `The value ${data} for the key ${key} does not exist.`;
     cache[key] = cache[key].filter(v => v !== result);
+
+    await this.ensureCreate(target);
     await this.provider.update(this.type, target, { [key]: cache[key] });
     await this.sync(target);
     return true;
