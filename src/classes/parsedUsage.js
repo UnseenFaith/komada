@@ -5,7 +5,7 @@
 class ParsedUsage {
 
   /**
-   * @param {KomadaClient} client The klasa client
+   * @param {KomadaClient} client The Komada client
    * @param {Command} command The command this parsed usage is for
    */
   constructor(client, command) {
