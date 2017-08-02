@@ -42,7 +42,7 @@ class SettingGateway extends SchemaManager {
      * @name SettingGateway#sql
      * @type {?SQL}
      */
-    this.sql = this.provider.conf.sql ? new SQL(this.client, this, this.provider) : null;
+    this.sql = this.provider.conf.sql ? new SQL(this.client, this) : null;
 
     /**
      * The function validator for this instance of SettingGateway.
