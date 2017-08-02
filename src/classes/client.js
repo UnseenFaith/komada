@@ -25,6 +25,46 @@ const defaultPermStructure = new PermLevels()
   .addLevel(10, false, (client, msg) => msg.author.id === client.config.ownerID);
 
 /**
+ * @typedef  {object}   OptionsDisabled
+ * @property {string[]} [commands=Array]    Disabled Commands
+ * @property {string[]} [events=Array]      Disabled Events
+ * @property {string[]} [functions=Array]   Disabled Functions
+ * @property {string[]} [inhibitors=Array]  Disabled Inhibitors
+ * @property {string[]} [finalizers=Array]  Disabled Finalizers
+ * @property {string[]} [monitors=Array]    Disabled Monitors
+ * @property {string[]} [providers=Array]   Disabled Providers
+ * @property {string[]} [extendables=Array] Disabled Extendables
+ */
+
+/**
+ * @typedef  {object} OptionsProviders
+ * @property {string} [engine=json] The Provider Engine SettingGateway will use to store and access to the persistent data.
+ * @property {string} [cache=js]    The Provider Cache Engine CacheManager from SettingGateway will use to cache the data.
+ */
+
+/**
+ * @typedef  {object}  KomadaOptions
+ * @property {string}  [prefix=?] The prefix for Komada. Defaults to '?'.
+ * @property {string}  [ownerID=String] The bot owner's ID, Komada will autofetch it if it's not specified.
+ *
+ * @property {OptionsDisabled}  [disabled={}] The disabled pieces.
+ * @property {PermLevels|{}[]} [permStructure=Array<object>] The PermStructure for Komada.
+ *
+ * @property {boolean} [selfbot=boolean] Whether the bot is a selfbot or not. Komada detects this automatically.
+ * @property {string}  [readyMessage=String] A custom string message Komada will use when firing the ready event message.
+ * @property {number}  [commandMessageLifetime=1800] The lifetime for the command messages, in milliseconds.
+ * @property {number}  [commandMessageSweep=900] How frequent should Komada sweep the command messages.
+ *
+ * @property {boolean} [disableLogTimestamps=false] Whether the komada logger should show the timestamps.
+ * @property {boolean} [disableLogColor=false] Whether the komada logger should show colours.
+ *
+ * @property {boolean} [cmdEditing=false] Whether Komada should consider edited messages as potential messages able to fire new commands.
+ * @property {boolean} [cmdPrompt=false] Whether Komada should prompt missing/invalid arguments at failed command execution.
+ *
+ * @property {OptionsProviders}  [provider={}] The engines for SettingGateway, 'engine' for Persistent Data, 'cache' for Cache Engine (defaults to Collection)
+ */
+
+/**
  * The class for the magic behind Komada
  * @extends external:Client
  */
@@ -80,9 +120,6 @@ class Komada extends Discord.Client {
      * @type {ArgResolver}
      */
     this.argResolver = new ArgResolver(this);
-
-    /* Remove this */
-    this.helpStructure = new Map();
 
     /**
      * The collection of commands available for use in Komada
