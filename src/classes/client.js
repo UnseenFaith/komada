@@ -34,12 +34,14 @@ const defaultPermStructure = new PermLevels()
  * @property {string[]} [monitors=Array]    Disabled Monitors
  * @property {string[]} [providers=Array]   Disabled Providers
  * @property {string[]} [extendables=Array] Disabled Extendables
+ * @memberof KomadaOptions
  */
 
 /**
  * @typedef  {object} OptionsProviders
  * @property {string} [engine=json] The Provider Engine SettingGateway will use to store and access to the persistent data.
  * @property {string} [cache=js]    The Provider Cache Engine CacheManager from SettingGateway will use to cache the data.
+ * @memberof KomadaOptions
  */
 
 /**
@@ -70,10 +72,10 @@ const defaultPermStructure = new PermLevels()
  */
 class Komada extends Discord.Client {
 
-/**
- * Creates a new instance of Komada
- * @param  {KomadaOptions} [config={}] The configuration options to provide to Komada
- */
+  /**
+   * Creates a new instance of Komada
+   * @param  {KomadaOptions} [config={}] The configuration options to provide to Komada
+   */
   constructor(config = {}) {
     if (typeof config !== "object") throw new TypeError("Configuration for Komada must be an object.");
     super(config.clientOptions);
@@ -200,15 +202,15 @@ class Komada extends Discord.Client {
     this.ready = false;
 
     /**
-   * Additional methods to be used elsewhere in the bot
-   * @type {Object}
-   * @property {Class} Collection A discord.js collection
-   * @property {Class} Embed A discord.js Message Embed
-   * @property {Class} MessageCollector A discord.js MessageCollector
-   * @property {Class} Webhook A discord.js WebhookClient
-   * @property {Function} escapeMarkdown A discord.js escape markdown function
-   * @property {Function} splitMessage A discord.js split message function
-   */
+     * Additional methods to be used elsewhere in the bot
+     * @type {Object}
+     * @property {Class} Collection A discord.js collection
+     * @property {Class} Embed A discord.js Message Embed
+     * @property {Class} MessageCollector A discord.js MessageCollector
+     * @property {Class} Webhook A discord.js WebhookClient
+     * @property {Function} escapeMarkdown A discord.js escape markdown function
+     * @property {Function} splitMessage A discord.js split message function
+     */
     this.methods = {
       Collection: Discord.Collection,
       Embed: Discord.MessageEmbed,
