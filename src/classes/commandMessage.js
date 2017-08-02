@@ -1,9 +1,4 @@
 /**
- * @external Collection
- * @see https://discord.js.org/#/docs/main/master/class/Collection
- */
-
-/**
  * The internal class that turns command arguments into command parameters
  * @extends {external:Collection}
  */
