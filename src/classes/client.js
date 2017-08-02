@@ -7,6 +7,7 @@ const Loader = require("./loader");
 const ArgResolver = require("./argResolver");
 const PermLevels = require("./permLevels");
 const Settings = require("./settingsCache");
+const GuildSettings = require("./GuildSettings.js")
 
 const defaultPermStructure = new PermLevels()
   .addLevel(0, false, () => true)
