@@ -4,8 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased] - Classbased | Staged for 0.20.3
+## [Unreleased] - Classbased | Staged for 0.20.6
 ### Added
+- [[#322](https://github.com/dirigeants/komada/pull/322)] SettingGateway is now capable to handle asynchronous cache for internal parsing.
+- [[#313](https://github.com/dirigeants/komada/pull/317)] Added `client.settings`, to handle multiple
+instances of SettingGateway.
 - [[#317](https://github.com/dirigeants/komada/pull/317)] `client.owner` is now a thing.
 - [[#298](https://github.com/dirigeants/komada/pull/298)] `config.ownerID` is automatically detected now.
 - [[#291](https://github.com/dirigeants/komada/pull/291)] `getResolved` method, which returns the resolved configuration
@@ -65,6 +68,10 @@ keyword. `exports.run = __async__ (client, msg, [...args])`.
 command.
 
 ### Changed
+- [[#322](https://github.com/dirigeants/komada/pull/322)] **[BREAKING]** `SettingGateway#update`'s arguments are now `key`, `object` and `?guild`, allowing instances of SG which resolver aimed to non-Guild classes to parse correctly. The argument `object` can contain multiple keys. (So SG will update all keys from the object at once). Previously, you could update only a pair `key-value`.
+- [[#322](https://github.com/dirigeants/komada/pull/322)] Safer editing when using SettingGateway, now ensuring the settings has been created before inserting the data. (Fixes an issue when the data was inserted without creating it before).
+- [[#317](https://github.com/dirigeants/komada/pull/317)] **[BREAKING]** `client.settingGateway` has been changed to 
+`client.settings`, which is able to handle multiple instances of SettingGateway.
 - [[#300](https://github.com/dirigeants/komada/pull/300)] **[Update]** `client.methods.Embed` changed to use Discord.js MessageEmbed.
 - [[#297](https://github.com/dirigeants/komada/pull/297)] **[Update]** Abstraction of Settings and slight refactor so its easier to use.
 - [[#296](https://github.com/dirigeants/komada/pull/296)] **[Update]** The JSON provider and schemaManager now uses atomics.
@@ -119,6 +126,8 @@ core event.
 cached an implied permissions object, instead of generating a new object every time a command is run.
 
 ### Fixed
+- [[#322](https://github.com/dirigeants/komada/pull/322)] **[BugFix]** `SettingGateway#sync` not being running properly.
+- [[#322](https://github.com/dirigeants/komada/pull/322)] **[BugFix]** Settings not being created properly.
 - [[#290](https://github.com/dirigeants/komada/pull/290)] **[BugFix]** Fixed reload commands.
 - [[#289](https://github.com/dirigeants/komada/pull/289)] **[BugFix]** If the bot was unable to send a message, the
 **reboot** command would never call `process.exit()`.
