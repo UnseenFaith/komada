@@ -1,12 +1,34 @@
 const Resolver = require("./Resolver");
 
 /* eslint-disable no-throw-literal, class-methods-use-this */
-module.exports = class ArgResolver extends Resolver {
+/**
+ * The resolver that is used for arguments.
+ * @extends Resolver
+ */
+class ArgResolver extends Resolver {
 
+  /**
+   * Resolves a message
+   * @param {string} arg This arg
+   * @param {Object} currentUsage This current usage
+   * @param {number} possible This possible usage id
+   * @param {boolean} repeat If it is a looping/repeating arg
+   * @param {Message} msg The message that triggered the command
+   * @returns {external:Message}
+   */
   message(...args) {
     return this.msg(...args);
   }
 
+  /**
+   * Resolves a message
+   * @param {string} arg This arg
+   * @param {Object} currentUsage This current usage
+   * @param {number} possible This possible usage id
+   * @param {boolean} repeat If it is a looping/repeating arg
+   * @param {Message} msg The message that triggered the command
+   * @returns {external:Message}
+   */
   async msg(arg, currentUsage, possible, repeat, msg) {
     const message = await super.msg(arg, msg.channel);
     if (message) return message;
@@ -25,10 +47,26 @@ module.exports = class ArgResolver extends Resolver {
     throw `${currentUsage.possibles[possible].name} must be a valid message id.`;
   }
 
+  /**
+   * Resolves a user
+   * @param {string} arg This arg
+   * @param {Object} currentUsage This current usage
+   * @param {number} possible This possible usage id
+   * @param {boolean} repeat If it is a looping/repeating arg
+   * @returns {external:User}
+   */
   mention(...args) {
     return this.user(...args);
   }
 
+  /**
+   * Resolves a user
+   * @param {string} arg This arg
+   * @param {Object} currentUsage This current usage
+   * @param {number} possible This possible usage id
+   * @param {boolean} repeat If it is a looping/repeating arg
+   * @returns {external:User}
+   */
   async user(arg, currentUsage, possible, repeat) {
     const user = await super.user(arg);
     if (user) return user;
@@ -36,6 +74,15 @@ module.exports = class ArgResolver extends Resolver {
     throw `${currentUsage.possibles[possible].name} must be a mention or valid user id.`;
   }
 
+  /**
+   * Resolves a member
+   * @param {string} arg This arg
+   * @param {Object} currentUsage This current usage
+   * @param {number} possible This possible usage id
+   * @param {boolean} repeat If it is a looping/repeating arg
+   * @param {Message} msg The message that triggered the command
+   * @returns {external:GuildMember}
+   */
   async member(arg, currentUsage, possible, repeat, msg) {
     const member = await super.member(arg, msg.guild);
     if (member) return member;
@@ -43,6 +90,14 @@ module.exports = class ArgResolver extends Resolver {
     throw `${currentUsage.possibles[possible].name} must be a mention or valid user id.`;
   }
 
+  /**
+   * Resolves a channel
+   * @param {string} arg This arg
+   * @param {Object} currentUsage This current usage
+   * @param {number} possible This possible usage id
+   * @param {boolean} repeat If it is a looping/repeating arg
+   * @returns {external:Channel}
+   */
   async channel(arg, currentUsage, possible, repeat) {
     const channel = await super.channel(arg);
     if (channel) return channel;
@@ -50,6 +105,14 @@ module.exports = class ArgResolver extends Resolver {
     throw `${currentUsage.possibles[possible].name} must be a channel tag or valid channel id.`;
   }
 
+  /**
+   * Resolves a guild
+   * @param {string} arg This arg
+   * @param {Object} currentUsage This current usage
+   * @param {number} possible This possible usage id
+   * @param {boolean} repeat If it is a looping/repeating arg
+   * @returns {external:Guild}
+   */
   async guild(arg, currentUsage, possible, repeat) {
     const guild = await super.guild(arg);
     if (guild) return guild;
@@ -57,6 +120,15 @@ module.exports = class ArgResolver extends Resolver {
     throw `${currentUsage.possibles[possible].name} must be a valid guild id.`;
   }
 
+  /**
+   * Resolves a role
+   * @param {string} arg This arg
+   * @param {Object} currentUsage This current usage
+   * @param {number} possible This possible usage id
+   * @param {boolean} repeat If it is a looping/repeating arg
+   * @param {Message} msg The message that triggered the command
+   * @returns {external:Role}
+   */
   async role(arg, currentUsage, possible, repeat, msg) {
     const role = await super.role(arg, msg.guild);
     if (role) return role;
@@ -64,6 +136,14 @@ module.exports = class ArgResolver extends Resolver {
     throw `${currentUsage.possibles[possible].name} must be a role mention or role id.`;
   }
 
+  /**
+   * Resolves a literal
+   * @param {string} arg This arg
+   * @param {Object} currentUsage This current usage
+   * @param {number} possible This possible usage id
+   * @param {boolean} repeat If it is a looping/repeating arg
+   * @returns {string}
+   */
   async literal(arg, currentUsage, possible, repeat) {
     if (arg.toLowerCase() === currentUsage.possibles[possible].name.toLowerCase()) return arg.toLowerCase();
     if (currentUsage.type === "optional" && !repeat) return null;
@@ -73,10 +153,26 @@ module.exports = class ArgResolver extends Resolver {
     ].join("\n");
   }
 
+  /**
+   * Resolves a boolean
+   * @param {string} arg This arg
+   * @param {Object} currentUsage This current usage
+   * @param {number} possible This possible usage id
+   * @param {boolean} repeat If it is a looping/repeating arg
+   * @returns {boolean}
+   */
   bool(...args) {
     return this.boolean(...args);
   }
 
+  /**
+   * Resolves a boolean
+   * @param {string} arg This arg
+   * @param {Object} currentUsage This current usage
+   * @param {number} possible This possible usage id
+   * @param {boolean} repeat If it is a looping/repeating arg
+   * @returns {boolean}
+   */
   async boolean(arg, currentUsage, possible, repeat) {
     const boolean = await super.boolean(arg);
     if (boolean !== null) return boolean;
@@ -84,10 +180,26 @@ module.exports = class ArgResolver extends Resolver {
     throw `${currentUsage.possibles[possible].name} must be true or false.`;
   }
 
+  /**
+   * Resolves a string
+   * @param {string} arg This arg
+   * @param {Object} currentUsage This current usage
+   * @param {number} possible This possible usage id
+   * @param {boolean} repeat If it is a looping/repeating arg
+   * @returns {string}
+   */
   str(...args) {
     return this.string(...args);
   }
 
+  /**
+   * Resolves a string
+   * @param {string} arg This arg
+   * @param {Object} currentUsage This current usage
+   * @param {number} possible This possible usage id
+   * @param {boolean} repeat If it is a looping/repeating arg
+   * @returns {string}
+   */
   async string(arg, currentUsage, possible, repeat) {
     const { min, max } = currentUsage.possibles[possible];
     if (min && max) {
@@ -107,10 +219,26 @@ module.exports = class ArgResolver extends Resolver {
     return arg;
   }
 
+  /**
+   * Resolves a integer
+   * @param {string} arg This arg
+   * @param {Object} currentUsage This current usage
+   * @param {number} possible This possible usage id
+   * @param {boolean} repeat If it is a looping/repeating arg
+   * @returns {number}
+   */
   int(...args) {
     return this.integer(...args);
   }
 
+  /**
+   * Resolves a integer
+   * @param {string} arg This arg
+   * @param {Object} currentUsage This current usage
+   * @param {number} possible This possible usage id
+   * @param {boolean} repeat If it is a looping/repeating arg
+   * @returns {number}
+   */
   async integer(arg, currentUsage, possible, repeat) {
     const { min, max } = currentUsage.possibles[possible];
     arg = await super.integer(arg);
@@ -134,14 +262,38 @@ module.exports = class ArgResolver extends Resolver {
     return arg;
   }
 
+  /**
+   * Resolves a number
+   * @param {string} arg This arg
+   * @param {Object} currentUsage This current usage
+   * @param {number} possible This possible usage id
+   * @param {boolean} repeat If it is a looping/repeating arg
+   * @returns {number}
+   */
   num(...args) {
     return this.float(...args);
   }
 
+  /**
+   * Resolves a number
+   * @param {string} arg This arg
+   * @param {Object} currentUsage This current usage
+   * @param {number} possible This possible usage id
+   * @param {boolean} repeat If it is a looping/repeating arg
+   * @returns {number}
+   */
   number(...args) {
     return this.float(...args);
   }
 
+  /**
+   * Resolves a number
+   * @param {string} arg This arg
+   * @param {Object} currentUsage This current usage
+   * @param {number} possible This possible usage id
+   * @param {boolean} repeat If it is a looping/repeating arg
+   * @returns {number}
+   */
   async float(arg, currentUsage, possible, repeat) {
     const { min, max } = currentUsage.possibles[possible];
     arg = await super.float(arg);
@@ -165,6 +317,14 @@ module.exports = class ArgResolver extends Resolver {
     return arg;
   }
 
+  /**
+   * Resolves a hyperlink
+   * @param {string} arg This arg
+   * @param {Object} currentUsage This current usage
+   * @param {number} possible This possible usage id
+   * @param {boolean} repeat If it is a looping/repeating arg
+   * @returns {string}
+   */
   async url(arg, currentUsage, possible, repeat) {
     const hyperlink = await super.url(arg);
     if (hyperlink !== null) return hyperlink;
@@ -172,4 +332,6 @@ module.exports = class ArgResolver extends Resolver {
     throw `${currentUsage.possibles[possible].name} must be a valid url.`;
   }
 
-};
+}
+
+module.exporots = ArgResolver;

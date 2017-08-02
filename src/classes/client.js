@@ -1,3 +1,4 @@
+/* eslint-disable no-throw-literal, no-use-before-define, no-restricted-syntax, no-underscore-dangle */
 const Discord = require("discord.js");
 const path = require("path");
 const now = require("performance-now");
@@ -23,12 +24,24 @@ const defaultPermStructure = new PermLevels()
   .addLevel(9, true, (client, msg) => msg.author.id === client.config.ownerID)
   .addLevel(10, false, (client, msg) => msg.author.id === client.config.ownerID);
 
-/* eslint-disable no-throw-literal, no-use-before-define, no-restricted-syntax, no-underscore-dangle */
-module.exports = class Komada extends Discord.Client {
+/**
+ * The class for the magic behind Komada
+ * @extends external:Client
+ */
+class Komada extends Discord.Client {
 
+/**
+ * Creates a new instance of Komada
+ * @param  {KomadaOptions} [config={}] The configuration options to provide to Komada
+ */
   constructor(config = {}) {
     if (typeof config !== "object") throw new TypeError("Configuration for Komada must be an object.");
     super(config.clientOptions);
+    /**
+     * The configuration used to create Komada
+     * @type {KomadaOptions}
+     */
+    /* Remove all of this and replace with a mergeConfig method instead before v1 release */
     this.config = config;
     if (!("prefix" in config)) this.config.prefix = "?";
     this.config.provider = config.provider || {};
@@ -43,24 +56,122 @@ module.exports = class Komada extends Discord.Client {
       providers: config.disabled.providers || [],
       extendables: config.disabled.extendables || [],
     };
+
+    /**
+     * The location of where the core files of Komada rely in, typically inside node_modules
+     * @type {String}
+     */
     this.coreBaseDir = path.join(__dirname, "../");
+
+    /**
+     * The location of where you installed Komada, whether its from an enviroment variable named clientDir or where you run the node file from.
+     * @type {String}
+     */
     this.clientBaseDir = `${process.env.clientDir || process.cwd()}${path.sep}`;
+
+    /**
+     * An object containing all the functions within Komada
+     * @type {Loader}
+     */
     this.funcs = new Loader(this);
+
+    /**
+     * The resolver that resolves arguments in commands into their expected results
+     * @type {ArgResolver}
+     */
     this.argResolver = new ArgResolver(this);
+
+    /* Remove this */
     this.helpStructure = new Map();
+
+    /**
+     * The collection of commands available for use in Komada
+     * @type external:Collection
+     */
     this.commands = new Discord.Collection();
+
+    /**
+     * The collection of aliases that point to commands in Komada
+     * @type external:Collection
+     */
     this.aliases = new Discord.Collection();
+
+    /**
+     * The collection of inhibitors ran on commands
+     * @type external:Collection
+     */
     this.commandInhibitors = new Discord.Collection();
+
+    /**
+     * The collection of finalizers ran on succcesful commands.
+     * @type external:Collection
+     */
     this.commandFinalizers = new Discord.Collection();
+
+    /**
+     * The collection of monitors that are ran are specific or all messages.
+     * @type external:Collection
+     */
     this.messageMonitors = new Discord.Collection();
+
+    /**
+     * The collection of providers that can be used in Komada
+     * @type external:Collection
+     */
     this.providers = new Discord.Collection();
+
+    /**
+     * The collection of event handlers in Komada, used for reloading
+     * @type external:Collection
+     */
     this.eventHandlers = new Discord.Collection();
+
+    /**
+     * The permStructure Komada will take into account when commands are ran and permLevel is calculated.
+     * @type {PermissionStructure}
+     */
     this.permStructure = this.validatePermStructure();
+
+    /**
+     * The command message class.
+     * @type {CommandMessage}
+     */
     this.CommandMessage = CommandMessage;
+
+    /**
+     * The collection of stored command messages
+     * @type external:Collection
+     */
     this.commandMessages = new Discord.Collection();
+
+    /**
+     * The lifetime of command messages before they are removed from the cache and not editable anymore.
+     * @type {Number}
+     */
     this.commandMessageLifetime = config.commandMessageLifetime || 1800;
+
+    /**
+     * The amount of time in between each command message sweep in Komada.
+     * @type {Number}
+     */
     this.commandMessageSweep = config.commandMessageSweep || 900;
+
+    /**
+     * Whether or not Komada is completely ready to accept commands from users or not. This will be true after everything is initialized correctly.
+     * @type {Boolean}
+     */
     this.ready = false;
+
+    /**
+   * Additional methods to be used elsewhere in the bot
+   * @type {Object}
+   * @property {Class} Collection A discord.js collection
+   * @property {Class} Embed A discord.js Message Embed
+   * @property {Class} MessageCollector A discord.js MessageCollector
+   * @property {Class} Webhook A discord.js WebhookClient
+   * @property {Function} escapeMarkdown A discord.js escape markdown function
+   * @property {Function} splitMessage A discord.js split message function
+   */
     this.methods = {
       Collection: Discord.Collection,
       Embed: Discord.MessageEmbed,
@@ -69,25 +180,56 @@ module.exports = class Komada extends Discord.Client {
       escapeMarkdown: Discord.escapeMarkdown,
       splitMessage: Discord.splitMessage,
     };
+
+    /**
+     * The gateway for settings
+     * @type {GuildSettings}
+     */
     this.settingGateway = new GuildSettings(this);
+
+    /**
+     * The oauth bots application. This will either be a full application object when Komada has finally loaded or null if the bot is a selfbot.
+     * @type {Object}
+     */
     this.application = null;
+
     this.once("ready", this._ready.bind(this));
   }
 
+  /**
+   * The invite link for the bot
+   * @readonly
+   * @returns {string}
+   */
   get invite() {
     if (!this.user.bot) throw "Why would you need an invite link for a selfbot...";
     const permissions = Discord.Permissions.resolve([...new Set(this.commands.reduce((a, b) => a.concat(b.conf.botPerms), ["READ_MESSAGES", "SEND_MESSAGES"]))]);
     return `https://discordapp.com/oauth2/authorize?client_id=${this.application.id}&permissions=${permissions}&scope=bot`;
   }
 
+  /**
+   * The schema manager for this bot
+   * @readonly
+   * @type {SchemaManager}
+   */
   get schemaManager() {
     return this.settingGateway.schemaManager;
   }
 
+  /**
+   * The owner for this bot
+   * @readonly
+   * @type {external:User}
+   */
   get owner() {
     return this.users.get(this.config.ownerID);
   }
 
+  /**
+   * Validates the permission structure passed to the client
+   * @private
+   * @returns {validPermStructure}
+   */
   validatePermStructure() {
     const structure = this.config.permStructure instanceof PermLevels ? this.config.permStructure.structure : null;
     const permStructure = structure || this.config.permStructure || defaultPermStructure.structure;
@@ -99,6 +241,10 @@ module.exports = class Komada extends Discord.Client {
     return permStructure;
   }
 
+  /**
+   * Use this to login to Discord with your bot
+   * @param {string} token Your bot token
+   */
   async login(token) {
     const start = now();
     await this.funcs.loadAll(this);
@@ -106,6 +252,10 @@ module.exports = class Komada extends Discord.Client {
     super.login(token);
   }
 
+  /**
+   * The once ready function for the client to init all pieces
+   * @private
+   */
   async _ready() {
     this.config.prefixMention = new RegExp(`^<@!?${this.user.id}>`);
     if (this.user.bot) this.application = await super.fetchApplication();
@@ -140,6 +290,11 @@ module.exports = class Komada extends Discord.Client {
     this.emit("log", this.config.readyMessage || `Successfully initialized. Ready to serve ${this.guilds.size} guilds.`);
   }
 
+  /**
+   * Sweeps command messages based on the lifetime parameter
+   * @param {number} lifetime The threshold for how old command messages can be before sweeping since the last edit in seconds
+   * @returns {number} The amount of messages swept
+   */
   sweepCommandMessages(lifetime = this.commandMessageLifetime) {
     if (typeof lifetime !== "number" || isNaN(lifetime)) throw new TypeError("The lifetime must be a number.");
     if (lifetime <= 0) {
@@ -159,7 +314,9 @@ module.exports = class Komada extends Discord.Client {
     return messages - this.commandMessages.size;
   }
 
-};
+}
+
+module.exports = Komada;
 
 process.on("unhandledRejection", (err) => {
   if (!err) return;
