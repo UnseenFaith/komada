@@ -2,22 +2,35 @@ const SchemaManager = require("./schemaManager");
 const SQL = require("./sql");
 
 /* eslint-disable no-restricted-syntax, class-methods-use-this */
-module.exports = class SettingGateway extends SchemaManager {
+
+/**
+ * The database driver.
+ * @class SettingGateway
+ * @extends {SchemaManager}
+ */
+class SettingGateway extends SchemaManager {
 
   constructor(store, type, validateFunction, schema) {
     super(store.client);
 
-    /** @type {SettingCache} */
+    /**
+     * The SettingCache instance which initiated this SettingGateway.
+     * @name SettingGateway#store
+     * @type {SettingCache}
+     * @readonly
+     */
     Object.defineProperty(this, "store", { value: store });
 
     /**
      * The name of this instance of SettingGateway. The schema will be saved under 'name_Schema.json'.
+     * @name SettingGateway#type
      * @type {string}
      */
     this.type = type;
 
     /**
      * The provider engine this instance of SettingGateway should use to handle your settings.
+     * @name SettingGateway#engine
      * @type {string}
      */
     this.engine = this.client.config.provider.engine || "json";
@@ -26,18 +39,21 @@ module.exports = class SettingGateway extends SchemaManager {
 
     /**
      * If the provider is SQL, this property is on charge to serialize/deserialize.
+     * @name SettingGateway#sql
      * @type {?SQL}
      */
     this.sql = this.provider.conf.sql ? new SQL(this.client, this, this.provider) : null;
 
     /**
      * The function validator for this instance of SettingGateway.
+     * @name SettingGateway#validate
      * @type {function}
      */
     this.validate = validateFunction;
 
     /**
      * The schema for this instance of SettingGateway.
+     * @name SettingGateway#defaultDataSchema
      * @type {object}
      */
     this.defaultDataSchema = schema;
@@ -256,4 +272,6 @@ module.exports = class SettingGateway extends SchemaManager {
     return this.client.providers.get(this.engine);
   }
 
-};
+}
+
+module.exports = SettingGateway;
