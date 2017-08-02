@@ -1,4 +1,4 @@
-/* eslint-disable no-throw-literal, class-methods-use-this */
+/* eslint-disable class-methods-use-this */
 /**
  * Converts usage strings into objects to compare against later
  */
@@ -18,15 +18,15 @@ class ParsedUsage {
     Object.defineProperty(this, "client", { value: client });
 
     /**
-   * All names and aliases for the command
-   * @type {string[]}
-   */
+     * All names and aliases for the command
+     * @type {string[]}
+     */
     this.names = [command.help.name, ...command.conf.aliases];
 
     /**
-    * The compiled string for all names/aliases in a usage string
-    * @type {string}
-    */
+      * The compiled string for all names/aliases in a usage string
+      * @type {string}
+      */
     this.commands = this.names.length === 1 ? this.names[0] : `(${this.names.join("|")})`;
 
     /**
