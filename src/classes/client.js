@@ -48,7 +48,7 @@ const defaultPermStructure = new PermLevels()
  * @property {string}  [ownerID=String] The bot owner's ID, Komada will autofetch it if it's not specified.
  *
  * @property {OptionsDisabled}  [disabled={}] The disabled pieces.
- * @property {PermLevels|{}[]} [permStructure=Array<object>] The PermStructure for Komada.
+ * @property {PermLevels|Array<{}>} [permStructure=Array<{}>] The PermStructure for Komada.
  *
  * @property {boolean} [selfbot=boolean] Whether the bot is a selfbot or not. Komada detects this automatically.
  * @property {string}  [readyMessage=String] A custom string message Komada will use when firing the ready event message.
