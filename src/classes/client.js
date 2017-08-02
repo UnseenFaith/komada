@@ -7,7 +7,6 @@ const Loader = require("./loader");
 const ArgResolver = require("./argResolver");
 const PermLevels = require("./permLevels");
 const Settings = require("./settingsCache");
-const GuildSettings = require("./GuildSettings.js");
 
 const defaultPermStructure = new PermLevels()
   .addLevel(0, false, () => true)
@@ -183,10 +182,10 @@ class Komada extends Discord.Client {
     };
 
     /**
-     * The gateway for settings
-     * @type {GuildSettings}
+     * The object where the gateways are stored settings
+     * @type {Object}
      */
-    this.settingGateway = new GuildSettings(this);
+    this.settings = null;
 
     /**
      * The oauth bots application. This will either be a full application object when Komada has finally loaded or null if the bot is a selfbot.
@@ -206,15 +205,6 @@ class Komada extends Discord.Client {
     if (!this.user.bot) throw "Why would you need an invite link for a selfbot...";
     const permissions = Discord.Permissions.resolve([...new Set(this.commands.reduce((a, b) => a.concat(b.conf.botPerms), ["READ_MESSAGES", "SEND_MESSAGES"]))]);
     return `https://discordapp.com/oauth2/authorize?client_id=${this.application.id}&permissions=${permissions}&scope=bot`;
-  }
-
-  /**
-   * The schema manager for this bot
-   * @readonly
-   * @type {SchemaManager}
-   */
-  get schemaManager() {
-    return this.settingGateway.schemaManager;
   }
 
   /**
