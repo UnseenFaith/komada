@@ -9,8 +9,15 @@ const regex = {
 };
 
 /* eslint-disable class-methods-use-this */
-module.exports = class Resolver {
 
+/**
+ * The base resolver class
+ */
+class Resolver {
+
+  /**
+   * @param {KomadaClient} client The Komada Client
+   */
   constructor(client) {
     Object.defineProperty(this, "client", { value: client });
   }
@@ -26,6 +33,13 @@ module.exports = class Resolver {
     return regex.snowflake.test(message) ? channel.fetchMessage(message).catch(() => null) : undefined;
   }
 
+  /**
+   * Fetch messages by a snowflake or instanceof Message
+   * @param  {Snowflake}  message The message snowflake to validate.
+   * @param  {Channel}  channel The Channel object in which the message can be found.
+   * @param  {number}  [limit=100] The number of messages to fetch and send back.
+   * @return {Promise<?Collection<Message>>}
+   */
   async msgs(message, channel, limit = 100) {
     if (message instanceof Message) message = message.id;
     return regex.snowflake.test(message) ? channel.fetchMessages(message, { limit, around: message }).catch(() => null) : undefined;
@@ -147,4 +161,6 @@ module.exports = class Resolver {
     return null;
   }
 
-};
+}
+
+module.exports = Resolver;
