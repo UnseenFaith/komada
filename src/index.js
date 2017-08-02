@@ -96,6 +96,11 @@ module.exports = {
   */
 
 /**
+  * @external VoiceChannel
+  * @see {@link https://discord.js.org/#/docs/main/master/class/VoiceChannel}
+  */
+
+/**
   * @external User
   * @see {@link https://discord.js.org/#/docs/main/master/class/User}
   */
@@ -129,3 +134,8 @@ module.exports = {
   * @external ShardingManager
   * @see {@link https://discord.js.org/#/docs/main/master/class/ShardingManager}
   */
+
+/**
+ * @external Collection
+ * @see {@link https://discord.js.org/#/docs/main/master/class/Collection}
+ */
