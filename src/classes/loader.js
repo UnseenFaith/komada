@@ -579,4 +579,4 @@ class Loader {
 
 }
 
-module.export = Loader;
+module.exports = Loader;

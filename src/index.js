@@ -1,17 +1,18 @@
 module.exports = {
-  Client: require("./classes/client"),
-  PermLevels: require("./classes/permLevels"),
-  CommandMessage: require("./classes/commandMessage"),
   ArgResolver: require("./classes/argResolver"),
-  Resolver: require("./classes/Resolver"),
-  Loader: require("./classes/loader"),
-  parsedUsage: require("./classes/parsedUsage"),
-  version: require("../package").version,
-  SettingsGateway: require("./classes/settingGateway"),
   CacheManager: require("./classes/cacheManager"),
+  Client: require("./classes/client"),
+  CommandMessage: require("./classes/commandMessage"),
+  Loader: require("./classes/loader"),
+  ParsedUsage: require("./classes/parsedUsage"),
+  PermLevels: require("./classes/permLevels"),
+  Resolver: require("./classes/Resolver"),
   SchemaManager: require("./classes/schemaManager"),
+  SettingsGateway: require("./classes/settingGateway"),
+  SettingResolver: require("./classes/settingResolver"),
+  SettingsCache: require("./classes/settingsCache"),
   SQL: require("./classes/sql"),
-  settingResolver: require("./classes/settingResolver"),
+  version: require("../package.json").version,
 };
 
 /**

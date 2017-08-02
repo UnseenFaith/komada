@@ -334,4 +334,4 @@ class ArgResolver extends Resolver {
 
 }
 
-module.exporots = ArgResolver;
+module.exports = ArgResolver;

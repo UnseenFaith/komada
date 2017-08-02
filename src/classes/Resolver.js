@@ -75,7 +75,7 @@ class Resolver {
 
   /**
    * Resolve a Channel object by its instance of Channel, or by its Snowflake.
-   * @param {(Channel|Snowflake)} channel The channel to validate.
+   * @param {Channel} channel The channel to validate.
    * @returns {Promise<?Channel>}
    */
   async channel(channel) {
@@ -86,7 +86,7 @@ class Resolver {
 
   /**
    * Resolve a Guild object by its instance of Guild, or by its Snowflake.
-   * @param {(Guild|Snowflake)} guild The guild to validate/find.
+   * @param {Guild} guild The guild to validate/find.
    * @returns {Promise<?Guild>}
    */
   async guild(guild) {
@@ -97,7 +97,7 @@ class Resolver {
 
   /**
    * Resolve a Role object by its instance of Role, or by its Snowflake.
-   * @param {(Role|Snowflake)} role The role to validate/find.
+   * @param {Role} role The role to validate/find.
    * @param {Guild} guild The Guild object in which the role can be found.
    * @returns {Promise<?Role>}
    */

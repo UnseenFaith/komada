@@ -2,7 +2,7 @@ const { resolve } = require("path");
 const fs = require("fs-nextra");
 const CacheManager = require("./cacheManager");
 
-const validTypes = ["User", "Channel", "Guild", "Role", "Boolean", "String", "Integer", "Float", "url", "Command"];
+const validTypes = ["User", "Channel", "TextChannel", "VoiceChannel", "Guild", "Role", "Boolean", "String", "Integer", "Float", "url", "Command"];
 
 class SchemaManager extends CacheManager {
 
