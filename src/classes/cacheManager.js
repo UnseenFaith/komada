@@ -1,54 +1,74 @@
 /**
  * Manages the local cache
+ * @class CacheManager
  */
 class CacheManager {
 
   /**
-   * @param {KomadaClient} client The Klasa client
+   * @param {KomadaClient} client The Komada client
    */
   constructor(client) {
-    this.cacheEngine = client.config.provider.cache || "js";
+    /**
+     * The provider SettingGateway will use to store the cache.
+     * @name CacheManager#cacheEngine
+     * @type {string}
+     * @readonly
+     */
+    Object.defineProperty(this, "cacheEngine", { value: client.config.provider.cache || "js" });
+
+    /**
+     * The data stored for this SettingGateway instance.
+     * @name CacheManager#data
+     */
     this.data = this.cacheEngine === "js" ? new client.methods.Collection() : client.providers.get(this.cacheEngine);
   }
 
   /**
-   * Gets a guild from cache
-   * @param {string} guild The guild id
-   * @returns {Object} The guild setting object
+   * Get the data from the cache by its ID.
+   * @name CacheManager#get
+   * @param {string} key The key to search for.
+   * @returns {Object}
    */
-  get(guild) {
-    if (this.cacheEngine === "js") return this.data.get(guild);
-    return this.data.get("guilds", guild);
+  get(key) {
+    if (this.cacheEngine === "js") return this.data.get(key);
+    return this.data.get(this.type, key);
   }
 
   /**
-   * Gets all guilds from cache
-   * @returns {Object[]} All guild setting objects
+   * TODO: This needs to be fixed. When in JS, this.data is a Collection, not an array of objects.
+   * FIX Before v1 Release
+   */
+  /**
+   * Get all the data from the cache as an array of objects.
+   * @name CacheManager#getAll
+   * @returns {Object[]}
    */
   getAll() {
     if (this.cacheEngine === "js") return this.data;
-    return this.data.getAll("guilds");
+    return this.data.getAll(this.type);
   }
 
   /**
-   * Sets a guild setting object to cache
-   * @param {string} guild The guild id
-   * @param {Object} data The guild setting object
-   * @returns {void}
+   * Save a new data to the cache.
+   * @name CacheManager#set
+   * @param {string} key   The data's key.
+   * @param {Object} value The data's value.
+   * @returns {any}
    */
-  set(guild, data) {
-    if (this.cacheEngine === "js") return this.data.set(guild, data);
-    return this.data.set("guilds", guild, data);
+  set(key, value) {
+    if (this.cacheEngine === "js") return this.data.set(key, value);
+    return this.data.set(this.type, key, value);
   }
 
   /**
-   * Deletes a guild from cache
-   * @param {string} guild The guild id
-   * @returns {void}
+   * Delete the selected data from the cache by its ID.
+   * @name CacheManager#delete
+   * @param {string} key The data's key.
+   * @returns {any}
    */
-  delete(guild) {
-    if (this.cacheEngine === "js") return this.data.delete(guild);
-    return this.data.delete("guilds", guild);
+  delete(key) {
+    if (this.cacheEngine === "js") return this.data.delete(key);
+    return this.data.delete(this.type, key);
   }
 
 }
