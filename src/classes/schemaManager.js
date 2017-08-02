@@ -4,17 +4,33 @@ const CacheManager = require("./cacheManager");
 
 const validTypes = ["User", "Channel", "TextChannel", "VoiceChannel", "Guild", "Role", "Boolean", "String", "Integer", "Float", "url", "Command"];
 
+/**
+ * The Schema driver for SettingGateway
+ * @class SchemaManager
+ * @extends {CacheManager}
+ */
 class SchemaManager extends CacheManager {
 
+  /**
+   * @param {KomadaClient} client The Klasa client
+   */
   constructor(client) {
     super(client);
+
+    /**
+     * The schema created for this SchemaManager instance.
+     */
     this.schema = {};
+
+    /**
+     * The default values for this SchemaManager instance.
+     */
     this.defaults = {};
   }
 
   /**
    * Initialize the SchemaManager.
-   * @returns {void}
+   * @returns {Promise<void>}
    */
   async initSchema() {
     const baseDir = resolve(this.client.clientBaseDir, "bwd");
@@ -46,18 +62,29 @@ class SchemaManager extends CacheManager {
   }
 
   /**
-   * Add a new key to the schema.
-   * @param {string} key The key to add.
-   * @param {Object} options Options for the key.
-   * @param {string} options.type The type for the key.
-   * @param {string} options.default The default value for the key.
-   * @param {boolean} options.array Whether the key should be stored as Array or not.
-   * @param {number} options.min The min value for the key (String.length for String, value for number).
-   * @param {number} options.max The max value for the key (String.length for String, value for number).
-   * @param {boolean} [force=false] Whether this change should modify all configurations or not.
-   * @returns {Promise<void>}
+   * @typedef  {Object}  AddOptions
+   * @property {string}  type The type for the key.
+   * @property {string}  default The default value for the key.
+   * @property {number}  min The min value for the key (String.length for String, value for number).
+   * @property {number}  max The max value for the key (String.length for String, value for number).
+   * @property {boolean} array Whether the key should be stored as Array or not.
+   * @memberof SchemaManager
    */
-  async add(key, options, force = false) {
+
+  /**
+   * Add a new key to the schema.
+   * @param {string}     key The key to add.
+   * @param {AddOptions} options Options for the key.
+   * @param {boolean}    [force=false] Whether this change should modify all configurations or not.
+   * @returns {Promise<void>}
+   * @example
+   * // Add a key called 'modlog', being a TextChannel.
+   * SchemaManager.add("modlog", { type: "TextChannel" });
+   *
+   * // Add a key called 'playlist-length', being an Integer with minimum value of 5 and max 20, being 15 by default.
+   * SchemaManager.add("playlist-length", { type: "Integer", default: 15, min: 5, max: 20 });
+   */
+  async add(key, options, force = true) {
     if (key in this.schema) throw `The key ${key} already exists in the current schema.`;
     if (!options.type) throw "The option type is required.";
     if (!validTypes.includes(options.type)) throw `The type ${options.type} is not supported.`;
@@ -80,11 +107,14 @@ class SchemaManager extends CacheManager {
 
   /**
    * Remove a key from the schema.
-   * @param {string} key The key to remove.
+   * @param {string}  key The key to remove.
    * @param {boolean} [force=false] Whether this change should modify all configurations or not.
    * @returns {Promise<void>}
+   * @example
+   * // Remove a key called 'modlog'.
+   * SchemaManager.remove("modlog");
    */
-  async remove(key, force = false) {
+  async remove(key, force = true) {
     if (key === "prefix") throw "You can't remove the prefix key.";
     delete this.schema[key];
     if (force) await this.force("delete", key);
@@ -92,10 +122,10 @@ class SchemaManager extends CacheManager {
   }
 
   /**
-   * Modify all configurations.
+   * Modify all configurations. Do NOT use this directly.
    * @param {string} action Whether reset, add, or delete.
    * @param {string} key The key to update.
-   * @returns {void}
+   * @returns {Promise<void>}
    */
   async force(action, key) {
     if (this.sql) {
