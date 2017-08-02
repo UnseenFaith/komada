@@ -1,7 +1,12 @@
 const Resolver = require("./Resolver");
-
 /* eslint-disable class-methods-use-this */
-module.exports = class SettingResolver extends Resolver {
+
+/**
+ * SettingResolver class for SettingGateway argument parsing.
+ * @class SettingResolver
+ * @extends {Resolver}
+ */
+class SettingResolver extends Resolver {
 
   async user(data) {
     const result = await super.user(data);
@@ -100,4 +105,6 @@ module.exports = class SettingResolver extends Resolver {
     return null;
   }
 
-};
+}
+
+module.exports = SettingResolver;
