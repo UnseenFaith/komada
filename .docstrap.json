@@ -1,6 +1,6 @@
 {
     "templates": {
-      "name"                    : "Documentation",
+      "name"                    : "Komada",
       "footerText"              : "Welcome to Komada's Documentation!",
       "tabNames": {
         "api"                   : "Documentation",
@@ -20,6 +20,7 @@
         "template"              : "node_modules/tui-jsdoc-template",
         "encoding"              : "utf8",
         "destination"           : "./docs/",
+        "tutorials"             : "./examples",
         "recurse"               : true
     }
 }

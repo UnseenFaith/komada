@@ -64,6 +64,7 @@ const defaultPermStructure = new PermLevels()
  * @property {boolean} [cmdPrompt=false] Whether Komada should prompt missing/invalid arguments at failed command execution.
  *
  * @property {OptionsProviders}  [provider={}] The engines for SettingGateway, 'engine' for Persistent Data, 'cache' for Cache Engine (defaults to Collection)
+ * @memberof Komada
  */
 
 /**
