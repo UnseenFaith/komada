@@ -15,6 +15,17 @@ module.exports = {
   version: require("../package.json").version,
 };
 
+
+/**
+ * @name Discord.js
+ */
+
+/**
+ * Collection
+ * @memberof Discord.js
+ * @see {@link https://discord.js.org/#/docs/main/master/class/Collection}
+ */
+
 /**
   * @external Channel
   * @see {@link https://discord.js.org/#/docs/main/master/class/Channel}
