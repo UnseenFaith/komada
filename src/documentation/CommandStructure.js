@@ -1,7 +1,7 @@
 /**
- * All commands will follow this similar structure. It doesn't matter what order they are in.
+ * Commands are pieces of code ran when messages contain the bots prefix. Along with these, we have a full argument parsing system for use in commands.
  * @module Command
- * @example
+ * @example <caption> They will always follow this structure </caption>
  * exports.run = async (client, msg, ...args) => { // code here };
  * exports.help = {};
  * exports.conf = {};
@@ -14,10 +14,19 @@
  * @param  {Array}  args An array of arguments passed through by our argument parser.
  * @example
  * exports.run = (client, msg) => msg.reply("Hello Komada!");
+ * @example
+ * exports.run = async (client, msg) => {
+ *  const message = await msg.channel.send("Hello!");
+ *  return message.edit("Hello from Komada!");
+ * }
+ * @example
+ * exports.run = async function run(client, msg) {
+ *  const message = await msg.channel.send("Hello!");
+ *  return message.edit("Hello from Komada!");
+ * }
  * @return {Promise}
  */
 exports.run = async (client, msg, ...args) => ({}); // eslint-disable-line
-
 
 /**
  * An object containing help information that will help identify and use a command.
