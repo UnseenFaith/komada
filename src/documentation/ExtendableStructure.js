@@ -17,7 +17,7 @@ exports.extend = function() {}; // eslint-disable-line
 
 
 /**
- * An Object containing configuration values that will configure a command.
+ * An Object containing configuration values that will configure an extendable.
  * @typedef {Object} Conf
  * @property {String} type Type of extendable. This will be one of the three: "method", "set", or "get".
  * @property {String} method The name of this extendable.
@@ -26,7 +26,7 @@ exports.extend = function() {}; // eslint-disable-line
 
 
 /**
- * An object that configures the inhibitor.
+ * An object that configures the extendable.
  * @type {Conf}
  * @example <caption> When applied to Message, this would be accessed via <MessageObject>.ping(); </caption>
  * exports.conf = {

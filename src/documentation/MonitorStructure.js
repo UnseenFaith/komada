@@ -20,7 +20,7 @@ exports.run = (client, msg) => {}; // eslint-disable-line
 
 
 /**
- * An Object containing configuration values that will configure a command.
+ * An Object containing configuration values that will configure a monitor.
  * @typedef {Object} Conf
  * @property {Boolean} enabled Whether or not this monitor should be enabled for use.
  * @property {Boolean} ignoreBots Whether or not this monitor should ignore other bots.
@@ -29,7 +29,7 @@ exports.run = (client, msg) => {}; // eslint-disable-line
 
 
 /**
- * An object that configures the inhibitor.
+ * An object that configures the monitor.
  * @type {Conf}
  * @example
  * exports.conf = {

@@ -27,7 +27,7 @@ exports.run = (client, msg, cmd) => ({}); // eslint-disable-line
 
 
 /**
- * An Object containing configuration values that will configure a command.
+ * An Object containing configuration values that will configure a inhibitor.
  * @typedef {Object} Conf
  * @property {Boolean} enabled Whether or not this inhibitor should be enabled for use.
  * @property {Number} priority The priority of this inhibitor. **This will probably be removed in the future**
