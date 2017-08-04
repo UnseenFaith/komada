@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased] - Classbased | Staged for 0.20.6
 ### Added
 - [[#322](https://github.com/dirigeants/komada/pull/322)] SettingGateway is now capable to handle asynchronous cache for internal parsing.
-- [[#313](https://github.com/dirigeants/komada/pull/317)] Added `client.settings`, to handle multiple
+- [[#313](https://github.com/dirigeants/komada/pull/313)] Added `client.settings`, to handle multiple
 instances of SettingGateway.
 - [[#317](https://github.com/dirigeants/komada/pull/317)] `client.owner` is now a thing.
 - [[#298](https://github.com/dirigeants/komada/pull/298)] `config.ownerID` is automatically detected now.
