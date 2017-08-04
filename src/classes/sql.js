@@ -64,7 +64,6 @@ class SQL {
 
   /**
    * Init the deserialization keys for SQL providers.
-   * @param {Object} schema The schema object.
    */
   initDeserialize() {
     this.deserializeKeys = [];
@@ -98,7 +97,7 @@ class SQL {
     const keys = Object.keys(defaults);
     if (!keys.includes("id")) keys.push("id");
     const columns = keys.filter(k => k !== key);
-    await this.provider.updateColumns("guilds", columns, newSQLSchema);
+    await this.provider.updateColumns(this.gateway.type, columns, newSQLSchema);
     this.initDeserialize();
 
     return true;
