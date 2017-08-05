@@ -4,10 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased] - Classbased | Staged for 0.20.6
+## [Unreleased] - Classbased | Staged for 0.20.7
 ### Added
-- [[#322](https://github.com/dirigeants/komada/pull/322)] SettingGateway is now capable to handle asynchronous cache for internal parsing.
-- [[#313](https://github.com/dirigeants/komada/pull/313)] Added `client.settings`, to handle multiple
+- [[#323](https://github.com/dirigeants/komada/pull/323)] Documentation to all pieces.
+- [[#323](https://github.com/dirigeants/komada/pull/323)] Added the types `TextChannel` and `VoiceChannel` to the
+compatible types for `SchemaManager`, as a way to prevent security issues.
+- [[#322](https://github.com/dirigeants/komada/pull/322)] SettingGateway is now capable to handle asynchronous cache for
+internal parsing.
+- [[#313](https://github.com/dirigeants/komada/pull/317)] Added `client.settings`, to handle multiple
 instances of SettingGateway.
 - [[#317](https://github.com/dirigeants/komada/pull/317)] `client.owner` is now a thing.
 - [[#298](https://github.com/dirigeants/komada/pull/298)] `config.ownerID` is automatically detected now.
@@ -68,6 +72,8 @@ keyword. `exports.run = __async__ (client, msg, [...args])`.
 command.
 
 ### Changed
+- [[#323](https://github.com/dirigeants/komada/pull/323)] Made `this.provider` a getter in `SQL`, so it updates when
+reloading the provider.
 - [[#322](https://github.com/dirigeants/komada/pull/322)] **[BREAKING]** `SettingGateway#update`'s arguments are now `key`, `object` and `?guild`, allowing instances of SG which resolver aimed to non-Guild classes to parse correctly. The argument `object` can contain multiple keys. (So SG will update all keys from the object at once). Previously, you could update only a pair `key-value`.
 - [[#322](https://github.com/dirigeants/komada/pull/322)] Safer editing when using SettingGateway, now ensuring the settings has been created before inserting the data. (Fixes an issue when the data was inserted without creating it before).
 - [[#317](https://github.com/dirigeants/komada/pull/317)] **[BREAKING]** `client.settingGateway` has been changed to 
@@ -126,6 +132,12 @@ core event.
 cached an implied permissions object, instead of generating a new object every time a command is run.
 
 ### Fixed
+- [[#323](https://github.com/dirigeants/komada/pull/323)] **[BugFix]** `SettingGateway#getResolved` was not accepting
+any other table than `guilds`.
+- [[#323](https://github.com/dirigeants/komada/pull/323)] **[BugFix]** `CacheManager` was not accepting any other table
+than `guilds`.
+- [[#323](https://github.com/dirigeants/komada/pull/323)] **[BugFix]** `SQL` was not accepting any other table than
+`guilds`.
 - [[#322](https://github.com/dirigeants/komada/pull/322)] **[BugFix]** `SettingGateway#sync` not being running properly.
 - [[#322](https://github.com/dirigeants/komada/pull/322)] **[BugFix]** Settings not being created properly.
 - [[#290](https://github.com/dirigeants/komada/pull/290)] **[BugFix]** Fixed reload commands.
