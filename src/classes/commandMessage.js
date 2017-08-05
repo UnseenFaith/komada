@@ -1,7 +1,3 @@
-/**
- * The internal class that turns command arguments into command parameters
- * @extends {external:Collection}
- */
 class CommandMessage {
 
 /* eslint-disable no-underscore-dangle, no-throw-literal, newline-per-chained-call */
