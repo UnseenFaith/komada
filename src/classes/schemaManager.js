@@ -75,7 +75,7 @@ class SchemaManager extends CacheManager {
    * Add a new key to the schema.
    * @param {string}     key The key to add.
    * @param {AddOptions} options Options for the key.
-   * @param {boolean}    [force=false] Whether this change should modify all configurations or not.
+   * @param {boolean}    [force=true] Whether this change should modify all configurations or not.
    * @returns {Promise<void>}
    * @example
    * // Add a key called 'modlog', being a TextChannel.
