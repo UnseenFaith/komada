@@ -95,7 +95,7 @@ class SchemaManager extends CacheManager {
       if (!options.default) options.default = [];
       else if (!(options.default instanceof Array)) throw "The option default must be an array if the array option is set to true.";
     } else {
-      if (!options.default) options.default = null;
+      if (!("default" in options)) options.default = null;
       options.array = false;
     }
     if (this.sql) options.sql = this.sql.buildSingleSQLSchema(options);
