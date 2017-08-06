@@ -1,0 +1,26 @@
+{
+    "templates": {
+      "name"                    : "Komada",
+      "footerText"              : "Welcome to Komada's Documentation!",
+      "tabNames": {
+        "api"                   : "Documentation",
+        "tutorials"             : "Examples"
+      },
+      "logo": {
+        "url"                   : "https://cdn.discordapp.com/avatars/275809850422722560/14149c5c7e9801db6b0f8b45b9ada0b5.png",
+        "width"                 : "100px",
+        "height"                : "100px",
+        "link"                  : "https://github.com/dirigeants/komada"
+      }
+    },
+    "source": {
+        "include"               : [ "./src"]
+    },
+    "opts": {
+        "template"              : "node_modules/tui-jsdoc-template",
+        "encoding"              : "utf8",
+        "destination"           : "./docs/",
+        "tutorials"             : "./examples",
+        "recurse"               : true
+    }
+}

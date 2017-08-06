@@ -1,7 +1,12 @@
 const Resolver = require("./Resolver");
+/* eslint-disable class-methods-use-this */
 
-/* eslint-disable no-throw-literal, class-methods-use-this */
-module.exports = class SettingResolver extends Resolver {
+/**
+ * SettingResolver class for SettingGateway argument parsing.
+ * @class SettingResolver
+ * @extends {Resolver}
+ */
+class SettingResolver extends Resolver {
 
   async user(data) {
     const result = await super.user(data);
@@ -12,6 +17,18 @@ module.exports = class SettingResolver extends Resolver {
   async channel(data) {
     const result = await super.channel(data);
     if (!result) throw "This key expects a Channel Object or ID.";
+    return result;
+  }
+
+  async textchannel(data) {
+    const result = await this.channel(data);
+    if (result.type !== "text") throw "This key expects a TextChannel Object or ID.";
+    return result;
+  }
+
+  async voicechannel(data) {
+    const result = await this.channel(data);
+    if (result.type !== "voice") throw "This key expects a VoiceChannel Object or ID.";
     return result;
   }
 
@@ -88,4 +105,6 @@ module.exports = class SettingResolver extends Resolver {
     return null;
   }
 
-};
+}
+
+module.exports = SettingResolver;

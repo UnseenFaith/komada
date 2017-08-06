@@ -1,6 +1,6 @@
 {
   "name": "komada",
-  "version": "0.20.6",
+  "version": "0.20.7",
   "description": "Komada: Croatian for 'pieces', is a modular bot system including reloading modules and easy to use custom commands.",
   "homepage": "https://github.com/dirigeants/komada#readme",
   "bugs": {
@@ -8,14 +8,15 @@
   },
   "license": "MIT",
   "author": "Evelyne Lachance",
-  "main": "index.js",
+  "main": "src/index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/dirigeants/komada.git"
   },
   "scripts": {
     "lint": "npm run test -- --fix",
-    "test": "eslint classes commands finalizers functions inhibitors events extendables"
+    "test": "npx eslint src",
+    "docs": "npx jsdoc -c ./.docstrap.json -R README.md"
   },
   "dependencies": {
     "chalk": "^2.0.1",
@@ -28,7 +29,10 @@
   "devDependencies": {
     "eslint": "^4.3.0",
     "eslint-config-airbnb-base": "^11.3.1",
-    "eslint-plugin-import": "^2.7.0"
+    "eslint-plugin-import": "^2.7.0",
+    "ink-docstrap": "^1.3.0",
+    "jsdoc": "github:jsdoc3/jsdoc#master",
+    "tui-jsdoc-template": "github:dirigeants/tui.jsdoc-template"
   },
   "peerDependencies": {
     "dotenv": "^4.0.0"

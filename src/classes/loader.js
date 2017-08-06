@@ -17,9 +17,21 @@ const coreProtected = {
 };
 
 /* eslint-disable no-throw-literal, import/no-dynamic-require, class-methods-use-this */
-module.exports = class Loader {
+/**
+ * The loader class that handles loading all of the pieces into Komada.
+ * @private
+ */
+class Loader {
 
+/**
+ * Constructs the class so that pieces can be loaded.
+ * @param  {KomadaClient} client The komada client
+ */
   constructor(client) {
+    /**
+     * The komada client
+     * @type {KomadaClient}
+     */
     Object.defineProperty(this, "client", { value: client });
     const makeDirsObject = dir => ({
       functions: resolve(dir, "functions"),
@@ -31,10 +43,23 @@ module.exports = class Loader {
       providers: resolve(dir, "providers"),
       extendables: resolve(dir, "extendables"),
     });
+
+    /**
+     * An object containing string paths to piece folders for the core of Komada
+     * @type {Object}
+     */
     this.coreDirs = makeDirsObject(this.client.coreBaseDir);
+
+    /**
+     * An object containing string paths to piece folders for the user side of Komada
+     * @type {Object}
+     */
     this.clientDirs = makeDirsObject(this.client.clientBaseDir);
   }
 
+  /**
+   * Loads all of the pieces into Komada
+   */
   async loadAll() {
     const [funcs, [commands, aliases], inhibitors, finalizers, events, monitors, providers, extendables] = await Promise.all([
       this.loadFunctions(),
@@ -61,6 +86,10 @@ module.exports = class Loader {
     ].join("\n"));
   }
 
+  /**
+   * Loads all of functions from both the core and client directories
+   * @return {Promise<number>} The number of functions loaded into Komada
+   */
   async loadFunctions() {
     const coreFiles = await fs.readdir(this.coreDirs.functions)
       .catch(() => { fs.ensureDir(this.coreDirs.functions).catch(err => this.client.emit("error", err)); });
@@ -79,11 +108,21 @@ module.exports = class Loader {
     return (coreFiles ? coreFiles.length : 0) + (userFiles ? userFiles.length : 0);
   }
 
+  /**
+   * Loads a new function into Komada
+   * @param  {string} file The file we're loading into komada.
+   * @param  {string} dir The directory from which we're loading the functions from
+   */
   loadNewFunction(file, dir) {
     this[file.split(".")[0]] = require(join(dir, file));
     delete require.cache[join(dir, file)];
   }
 
+  /**
+   * Reloads a function
+   * @param  {string}  name A string representing the function name
+   * @return {Promise<string>}
+   */
   async reloadFunction(name) {
     const file = name.endsWith(".js") ? name : `${name}.js`;
     if (name.endsWith(".js")) name = name.slice(0, -3);
@@ -96,6 +135,10 @@ module.exports = class Loader {
     return `Successfully reloaded the function ${name}.`;
   }
 
+  /**
+   * Loads all commands into Komada
+   * @return {Promise<Array>} An array containing the number of commands and aliases loading into Komada
+   */
   async loadCommands() {
     this.client.commands.clear();
     this.client.aliases.clear();
@@ -106,6 +149,11 @@ module.exports = class Loader {
     return [this.client.commands.size, this.client.aliases.size];
   }
 
+  /**
+   * Walks the command directories
+   * @param  {string}  dir The directory we are walking for commands.
+   * @return {Promise}
+   */
   async walkCommandDirectories(dir) {
     const files = await fs.readdir(dir)
       .catch(() => { fs.ensureDir(dir).catch(err => this.client.emit("error", err)); });
@@ -137,6 +185,11 @@ module.exports = class Loader {
     return Promise.all(mps2).catch((err) => { throw err; });
   }
 
+  /**
+   * Loads a new command
+   * @param  {Array} file An array of file information for the command we're loading.
+   * @param  {string} dir The directory we're loading this new command from.
+   */
   loadNewCommand(file, dir) {
     const cmd = require(join(dir, ...file));
     cmd.help.fullCategory = file.slice(0, -1);
@@ -150,6 +203,11 @@ module.exports = class Loader {
     delete require.cache[join(dir, ...file)];
   }
 
+  /**
+   * Reloads the given command name.
+   * @param  {string}  name The name of the command we are reloading
+   * @return {Promise<string>}
+   */
   async reloadCommand(name) {
     if (name.endsWith(".js")) name = name.slice(0, -3);
     name = join(...name.split("/"));
@@ -170,6 +228,10 @@ module.exports = class Loader {
     return `Successfully reloaded the command ${name}.`;
   }
 
+  /**
+   * Loads command inhibitors into Komada
+   * @return {Promise<number>} The number of inhibitors loaded.
+   */
   async loadCommandInhibitors() {
     this.client.commandInhibitors.clear();
     const coreFiles = await fs.readdir(this.coreDirs.inhibitors)
@@ -190,11 +252,21 @@ module.exports = class Loader {
     return this.client.commandInhibitors.size;
   }
 
+  /**
+   * Loads a new inhibitor
+   * @param  {string} file The file we are loading
+   * @param  {string} dir The location from where we are loading
+   */
   loadNewInhibitor(file, dir) {
     this.client.commandInhibitors.set(file.split(".")[0], require(join(dir, file)));
     delete require.cache[join(dir, file)];
   }
 
+  /**
+   * Reloads an inhibitor
+   * @param  {string}  name The inhibitor we are reloading.
+   * @return {Promise<string>}
+   */
   async reloadInhibitor(name) {
     const file = name.endsWith(".js") ? name : `${name}.js`;
     if (name.endsWith(".js")) name = name.slice(0, -3);
@@ -211,6 +283,10 @@ module.exports = class Loader {
     this.client.commandInhibitors = this.client.commandInhibitors.sort((low, high) => low.conf.priority < high.conf.priority);
   }
 
+  /**
+   * Loads command finalizes into Komada
+   * @return {Promise<number>} The number of finalizers loaded
+   */
   async loadCommandFinalizers() {
     this.client.commandFinalizers.clear();
     const coreFiles = await fs.readdir(this.coreDirs.finalizers)
@@ -230,11 +306,21 @@ module.exports = class Loader {
     return this.client.commandFinalizers.size;
   }
 
+  /**
+   * Loads new finalizers
+   * @param  {string} file The file we are loading
+   * @param  {string} dir  The dir we are loading from
+   */
   loadNewFinalizer(file, dir) {
     this.client.commandFinalizers.set(file.split(".")[0], require(join(dir, file)));
     delete require.cache[join(dir, file)];
   }
 
+  /**
+   * Reloads a finalizer
+   * @param  {string}  name The name of the finalize we are reloading
+   * @return {Promise<string>}
+   */
   async reloadFinalizer(name) {
     const file = name.endsWith(".js") ? name : `${name}.js`;
     if (name.endsWith(".js")) name = name.slice(0, -3);
@@ -246,6 +332,10 @@ module.exports = class Loader {
     return `Successfully reloaded the finalizer ${name}.`;
   }
 
+  /**
+   * Loads events into Komada
+   * @return {Promise<number>} The number of events loaded.
+   */
   async loadEvents() {
     this.client.eventHandlers.forEach((listener, event) => this.client.removeListener(event, listener));
     this.client.eventHandlers.clear();
@@ -266,6 +356,11 @@ module.exports = class Loader {
     return this.client.eventHandlers.size;
   }
 
+  /**
+   * Loads a new event into Komada
+   * @param  {string} file The file we are loading
+   * @param  {string} dir The directory we are loading from
+   */
   loadNewEvent(file, dir) {
     const eventName = file.split(".")[0];
     this.client.eventHandlers.set(eventName, (...args) => require(join(dir, file)).run(this.client, ...args));
@@ -273,6 +368,11 @@ module.exports = class Loader {
     delete require.cache[join(dir, file)];
   }
 
+  /**
+   * Reloads a new event
+   * @param  {string}  name The nme of the event we are reloading
+   * @return {Promise<string>}
+   */
   async reloadEvent(name) {
     const file = name.endsWith(".js") ? name : `${name}.js`;
     if (name.endsWith(".js")) name = name.slice(0, -3);
@@ -285,6 +385,10 @@ module.exports = class Loader {
     return `Successfully reloaded the event ${name}.`;
   }
 
+  /**
+   * The message monitors beling loaded into Komada
+   * @return {Promise<number>} The number of monitors loaded into Komada
+   */
   async loadMessageMonitors() {
     this.client.messageMonitors.clear();
     const coreFiles = await fs.readdir(this.coreDirs.monitors)
@@ -304,11 +408,21 @@ module.exports = class Loader {
     return this.client.messageMonitors.size;
   }
 
+  /**
+   * Loads a new monitor into Komada
+   * @param  {string} file The file we are loading
+   * @param  {string} dir The directory we are loading from
+   */
   loadNewMessageMonitor(file, dir) {
     this.client.messageMonitors.set(file.split(".")[0], require(join(dir, file)));
     delete require.cache[join(dir, file)];
   }
 
+  /**
+   * Reloads a Message monitor
+   * @param  {string}  name The name of the monitor we are reloading
+   * @return {Promise<string>}
+   */
   async reloadMessageMonitor(name) {
     const file = name.endsWith(".js") ? name : `${name}.js`;
     if (name.endsWith(".js")) name = name.slice(0, -3);
@@ -320,6 +434,10 @@ module.exports = class Loader {
     return `Successfully reloaded the monitor ${name}.`;
   }
 
+  /**
+   * Loads providers into Komada
+   * @return {Promise<number>} The number of providers loaded into Komada
+   */
   async loadProviders() {
     this.client.providers.clear();
     const coreFiles = await fs.readdir(this.coreDirs.providers)
@@ -339,11 +457,21 @@ module.exports = class Loader {
     return this.client.providers.size;
   }
 
+  /**
+   * Loads a new provider into Komada
+   * @param  {string} file The file we are loading
+   * @param  {stirng} dir The directory we are loading from.
+   */
   loadNewProvider(file, dir) {
     this.client.providers.set(file.split(".")[0], require(join(dir, file)));
     delete require.cache[join(dir, file)];
   }
 
+  /**
+   * Reloads a provider
+   * @param  {string}  name The name of the provider we are reloading
+   * @return {Promise<string>}
+   */
   async reloadProvider(name) {
     const file = name.endsWith(".js") ? name : `${name}.js`;
     if (name.endsWith(".js")) name = name.slice(0, -3);
@@ -357,6 +485,10 @@ module.exports = class Loader {
     return `Successfully reloaded the provider ${name}.`;
   }
 
+  /**
+   * Loads an extendble into Komada
+   * @return {Promise<number>} The number of extendables loaded into Komada
+   */
   async loadExtendables() {
     const coreFiles = await fs.readdir(this.coreDirs.extendables)
       .catch(() => { fs.ensureDir(this.coreDirs.extendables).catch(err => this.client.emit("error", err)); });
@@ -375,6 +507,11 @@ module.exports = class Loader {
     return (coreFiles ? coreFiles.length : 0) + (userFiles ? userFiles.length : 0);
   }
 
+  /**
+   * Loads a new extendable into Komada
+   * @param  {string} file The file we are loading
+   * @param  {string} dir The directory we are loading from.
+   */
   loadNewExtendable(file, dir) {
     const extendable = require(join(dir, file));
     let myExtend;
@@ -399,6 +536,13 @@ module.exports = class Loader {
   }
 
 
+  /**
+   * Loads an array of files into Komada
+   * @param  {Array}  files The files we are loading
+   * @param  {string}  dir The directory we are loading the files from
+   * @param  {Function}  loadNew The loadNew function
+   * @param  {Function}  startOver The loadAll function
+   */
   async loadFiles(files, dir, loadNew, startOver) {
     try {
       files.forEach(file => loadNew.call(this, file, dir));
@@ -417,6 +561,10 @@ module.exports = class Loader {
     }
   }
 
+  /**
+   * Installs an NPM module if it can't be found.
+   * @param  {string}  missingModule The name of the missing module
+   */
   async installNPM(missingModule) {
     console.log(`Installing: ${missingModule}`);
     const { stdout, stderr } = await exec(`npm i ${missingModule}`, { cwd: this.client.clientBaseDir }).catch((err) => {
@@ -429,4 +577,6 @@ module.exports = class Loader {
     console.error(stderr);
   }
 
-};
+}
+
+module.exports = Loader;
