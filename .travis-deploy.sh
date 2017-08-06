@@ -3,7 +3,7 @@
 
 set -e
 
-if [ "$TRAVIS_BRANCH" != "indev" -o -n "$TRAVIS_TAG" -o "$TRAVIS_PULL_REQUEST" != "false" ]; then
+if [ "$TRAVIS_BRANCH" != "master" -o -n "$TRAVIS_TAG" -o "$TRAVIS_PULL_REQUEST" != "false" ]; then
   echo -e "Not building for a non indev branch push - building without deploying."
   npm run docs
   exit 0
@@ -14,7 +14,7 @@ echo -e "Building for a indev branch push - building and deploying."
 REPO=$(git config remote.origin.url)
 SHA=$(git rev-parse --verify HEAD)
 
-TARGET_BRANCH="indev"
+TARGET_BRANCH="master"
 git clone $REPO dist -b $TARGET_BRANCH
 
 npm run docs
