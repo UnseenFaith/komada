@@ -1,0 +1,671 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Source: classes/loader.js | Komada</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/tui-doc.css">
+
+    
+</head>
+<body>
+<nav class="lnb" id="lnb">
+    <div class="logo" style="width: 100px; height: 100px">
+        
+            <a href="https://github.com/dirigeants/komada" rel="noopener noreferrer" target="_blank">
+                <img src="https://cdn.discordapp.com/avatars/275809850422722560/14149c5c7e9801db6b0f8b45b9ada0b5.png" width="100%" height="100%">
+            </a>
+        
+    </div>
+    <div class="title">
+        <h1><a href="index.html" class="link">Komada</a></h1>
+        
+    </div>
+    <div class="search-container" id="search-container">
+        <input type="text" placeholder="Search">
+        <ul></ul>
+    </div>
+    
+        <ol class="lnb-tab">
+            <li id="api-tab">
+                <a href="#"><h4>Documentation</h4></a>
+            </li>
+            <li id="examples-tab">
+                <a href="#"><h4>Examples</h4></a>
+            </li>
+        </ol>
+    
+    <div class="lnb-api hidden"><h3>Modules</h3><ul><li><a href="module-Command.html">Command</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Command_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="module-Command.html#.conf">conf</a></li><li><a href="module-Command.html#.help">help</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Command.html#.run">run</a></li></ul><div class="member-type">Typedef</div><ul class="inner"><li><a href="module-Command.html#~Conf">Conf</a></li><li><a href="module-Command.html#~Help">Help</a></li></ul></div></li><li><a href="module-Event.html">Event</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Event_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Event.html#.run">run</a></li></ul></div></li><li><a href="module-Extendable.html">Extendable</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Extendable_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="module-Extendable.html#.conf">conf</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Extendable.html#.extend">extend</a></li></ul><div class="member-type">Typedef</div><ul class="inner"><li><a href="module-Extendable.html#~Conf">Conf</a></li></ul></div></li><li><a href="module-Functions.html">Functions</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Functions_sub"></div></li><li><a href="module-Inhibitor.html">Inhibitor</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Inhibitor_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="module-Inhibitor.html#.conf">conf</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Inhibitor.html#.run">run</a></li></ul><div class="member-type">Typedef</div><ul class="inner"><li><a href="module-Inhibitor.html#~Conf">Conf</a></li></ul></div></li><li><a href="module-Monitor.html">Monitor</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Monitor_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="module-Monitor.html#.conf">conf</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Monitor.html#.run">run</a></li></ul><div class="member-type">Typedef</div><ul class="inner"><li><a href="module-Monitor.html#~Conf">Conf</a></li></ul></div></li><li><a href="module-Provider.html">Provider</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Provider_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="module-Provider.html#.conf">conf</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Provider.html#.create">create</a></li><li><a href="module-Provider.html#.createTable">createTable</a></li><li><a href="module-Provider.html#.delete">delete</a></li><li><a href="module-Provider.html#.get">get</a></li><li><a href="module-Provider.html#.getAll">getAll</a></li><li><a href="module-Provider.html#.hasTable">hasTable</a></li><li><a href="module-Provider.html#.replace">replace</a></li><li><a href="module-Provider.html#.update">update</a></li></ul></div></li><li><a href="module-ProviderSQL.html">ProviderSQL</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:ProviderSQL_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="module-ProviderSQL.html#.CONSTANTS">CONSTANTS</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="module-ProviderSQL.html#.sanitize">sanitize</a></li><li><a href="module-ProviderSQL.html#.serialize">serialize</a></li><li><a href="module-ProviderSQL.html#.updateColumns">updateColumns</a></li></ul></div></li></ul></div><div class="lnb-api hidden"><h3>Externals</h3><ul><li><a href="external-Channel.html">Channel</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:Channel_sub"></div></li><li><a href="external-Client.html">Client</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:Client_sub"></div></li><li><a href="external-Collection.html">Collection</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:Collection_sub"></div></li><li><a href="external-DiscordJSConfig.html">DiscordJSConfig</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:DiscordJSConfig_sub"></div></li><li><a href="external-DMChannel.html">DMChannel</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:DMChannel_sub"></div></li><li><a href="external-Emoji.html">Emoji</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:Emoji_sub"></div></li><li><a href="external-GroupDMChannel.html">GroupDMChannel</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:GroupDMChannel_sub"></div></li><li><a href="external-Guild.html">Guild</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:Guild_sub"></div></li><li><a href="external-GuildMember.html">GuildMember</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:GuildMember_sub"></div></li><li><a href="external-GuildResolvable.html">GuildResolvable</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:GuildResolvable_sub"></div></li><li><a href="external-Message.html">Message</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:Message_sub"></div></li><li><a href="external-MessageAttachment.html">MessageAttachment</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:MessageAttachment_sub"></div></li><li><a href="external-MessageEmbed.html">MessageEmbed</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:MessageEmbed_sub"></div></li><li><a href="external-MessageOptions.html">MessageOptions</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:MessageOptions_sub"></div></li><li><a href="external-MessageReaction.html">MessageReaction</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:MessageReaction_sub"></div></li><li><a href="external-ReactionEmoji.html">ReactionEmoji</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:ReactionEmoji_sub"></div></li><li><a href="external-Role.html">Role</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:Role_sub"></div></li><li><a href="external-ShardingManager.html">ShardingManager</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:ShardingManager_sub"></div></li><li><a href="external-StringResolvable.html">StringResolvable</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:StringResolvable_sub"></div></li><li><a href="external-TextChannel.html">TextChannel</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:TextChannel_sub"></div></li><li><a href="external-User.html">User</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:User_sub"></div></li><li><a href="external-UserResolvable.html">UserResolvable</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:UserResolvable_sub"></div></li><li><a href="external-VoiceChannel.html">VoiceChannel</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:VoiceChannel_sub"></div></li><li><a href="external-Webhook.html">Webhook</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:Webhook_sub"></div></li></ul></div><div class="lnb-api hidden"><h3>Classes</h3><ul><li><a href="ArgResolver.html">ArgResolver</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="ArgResolver_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="ArgResolver.html#bool">bool</a></li><li><a href="ArgResolver.html#boolean">boolean</a></li><li><a href="ArgResolver.html#channel">channel</a></li><li><a href="ArgResolver.html#float">float</a></li><li><a href="ArgResolver.html#guild">guild</a></li><li><a href="ArgResolver.html#int">int</a></li><li><a href="ArgResolver.html#integer">integer</a></li><li><a href="ArgResolver.html#literal">literal</a></li><li><a href="ArgResolver.html#member">member</a></li><li><a href="ArgResolver.html#mention">mention</a></li><li><a href="ArgResolver.html#message">message</a></li><li><a href="ArgResolver.html#msg">msg</a></li><li><a href="ArgResolver.html#msgs">msgs</a></li><li><a href="ArgResolver.html#num">num</a></li><li><a href="ArgResolver.html#number">number</a></li><li><a href="ArgResolver.html#role">role</a></li><li><a href="ArgResolver.html#str">str</a></li><li><a href="ArgResolver.html#string">string</a></li><li><a href="ArgResolver.html#url">url</a></li><li><a href="ArgResolver.html#user">user</a></li></ul></div></li><li><a href="CacheManager.html">CacheManager</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="CacheManager_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="CacheManager.html#cacheEngine">cacheEngine</a></li><li><a href="CacheManager.html#data">data</a></li><li><a href="CacheManager.html#delete">delete</a></li><li><a href="CacheManager.html#get">get</a></li><li><a href="CacheManager.html#getAll">getAll</a></li><li><a href="CacheManager.html#set">set</a></li></ul></div></li><li><a href="CommandMessage.html">CommandMessage</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="CommandMessage_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="CommandMessage.html#args">args</a></li><li><a href="CommandMessage.html#client">client</a></li><li><a href="CommandMessage.html#cmd">cmd</a></li><li><a href="CommandMessage.html#msg">msg</a></li><li><a href="CommandMessage.html#params">params</a></li><li><a href="CommandMessage.html#prefix">prefix</a></li><li><a href="CommandMessage.html#prefixLength">prefixLength</a></li><li><a href="CommandMessage.html#reprompted">reprompted</a></li></ul></div></li><li><a href="Komada.html">Komada</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Komada_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="Komada.html#aliases">aliases</a></li><li><a href="Komada.html#application">application</a></li><li><a href="Komada.html#argResolver">argResolver</a></li><li><a href="Komada.html#clientBaseDir">clientBaseDir</a></li><li><a href="Komada.html#commandFinalizers">commandFinalizers</a></li><li><a href="Komada.html#commandInhibitors">commandInhibitors</a></li><li><a href="Komada.html#CommandMessage">CommandMessage</a></li><li><a href="Komada.html#commandMessageLifetime">commandMessageLifetime</a></li><li><a href="Komada.html#commandMessages">commandMessages</a></li><li><a href="Komada.html#commandMessageSweep">commandMessageSweep</a></li><li><a href="Komada.html#commands">commands</a></li><li><a href="Komada.html#coreBaseDir">coreBaseDir</a></li><li><a href="Komada.html#eventHandlers">eventHandlers</a></li><li><a href="Komada.html#funcs">funcs</a></li><li><a href="Komada.html#invite">invite</a></li><li><a href="Komada.html#messageMonitors">messageMonitors</a></li><li><a href="Komada.html#methods">methods</a></li><li><a href="Komada.html#owner">owner</a></li><li><a href="Komada.html#permStructure">permStructure</a></li><li><a href="Komada.html#providers">providers</a></li><li><a href="Komada.html#ready">ready</a></li><li><a href="Komada.html#settings">settings</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="Komada.html#login">login</a></li><li><a href="Komada.html#sweepCommandMessages">sweepCommandMessages</a></li></ul><div class="member-type">Typedef</div><ul class="inner"><li><a href="Komada.html#.KomadaOptions">KomadaOptions</a></li></ul></div></li><li><a href="ParsedUsage.html">ParsedUsage</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="ParsedUsage_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="ParsedUsage.html#client">client</a></li><li><a href="ParsedUsage.html#commands">commands</a></li><li><a href="ParsedUsage.html#deliminatedUsage">deliminatedUsage</a></li><li><a href="ParsedUsage.html#names">names</a></li><li><a href="ParsedUsage.html#nearlyFullUsage">nearlyFullUsage</a></li><li><a href="ParsedUsage.html#parsedUsage">parsedUsage</a></li><li><a href="ParsedUsage.html#usageString">usageString</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="ParsedUsage.html#fullUsage">fullUsage</a></li></ul></div></li><li><a href="PermissionLevels.html">PermissionLevels</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="PermissionLevels_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="PermissionLevels.html#levels">levels</a></li><li><a href="PermissionLevels.html#structure">structure</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="PermissionLevels.html#addLevel">addLevel</a></li></ul><div class="member-type">Typedef</div><ul class="inner"><li><a href="PermissionLevels.html#.permLevel">permLevel</a></li><li><a href="PermissionLevels.html#.validPermStructure">validPermStructure</a></li></ul></div></li><li><a href="Resolver.html">Resolver</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Resolver_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="Resolver.html#boolean">boolean</a></li><li><a href="Resolver.html#channel">channel</a></li><li><a href="Resolver.html#float">float</a></li><li><a href="Resolver.html#guild">guild</a></li><li><a href="Resolver.html#integer">integer</a></li><li><a href="Resolver.html#member">member</a></li><li><a href="Resolver.html#msg">msg</a></li><li><a href="Resolver.html#msgs">msgs</a></li><li><a href="Resolver.html#role">role</a></li><li><a href="Resolver.html#string">string</a></li><li><a href="Resolver.html#url">url</a></li><li><a href="Resolver.html#user">user</a></li></ul></div></li><li><a href="SchemaManager.html">SchemaManager</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="SchemaManager_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="SchemaManager.html#cacheEngine">cacheEngine</a></li><li><a href="SchemaManager.html#data">data</a></li><li><a href="SchemaManager.html#defaults">defaults</a></li><li><a href="SchemaManager.html#delete">delete</a></li><li><a href="SchemaManager.html#get">get</a></li><li><a href="SchemaManager.html#getAll">getAll</a></li><li><a href="SchemaManager.html#schema">schema</a></li><li><a href="SchemaManager.html#set">set</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="SchemaManager.html#add">add</a></li><li><a href="SchemaManager.html#force">force</a></li><li><a href="SchemaManager.html#initSchema">initSchema</a></li><li><a href="SchemaManager.html#remove">remove</a></li><li><a href="SchemaManager.html#validateSchema">validateSchema</a></li></ul><div class="member-type">Typedef</div><ul class="inner"><li><a href="SchemaManager.html#.AddOptions">AddOptions</a></li></ul></div></li><li><a href="SettingGateway.html">SettingGateway</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="SettingGateway_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="SettingGateway.html#cacheEngine">cacheEngine</a></li><li><a href="SettingGateway.html#client">client</a></li><li><a href="SettingGateway.html#create">create</a></li><li><a href="SettingGateway.html#data">data</a></li><li><a href="SettingGateway.html#defaultDataSchema">defaultDataSchema</a></li><li><a href="SettingGateway.html#defaults">defaults</a></li><li><a href="SettingGateway.html#delete">delete</a></li><li><a href="SettingGateway.html#destroy">destroy</a></li><li><a href="SettingGateway.html#engine">engine</a></li><li><a href="SettingGateway.html#ensureCreate">ensureCreate</a></li><li><a href="SettingGateway.html#get">get</a></li><li><a href="SettingGateway.html#getAll">getAll</a></li><li><a href="SettingGateway.html#getResolved">getResolved</a></li><li><a href="SettingGateway.html#init">init</a></li><li><a href="SettingGateway.html#provider">provider</a></li><li><a href="SettingGateway.html#reset">reset</a></li><li><a href="SettingGateway.html#resolver">resolver</a></li><li><a href="SettingGateway.html#schema">schema</a></li><li><a href="SettingGateway.html#set">set</a></li><li><a href="SettingGateway.html#sql">sql</a></li><li><a href="SettingGateway.html#store">store</a></li><li><a href="SettingGateway.html#sync">sync</a></li><li><a href="SettingGateway.html#type">type</a></li><li><a href="SettingGateway.html#update">update</a></li><li><a href="SettingGateway.html#updateArray">updateArray</a></li><li><a href="SettingGateway.html#validate">validate</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="SettingGateway.html#add">add</a></li><li><a href="SettingGateway.html#force">force</a></li><li><a href="SettingGateway.html#initSchema">initSchema</a></li><li><a href="SettingGateway.html#remove">remove</a></li><li><a href="SettingGateway.html#validateSchema">validateSchema</a></li></ul></div></li><li><a href="SettingResolver.html">SettingResolver</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="SettingResolver_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="SettingResolver.html#.maxOrMin">maxOrMin</a></li><li><a href="SettingResolver.html#boolean">boolean</a></li><li><a href="SettingResolver.html#channel">channel</a></li><li><a href="SettingResolver.html#float">float</a></li><li><a href="SettingResolver.html#guild">guild</a></li><li><a href="SettingResolver.html#integer">integer</a></li><li><a href="SettingResolver.html#member">member</a></li><li><a href="SettingResolver.html#msg">msg</a></li><li><a href="SettingResolver.html#msgs">msgs</a></li><li><a href="SettingResolver.html#role">role</a></li><li><a href="SettingResolver.html#string">string</a></li><li><a href="SettingResolver.html#url">url</a></li><li><a href="SettingResolver.html#user">user</a></li></ul></div></li><li><a href="SettingsCache.html">SettingsCache</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="SettingsCache_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="SettingsCache.html#client">client</a></li><li><a href="SettingsCache.html#defaultDataSchema">defaultDataSchema</a></li><li><a href="SettingsCache.html#guilds">guilds</a></li><li><a href="SettingsCache.html#resolver">resolver</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="SettingsCache.html#add">add</a></li><li><a href="SettingsCache.html#validate">validate</a></li></ul></div></li><li><a href="SQL.html">SQL</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="SQL_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="SQL.html#client">client</a></li><li><a href="SQL.html#constants">constants</a></li><li><a href="SQL.html#defaults">defaults</a></li><li><a href="SQL.html#gateway">gateway</a></li><li><a href="SQL.html#provider">provider</a></li><li><a href="SQL.html#sanitizer">sanitizer</a></li><li><a href="SQL.html#schema">schema</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="SQL.html#buildSingleSQLSchema">buildSingleSQLSchema</a></li><li><a href="SQL.html#buildSQLSchema">buildSQLSchema</a></li><li><a href="SQL.html#deserializer">deserializer</a></li><li><a href="SQL.html#initDeserialize">initDeserialize</a></li><li><a href="SQL.html#updateColumns">updateColumns</a></li></ul></div></li></ul></div>
+</nav>
+<div id="resizer"></div>
+
+<div class="main" id="main">
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const fs = require("fs-nextra");
+const { promisify } = require("util");
+const exec = promisify(require("child_process").exec);
+const { sep, resolve, join } = require("path");
+const Discord = require("discord.js");
+const ParsedUsage = require("./parsedUsage");
+
+const coreProtected = {
+  commands: [],
+  events: ["disconnect", "error", "guildCreate", "guildDelete", "message", "messageBulkDelete", "messageDelete", "messageUpdate", "warn"],
+  functions: ["checkPerms", "clean", "confs", "getPrefix", "handleError", "newError", " regExpEsc", "toTitleCase"],
+  inhibitors: ["runIn", "disable", "permissions", "requiredFuncs", "missingBotPermissions", "disable"],
+  finalizers: [],
+  monitors: [],
+  providers: [],
+  extendables: ["get_attachable", "get_conf", "get_embedable", "get_postable", "get_reactable", "get_readable", "get_usableCommands", "hasAtleastPermissionLevel", "send", "sendCode", "sendEmbed", "sendFile", "sendFiles", "sendMessage"],
+};
+
+/* eslint-disable no-throw-literal, import/no-dynamic-require, class-methods-use-this */
+/**
+ * The loader class that handles loading all of the pieces into Komada.
+ * @private
+ */
+class Loader {
+
+/**
+ * Constructs the class so that pieces can be loaded.
+ * @param  {KomadaClient} client The komada client
+ */
+  constructor(client) {
+    /**
+     * The komada client
+     * @type {KomadaClient}
+     */
+    Object.defineProperty(this, "client", { value: client });
+    const makeDirsObject = dir => ({
+      functions: resolve(dir, "functions"),
+      commands: resolve(dir, "commands"),
+      inhibitors: resolve(dir, "inhibitors"),
+      finalizers: resolve(dir, "finalizers"),
+      events: resolve(dir, "events"),
+      monitors: resolve(dir, "monitors"),
+      providers: resolve(dir, "providers"),
+      extendables: resolve(dir, "extendables"),
+    });
+
+    /**
+     * An object containing string paths to piece folders for the core of Komada
+     * @type {Object}
+     */
+    this.coreDirs = makeDirsObject(this.client.coreBaseDir);
+
+    /**
+     * An object containing string paths to piece folders for the user side of Komada
+     * @type {Object}
+     */
+    this.clientDirs = makeDirsObject(this.client.clientBaseDir);
+  }
+
+  /**
+   * Loads all of the pieces into Komada
+   */
+  async loadAll() {
+    const [funcs, [commands, aliases], inhibitors, finalizers, events, monitors, providers, extendables] = await Promise.all([
+      this.loadFunctions(),
+      this.loadCommands(),
+      this.loadCommandInhibitors(),
+      this.loadCommandFinalizers(),
+      this.loadEvents(),
+      this.loadMessageMonitors(),
+      this.loadProviders(),
+      this.loadExtendables(),
+    ]).catch((err) => {
+      console.error(err);
+      process.exit();
+    });
+    this.client.emit("log", [
+      `Loaded ${funcs} functions.`,
+      `Loaded ${commands} commands, with ${aliases} aliases.`,
+      `Loaded ${inhibitors} command inhibitors.`,
+      `Loaded ${finalizers} command finalizers.`,
+      `Loaded ${monitors} message monitors.`,
+      `Loaded ${providers} providers.`,
+      `Loaded ${events} events.`,
+      `Loaded ${extendables} extendables.`,
+    ].join("\n"));
+  }
+
+  /**
+   * Loads all of functions from both the core and client directories
+   * @return {Promise&lt;number>} The number of functions loaded into Komada
+   */
+  async loadFunctions() {
+    const coreFiles = await fs.readdir(this.coreDirs.functions)
+      .catch(() => { fs.ensureDir(this.coreDirs.functions).catch(err => this.client.emit("error", err)); });
+    if (coreFiles) {
+      await this.loadFiles(coreFiles.filter(file => file.endsWith(".js")
+        &amp;&amp; (coreProtected.functions.includes(file.split(".")[0]) || !this.client.config.disabled.functions.includes(file.split(".")[0])))
+        , this.coreDirs.functions, this.loadNewFunction, this.loadFunctions)
+        .catch((err) => { throw err; });
+    }
+    const userFiles = await fs.readdir(this.clientDirs.functions)
+      .catch(() => { fs.ensureDir(this.clientDirs.functions).catch(err => this.client.emit("error", err)); });
+    if (userFiles) {
+      await this.loadFiles(userFiles.filter(file => file.endsWith(".js")), this.clientDirs.functions, this.loadNewFunction, this.loadFunctions)
+        .catch((err) => { throw err; });
+    }
+    return (coreFiles ? coreFiles.length : 0) + (userFiles ? userFiles.length : 0);
+  }
+
+  /**
+   * Loads a new function into Komada
+   * @param  {string} file The file we're loading into komada.
+   * @param  {string} dir The directory from which we're loading the functions from
+   */
+  loadNewFunction(file, dir) {
+    this[file.split(".")[0]] = require(join(dir, file));
+    delete require.cache[join(dir, file)];
+  }
+
+  /**
+   * Reloads a function
+   * @param  {string}  name A string representing the function name
+   * @return {Promise&lt;string>}
+   */
+  async reloadFunction(name) {
+    const file = name.endsWith(".js") ? name : `${name}.js`;
+    if (name.endsWith(".js")) name = name.slice(0, -3);
+    const files = await fs.readdir(this.clientDirs.functions);
+    if (!files.includes(file)) throw `Could not find a reloadable file named ${file}`;
+    if (this[name]) delete this[name];
+    await this.loadFiles([file], this.clientDirs.functions, this.loadNewFunction, this.reloadFunction)
+      .catch((err) => { throw err; });
+    if (this.client.funcs[name].init) this.client.funcs[name].init(this.client);
+    return `Successfully reloaded the function ${name}.`;
+  }
+
+  /**
+   * Loads all commands into Komada
+   * @return {Promise&lt;Array>} An array containing the number of commands and aliases loading into Komada
+   */
+  async loadCommands() {
+    this.client.commands.clear();
+    this.client.aliases.clear();
+    await this.walkCommandDirectories(this.coreDirs.commands)
+      .catch((err) => { throw err; });
+    await this.walkCommandDirectories(this.clientDirs.commands)
+      .catch((err) => { throw err; });
+    return [this.client.commands.size, this.client.aliases.size];
+  }
+
+  /**
+   * Walks the command directories
+   * @param  {string}  dir The directory we are walking for commands.
+   * @return {Promise}
+   */
+  async walkCommandDirectories(dir) {
+    const files = await fs.readdir(dir)
+      .catch(() => { fs.ensureDir(dir).catch(err => this.client.emit("error", err)); });
+    if (!files) return false;
+    await this.loadFiles(files.filter(file => file.endsWith(".js")
+      &amp;&amp; (coreProtected.commands.includes(file.split(".")[0]) || !this.client.config.disabled.commands.includes(file.split(".")[0])))
+      .map(file => [file])
+      , dir, this.loadNewCommand, this.loadCommands)
+      .catch((err) => { throw err; });
+    const subfolders = [];
+    const mps1 = files.filter(file => !file.includes(".")).map(async (folder) => {
+      const subFiles = await fs.readdir(resolve(dir, folder));
+      if (!subFiles) return true;
+      subFiles.filter(file => !file.includes(".")).forEach(subfolder => subfolders.push({ folder, subfolder }));
+      return this.loadFiles(subFiles.filter(file => file.endsWith(".js")
+        &amp;&amp; (coreProtected.commands.includes(file.split(".")[0]) || !this.client.config.disabled.commands.includes(file.split(".")[0])))
+        .map(file => [folder, file]), dir, this.loadNewCommand, this.loadCommands)
+        .catch((err) => { throw err; });
+    });
+    await Promise.all(mps1).catch((err) => { throw err; });
+    const mps2 = subfolders.map(async (subfolder) => {
+      const subSubFiles = await fs.readdir(resolve(dir, subfolder.folder, subfolder.subfolder));
+      if (!subSubFiles) return true;
+      return this.loadFiles(subSubFiles.filter(file => file.endsWith(".js")
+        &amp;&amp; (coreProtected.commands.includes(file.split(".")[0]) || !this.client.config.disabled.commands.includes(file.split(".")[0])))
+        .map(file => [subfolder.folder, subfolder.subfolder, file]), dir, this.loadNewCommand, this.loadCommands)
+        .catch((err) => { throw err; });
+    });
+    return Promise.all(mps2).catch((err) => { throw err; });
+  }
+
+  /**
+   * Loads a new command
+   * @param  {Array} file An array of file information for the command we're loading.
+   * @param  {string} dir The directory we're loading this new command from.
+   */
+  loadNewCommand(file, dir) {
+    const cmd = require(join(dir, ...file));
+    cmd.help.fullCategory = file.slice(0, -1);
+    cmd.help.subCategory = cmd.help.fullCategory[1] || "General";
+    cmd.help.category = cmd.help.fullCategory[0] || "General";
+    cmd.cooldown = new Map();
+    this.client.commands.set(cmd.help.name, cmd);
+    cmd.conf.aliases = cmd.conf.aliases || [];
+    cmd.conf.aliases.forEach(alias => this.client.aliases.set(alias, cmd.help.name));
+    cmd.usage = new ParsedUsage(this.client, cmd);
+    delete require.cache[join(dir, ...file)];
+  }
+
+  /**
+   * Reloads the given command name.
+   * @param  {string}  name The name of the command we are reloading
+   * @return {Promise&lt;string>}
+   */
+  async reloadCommand(name) {
+    if (name.endsWith(".js")) name = name.slice(0, -3);
+    name = join(...name.split("/"));
+    const fullCommand = this.client.commands.get(name) || this.client.commands.get(this.client.aliases.get(name));
+    const dir = this.clientDirs.commands;
+    const file = fullCommand ? [...fullCommand.help.fullCategory, `${fullCommand.help.name}.js`] : `${name}.js`.split(sep);
+    const fileToCheck = file[file.length - 1];
+    const dirToCheck = resolve(dir, ...file.slice(0, -1));
+    const files = await fs.readdir(dirToCheck).catch(() => { throw "A user directory path could not be found. Only user commands may be reloaded."; });
+    if (!files.includes(fileToCheck)) throw `Could not find a reloadable file named ${file.join(sep)}`;
+    this.client.aliases.forEach((cmd, alias) => {
+      if (cmd === name) this.client.aliases.delete(alias);
+    });
+    await this.loadFiles([file], dir, this.loadNewCommand, this.reloadCommand)
+      .catch((err) => { throw err; });
+    const newCommand = this.client.commands.get(fileToCheck.slice(0, -3));
+    if (newCommand.init) newCommand.init(this.client);
+    return `Successfully reloaded the command ${name}.`;
+  }
+
+  /**
+   * Loads command inhibitors into Komada
+   * @return {Promise&lt;number>} The number of inhibitors loaded.
+   */
+  async loadCommandInhibitors() {
+    this.client.commandInhibitors.clear();
+    const coreFiles = await fs.readdir(this.coreDirs.inhibitors)
+      .catch(() => { fs.ensureDir(this.coreDirs.inhibitors).catch(err => this.client.emit("error", err)); });
+    if (coreFiles) {
+      await this.loadFiles(coreFiles.filter(file => file.endsWith(".js")
+        &amp;&amp; (coreProtected.inhibitors.includes(file.split(".")[0]) || !this.client.config.disabled.inhibitors.includes(file.split(".")[0])))
+        , this.coreDirs.inhibitors, this.loadNewInhibitor, this.loadCommandInhibitors)
+        .catch((err) => { throw err; });
+    }
+    const userFiles = await fs.readdir(this.clientDirs.inhibitors)
+      .catch(() => { fs.ensureDir(this.clientDirs.inhibitors).catch(err => this.client.emit("error", err)); });
+    if (userFiles) {
+      await this.loadFiles(userFiles.filter(file => file.endsWith(".js")), this.clientDirs.inhibitors, this.loadNewInhibitor, this.loadCommandInhibitors)
+        .catch((err) => { throw err; });
+    }
+    this.sortInhibitors();
+    return this.client.commandInhibitors.size;
+  }
+
+  /**
+   * Loads a new inhibitor
+   * @param  {string} file The file we are loading
+   * @param  {string} dir The location from where we are loading
+   */
+  loadNewInhibitor(file, dir) {
+    this.client.commandInhibitors.set(file.split(".")[0], require(join(dir, file)));
+    delete require.cache[join(dir, file)];
+  }
+
+  /**
+   * Reloads an inhibitor
+   * @param  {string}  name The inhibitor we are reloading.
+   * @return {Promise&lt;string>}
+   */
+  async reloadInhibitor(name) {
+    const file = name.endsWith(".js") ? name : `${name}.js`;
+    if (name.endsWith(".js")) name = name.slice(0, -3);
+    const files = await fs.readdir(this.clientDirs.inhibitors);
+    if (!files.includes(file)) throw `Could not find a reloadable file named ${file}`;
+    await this.loadFiles([file], this.clientDirs.inhibitors, this.loadNewInhibitor, this.reloadInhibitor)
+      .catch((err) => { throw err; });
+    this.sortInhibitors();
+    if (this.client.commandInhibitors.get(name).init) this.client.commandInhibitors.get(name).init(this.client);
+    return `Successfully reloaded the inhibitor ${name}.`;
+  }
+
+  sortInhibitors() {
+    this.client.commandInhibitors = this.client.commandInhibitors.sort((low, high) => low.conf.priority &lt; high.conf.priority);
+  }
+
+  /**
+   * Loads command finalizes into Komada
+   * @return {Promise&lt;number>} The number of finalizers loaded
+   */
+  async loadCommandFinalizers() {
+    this.client.commandFinalizers.clear();
+    const coreFiles = await fs.readdir(this.coreDirs.finalizers)
+      .catch(() => { fs.ensureDir(this.coreDirs.finalizers).catch(err => this.client.emit("error", err)); });
+    if (coreFiles) {
+      await this.loadFiles(coreFiles.filter(file => file.endsWith(".js")
+        &amp;&amp; (coreProtected.finalizers.includes(file.split(".")[0]) || !this.client.config.disabled.finalizers.includes(file.split(".")[0])))
+        , this.coreDirs.finalizers, this.loadNewFinalizer, this.loadCommandFinalizers)
+        .catch((err) => { throw err; });
+    }
+    const userFiles = await fs.readdir(this.clientDirs.finalizers)
+      .catch(() => { fs.ensureDir(this.clientDirs.finalizers).catch(err => this.client.emit("error", err)); });
+    if (userFiles) {
+      await this.loadFiles(userFiles.filter(file => file.endsWith(".js")), this.clientDirs.finalizers, this.loadNewFinalizer, this.loadCommandFinalizers)
+        .catch((err) => { throw err; });
+    }
+    return this.client.commandFinalizers.size;
+  }
+
+  /**
+   * Loads new finalizers
+   * @param  {string} file The file we are loading
+   * @param  {string} dir  The dir we are loading from
+   */
+  loadNewFinalizer(file, dir) {
+    this.client.commandFinalizers.set(file.split(".")[0], require(join(dir, file)));
+    delete require.cache[join(dir, file)];
+  }
+
+  /**
+   * Reloads a finalizer
+   * @param  {string}  name The name of the finalize we are reloading
+   * @return {Promise&lt;string>}
+   */
+  async reloadFinalizer(name) {
+    const file = name.endsWith(".js") ? name : `${name}.js`;
+    if (name.endsWith(".js")) name = name.slice(0, -3);
+    const files = await fs.readdir(this.clientDirs.finalizers);
+    if (!files.includes(file)) throw `Could not find a reloadable file named ${file}`;
+    await this.loadFiles([file], this.clientDirs.finalizers, this.loadNewFinalizer, this.reloadFinalizer)
+      .catch((err) => { throw err; });
+    if (this.client.commandFinalizers.get(name).init) this.client.commandFinalizers.get(name).init(this.client);
+    return `Successfully reloaded the finalizer ${name}.`;
+  }
+
+  /**
+   * Loads events into Komada
+   * @return {Promise&lt;number>} The number of events loaded.
+   */
+  async loadEvents() {
+    this.client.eventHandlers.forEach((listener, event) => this.client.removeListener(event, listener));
+    this.client.eventHandlers.clear();
+    const coreFiles = await fs.readdir(this.coreDirs.events)
+      .catch(() => { fs.ensureDir(this.coreDirs.events).catch(err => this.client.emit("error", err)); });
+    if (coreFiles) {
+      await this.loadFiles(coreFiles.filter(file => file.endsWith(".js")
+        &amp;&amp; (coreProtected.events.includes(file.split(".")[0]) || !this.client.config.disabled.events.includes(file.split(".")[0])))
+        , this.coreDirs.events, this.loadNewEvent, this.loadEvents)
+        .catch((err) => { throw err; });
+    }
+    const userFiles = await fs.readdir(this.clientDirs.events)
+      .catch(() => { fs.ensureDir(this.clientDirs.events).catch(err => this.client.emit("error", err)); });
+    if (userFiles) {
+      await this.loadFiles(userFiles.filter(file => file.endsWith(".js")), this.clientDirs.events, this.loadNewEvent, this.loadEvents)
+        .catch((err) => { throw err; });
+    }
+    return this.client.eventHandlers.size;
+  }
+
+  /**
+   * Loads a new event into Komada
+   * @param  {string} file The file we are loading
+   * @param  {string} dir The directory we are loading from
+   */
+  loadNewEvent(file, dir) {
+    const eventName = file.split(".")[0];
+    this.client.eventHandlers.set(eventName, (...args) => require(join(dir, file)).run(this.client, ...args));
+    this.client.on(eventName, this.client.eventHandlers.get(eventName));
+    delete require.cache[join(dir, file)];
+  }
+
+  /**
+   * Reloads a new event
+   * @param  {string}  name The nme of the event we are reloading
+   * @return {Promise&lt;string>}
+   */
+  async reloadEvent(name) {
+    const file = name.endsWith(".js") ? name : `${name}.js`;
+    if (name.endsWith(".js")) name = name.slice(0, -3);
+    const files = await fs.readdir(this.clientDirs.events);
+    if (!files.includes(file)) throw `Could not find a reloadable file named ${file}`;
+    const listener = this.client.eventHandlers.get(name);
+    if (listener) this.client.removeListener(name, listener);
+    await this.loadFiles([file], this.clientDirs.events, this.loadNewEvent, this.reloadEvent)
+      .catch((err) => { throw err; });
+    return `Successfully reloaded the event ${name}.`;
+  }
+
+  /**
+   * The message monitors beling loaded into Komada
+   * @return {Promise&lt;number>} The number of monitors loaded into Komada
+   */
+  async loadMessageMonitors() {
+    this.client.messageMonitors.clear();
+    const coreFiles = await fs.readdir(this.coreDirs.monitors)
+      .catch(() => { fs.ensureDir(this.coreDirs.monitors).catch(err => this.client.emit("error", err)); });
+    if (coreFiles) {
+      await this.loadFiles(coreFiles.filter(file => file.endsWith(".js")
+        &amp;&amp; (coreProtected.monitors.includes(file.split(".")[0]) || !this.client.config.disabled.monitors.includes(file.split(".")[0])))
+        , this.coreDirs.monitors, this.loadNewMessageMonitor, this.loadMessageMonitors)
+        .catch((err) => { throw err; });
+    }
+    const userFiles = await fs.readdir(this.clientDirs.monitors)
+      .catch(() => { fs.ensureDir(this.clientDirs.monitors).catch(err => this.client.emit("error", err)); });
+    if (userFiles) {
+      await this.loadFiles(userFiles.filter(file => file.endsWith(".js")), this.clientDirs.monitors, this.loadNewMessageMonitor, this.loadMessageMonitors)
+        .catch((err) => { throw err; });
+    }
+    return this.client.messageMonitors.size;
+  }
+
+  /**
+   * Loads a new monitor into Komada
+   * @param  {string} file The file we are loading
+   * @param  {string} dir The directory we are loading from
+   */
+  loadNewMessageMonitor(file, dir) {
+    this.client.messageMonitors.set(file.split(".")[0], require(join(dir, file)));
+    delete require.cache[join(dir, file)];
+  }
+
+  /**
+   * Reloads a Message monitor
+   * @param  {string}  name The name of the monitor we are reloading
+   * @return {Promise&lt;string>}
+   */
+  async reloadMessageMonitor(name) {
+    const file = name.endsWith(".js") ? name : `${name}.js`;
+    if (name.endsWith(".js")) name = name.slice(0, -3);
+    const files = await fs.readdir(this.clientDirs.monitors);
+    if (!files.includes(file)) throw `Could not find a reloadable file named ${file}`;
+    await this.loadFiles([file], this.clientDirs.monitors, this.loadNewMessageMonitor, this.reloadMessageMonitor)
+      .catch((err) => { throw err; });
+    if (this.client.messageMonitors.get(name).init) this.client.messageMonitors.get(name).init(this.client);
+    return `Successfully reloaded the monitor ${name}.`;
+  }
+
+  /**
+   * Loads providers into Komada
+   * @return {Promise&lt;number>} The number of providers loaded into Komada
+   */
+  async loadProviders() {
+    this.client.providers.clear();
+    const coreFiles = await fs.readdir(this.coreDirs.providers)
+      .catch(() => { fs.ensureDir(this.coreDirs.providers).catch(err => this.client.emit("error", err)); });
+    if (coreFiles) {
+      await this.loadFiles(coreFiles.filter(file => file.endsWith(".js")
+        &amp;&amp; (coreProtected.providers.includes(file.split(".")[0]) || !this.client.config.disabled.providers.includes(file.split(".")[0])))
+        , this.coreDirs.providers, this.loadNewProvider, this.loadProviders)
+        .catch((err) => { throw err; });
+    }
+    const userFiles = await fs.readdir(this.clientDirs.providers)
+      .catch(() => { fs.ensureDir(this.clientDirs.providers).catch(err => this.client.emit("error", err)); });
+    if (userFiles) {
+      await this.loadFiles(userFiles.filter(file => file.endsWith(".js")), this.clientDirs.providers, this.loadNewProvider, this.loadProviders)
+        .catch((err) => { throw err; });
+    }
+    return this.client.providers.size;
+  }
+
+  /**
+   * Loads a new provider into Komada
+   * @param  {string} file The file we are loading
+   * @param  {stirng} dir The directory we are loading from.
+   */
+  loadNewProvider(file, dir) {
+    this.client.providers.set(file.split(".")[0], require(join(dir, file)));
+    delete require.cache[join(dir, file)];
+  }
+
+  /**
+   * Reloads a provider
+   * @param  {string}  name The name of the provider we are reloading
+   * @return {Promise&lt;string>}
+   */
+  async reloadProvider(name) {
+    const file = name.endsWith(".js") ? name : `${name}.js`;
+    if (name.endsWith(".js")) name = name.slice(0, -3);
+    const provider = this.client.providers.get(name);
+    if (provider &amp;&amp; provider.shutdown) await provider.shutdown();
+    const files = await fs.readdir(this.clientDirs.providers);
+    if (!files.includes(file)) throw `Could not find a reloadable file named ${file}`;
+    await this.loadFiles([file], this.clientDirs.providers, this.loadNewProvider, this.reloadProvider)
+      .catch((err) => { throw err; });
+    if (this.client.providers.get(name).init) this.client.providers.get(name).init(this.client);
+    return `Successfully reloaded the provider ${name}.`;
+  }
+
+  /**
+   * Loads an extendble into Komada
+   * @return {Promise&lt;number>} The number of extendables loaded into Komada
+   */
+  async loadExtendables() {
+    const coreFiles = await fs.readdir(this.coreDirs.extendables)
+      .catch(() => { fs.ensureDir(this.coreDirs.extendables).catch(err => this.client.emit("error", err)); });
+    if (coreFiles) {
+      await this.loadFiles(coreFiles.filter(file => file.endsWith(".js")
+        &amp;&amp; (coreProtected.extendables.includes(file.split(".")[0]) || !this.client.config.disabled.extendables.includes(file.split(".")[0])))
+        , this.coreDirs.extendables, this.loadNewExtendable, this.loadExtendables)
+        .catch((err) => { throw err; });
+    }
+    const userFiles = await fs.readdir(this.clientDirs.extendables)
+      .catch(() => { fs.ensureDir(this.clientDirs.extendables).catch(err => this.client.emit("error", err)); });
+    if (userFiles) {
+      await this.loadFiles(userFiles.filter(file => file.endsWith(".js")), this.clientDirs.extendables, this.loadNewExtendable, this.loadExtendables)
+        .catch((err) => { throw err; });
+    }
+    return (coreFiles ? coreFiles.length : 0) + (userFiles ? userFiles.length : 0);
+  }
+
+  /**
+   * Loads a new extendable into Komada
+   * @param  {string} file The file we are loading
+   * @param  {string} dir The directory we are loading from.
+   */
+  loadNewExtendable(file, dir) {
+    const extendable = require(join(dir, file));
+    let myExtend;
+    switch (extendable.conf.type.toLowerCase()) {
+      case "set":
+      case "setter":
+        myExtend = { set: extendable.extend };
+        break;
+      case "get":
+      case "getter":
+        myExtend = { get: extendable.extend };
+        break;
+      case "method":
+      default:
+        myExtend = { value: extendable.extend };
+        break;
+    }
+    extendable.conf.appliesTo.forEach((structure) => {
+      Object.defineProperty(Discord[structure].prototype, extendable.conf.method, myExtend);
+    });
+    delete require.cache[join(dir, file)];
+  }
+
+
+  /**
+   * Loads an array of files into Komada
+   * @param  {Array}  files The files we are loading
+   * @param  {string}  dir The directory we are loading the files from
+   * @param  {Function}  loadNew The loadNew function
+   * @param  {Function}  startOver The loadAll function
+   */
+  async loadFiles(files, dir, loadNew, startOver) {
+    try {
+      files.forEach(file => loadNew.call(this, file, dir));
+    } catch (error) {
+      if (error.code === "MODULE_NOT_FOUND") {
+        const missingModule = /'([^']+)'/g.exec(error.toString());
+        if (/\/|\\/.test(missingModule)) throw `\`\`\`${error.stack || error}\`\`\``;
+        await this.installNPM(missingModule[1]).catch((err) => {
+          console.error(err);
+          process.exit();
+        });
+        startOver.call(this, files[0]);
+      } else {
+        throw `\`\`\`${error.stack || error}\`\`\``;
+      }
+    }
+  }
+
+  /**
+   * Installs an NPM module if it can't be found.
+   * @param  {string}  missingModule The name of the missing module
+   */
+  async installNPM(missingModule) {
+    console.log(`Installing: ${missingModule}`);
+    const { stdout, stderr } = await exec(`npm i ${missingModule}`, { cwd: this.client.clientBaseDir }).catch((err) => {
+      console.error("=====NEW DEPENDANCY INSTALL FAILED HORRIBLY=====");
+      throw err;
+    });
+
+    console.log("=====INSTALLED NEW DEPENDANCY=====");
+    console.log(stdout);
+    console.error(stderr);
+  }
+
+}
+
+module.exports = Loader;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<footer>
+    <img class="logo" src="https://cdn.discordapp.com/avatars/275809850422722560/14149c5c7e9801db6b0f8b45b9ada0b5.png" style="width: 100px; height: 100px">
+    <div class="footer-text">Welcome to Komada's Documentation!</div>
+</footer>
+<script>prettyPrint();</script>
+<script src="scripts/jquery.min.js"></script>
+<script src="scripts/tui-doc.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+    <script>
+        var id = '_sub'.replace(/"/g, '_');
+        var selectedApi = document.getElementById(id); // do not use jquery selector
+        var $selectedApi = $(selectedApi);
+
+        $selectedApi.removeClass('hidden');
+        $selectedApi.parent().find('.glyphicon').removeClass('glyphicon-plus').addClass('glyphicon-minus');
+        showLnbApi();
+    </script>
+
+</body>
+</html>
