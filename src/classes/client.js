@@ -34,14 +34,14 @@ const defaultPermStructure = new PermLevels()
  * @property {string[]} [monitors=Array]    Disabled Monitors
  * @property {string[]} [providers=Array]   Disabled Providers
  * @property {string[]} [extendables=Array] Disabled Extendables
- * @memberof Options
+ * @memberof Komada
  */
 
 /**
  * @typedef  {object} OptionsProviders
  * @property {string} [engine=json] The Provider Engine SettingGateway will use to store and access to the persistent data.
  * @property {string} [cache=js]    The Provider Cache Engine CacheManager from SettingGateway will use to cache the data.
- * @memberof Options
+ * @memberof Komada
  */
 
 /**
@@ -49,8 +49,8 @@ const defaultPermStructure = new PermLevels()
  * @property {string}  [prefix=?] The prefix for Komada. Defaults to '?'.
  * @property {string}  [ownerID=String] The bot owner's ID, Komada will autofetch it if it's not specified.
  *
- * @property {OptionsDisabled}  [disabled={}] The disabled pieces.
- * @property {PermLevels|Array<{}>} [permStructure=Array<{}>] The PermStructure for Komada.
+ * @property {Komada.OptionsDisabled}  [disabled={}] The disabled pieces.
+ * @property {PermissionLevels|Array<{}>} [permStructure=Array<{}>] The PermStructure for Komada.
  *
  * @property {boolean} [selfbot=boolean] Whether the bot is a selfbot or not. Komada detects this automatically.
  * @property {string}  [readyMessage=String] A custom string message Komada will use when firing the ready event message.
@@ -63,7 +63,7 @@ const defaultPermStructure = new PermLevels()
  * @property {boolean} [cmdEditing=false] Whether Komada should consider edited messages as potential messages able to fire new commands.
  * @property {boolean} [cmdPrompt=false] Whether Komada should prompt missing/invalid arguments at failed command execution.
  *
- * @property {OptionsProviders}  [provider={}] The engines for SettingGateway, 'engine' for Persistent Data, 'cache' for Cache Engine (defaults to Collection)
+ * @property {Komada.OptionsProviders}  [provider={}] The engines for SettingGateway, 'engine' for Persistent Data, 'cache' for Cache Engine (defaults to Collection)
  * @memberof Komada
  */
 
