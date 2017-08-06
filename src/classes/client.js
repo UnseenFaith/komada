@@ -34,18 +34,18 @@ const defaultPermStructure = new PermLevels()
  * @property {string[]} [monitors=Array]    Disabled Monitors
  * @property {string[]} [providers=Array]   Disabled Providers
  * @property {string[]} [extendables=Array] Disabled Extendables
- * @memberof KomadaOptions
+ * @memberof Options
  */
 
 /**
  * @typedef  {object} OptionsProviders
  * @property {string} [engine=json] The Provider Engine SettingGateway will use to store and access to the persistent data.
  * @property {string} [cache=js]    The Provider Cache Engine CacheManager from SettingGateway will use to cache the data.
- * @memberof KomadaOptions
+ * @memberof Options
  */
 
 /**
- * @typedef  {object}  KomadaOptions
+ * @typedef  {object}  Options
  * @property {string}  [prefix=?] The prefix for Komada. Defaults to '?'.
  * @property {string}  [ownerID=String] The bot owner's ID, Komada will autofetch it if it's not specified.
  *
@@ -75,14 +75,14 @@ class Komada extends Discord.Client {
 
   /**
    * Creates a new instance of Komada
-   * @param  {KomadaOptions} [config={}] The configuration options to provide to Komada
+   * @param  {Komada.Options} [config={}] The configuration options to provide to Komada
    */
   constructor(config = {}) {
     if (typeof config !== "object") throw new TypeError("Configuration for Komada must be an object.");
     super(config.clientOptions);
     /**
      * The configuration used to create Komada
-     * @type {KomadaOptions}
+     * @type {Komada.Options}
      */
     /* Remove all of this and replace with a mergeConfig method instead before v1 release */
     this.config = config;
