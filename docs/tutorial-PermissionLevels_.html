@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>External: Message | Komada</title>
+    <title>Tutorial: PermissionLevels | Komada</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -50,96 +50,142 @@
 <div class="main" id="main">
     
 
-
-
-
 <section>
-
-<header>
-    
-        <h2>Message</h2>
+    <header>
         
-    
-</header>
 
-<article>
-    
-        <div class="container-overview">
-        
-            
-
-            
-
-
-<dl class="details">
+        <h2>PermissionLevels</h2>
+    </header>
 
     
+        <article class="readme">
+            <h1>Permission Levels (aka PermStructure or Permission Structure)</h1>
+<p>Permission levels allow you to tailor your bot to only run commands for whomever you want. This structure is always ran when checking for commands, and is also ran when checking for things like: &quot;Should this command that the user can't use be displayed
+in the help menu?&quot;. Permission levels can do almost anything you want as long as you follow the structure correctly.</p>
+<p>By default Komada comes with the following permission levels:</p>
+<pre class="prettyprint source lang-js"><code>const defaultPermStructure = new PermLevels()
+  .addLevel(0, false, () => true)
+  .addLevel(2, false, (client, msg) => {
+    if (!msg.guild || !msg.guild.settings.modRole) return false;
+    const modRole = msg.guild.roles.get(msg.guild.settings.modRole);
+    return modRole && msg.member.roles.has(modRole.id);
+  })
+  .addLevel(3, false, (client, msg) => {
+    if (!msg.guild || !msg.guild.settings.adminRole) return false;
+    const adminRole = msg.guild.roles.get(msg.guild.settings.adminRole);
+    return adminRole && msg.member.roles.has(adminRole.id);
+  })
+  .addLevel(4, false, (client, msg) => msg.guild && msg.author.id === msg.guild.owner.id)
+  .addLevel(9, true, (client, msg) => msg.author.id === client.config.ownerID)
+  .addLevel(10, false, (client, msg) => msg.author.id === client.config.ownerID);
+</code></pre>
+<p>Basically, this means that Commands with the permission level:</p>
+<ul>
+<li>0, Everyone can use.</li>
+<li>2, Only those with the modRole can use</li>
+<li>3, Only those with the adminRole can use.</li>
+<li>4, Only those who are the GuildOwner can use.</li>
+<li>9-10, Only the bot owner can use these.</li>
+</ul>
+<blockquote>
+<p>Permission Level 9 is a very special one. The difference between 9 and 10 is that we break on 9. Basically, breaking means that if you don't have the required permission level, Komada should respond back to you telling you that you can't use the command.
+This allows you to have special interactions when certain people use the commands, such as silent admin commands.</p>
+</blockquote>
+<h1>Completely new Permission structure</h1>
+<p>If you want to completely get rid of the default permStructure and create your own, you will do this in the file that you declare a new Komada client. Here's a starting point that you can use.</p>
+<pre class="prettyprint source lang-js"><code>const { Client, PermLevels } = require(&quot;komada&quot;);
 
+const client = new Client({
+  ownerID : &quot;your-user-id&quot;,
+  prefix: &quot;+&quot;,
+  clientOptions: {
+    fetchAllMembers: false,
+  },
+});
+
+client.login(&quot;your-bot-token&quot;);
+</code></pre>
+<p>You'll notice we destructured Komada since we only need access to Client and PermLevels. To get started with PermLevels you'll first create a new class and set it to a variable.</p>
+<pre class="prettyprint source lang-js"><code>const { Client, PermLevels } = require(&quot;komada&quot;);
+
+const permStructure = new PermLevels();
+
+const client = new Client({
+  ownerID : &quot;your-user-id&quot;,
+  prefix: &quot;+&quot;,
+  clientOptions: {
+    fetchAllMembers: false,
+  },
+});
+
+client.login(&quot;your-bot-token&quot;);
+</code></pre>
+<p>Now that you've created your new PermLevels and assigned it to a variable, there are two ways you can add to this new structure. Both of these are valid and supported ways of adding levels.</p>
+<pre class="prettyprint source lang-js"><code>const { Client, PermLevels } = require(&quot;komada&quot;);
+
+/** First Way */
+const permStructure = new PermLevels();
+permStructure.addLevel(0, false, () => true);
+permStructure.addLevel(10, false, (client, msg) => msg.author === client.owner);
+
+/** Second Way */
+const permStructure = new PermLevels()
+  .addLevel(0, false () => true)
+  .addLevel(10, false, (client, msg) => msg.author === client.owner);
+
+const client = new Client({
+  ownerID : &quot;your-user-id&quot;,
+  prefix: &quot;+&quot;,
+  clientOptions: {
+    fetchAllMembers: false,
+  },
+});
+
+client.login(&quot;your-bot-token&quot;);
+</code></pre>
+<p>And now that you've created your new permStructure with your new levels, all you need to do is let Komada know you want to use this one instead, and we do this by simply passing it as a configuration option, like so:</p>
+<pre class="prettyprint source lang-js"><code>const { Client, PermLevels } = require(&quot;komada&quot;);
+
+const permStructure = new PermLevels()
+  .addLevel(0, false () => true)
+  .addLevel(10, false, (client, msg) => msg.author === client.owner);
+
+const client = new Client({
+  ownerID : &quot;your-user-id&quot;,
+  prefix: &quot;+&quot;,
+  permStructure,
+  clientOptions: {
+    fetchAllMembers: false,
+  },
+});
+
+client.login(&quot;your-bot-token&quot;);
+</code></pre>
+<p>And that's all you need to do. Now you have a new permStructure with just two levels.</p>
+<h1>Edit the Existing Permission Structure</h1>
+<p>If you want to edit the existing permStructure in Komada you can do so after creating your client.</p>
+<pre class="prettyprint source lang-js"><code>const { Client } = require(&quot;komada&quot;);
+
+const client = new Client({
+  ownerID : &quot;your-user-id&quot;,
+  prefix: &quot;+&quot;,
+  clientOptions: {
+    fetchAllMembers: false,
+  },
+});
+
+client.permStructure.addLevel(8, false, (client, msg) => msg.author.username === &quot;Faith&quot;);
+
+client.login(&quot;your-bot-token&quot;);
+</code></pre>
+<blockquote>
+<p>Please note that you will not be able to edit already existing permLevels in the default structure, so if you're looking to overwrite a default permission level you should check the other portion of this guide instead.</p>
+</blockquote>
+<h1>Final Words</h1>
+<p>That about sums up permission levels. If you're having issues with this or don't quite understand whats happening, I encourage you to read the documentation on <a href="https://dirigeants.github.io/komada/PermissionLevels.html">PermissionLevels</a>. If you still don't understand after reading the documentation, then hop on our Discord server and we'll be more than happy to explain to you what you don't understand.</p>
+        </article>
     
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="https://discord.js.org/#/docs/main/master/class/Message">https://discord.js.org/#/docs/main/master/class/Message</a></li>
-        </ul>
-    </dd>
-    
-
-    
-</dl>
-
-
-            
-        
-        </div>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</article>
-
 </section>
-
 
 
 
@@ -154,13 +200,7 @@
 <script src="scripts/linenumber.js"></script>
 
     <script>
-        var id = 'external:Message_sub'.replace(/"/g, '_');
-        var selectedApi = document.getElementById(id); // do not use jquery selector
-        var $selectedApi = $(selectedApi);
-
-        $selectedApi.removeClass('hidden');
-        $selectedApi.parent().find('.glyphicon').removeClass('glyphicon-plus').addClass('glyphicon-minus');
-        showLnbApi();
+        showLnbExamples();
     </script>
 
 </body>
