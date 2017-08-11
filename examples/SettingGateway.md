@@ -6,9 +6,9 @@ The concept of SettingGateway is designed to provide users a very useful interfa
 
 This system has been implemented in Komada **0.20.3**, after the PR [#255](https://github.com/dirigeants/komada/pull/255), still far from its concept level, it has been able to provide users a fully functional system that is able to work with any provider from [komada-pieces](https://github.com/dirigeants/komada-pieces), check the [Providers](https://dirigeants.github.io/komada/module-Provider.html) page for further information about them, and [SettingGateway](https://dirigeants.github.io/komada/SettingGateway.html)'s documentation.
 
-By default, Komada uses the [json](https://github.com/dirigeants/komada/blob/master/src/providers/json.js) provider by default, do not scream about it and insta-replace with SQLite, Komada's JSON provider writes the data [**atomically**](https://en.wikipedia.org/wiki/Atomicity_(database_systems)), in other words, it is very rare for the data to corrupt.
+By default, Komada uses the [json](https://github.com/dirigeants/komada/blob/master/src/providers/json.js) provider by default, do not scream about it and insta-replace with SQLite, Komada's JSON provider writes the data [atomically](https://en.wikipedia.org/wiki/Atomicity_(database_systems)), in other words, it is very rare for the data to corrupt.
 
-However, as Komada works on a [**NoSQL**](https://en.wikipedia.org/wiki/NoSQL) environment, the data cannot be used directly, for that, you need a special set of methods that defines a [ProviderSQL](https://dirigeants.github.io/komada/module-ProviderSQL.html) which is required for the [SQL](https://dirigeants.github.io/komada/SQL.html) engine to work.
+However, as Komada works on a [NoSQL](https://en.wikipedia.org/wiki/NoSQL) environment, the data cannot be used directly, for that, you need a special set of methods that defines a [ProviderSQL](https://dirigeants.github.io/komada/module-ProviderSQL.html) which is required for the [SQL](https://dirigeants.github.io/komada/SQL.html) engine to work.
 
 ## Change the *provider's engine*.
 
@@ -65,7 +65,7 @@ client.settings.guilds.add("users", { type: "User", array: true });
 
 > `options.array` defaults to `false`, and when `options.default` is not specified, it defaults to `null`, however, when `options.array` is `true`, `options.default` defaults to `[]` (empty array).
 
-# Editing keys from the guild settings.
+## Editing keys from the guild settings.
 
 Now that I have a new key called `modlogs`, I want to configure it outside the `conf` command, how can we do this?
 
@@ -91,7 +91,7 @@ client.settings.guilds.updateArray(msg.guild, "remove", "users", "14604893824221
 
 Check: [SettingGateway#updateArray](https://dirigeants.github.io/komada/SettingGateway.html#updateArray)
 
-# Removing a key from the guild settings.
+## Removing a key from the guild settings.
 
 I have a key which is useless for me, so I *want* to remove it from the schema.
 
@@ -101,7 +101,7 @@ client.settings.guilds.remove("users");
 
 > Do not confuse `SchemaManager#remove` and `SchemaManager#delete`, the first one deletes an entry from the schema, whereas the second deletes an entry for the selected key from the database.
 
-# Add a key to the guild settings if it doesn't exist.
+## Add a key to the guild settings if it doesn't exist.
 
 In [Komada-Pieces](https://github.com/dirigeants/komada-pieces/), specially, some pieces require a key from the settings to work, however, the creator of the pieces does not know if the user who downloads the piece has it, so this function becomes is useful in this case.
 
@@ -113,7 +113,7 @@ async function() {
 }
 ```
 
-# How can I create new SettingGateway instances?
+## How can I create new SettingGateway instances?
 
 **1.** By using [SettingsCache](https://dirigeants.github.io/komada/SettingsCache.html), (available from `client.settings`).
 
