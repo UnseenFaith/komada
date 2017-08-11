@@ -18,7 +18,7 @@ exports.run = async (client, msg, [action, key, ...value]) => {
         return msg.sendMessage(`Successfully added the value \`${value.join(" ")}\` to the key: **${key}**`);
       }
       const response = await client.settings.guilds.update(msg.guild, { [key]: value.join(" ") });
-      return msg.sendMessage(`Successfully updated the key **${key}**: \`${response}\``);
+      return msg.sendMessage(`Successfully updated the key **${key}**: \`${response[key]}\``);
     }
     case "remove": {
       if (!key) return msg.sendMessage("You must provide a key");
