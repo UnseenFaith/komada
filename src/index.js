@@ -7,6 +7,7 @@ module.exports = {
   ParsedUsage: require("./classes/parsedUsage"),
   PermLevels: require("./classes/permLevels"),
   Resolver: require("./classes/Resolver"),
+  Schema: require("./classes/Schema"),
   SchemaManager: require("./classes/schemaManager"),
   SettingsGateway: require("./classes/settingGateway"),
   SettingResolver: require("./classes/settingResolver"),
