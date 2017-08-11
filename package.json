@@ -19,7 +19,7 @@
     "docs": "npx jsdoc -c ./.docstrap.json -R README.md"
   },
   "dependencies": {
-    "chalk": "^2.1.0",
+    "chalk": "^2.0.1",
     "discord.js": "github:hydrabolt/discord.js",
     "fs-nextra": "^0.2.0",
     "moment": "^2.18.1",
@@ -38,6 +38,6 @@
     "dotenv": "^4.0.0"
   },
   "engines": {
-    "node": ">=8.1.0"
+    "node": ">=8.3.0"
   }
 }
