@@ -372,11 +372,11 @@
       }
     },
     "discord.js": {
-      "version": "github:hydrabolt/discord.js#fa5c4efa2bc545bc4df6f449dde343a6dcfdcfe2",
+      "version": "github:hydrabolt/discord.js#3ba224900f99199ecd3179070f587ad2a67ae19b",
       "requires": {
         "long": "3.2.0",
         "prism-media": "0.0.1",
-        "snekfetch": "3.2.8",
+        "snekfetch": "3.2.9",
         "tweetnacl": "1.0.0",
         "ws": "3.1.0"
       }
@@ -1676,9 +1676,9 @@
       "dev": true
     },
     "snekfetch": {
-      "version": "3.2.8",
-      "resolved": "https://registry.npmjs.org/snekfetch/-/snekfetch-3.2.8.tgz",
-      "integrity": "sha512-73twCWDXKw6oXxe3oTCSYqP0G+LQjorqqcwhudft4YWP4K0o3A79IE/zsfX+4JztOQgSO7b55QZExXnzLW9Y7A=="
+      "version": "3.2.9",
+      "resolved": "https://registry.npmjs.org/snekfetch/-/snekfetch-3.2.9.tgz",
+      "integrity": "sha512-0ZYxGRMtgBska6uQ616F0jcPYad/sLe+uBJJ2vewD62ftEFnh6rY5mza05KoUS5UWcclMuiUfAZSf10ZYnkOZA=="
     },
     "spdx-correct": {
       "version": "1.0.2",
