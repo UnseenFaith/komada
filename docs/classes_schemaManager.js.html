@@ -176,6 +176,7 @@ class SchemaManager extends CacheManager {
   async remove(key, force = true) {
     if (key === "prefix") throw "You can't remove the prefix key.";
     delete this.schema[key];
+    delete this.defaults[key];
     if (force) await this.force("delete", key);
     return fs.outputJSONAtomic(this.filePath, this.schema);
   }
