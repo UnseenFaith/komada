@@ -20,3 +20,4 @@ server\.js
 \.vscode/
 
 bwd/
+/.vs
