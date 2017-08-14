@@ -269,6 +269,11 @@ ul, ol, li {list-style:none; padding-left:0; margin-left:0;}
     width: 40px;
 }
 
+code {
+  padding: 2px;
+  font-size: 85%;
+}
+
 /* FOOTER */
 footer {
     padding-top: 3px;
