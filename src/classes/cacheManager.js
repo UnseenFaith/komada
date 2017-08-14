@@ -35,6 +35,16 @@ class CacheManager {
   }
 
   /**
+   * Check if the providen key exists in the cache
+   * @param {string} key The key to check for.
+   * @returns {boolean}
+   */
+  has(key) {
+    if (this.cacheEngine === "js") return this.data.has(key);
+    return this.data.has(this.type, key);
+  }
+
+  /**
    * TODO: This needs to be fixed. When in JS, this.data is a Collection, not an array of objects.
    * FIX Before v1 Release
    */
