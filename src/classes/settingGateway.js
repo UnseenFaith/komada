@@ -201,9 +201,9 @@ class SettingGateway extends SchemaManager {
    */
   async ensureCreate(target) {
     if (typeof target !== "string") throw `Expected input type string, got ${typeof target}`;
-    let cache = this.get(target);
-    if (cache instanceof Promise) cache = await cache;
-    if (!("id" in cache)) return this.create(target);
+    let exists = this.has(target);
+    if (exists instanceof Promise) exists = await exists;
+    if (exists === false) return this.create(target);
     return true;
   }
 
