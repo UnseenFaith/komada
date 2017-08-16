@@ -1,163 +1,106 @@
-const SchemaManager = require("./schemaManager");
-const SQL = require("./sql");
-
-/* eslint-disable no-restricted-syntax, class-methods-use-this */
-
 /**
- * The database driver.
- * @class SettingGateway
- * @extends {SchemaManager}
+ * The gateway for this settings instance. The gateway handles all the creation and setting of non-default entries, along with saving.
  */
-class SettingGateway extends SchemaManager {
 
-  constructor(store, type, validateFunction, schema) {
-    super(store.client);
+class Gateway {
 
+  /**
+   * 
+   * @param {any} settings
+   * @param {any} validateFunction
+   */
+  constructor(settings, validateFunction) {
     /**
-     * The SettingCache instance which initiated this SettingGateway.
-     * @name SettingGateway#store
-     * @type {SettingCache}
+     * The Settings class that this gateway is a part of.
+     * @name Gateway.settings
+     * @type {Settings}
      * @readonly
      */
-    Object.defineProperty(this, "store", { value: store });
+    Object.defineProperty(this, "settings", { value: settings });
 
     /**
-     * The name of this instance of SettingGateway. The schema will be saved under 'name_Schema.json'.
-     * @name SettingGateway#type
+     * The provider engine that will handle saving and getting all data for this instance.
      * @type {string}
      */
-    this.type = type;
+    this.engine = this.client.config.providere.engine || "json";
+
+    if (!this.provider) throw `This provider(${this.engine}) does not exist in your system.`;
 
     /**
-     * The provider engine this instance of SettingGateway should use to handle your settings.
-     * @name SettingGateway#engine
+     * If the provider is SQL, this property will ensure data is serialized and deserialized.
      * @type {string}
-     */
-    this.engine = this.client.config.provider.engine || "json";
-
-    if (!this.provider) throw `This provider (${this.engine}) does not exist in your system.`;
-
-    /**
-     * If the provider is SQL, this property is on charge to serialize/deserialize.
-     * @name SettingGateway#sql
-     * @type {?SQL}
      */
     this.sql = this.provider.conf.sql ? new SQL(this.client, this) : null;
 
     /**
-     * The function validator for this instance of SettingGateway.
-     * @name SettingGateway#validate
+     * The function validator for this gateway.
      * @type {function}
      */
     this.validate = validateFunction;
-
-    /**
-     * The schema for this instance of SettingGateway.
-     * @name SettingGateway#defaultDataSchema
-     * @type {object}
-     */
-    this.defaultDataSchema = schema;
   }
 
   /**
-   * Initialize the configuration for this gateway.
-   * @name SettingGateway#init
+   * Initializes the gateway, creating tables, ensuring the schema exists, and caching values.
    * @returns {void}
    */
-  async init() {
-    await this.initSchema();
-    if (!(await this.provider.hasTable(this.type))) {
-      const SQLCreate = this.sql ? this.sql.buildSQLSchema(this.schema) : undefined;
-      await this.provider.createTable(this.type, SQLCreate);
-    }
+  async init(schema) {
+    if (!(await this.provider.hasTable(this.type))) await this.provider.createTable(this.type, this.sql ? this.sql.buildSQLSchema(schema) : undefined);
     const data = await this.provider.getAll(this.type);
     if (this.sql) {
       this.sql.initDeserialize();
       for (let i = 0; i < data.length; i++) this.sql.deserializer(data[i]);
     }
-    if (data[0]) for (const key of data) super.set(key.id, key);
+    for (const key of data) this.cache.set(key.id, key);
   }
 
   /**
-   * Create a new entry in the configuration.
-   * @name SettingGateway#create
+   * Creates a new entry in the cache.
    * @param {Object|string} input An object containing a id property, like discord.js objects, or a string.
-   * @returns {void}
    */
   async create(input) {
     const target = await this.validate(input).then(output => (output.id || output));
-    await this.provider.create(this.type, target, this.defaults);
-    super.set(target, this.defaults);
+    await this.provider.create(this.type, target, this.schema.defaults);
+    this.cache.set(target, this.schema.defaults);
   }
 
   /**
-   * Remove an entry from the configuration.
-   * @name SettingGateway#destroy
-   * @param {string} input A key to delete from the cache.
-   * @returns {void}
+   * Removes an entry from the cache.
+   * @param {Object|string} input An object containing a id property, like discord.js objects, or a string.
    */
   async destroy(input) {
-    await this.provider.delete(this.type, input);
-    super.delete(this.type, input);
+    const target = await this.validate(input).then(output => (output.id || output));
+    await this.provider.delete(this.type, target);
+    this.cache.delete(this.type, target);
   }
 
-  /**
-   * Get an entry from the cache.
-   * @name SettingGateway#get
-   * @param {string} input A key to get the value for.
-   * @returns {Object}
-   */
   get(input) {
-    if (input === "default") return this.defaults;
-    return super.get(input) || this.defaults;
+    return input !== "default" ? this.cache.get(input) || this.schema.defaults : this.schema.defaults;  
   }
 
-  /**
-   * Updates an entry.
-   * @name SettingGateway#getResolved
-   * @param {Object|string} input An object containing a id property, like Discord.js objects, or a string.
-   * @param {Object|string} [guild=null] A Guild resolvable, useful for when the instance of SG doesn't aim for Guild settings.
-   * @returns {Object}
-   */
-  async getResolved(input, guild = null) {
-    const target = await this.validate(input).then(output => output.id || output);
-    guild = await this.resolver.guild(guild || target);
-
-    let settings = this.get(target);
-    if (settings instanceof Promise) settings = await settings;
-    const resolved = await Promise.all(Object.entries(settings).map(([key, data]) => {
-      if (this.schema[key] && this.schema[key].array) return { [key]: Promise.all(data.map(entry => this.resolver[this.schema[key].type.toLowerCase()](entry, guild, this.schema[key]))) };
-      return { [key]: this.schema[key] && data ? this.resolver[this.schema[key].type.toLowerCase()](data, guild, this.schema[key]) : data };
-    }));
-    return Object.assign({}, ...resolved);
-  }
-
-  /**
-   * Sync either all entries from the configuration, or a single one.
-   * @name SettingGateway#sync
+    /**
+   * Sync either all entries from the provider, or a single one.
    * @param {Object|string} [input=null] An object containing a id property, like discord.js objects, or a string.
    * @returns {void}
    */
   async sync(input = null) {
     if (!input) {
       const data = await this.provider.getAll(this.type);
-      if (this.sql) for (let i = 0; i < data.length; i++) this.sql.deserializer(data[i]);
-      for (const key of data) super.set(key.id, key);
+      if (this.sql) for (let i = 0; i < data.length; i++) this.sql.derserializer(data[i]);
+      for (const key of data) this.cache.set(key.id, key);
       return;
     }
     const target = await this.validate(input).then(output => (output.id || output));
     const data = await this.provider.get(this.type, target);
     if (this.sql) this.sql.deserializer(data);
-    await super.set(target, data);
+    await this.cache.set(target, data);
   }
 
   /**
-   * Reset a key's value to default from a entry.
-   * @name SettingGateway#reset
-   * @param {Object|string} input An object containing a id property, like Discord.js objects, or a string.
-   * @param {string} key The key to reset.
-   * @returns {any}
-   */
+ * Reset a key's value to default from a entry.
+ * @param {Object|string} input An object containing a id property, like Discord.js objects, or a string.
+ * @param {string} key The key to reset.
+ * @returns {any}
+ */
   async reset(input, key) {
     const target = await this.validate(input).then(output => (output.id || output));
     if (!(key in this.schema)) throw `The key ${key} does not exist in the current data schema.`;
@@ -168,13 +111,12 @@ class SettingGateway extends SchemaManager {
   }
 
   /**
-   * Updates an entry.
-   * @name SettingGateway#update
-   * @param {Object|string} input An object or string that can be parsed by this instance's resolver.
-   * @param {Object} object An object with pairs of key/value to update.
-   * @param {Object|string} [guild=null] A Guild resolvable, useful for when the instance of SG doesn't aim for Guild settings.
-   * @returns {Object}
-   */
+ * Updates an entry.
+ * @param {Object|string} input An object or string that can be parsed by this instance's resolver.
+ * @param {Object} object An object with pairs of key/value to update.
+ * @param {Object|string} [guild=null] A Guild resolvable, useful for when the instance of SG doesn't aim for Guild settings.
+ * @returns {Object}
+ */
   async update(input, object, guild = null) {
     const target = await this.validate(input).then(output => output.id || output);
     guild = await this.resolver.guild(guild || target);
@@ -195,13 +137,12 @@ class SettingGateway extends SchemaManager {
 
   /**
    * Creates the settings if it did not exist previously.
-   * @name SettingGateway#ensureCreate
    * @param {Object|string} target An object or string that can be parsed by this instance's resolver.
    * @returns {true}
    */
   async ensureCreate(target) {
     if (typeof target !== "string") throw `Expected input type string, got ${typeof target}`;
-    let exists = this.has(target);
+    let exists = this.cache.has(target);
     if (exists instanceof Promise) exists = await exists;
     if (exists === false) return this.create(target);
     return true;
@@ -209,7 +150,6 @@ class SettingGateway extends SchemaManager {
 
   /**
    * Update an array from the a Guild's configuration.
-   * @name SettingGateway#updateArray
    * @param {Object|string} input An object containing a id property, like discord.js objects, or a string.
    * @param {string} type Either 'add' or 'remove'.
    * @param {string} key The key from the Schema.
@@ -244,27 +184,24 @@ class SettingGateway extends SchemaManager {
 
   /**
    * The client this SettingGateway was created with.
-   * @name SettingGateway#client
    * @type {KomadaClient}
    * @readonly
    */
   get client() {
-    return this.store.client;
+    return this.settings.client;
   }
 
   /**
    * The resolver instance this SettingGateway uses to parse the data.
-   * @name SettingGateway#resolver
    * @type {Resolver}
    * @readonly
    */
   get resolver() {
-    return this.store.resolver;
+    return this.settings.resolver;
   }
 
   /**
    * The provider this SettingGateway instance uses for the persistent data operations.
-   * @name SettingGateway#provider
    * @type {Resolver}
    * @readonly
    */
@@ -272,6 +209,33 @@ class SettingGateway extends SchemaManager {
     return this.client.providers.get(this.engine);
   }
 
+  /**
+   * The schema this gateway instance is handling.
+   * @type {Schema}
+   * @readonly
+   */
+  get schema() {
+    return this.settings.schema;
+  }
+
+  /**
+   * The cache created with this instance
+   * @type {Cache}
+   * @readonly
+   */
+
+  get cache() {
+    return this.settings.cache;
+  }
+
+  /**
+   * @type {string} The type of settings (or name).
+   * @readonly
+   */
+  get type() {
+    return this.settings.type;
+  }
+
 }
 
-module.exports = SettingGateway;
+module.exports = Gateway;
