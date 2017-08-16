@@ -1,3 +1,5 @@
+/* eslint-disable no-underscore-dangle */
+
 const Cache = require("./Cache");
 const Gateway = require("./Gateway");
 const Schema = require("./Schema");
@@ -8,7 +10,6 @@ const fs = require("fs-nextra");
 class Settings {
 
   constructor(client, name, validate, schema) {
-
     /**
      * @type {KomadaClient} The komada client.
      */
@@ -67,14 +68,14 @@ class Settings {
 
   /**
    * Validates our schema. Ensures that the object was created correctly and will not break.
-   * @param {object|Schema} schema
+   * @param {Object|Schema} schema The schema we are validating.
    */
   validateSchema(schema) {
     if (!(schema instanceof Schema)) schema = new Schema(schema);
-    for (const [key, value] of Object.entries(schema)) {
+    for (const [key, value] of Object.entries(schema)) { // eslint-disable-line
       if (value instanceof Object && "type" in value && "default" in value) {
         if (value.array && !(value.default instanceof Array)) {
-          this.client.emit("log", `The default value for ${key} must be an array.`, 'error');
+          this.client.emit("log", `The default value for ${key} must be an array.`, "error");
           delete this.schema[key];
           continue;
         }
@@ -87,7 +88,8 @@ class Settings {
   }
 
   /**
-   * @borrows Schema#add
+   * @param {string} name The name of the key you want to add.
+   * @param {Schema.Options} options Schema options.
    * @param {boolean} [force=true] Whether or not we should force update all settings.
    * @returns {Promise<void>}
    */
@@ -107,7 +109,7 @@ class Settings {
    * await client.settings.guilds.remove("modlog");
    */
   async remove(key, force = true) {
-    if (!key in this.schema) throw `The key ${key} does not exist in the schema.`;
+    if (!(key in this.schema)) throw `The key ${key} does not exist in the schema.`;
     delete this.schema[key];
     if (force) await this.force("delete", key);
     return fs.outputJSONAtomic(this.schemaPath, this.schema);

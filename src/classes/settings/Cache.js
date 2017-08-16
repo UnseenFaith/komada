@@ -1,6 +1,6 @@
 class Cache {
 
-  constructor(settings, type) {
+  constructor(settings) {
     /**
      * @name Cache.settings
      * @type {Settings} The settings instance that created this cache.
@@ -19,7 +19,7 @@ class Cache {
     /**
      * @type {Collection|Provider} The data we are storing. This will be a collection or a provider if you change the cache.
      */
-    this.data = this.cache === "js" ? new this.client.methods.Collection() : client.providers.get(this.cache);
+    this.data = this.cache === "js" ? new this.client.methods.Collection() : this.client.providers.get(this.cache);
   }
 
   /**

@@ -59,7 +59,7 @@ class SettingsCache {
     if (typeof validateFunction !== "function") throw "You must pass a validate function.";
     validateFunction = validateFunction.bind(null, this.resolver);
     if (schema.constructor.name !== "Object") throw "Schema must be a valid object or left undefined for an empty object.";
-    this[name] = new SettingGateway(this, name, validateFunction, schema);
+    this[name] = new Settings(this, name, validateFunction, schema);
     return this[name];
   }
 

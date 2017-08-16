@@ -43,7 +43,7 @@ class Gateway {
 
   /**
    * Initializes the gateway, creating tables, ensuring the schema exists, and caching values.
-   * @param {Schema} schema The Schema object, validated from settings.
+   * @param {Schema} The Schema object, validated from settings.
    * @returns {void}
    */
   async init(schema) {
