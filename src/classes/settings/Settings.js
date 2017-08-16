@@ -93,7 +93,7 @@ class Settings {
    */
   async add(name, options, force = true) {
     this.schema.add(name, options);
-    if (force) await this.force("add", key);
+    if (force) await this.force("add", name);
     return fs.outputJSONAtomic(this.schemaPath, this.schema);
   }
 
