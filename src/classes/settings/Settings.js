@@ -2,6 +2,8 @@ const Cache = require("./Cache");
 const Gateway = require("./Gateway");
 const Schema = require("./Schema");
 const Resolver = require("../settingResolver");
+const { resolve } = require("path");
+const fs = require("fs-nextra");
 
 class Settings {
 
