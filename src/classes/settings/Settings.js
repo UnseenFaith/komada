@@ -25,7 +25,7 @@ class Settings {
     /**
      * @type {Cache} The cache used to store data for this instance.
      */
-    this.cache = new Cache(client, type); // will be replaced later with CacheProviders
+    this.cache = new Cache(this, this.type); // will be replaced later with CacheProviders
 
     /**
      * @name Settings.schema
