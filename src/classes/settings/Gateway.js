@@ -85,7 +85,7 @@ class Gateway {
   async sync(input = null) {
     if (!input) {
       const data = await this.provider.getAll(this.type);
-      if (this.sql) for (let i = 0; i < data.length; i++) this.sql.derserializer(data[i]);
+      if (this.sql) for (let i = 0; i < data.length; i++) this.sql.deserializer(data[i]);
       for (const key of data) this.cache.set(key.id, key);
       return;
     }
