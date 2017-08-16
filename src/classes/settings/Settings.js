@@ -157,7 +157,7 @@ class Settings {
   }
 
   updateArray(...args) {
-    return this.gateway.update(...args);
+    return this.gateway.updateArray(...args);
   }
 
 }
