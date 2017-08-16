@@ -1,4 +1,5 @@
 const Settings = require("./settings/Settings");
+const Resolver = require("./settingResolver");
 
 /**
  * SettingGateway's driver to make new instances of it, with the purpose to handle different databases simultaneously.
@@ -17,6 +18,8 @@ class SettingsCache {
      * @readonly
      */
     Object.defineProperty(this, "client", { value: client });
+
+    this.resolver = new Resolver(client);
 
     /**
      * The SettingGateway instance created to handle guild settings.
