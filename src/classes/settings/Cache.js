@@ -1,7 +1,6 @@
 class Cache {
 
   constructor(settings, type) {
-    super();
     /**
      * @name Cache.settings
      * @type {Settings} The settings instance that created this cache.
