@@ -136,26 +136,44 @@ class Settings {
 
   // BEGIN GATEWAY EXPOSURE //
 
+  /**
+   * @borrows Gateway#create
+   */
   create(...args) {
     return this.gateway.create(...args);
   }
 
+  /**
+   * @borrows Gateway#destroy
+   */
   destroy(...args) {
     return this.gateway.destroy(...args);
   }
 
+  /**
+   * @borrows Gateway#get
+   */
   get(...args) {
     return this.gateway.get(...args);
   }
 
+  /**
+   * @borrows Gateway#reset
+   */
   reset(...args) {
     return this.gateway.reset(...args);
   }
 
+  /**
+   * @borrows Gateway#update
+   */
   update(...args) {
     return this.gateway.update(...args);
   }
 
+  /**
+   * @borrows Gateway#updateArray
+   */
   updateArray(...args) {
     return this.gateway.updateArray(...args);
   }
