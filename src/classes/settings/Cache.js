@@ -12,7 +12,7 @@ class Cache {
      * @readonly
      */
     Object.defineProperties(this, {
-      settings: { value: settings.client },
+      settings: { value: settings },
       cache: { value: settings.client.config.provider.cache || "js" },
     });
 
