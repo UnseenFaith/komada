@@ -19,7 +19,7 @@ class Cache {
     /**
      * @type {Collection|Provider} The data we are storing. This will be a collection or a provider if you change the cache.
      */
-    this.data = this.cache === "js" ? new client.methods.Collection() : client.providers.get(this.cache);
+    this.data = this.cache === "js" ? new this.client.methods.Collection() : client.providers.get(this.cache);
 
     /**
      * @type {String} The type of data you're storing. Essentially this is just a name we use to distinguish different settings from each other.
