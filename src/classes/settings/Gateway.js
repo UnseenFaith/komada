@@ -76,6 +76,10 @@ class Gateway {
     this.cache.delete(this.type, target);
   }
 
+  /**
+   * Gets an entry from the cache
+   * @param {string} input The key you are you looking for.
+   */
   get(input) {
     return input !== "default" ? this.cache.get(input) || this.schema.defaults : this.schema.defaults;
   }
@@ -99,11 +103,11 @@ class Gateway {
   }
 
   /**
- * Reset a key's value to default from a entry.
- * @param {Object|string} input An object containing a id property, like Discord.js objects, or a string.
- * @param {string} key The key to reset.
- * @returns {any}
- */
+   * Reset a key's value to default from a entry.
+   * @param {Object|string} input An object containing a id property, like Discord.js objects, or a string.
+   * @param {string} key The key to reset.
+   * @returns {any}
+   */
   async reset(input, key) {
     const target = await this.validate(input).then(output => (output.id || output));
     if (!(key in this.schema)) throw `The key ${key} does not exist in the current data schema.`;
@@ -114,12 +118,12 @@ class Gateway {
   }
 
   /**
- * Updates an entry.
- * @param {Object|string} input An object or string that can be parsed by this instance's resolver.
- * @param {Object} object An object with pairs of key/value to update.
- * @param {Object|string} [guild=null] A Guild resolvable, useful for when the instance of SG doesn't aim for Guild settings.
- * @returns {Object}
- */
+   * Updates an entry.
+   * @param {Object|string} input An object or string that can be parsed by this instance's resolver.
+   * @param {Object} object An object with pairs of key/value to update.
+   * @param {Object|string} [guild=null] A Guild resolvable, useful for when the instance of SG doesn't aim for Guild settings.
+   * @returns {Object}
+   */
   async update(input, object, guild = null) {
     const target = await this.validate(input).then(output => output.id || output);
     guild = await this.resolver.guild(guild || target);
@@ -232,7 +236,8 @@ class Gateway {
   }
 
   /**
-   * @type {string} The type of settings (or name).
+   * The type of settings (or name).
+   * @type {string}
    * @readonly
    */
   get type() {

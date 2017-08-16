@@ -8,47 +8,61 @@ const { resolve } = require("path");
 const fs = require("fs-nextra");
 
 class Settings {
-
+  /**
+   * Creates a new settings instance.
+   * @param {KomadaClient} client The Komada clien
+   * @param {string} name The name of these new settings
+   * @param {function} validate The validate function for gateway
+   * @param {Schema|object} schema The schema object
+   */
   constructor(client, name, validate, schema) {
     /**
-     * @type {KomadaClient} The komada client.
+     * The komada client.
+     * @type {KomadaClient}
      */
     Object.defineProperty(this, "client", { value: client });
 
     /**
-     * @type {string} The name or type of settings
+     * The name or type of settings
+     * @type {string} 
      */
     this.type = name;
 
     /**
-     * @type {Gateway} The gateway for this settings instance.
+     * The gateway for this settings instance.
+     * @type {Gateway}
      */
     this.gateway = new Gateway(this, validate);
 
     /**
-     * @type {Cache} The cache used to store data for this instance.
+     * The cache used to store data for this instance.
+     * @type {Cache}
      */
     this.cache = new Cache(this, this.type); // will be replaced later with CacheProviders
 
     /**
-     * @name Settings.schema
-     * @type {Schema} The schema that we will use for this instance.
+     * The schema that we will use for this instance.
+     * @name Settings#schema
+     * @type {Schema}
      */
     Object.defineProperty(this, "_schema", { value: schema });
     this.schema = null;
 
     /**
-     * @type {SettingResolver} The settings resolver used for this instance.
+     * The settings resolver used for this instance.
+     * @type {SettingResolver}
      */
     this.resolver = new Resolver(client);
 
     /**
-     * @type {string} The base directory where this instance will save to.
+     * The base directory where this instance will save to.
+     * @type {string}
      */
     this.baseDir = resolve(this.client.clientBaseDir, "bwd");
 
     /**
-     * @type {string} The path to the schema for this instance.
+     * The path to the schema for this instance.
+     * @type {string}
      */
     this.schemaPath = resolve(this.baseDir, `${this.type}_Schema.json`);
   }
@@ -139,42 +153,57 @@ class Settings {
   // BEGIN GATEWAY EXPOSURE //
 
   /**
-   * @borrows Gateway#create
+   * Creates a new entry in the cache.
+   * @param {Object|string} input An object containing a id property, like discord.js objects, or a string.
    */
   create(...args) {
     return this.gateway.create(...args);
   }
 
   /**
-   * @borrows Gateway#destroy
+   * Removes an entry from the cache.
+   * @param {Object|string} input An object containing a id property, like discord.js objects, or a string.
    */
   destroy(...args) {
     return this.gateway.destroy(...args);
   }
 
   /**
-   * @borrows Gateway#get
+   * Gets an entry from the cache
+   * @param {string} input The key you are you looking for.
    */
   get(...args) {
     return this.gateway.get(...args);
   }
 
   /**
-   * @borrows Gateway#reset
+   * Reset a key's value to default from a entry.
+   * @param {Object|string} input An object containing a id property, like Discord.js objects, or a string.
+   * @param {string} key The key to reset.
+   * @returns {any}
    */
   reset(...args) {
     return this.gateway.reset(...args);
   }
 
   /**
-   * @borrows Gateway#update
+   * Updates an entry.
+   * @param {Object|string} input An object or string that can be parsed by this instance's resolver.
+   * @param {Object} object An object with pairs of key/value to update.
+   * @param {Object|string} [guild=null] A Guild resolvable, useful for when the instance of SG doesn't aim for Guild settings.
+   * @returns {Object}
    */
   update(...args) {
     return this.gateway.update(...args);
   }
 
   /**
-   * @borrows Gateway#updateArray
+   * Update an array from the a Guild's configuration.
+   * @param {Object|string} input An object containing a id property, like discord.js objects, or a string.
+   * @param {string} type Either 'add' or 'remove'.
+   * @param {string} key The key from the Schema.
+   * @param {any} data The value to be added or removed.
+   * @returns {boolean}
    */
   updateArray(...args) {
     return this.gateway.updateArray(...args);

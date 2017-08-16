@@ -1,5 +1,13 @@
+/**
+ * Creates caches for storing data for settings in Komada.
+ */
+
 class Cache {
 
+  /**
+   * Constructs our cache instance.
+   * @param {Settings} settings The settings that created this cache.
+   */
   constructor(settings) {
     /**
      * @name Cache.settings
