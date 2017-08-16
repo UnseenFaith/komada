@@ -22,7 +22,7 @@ class Gateway {
      * The provider engine that will handle saving and getting all data for this instance.
      * @type {string}
      */
-    this.engine = this.client.config.providere.engine || "json";
+    this.engine = this.client.config.provider.engine || "json";
 
     if (!this.provider) throw `This provider(${this.engine}) does not exist in your system.`;
 

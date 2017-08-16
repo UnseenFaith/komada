@@ -57,7 +57,6 @@ class SettingsCache {
     validateFunction = validateFunction.bind(null, this.resolver);
     if (schema.constructor.name !== "Object") throw "Schema must be a valid object or left undefined for an empty object.";
     this[name] = new SettingGateway(this, name, validateFunction, schema);
-    await this[name].init();
     return this[name];
   }
 

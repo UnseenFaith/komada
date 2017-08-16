@@ -6,6 +6,12 @@ const Resolver = require("../settingResolver");
 class Settings {
 
   constructor(client, name, validate, schema) {
+
+    /**
+     * @type {KomadaClient} The komada client.
+     */
+    Object.defineProperty(this, "client", { value: client });
+
     /**
      * @type {string} The name or type of settings
      */
