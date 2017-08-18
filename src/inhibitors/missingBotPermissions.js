@@ -1,7 +1,7 @@
 const { Permissions } = require("discord.js");
 
 const impliedPermissions = new Permissions([
-  "READ_MESSAGES",
+  "VIEW_CHANNEL",
   "SEND_MESSAGES",
   "SEND_TTS_MESSAGES",
   "EMBED_LINKS",
