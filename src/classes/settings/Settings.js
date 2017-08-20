@@ -137,7 +137,7 @@ class Settings {
    * @private
    */
   async force(action, key) {
-    if (this.sql) await this.gateway.sql.updateColumns(this.schema, this.schema.defaults, key);
+    if (this.gateway.sql) await this.gateway.sql.updateColumns(this.schema, this.schema.defaults, key);
     const data = this.cache.getAll(this.type);
     let value;
     if (action === "add") value = this.schema.defaults[key];
