@@ -143,9 +143,9 @@
       }
     },
     "babylon": {
-      "version": "7.0.0-beta.19",
-      "resolved": "https://registry.npmjs.org/babylon/-/babylon-7.0.0-beta.19.tgz",
-      "integrity": "sha512-Vg0C9s/REX6/WIXN37UKpv5ZhRi6A4pjHlpkE34+8/a6c2W1Q692n3hmc+SZG5lKRnaExLUbxtJ1SVT+KaCQ/A==",
+      "version": "7.0.0-beta.20",
+      "resolved": "https://registry.npmjs.org/babylon/-/babylon-7.0.0-beta.20.tgz",
+      "integrity": "sha512-kkMTbo/6QmDD+ggF4KaeMLNvf+RfHVtC4mZJcGDZsbQvRqUgG4yWdy6fh3FZbwwLX9BD6PGmAeKN08P5O8pGLQ==",
       "dev": true
     },
     "balanced-match": {
@@ -381,7 +381,7 @@
       }
     },
     "discord.js": {
-      "version": "github:hydrabolt/discord.js#9b97fe292f62f18303c8a872511ce61f683e9dc3",
+      "version": "github:hydrabolt/discord.js#0c0ec72cb88ceb679190e4bbdca2040fd2e2d4d0",
       "requires": {
         "long": "3.2.0",
         "prism-media": "0.0.1",
@@ -973,7 +973,7 @@
       "version": "github:jsdoc3/jsdoc#8e2f8686c42c9c371c35be10faac61268497b12e",
       "dev": true,
       "requires": {
-        "babylon": "7.0.0-beta.19",
+        "babylon": "7.0.0-beta.20",
         "bluebird": "3.5.0",
         "catharsis": "0.8.9",
         "escape-string-regexp": "1.0.5",
