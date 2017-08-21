@@ -1,6 +1,8 @@
-/* eslint-disable class-methods-use-this, no-underscore-dangle, no-restricted-syntax */
+const Resolver = require("../settingResolver");
 
-const types = ["User", "Channel", "TextChannel", "VoiceChannel", "Guild", "Role", "Boolean", "String", "Integer", "Float", "url", "Command"];
+/* eslint-disable class-methods-use-this, no-underscore-dangle, no-restricted-syntax */
+const types = Object.getOwnPropertyNames(Resolver.prototype).slice(1);
+
 /**
  * Schema constructor that creates schemas for use in Komada.
  * @type {Object}
@@ -22,18 +24,18 @@ class Schema {
   /**
    * All of the valid key types in Komada at the present moment.
    * @typedef {string} Types
-   * @property {string} User
-   * @property {string} Channel
-   * @property {string} TextChannel
-   * @property {string} VoiceChannel
-   * @property {string} Guild
-   * @property {string} Role
-   * @property {string} Boolean
-   * @property {string} String
-   * @property {string} Integer
-   * @property {string} Float
+   * @property {string} user
+   * @property {string} channel
+   * @property {string} textChannel
+   * @property {string} voiceChannel
+   * @property {string} guild
+   * @property {string} role
+   * @property {string} boolean
+   * @property {string} string
+   * @property {string} integer
+   * @property {string} float
    * @property {string} url
-   * @property {string} Command
+   * @property {string} command
    * @memberof Schema
    */
 
@@ -54,8 +56,8 @@ class Schema {
    * @returns {Schema} Returns the schema you are creating so you can chain add calls.
    */
   add(name, { type, value, min, max, array } = {}) {
-    [name, value, min, max, array, type] = this._validateInput(name, value, min, max, array, type);
-    if (["Float", "Integer", "String"].includes(type)) {
+    [name, value, min, max, array, type] = this._validateInput(name, value, min, max, array, type.toLowerCase());
+    if (["float", "integer", "string"].includes(type) {
       this[name] = { type, default: value, min, max, array };
       return this;
     }

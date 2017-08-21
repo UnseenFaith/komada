@@ -88,17 +88,22 @@ class Settings {
     if (!(schema instanceof Schema)) schema = new Schema(schema);
     for (const [key, value] of Object.entries(schema)) { // eslint-disable-line
       if (value instanceof Object && "type" in value && "default" in value) {
-        if (value.array && !(value.default instanceof Array)) {
-          this.client.emit("log", `The default value for ${key} must be an array.`, "error");
-          delete this.schema[key];
-          continue;
+        if (value.type === "object") {
+          schema[key] = new Schema(value);
+          if (schema[key].some(v => v.type === "object")) this.validateSchema(schema[key]);
+        } else {
+          if (value.array && !(value.default instanceof Array)) {
+            this.client.emit("log", `The default value for ${key} must be an array.`, "error");
+            delete schema[key];
+            continue;
+          }
         }
       } else {
-        delete this.schema[key];
+        delete schema[key];
         this.client.emit("log", `The type value for ${key} is not supported. It must be an object with type and default properties.`, "error");
       }
     }
-    this.schema = schema;
+    if (!this.schema) this.schema = schema;
   }
 
   /**

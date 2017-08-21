@@ -82,6 +82,10 @@ class SettingResolver extends Resolver {
     return command.help.name;
   }
 
+  async object(data) {
+    return data;
+  }
+
   /**
    * Check if the input is valid with min and/or max values.
    * @static
