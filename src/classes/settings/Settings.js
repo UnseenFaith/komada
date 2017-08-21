@@ -73,7 +73,7 @@ class Settings {
   async init() {
     await fs.ensureDir(this.baseDir);
     const schema = await fs.readJSON(this.schemaPath)
-      .catch(() => fs.outputJSONAtomic(this.filePath, this._schema).then(() => this._schema));
+      .catch(() => fs.outputJSONAtomic(this.schemaPath, this._schema).then(() => this._schema));
     await this.validateSchema(schema);
     await this.gateway.init(this.schema);
   }
