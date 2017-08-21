@@ -60,7 +60,7 @@ class Schema {
     if (type === "object") {
       this[name] = new Schema();
     }
-    if (["float", "integer", "string"].includes(type) {
+    if (["float", "integer", "string"].includes(type)) {
       this[name] = { type, default: value, min, max, array };
       return this;
     }
