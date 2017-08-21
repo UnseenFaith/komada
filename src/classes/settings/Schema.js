@@ -59,6 +59,7 @@ class Schema {
     [name, value, min, max, array, type] = this._validateInput(name, value, min, max, array, type.toLowerCase());
     if (type === "object") {
       this[name] = new Schema();
+      return this;
     }
     if (["float", "integer", "string"].includes(type)) {
       this[name] = { type, default: value, min, max, array };
