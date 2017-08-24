@@ -66,4 +66,4 @@ node app.js
 
 ## Documentation
 
-Please check [Komada Docs](https://dirigeants.github.io/komada/) to learn more about Komada Framework and its usage. Any doubts? Ask us [here](https://discord.gg/dgs8263).
+Please check [Komada Docs](https://dirigeants.github.io/komada/) to learn more about Komada Framework and its usage. Any doubts? Ask us [here](https://discord.gg/FpEFSyY).
