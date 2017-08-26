@@ -30,7 +30,7 @@ class Resolver {
    */
   async msg(message, channel) {
     if (message instanceof Message) return message;
-    return regex.snowflake.test(message) ? channel.fetchMessage(message).catch(() => null) : undefined;
+    return regex.snowflake.test(message) ? channel.messages.fetch(message).catch(() => null) : undefined;
   }
 
   /**
@@ -42,7 +42,7 @@ class Resolver {
    */
   async msgs(message, channel, limit = 100) {
     if (message instanceof Message) message = message.id;
-    return regex.snowflake.test(message) ? channel.fetchMessages(message, { limit, around: message }).catch(() => null) : undefined;
+    return regex.snowflake.test(message) ? channel.messages.fetch(message, { limit, around: message }).catch(() => null) : undefined;
   }
 
   /**
@@ -53,7 +53,7 @@ class Resolver {
   async user(user) {
     if (user instanceof User) return user;
     if (user instanceof GuildMember) return user.user;
-    if (typeof user === "string" && regex.userOrMember.test(user)) return this.client.user.bot ? this.client.fetchUser(regex.userOrMember.exec(user)[1]).catch(() => null) : this.client.users.get(regex.userOrMember.exec(user)[1]);
+    if (typeof user === "string" && regex.userOrMember.test(user)) return this.client.user.bot ? this.client.users.fetch(regex.userOrMember.exec(user)[1]).catch(() => null) : this.client.users.get(regex.userOrMember.exec(user)[1]);
     return null;
   }
 
@@ -65,10 +65,10 @@ class Resolver {
    */
   async member(member, guild) {
     if (member instanceof GuildMember) return member;
-    if (member instanceof User) return guild.fetchMember(member);
+    if (member instanceof User) return guild.members.fetch(member);
     if (typeof member === "string" && regex.userOrMember.test(member)) {
-      const user = this.client.user.bot ? await this.client.fetchUser(regex.userOrMember.exec(member)[1]).catch(() => null) : this.client.users.get(regex.userOrMember.exec(member)[1]);
-      if (user) return guild.fetchMember(user).catch(() => null);
+      const user = this.client.user.bot ? await this.client.users.fetch(regex.userOrMember.exec(member)[1]).catch(() => null) : this.client.users.get(regex.userOrMember.exec(member)[1]);
+      if (user) return guild.members.fetch(user).catch(() => null);
     }
     return null;
   }
