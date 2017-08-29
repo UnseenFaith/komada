@@ -27,8 +27,8 @@
     "performance-now": "^2.1.0"
   },
   "devDependencies": {
-    "eslint": "^4.3.0",
-    "eslint-config-airbnb-base": "^11.3.1",
+    "eslint": "^4.5.0",
+    "eslint-config-airbnb-base": "^11.3.2",
     "eslint-plugin-import": "^2.7.0",
     "ink-docstrap": "^1.3.0",
     "jsdoc": "github:jsdoc3/jsdoc#master",
