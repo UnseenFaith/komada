@@ -93,6 +93,7 @@ const client = new komada.Client({
   clientOptions: {
     fetchAllMembers: false,
   },
+  cmdLogging: true,
 });
 
 client.login(&quot;your-bot-token&quot;);
@@ -109,6 +110,7 @@ client.login(&quot;your-bot-token&quot;);
 <li><strong>prefix</strong>: The default prefix when the bot first boots up. This option becomes useless after first boot, since the prefix is written to the default configuration system.</li>
 <li><strong>clientOptions</strong>: These are passed directly to the discord.js library. They are optional. For more information on which options are available, see <a href="https://discord.js.org/#/docs/main/stable/typedef/ClientOptions">ClientOptions in the discord.js docs</a>.</li>
 <li><strong>permStructure</strong>: It allows you to configure the permission levels from Komada, with a range of 0-10. You can also use <code>Komada.PermLevels</code> constructor.</li>
+<li><strong>cmdLogging</strong>: If set to true, it console.logs EVERY <em>successful</em> command run, where, the user who ran it, and the time it took to process the command with a sexy color format.</li>
 </ul>
 <blockquote>
 <p>Komada automatically detects selfbot mode, and takes appropriate precautions, such as not responding to anyone but yourself.</p>
@@ -122,7 +124,7 @@ node app.js
 <p><strong>Requirements</strong>: This version of Komada requires Node 8.1.0 or higher to run. Depends on Discord.js v12.0.0-dev or higher (the appropriate version is automatically installed).</p>
 </blockquote>
 <h2>Documentation</h2>
-<p>Please check <a href="https://komada.js.org">Komada Docs</a> to learn more about Komada Framework and its usage. Any doubts? Ask us <a href="https://discord.gg/dgs8263">here</a>.</p></article>
+<p>Please check <a href="https://dirigeants.github.io/komada/">Komada Docs</a> to learn more about Komada Framework and its usage. Any doubts? Ask us <a href="https://discord.gg/FpEFSyY">here</a>.</p></article>
     </section>
 
 

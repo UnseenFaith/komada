@@ -35,6 +35,7 @@ const client = new komada.Client({
   clientOptions: {
     fetchAllMembers: false,
   },
+  cmdLogging: true,
 });
 
 client.login("your-bot-token");
@@ -50,6 +51,7 @@ client.login("your-bot-token");
 - **prefix**: The default prefix when the bot first boots up. This option becomes useless after first boot, since the prefix is written to the default configuration system.
 - **clientOptions**: These are passed directly to the discord.js library. They are optional. For more information on which options are available, see [ClientOptions in the discord.js docs](https://discord.js.org/#/docs/main/stable/typedef/ClientOptions).
 - **permStructure**: It allows you to configure the permission levels from Komada, with a range of 0-10. You can also use `Komada.PermLevels` constructor.
+- **cmdLogging**: If set to true, it console.logs EVERY *successful* command run, where, the user who ran it, and the time it took to process the command with a sexy color format.
 
 > Komada automatically detects selfbot mode, and takes appropriate precautions, such as not responding to anyone but yourself.
 
@@ -66,4 +68,4 @@ node app.js
 
 ## Documentation
 
-Please check [Komada Docs](https://komada.js.org) to learn more about Komada Framework and its usage. Any doubts? Ask us [here](https://discord.gg/dgs8263).
+Please check [Komada Docs](https://dirigeants.github.io/komada/) to learn more about Komada Framework and its usage. Any doubts? Ask us [here](https://discord.gg/FpEFSyY).
