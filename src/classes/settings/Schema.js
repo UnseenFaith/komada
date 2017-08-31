@@ -81,6 +81,12 @@ class Schema {
     return defaults;
   }
 
+  get nestedKeys() {
+    const keys = [];
+    Schema.keyRecursion(this, keys);
+    return keys;
+  }
+
   _validateInput(name, value, min, max, array, type) {
     if (!name) throw "You must provide a name for this new key.";
     if (!types.includes(type)) throw `Invalid type provided. Valid types are: ${types.join(", ")}`;
@@ -110,6 +116,12 @@ class Schema {
       throw `Value must be shorter than ${max}`;
     }
     return [null, null];
+  }
+
+  static keyRecursion(obj, array) {
+    for (const key of Object.keys(obj)) {
+      if (obj[key].type && obj[key].type === "object") Schema.keyRecursion(obj[key], array); else array.push(key);
+    }
   }
 
 }
