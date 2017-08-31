@@ -35,10 +35,17 @@ class Settings {
     this.gateway = new Gateway(this, validate);
 
     /**
+     * TODO
+     * This will be changed back to what it was previously, just changing for testing.
+     * Ideally, this will be an entire new PR for merging default config options into Komada so we don't have to check if they exist in a million different places,
+     * just a single mergeConfig function.
+     */
+
+    /**
      * The cache used to store data for this instance.
      * @type {Cache}
      */
-    this.cache = client.providers.get(client.config.settings.cache);
+    this.cache = client.config.settings && client.config.settings.cache ? client.providers.get(client.config.settings.cache) : client.providers.get("collection");
 
     /**
      * The schema that we will use for this instance.
