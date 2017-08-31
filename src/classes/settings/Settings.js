@@ -1,6 +1,5 @@
 /* eslint-disable no-underscore-dangle */
 
-const Cache = require("./Cache");
 const Gateway = require("./Gateway");
 const Schema = require("./Schema");
 const Resolver = require("../settingResolver");
@@ -38,7 +37,7 @@ class Settings {
      * The cache used to store data for this instance.
      * @type {Cache}
      */
-    this.cache = new Cache(this, this.type); // will be replaced later with CacheProviders
+    this.cache = client.providers.get(client.config.settings.cache); 
 
     /**
      * The schema that we will use for this instance.
