@@ -7,6 +7,7 @@ const { resolve } = require("path");
 const fs = require("fs-nextra");
 
 class Settings {
+
   /**
    * Creates a new settings instance.
    * @param {KomadaClient} client The Komada clien
@@ -23,7 +24,7 @@ class Settings {
 
     /**
      * The name or type of settings
-     * @type {string} 
+     * @type {string}
      */
     this.type = name;
 
@@ -37,7 +38,7 @@ class Settings {
      * The cache used to store data for this instance.
      * @type {Cache}
      */
-    this.cache = client.providers.get(client.config.settings.cache); 
+    this.cache = client.providers.get(client.config.settings.cache);
 
     /**
      * The schema that we will use for this instance.
@@ -90,12 +91,10 @@ class Settings {
         if (value.type === "object") {
           schema[key] = new Schema(value);
           if (schema[key].some(v => v.type === "object")) this.validateSchema(schema[key]);
-        } else {
-          if (value.array && !(value.default instanceof Array)) {
-            this.client.emit("log", `The default value for ${key} must be an array.`, "error");
-            delete schema[key];
-            continue;
-          }
+        } else if (value.array && !(value.default instanceof Array)) {
+          this.client.emit("log", `The default value for ${key} must be an array.`, "error");
+          delete schema[key];
+          continue;
         }
       } else {
         delete schema[key];
