@@ -1,6 +1,5 @@
 module.exports = {
   ArgResolver: require("./classes/argResolver"),
-  Cache: require("./classes/settings/Cache"),
   Client: require("./classes/client"),
   CommandMessage: require("./classes/commandMessage"),
   Loader: require("./classes/loader"),
