@@ -589,7 +589,7 @@ class Loader {
         break;
     }
     extendable.conf.appliesTo.forEach((structure) => {
-      Object.defineProperty(Discord[structure].prototype, extendable.conf.method, myExtend);
+      Object.defineProperty(!extendable.conf.komada ? Discord[structure].prototype : require("komada")[structure].prototype, extendable.conf.method, myExtend);  // eslint-disable-line
     });
     delete require.cache[join(dir, file)];
   }

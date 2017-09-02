@@ -180,7 +180,7 @@ exports.conf = {};</code></pre>
     
     <div class="container-source members">
         <code><a href="documentation_ExtendableStructure.js.html">documentation/ExtendableStructure.js</a></code>,
-        <code><a href="documentation_ExtendableStructure.js.html#line38">line 38</a></code>
+        <code><a href="documentation_ExtendableStructure.js.html#line40">line 40</a></code>
     </div>
     
 </h4>
@@ -255,7 +255,8 @@ exports.conf = {};</code></pre>
     <pre class="prettyprint"><code>exports.conf = {
    type: "method",
    method: "ping",
-   appliesTo: ["Message"]
+   appliesTo: ["Message"],
+   komada: false
  };</code></pre>
 
     
@@ -500,6 +501,29 @@ exports.conf = {};</code></pre>
             
 
             <td class="description last">An array of Discord.js classes that this extendable will apply to.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>komada</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Whether or not this extendable should apply to Komada or Discord.js</td>
         </tr>
 
     
