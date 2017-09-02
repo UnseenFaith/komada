@@ -4,6 +4,7 @@ const exec = promisify(require("child_process").exec);
 const { sep, resolve, join } = require("path");
 const Discord = require("discord.js");
 const ParsedUsage = require("./parsedUsage");
+const Komada = require("../index.js");
 
 const coreProtected = {
   commands: [],
@@ -530,7 +531,7 @@ class Loader {
         break;
     }
     extendable.conf.appliesTo.forEach((structure) => {
-      Object.defineProperty(Discord[structure].prototype, extendable.conf.method, myExtend);
+      Object.defineProperty(!extendable.conf.komada ? Discord[structure].prototype : Komada[structure].prototype, extendable.conf.method, myExtend);
     });
     delete require.cache[join(dir, file)];
   }
