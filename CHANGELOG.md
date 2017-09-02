@@ -4,8 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased] - Classbased | Staged for 0.20.7
+## [Unreleased] - Classbased | Staged for 0.20.8
 ### Added
+- [[#343](https://github.com/dirigeants/komada/pull/343)] Komada extendables are now a thing.
 - [[#323](https://github.com/dirigeants/komada/pull/323)] Documentation to all pieces.
 - [[#323](https://github.com/dirigeants/komada/pull/323)] Added the types `TextChannel` and `VoiceChannel` to the
 compatible types for `SchemaManager`, as a way to prevent security issues.
@@ -76,7 +77,7 @@ command.
 reloading the provider.
 - [[#322](https://github.com/dirigeants/komada/pull/322)] **[BREAKING]** `SettingGateway#update`'s arguments are now `key`, `object` and `?guild`, allowing instances of SG which resolver aimed to non-Guild classes to parse correctly. The argument `object` can contain multiple keys. (So SG will update all keys from the object at once). Previously, you could update only a pair `key-value`.
 - [[#322](https://github.com/dirigeants/komada/pull/322)] Safer editing when using SettingGateway, now ensuring the settings has been created before inserting the data. (Fixes an issue when the data was inserted without creating it before).
-- [[#317](https://github.com/dirigeants/komada/pull/317)] **[BREAKING]** `client.settingGateway` has been changed to 
+- [[#317](https://github.com/dirigeants/komada/pull/317)] **[BREAKING]** `client.settingGateway` has been changed to
 `client.settings`, which is able to handle multiple instances of SettingGateway.
 - [[#300](https://github.com/dirigeants/komada/pull/300)] **[Update]** `client.methods.Embed` changed to use Discord.js MessageEmbed.
 - [[#297](https://github.com/dirigeants/komada/pull/297)] **[Update]** Abstraction of Settings and slight refactor so its easier to use.

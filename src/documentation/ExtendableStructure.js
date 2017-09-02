@@ -22,6 +22,7 @@ exports.extend = function() {}; // eslint-disable-line
  * @property {String} type Type of extendable. This will be one of the three: "method", "set", or "get".
  * @property {String} method The name of this extendable.
  * @property {Array} appliesTo An array of Discord.js classes that this extendable will apply to.
+ * @property {boolean} komada Whether or not this extendable should apply to Komada or Discord.js
  */
 
 
@@ -32,7 +33,8 @@ exports.extend = function() {}; // eslint-disable-line
  * exports.conf = {
    type: "method",
    method: "ping",
-   appliesTo: ["Message"]
+   appliesTo: ["Message"],
+   komada: false
  };
  */
 exports.conf = {};
