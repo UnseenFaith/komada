@@ -59,7 +59,7 @@ exports.validate = (options) => {
   if ("ownerID" in options && (typeof options.ownerID !== "string" || options.ownerID !== null)) throw new TypeError("OwnerID must be a string (user id) if provided.");
   if ("disabled" in options) {
     if (typeof options.disabled !== "object" || Array.isArray(options.disabled)) throw new TypeError("Disabled must be a valid object");
-    for (const key of Object.keys(options.disabled)) {
+    for (const key of Object.keys(options.disabled)) { // eslint-disable-line
       if (!pieces.includes(key)) throw new Error("Invalid piece name in the disabled array");
       if (!Array.isArray(options.disabled[key])) throw new TypeError(`${key} must be an array.`);
     }
