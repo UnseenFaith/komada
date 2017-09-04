@@ -287,6 +287,16 @@ footer {
     text-align: center;
 }
 
+footer a {
+    color: #ebf8ff;
+    text-decoration: underline;
+}
+
+footer a:hover {
+    color: #ebf8ff;
+    text-decoration: none;
+}
+
 /* README*/
 .readme {
     font-size: 14px;
