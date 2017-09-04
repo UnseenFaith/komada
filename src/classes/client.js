@@ -7,6 +7,7 @@ const Loader = require("./loader");
 const ArgResolver = require("./argResolver");
 const PermLevels = require("./permLevels");
 const Settings = require("./settingsCache");
+const merge = require("../functions/mergeConfig");
 
 const defaultPermStructure = new PermLevels()
   .addLevel(0, false, () => true)
@@ -85,7 +86,7 @@ class Komada extends Discord.Client {
      * @type {Komada.Options}
      */
     /* Remove all of this and replace with a mergeConfig method instead before v1 release */
-    this.config = config;
+    this.config = merge(config);
     if (!("prefix" in config)) this.config.prefix = "?";
     this.config.provider = config.provider || {};
     if (!config.disabled) config.disabled = {};
