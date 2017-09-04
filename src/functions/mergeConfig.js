@@ -18,7 +18,7 @@ const defaultPermStructure = new PermLevels()
 
 
 module.exports = (options) => {
-  for (const key in Object.keys(this.DEFAULT_OPTIONS)) {
+  for (const key in Object.keys(this.DEFAULT_OPTIONS)) { // eslint-disable-line
     if (!(key in options)) options[key] = this.DEFAULT_OPTIONS[key];
   }
   this.validate(options);
