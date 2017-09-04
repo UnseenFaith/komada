@@ -545,7 +545,7 @@ class Loader {
    */
   async loadFiles(files, dir, loadNew, startOver) {
     try {
-      files.forEach(file => loadNew.call(this, file, dir));
+      files.forEach(file => delete require.cache[join(dir, ...file)] && loadNew.call(this, file, dir));
     } catch (error) {
       if (error.code === "MODULE_NOT_FOUND") {
         const missingModule = /'([^']+)'/g.exec(error.toString());
