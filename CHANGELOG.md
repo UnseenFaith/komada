@@ -133,6 +133,7 @@ core event.
 cached an implied permissions object, instead of generating a new object every time a command is run.
 
 ### Fixed
+- [[#347](https://github.com/dirigeants/komada/pull/347)] **[BugFix]** Cache deletions corrected to work on failures or successes.
 - [[#323](https://github.com/dirigeants/komada/pull/323)] **[BugFix]** `SettingGateway#getResolved` was not accepting
 any other table than `guilds`.
 - [[#323](https://github.com/dirigeants/komada/pull/323)] **[BugFix]** `CacheManager` was not accepting any other table

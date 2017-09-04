@@ -115,7 +115,6 @@ class Loader {
    */
   loadNewFunction(file, dir) {
     this[file.split(".")[0]] = require(join(dir, file));
-    delete require.cache[join(dir, file)];
   }
 
   /**
@@ -200,7 +199,6 @@ class Loader {
     cmd.conf.aliases = cmd.conf.aliases || [];
     cmd.conf.aliases.forEach(alias => this.client.aliases.set(alias, cmd.help.name));
     cmd.usage = new ParsedUsage(this.client, cmd);
-    delete require.cache[join(dir, ...file)];
   }
 
   /**
@@ -259,7 +257,6 @@ class Loader {
    */
   loadNewInhibitor(file, dir) {
     this.client.commandInhibitors.set(file.split(".")[0], require(join(dir, file)));
-    delete require.cache[join(dir, file)];
   }
 
   /**
@@ -313,7 +310,6 @@ class Loader {
    */
   loadNewFinalizer(file, dir) {
     this.client.commandFinalizers.set(file.split(".")[0], require(join(dir, file)));
-    delete require.cache[join(dir, file)];
   }
 
   /**
@@ -365,7 +361,6 @@ class Loader {
     const eventName = file.split(".")[0];
     this.client.eventHandlers.set(eventName, (...args) => require(join(dir, file)).run(this.client, ...args));
     this.client.on(eventName, this.client.eventHandlers.get(eventName));
-    delete require.cache[join(dir, file)];
   }
 
   /**
@@ -415,7 +410,6 @@ class Loader {
    */
   loadNewMessageMonitor(file, dir) {
     this.client.messageMonitors.set(file.split(".")[0], require(join(dir, file)));
-    delete require.cache[join(dir, file)];
   }
 
   /**
@@ -464,7 +458,6 @@ class Loader {
    */
   loadNewProvider(file, dir) {
     this.client.providers.set(file.split(".")[0], require(join(dir, file)));
-    delete require.cache[join(dir, file)];
   }
 
   /**
@@ -532,7 +525,6 @@ class Loader {
     extendable.conf.appliesTo.forEach((structure) => {
       Object.defineProperty(!extendable.conf.komada ? Discord[structure].prototype : require("komada")[structure].prototype, extendable.conf.method, myExtend);  // eslint-disable-line
     });
-    delete require.cache[join(dir, file)];
   }
 
 
@@ -545,7 +537,7 @@ class Loader {
    */
   async loadFiles(files, dir, loadNew, startOver) {
     try {
-      files.forEach(file => delete require.cache[join(dir, ...file)] && loadNew.call(this, file, dir));
+      files.forEach(file => loadNew.call(this, file, dir));
     } catch (error) {
       if (error.code === "MODULE_NOT_FOUND") {
         const missingModule = /'([^']+)'/g.exec(error.toString());
@@ -558,6 +550,8 @@ class Loader {
       } else {
         throw `\`\`\`${error.stack || error}\`\`\``;
       }
+    } finally {
+      files.forEach(file => delete require.cache[join(dir, ...file)]);
     }
   }
 
