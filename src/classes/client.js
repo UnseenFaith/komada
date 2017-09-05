@@ -7,6 +7,7 @@ const Loader = require("./loader");
 const ArgResolver = require("./argResolver");
 const PermLevels = require("./permLevels");
 const Settings = require("./settingsCache");
+const merge = require("../functions/mergeConfig");
 
 const defaultPermStructure = new PermLevels()
   .addLevel(0, false, () => true)
@@ -84,21 +85,8 @@ class Komada extends Discord.Client {
      * The configuration used to create Komada
      * @type {Komada.Options}
      */
-    /* Remove all of this and replace with a mergeConfig method instead before v1 release */
-    this.config = config;
-    if (!("prefix" in config)) this.config.prefix = "?";
-    this.config.provider = config.provider || {};
-    if (!config.disabled) config.disabled = {};
-    this.config.disabled = {
-      commands: config.disabled.commands || [],
-      events: config.disabled.events || [],
-      functions: config.disabled.functions || [],
-      inhibitors: config.disabled.inhibitors || [],
-      finalizers: config.disabled.finalizers || [],
-      monitors: config.disabled.monitors || [],
-      providers: config.disabled.providers || [],
-      extendables: config.disabled.extendables || [],
-    };
+
+    this.config = merge(config);
 
     /**
      * The location of where the core files of Komada rely in, typically inside node_modules
@@ -322,7 +310,7 @@ class Komada extends Discord.Client {
     }));
     this.setInterval(this.sweepCommandMessages.bind(this), this.commandMessageLifetime);
     this.ready = true;
-    this.emit("log", this.config.readyMessage || `Successfully initialized. Ready to serve ${this.guilds.size} guilds.`);
+    this.emit("log", this.config.readyMessage(this));
   }
 
   /**
