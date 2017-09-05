@@ -6,5 +6,5 @@ exports.conf = {
 
 // eslint-disable-next-line func-names
 exports.extend = function () {
-  return this.guild ? this.guild.settings : this.client.settings.guilds.defaults;
+  return this.guild ? this.guild.settings : this.client.settings.guilds.schema.defaults;
 };
