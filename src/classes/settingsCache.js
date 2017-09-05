@@ -1,5 +1,5 @@
-const SettingGateway = require("./settingGateway");
-const SettingResolver = require("./settingResolver");
+const Settings = require("./settings/Settings");
+const Resolver = require("./settingResolver");
 
 /**
  * SettingGateway's driver to make new instances of it, with the purpose to handle different databases simultaneously.
@@ -19,19 +19,14 @@ class SettingsCache {
      */
     Object.defineProperty(this, "client", { value: client });
 
-    /**
-     * The resolver instance this SettingGateway uses to parse the data.
-     * @name SettingsCache#resolver
-     * @type {SettingResolver}
-     */
-    this.resolver = new SettingResolver(client);
+    this.resolver = new Resolver(client);
 
     /**
      * The SettingGateway instance created to handle guild settings.
      * @name SettingsCache#guilds
      * @type {SettingGateway}
      */
-    this.guilds = new SettingGateway(this, "guilds", this.validate.bind(null, this.resolver), this.defaultDataSchema);
+    this.guilds = new Settings(client, "guilds", this.validate.bind(null, this.resolver), this.defaultDataSchema, this.resolver);
   }
 
   /**
@@ -64,8 +59,7 @@ class SettingsCache {
     if (typeof validateFunction !== "function") throw "You must pass a validate function.";
     validateFunction = validateFunction.bind(null, this.resolver);
     if (schema.constructor.name !== "Object") throw "Schema must be a valid object or left undefined for an empty object.";
-    this[name] = new SettingGateway(this, name, validateFunction, schema);
-    await this[name].init();
+    this[name] = new Settings(this, name, validateFunction, schema, this.resolver);
     return this[name];
   }
 
