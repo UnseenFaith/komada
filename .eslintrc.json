@@ -9,6 +9,8 @@
   "extends": "airbnb-base",
   "rules": {
     "no-console": "off",
+    "object-curly-newline": "off",
+    "function-paren-newline": "off",
     "indent": ["error", 2, { "SwitchCase": 1 }],
     "linebreak-style": "off",
     "quotes": ["warn", "double"],
