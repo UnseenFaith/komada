@@ -12,8 +12,8 @@ class Settings {
    * Creates a new settings instance.
    * @param {KomadaClient} client The Komada clien
    * @param {string} name The name of these new settings
-   * @param {function} validate The validate function for gateway
-   * @param {Schema|object} schema The schema object
+   * @param {Function} validate The validate function for gateway
+   * @param {Schema|Object} schema The schema object
    */
   constructor(client, name, validate, schema) {
     /**
@@ -35,17 +35,10 @@ class Settings {
     this.gateway = new Gateway(this, validate);
 
     /**
-     * TODO
-     * This will be changed back to what it was previously, just changing for testing.
-     * Ideally, this will be an entire new PR for merging default config options into Komada so we don't have to check if they exist in a million different places,
-     * just a single mergeConfig function.
-     */
-
-    /**
      * The cache used to store data for this instance.
      * @type {Cache}
      */
-    this.cache = client.config.settings && client.config.settings.cache ? client.providers.get(client.config.settings.cache) : client.providers.get("collection");
+    this.cache = client.config.providers.cache === "js" ? client.providers.get("collection") : client.providers.get(client.config.providers.cache);
 
     /**
      * The schema that we will use for this instance.
@@ -95,10 +88,7 @@ class Settings {
     if (!(schema instanceof Schema)) schema = new Schema(schema);
     for (const [key, value] of Object.entries(schema)) { // eslint-disable-line
       if (value instanceof Object && "type" in value && "default" in value) {
-        if (value.type === "object") {
-          schema[key] = new Schema(value);
-          if (schema[key].some(v => v.type === "object")) this.validateSchema(schema[key]);
-        } else if (value.array && !(value.default instanceof Array)) {
+        if (value.array && !(value.default instanceof Array)) {
           this.client.emit("log", `The default value for ${key} must be an array.`, "error");
           delete schema[key];
           continue;
@@ -108,26 +98,26 @@ class Settings {
         this.client.emit("log", `The type value for ${key} is not supported. It must be an object with type and default properties.`, "error");
       }
     }
-    if (!this.schema) this.schema = schema;
   }
 
   /**
    * @param {string} name The name of the key you want to add.
    * @param {Schema.Options} options Schema options.
    * @param {boolean} [force=true] Whether or not we should force update all settings.
-   * @returns {Promise<void>}
+   * @returns {Promise<Schema>} The new schema object
    */
   async add(name, options, force = true) {
     this.schema.add(name, options);
     if (force) await this.force("add", name);
-    return fs.outputJSONAtomic(this.schemaPath, this.schema);
+    fs.outputJSONAtomic(this.schemaPath, this.schema);
+    return this.schema;
   }
 
   /**
    * Remove a key from the schema.
    * @param {string}  key The key to remove.
    * @param {boolean} [force=false] Whether this change should modify all configurations or not.
-   * @returns {Promise<void>}
+   * @returns {Promise<Schema>} The new schema object
    * @example
    * // Remove a key called 'modlog'.
    * await client.settings.guilds.remove("modlog");
@@ -136,7 +126,8 @@ class Settings {
     if (!(key in this.schema)) throw `The key ${key} does not exist in the schema.`;
     delete this.schema[key];
     if (force) await this.force("delete", key);
-    return fs.outputJSONAtomic(this.schemaPath, this.schema);
+    fs.outputJSONAtomic(this.schemaPath, this.schema);
+    return this.schema;
   }
 
   /**
@@ -165,6 +156,7 @@ class Settings {
   /**
    * Creates a new entry in the cache.
    * @param {Object|string} input An object containing a id property, like discord.js objects, or a string.
+   * @returns {Promisie<void>}
    */
   create(...args) {
     return this.gateway.create(...args);
@@ -173,6 +165,7 @@ class Settings {
   /**
    * Removes an entry from the cache.
    * @param {Object|string} input An object containing a id property, like discord.js objects, or a string.
+   * @returns {Promise<void>}
    */
   destroy(...args) {
     return this.gateway.destroy(...args);
@@ -181,6 +174,7 @@ class Settings {
   /**
    * Gets an entry from the cache
    * @param {string} input The key you are you looking for.
+   * @returns {Schema}
    */
   get(...args) {
     return this.gateway.get(...args);
@@ -213,6 +207,7 @@ class Settings {
    * @param {string} type Either 'add' or 'remove'.
    * @param {string} key The key from the Schema.
    * @param {any} data The value to be added or removed.
+   * @param {Object|string} [guild=null] The guild for this new setting change, useful for when settings don't aim for guilds.
    * @returns {boolean}
    */
   updateArray(...args) {

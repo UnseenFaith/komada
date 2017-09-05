@@ -24,7 +24,7 @@ class Gateway {
      * The provider engine that will handle saving and getting all data for this instance.
      * @type {string}
      */
-    this.engine = this.client.config.provider.engine || "json";
+    this.engine = this.client.config.provider.engine;
 
     if (!this.provider) throw `This provider(${this.engine}) does not exist in your system.`;
 
@@ -79,6 +79,7 @@ class Gateway {
   /**
    * Gets an entry from the cache
    * @param {string} input The key you are you looking for.
+   * @returns {Schema}
    */
   get(input) {
     return input !== "default" ? this.cache.get(input) || this.schema.defaults : this.schema.defaults;
@@ -161,15 +162,17 @@ class Gateway {
    * @param {string} type Either 'add' or 'remove'.
    * @param {string} key The key from the Schema.
    * @param {any} data The value to be added or removed.
+   * @param {Object|string} [guild=null] The guild for this setting, useful for when the settings aren't aimed for guilds
    * @returns {boolean}
    */
-  async updateArray(input, type, key, data) {
+  async updateArray(input, type, key, data, guild = null) {
     if (!["add", "remove"].includes(type)) throw "The type parameter must be either add or remove.";
     if (!(key in this.schema)) throw `The key ${key} does not exist in the current data schema.`;
     if (!this.schema[key].array) throw `The key ${key} is not an Array.`;
     if (data === undefined) throw "You must specify the value to add or filter.";
     const target = await this.validate(input).then(output => (output.id || output));
-    let result = await this.resolver[this.schema[key].type.toLowerCase()](data, this.client.guilds.get(target), this.schema[key]);
+    guild = await this.resolver.guild(guild || target);
+    let result = await this.resolver[this.schema[key].type.toLowerCase()](data, guild, this.schema[key]);
     if (result.id) result = result.id;
     let cache = this.get(target);
     if (cache instanceof Promise) cache = await cache;
@@ -209,7 +212,7 @@ class Gateway {
 
   /**
    * The provider this SettingGateway instance uses for the persistent data operations.
-   * @type {Resolver}
+   * @type {Provider}
    * @readonly
    */
   get provider() {

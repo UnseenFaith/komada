@@ -57,11 +57,6 @@ class Schema {
    */
   add(name, { type, value, min, max, array } = {}) {
     [name, value, min, max, array, type] = this._validateInput(name, value, min, max, array, type.toLowerCase());
-    if (type === "object") {
-      this[name] = new Schema();
-      this[name].type = "object";
-      return this;
-    }
     if (["float", "integer", "string"].includes(type)) {
       this[name] = { type, default: value, min, max, array };
       return this;
@@ -80,12 +75,6 @@ class Schema {
       defaults[key] = this[key].default;
     }
     return defaults;
-  }
-
-  get nestedKeys() {
-    const keys = [];
-    Schema.keyRecursion(this, keys);
-    return keys;
   }
 
   _validateInput(name, value, min, max, array, type) {
@@ -117,12 +106,6 @@ class Schema {
       throw `Value must be shorter than ${max}`;
     }
     return [null, null];
-  }
-
-  static keyRecursion(obj, array) {
-    for (const key of Object.keys(obj)) {
-      if (obj[key].type && obj[key].type === "object") Schema.keyRecursion(obj[key], array); else array.push(key);
-    }
   }
 
 }
