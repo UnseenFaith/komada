@@ -114,7 +114,7 @@ const defaultPermStructure = new PermLevels()
  * @property {PermissionLevels|Array&lt;{}>} [permStructure=Array&lt;{}>] The PermStructure for Komada.
  *
  * @property {boolean} [selfbot=boolean] Whether the bot is a selfbot or not. Komada detects this automatically.
- * @property {string}  [readyMessage=String] A custom string message Komada will use when firing the ready event message.
+ * @property {function}  [readyMessage=function] A custom function with a client argument that allows you to customize the ready string when Komada logs in.
  * @property {number}  [commandMessageLifetime=1800] The lifetime for the command messages, in milliseconds.
  * @property {number}  [commandMessageSweep=900] How frequent should Komada sweep the command messages.
  *
