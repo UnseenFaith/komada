@@ -38,7 +38,7 @@ class Settings {
      * The cache used to store data for this instance.
      * @type {Cache}
      */
-    this.cache = client.config.providers.cache === "js" ? client.providers.get("collection") : client.providers.get(client.config.providers.cache);
+    this.cache = client.config.provider.cache === "js" ? client.providers.get("collection") : client.providers.get(client.config.provider.cache);
 
     /**
      * The schema that we will use for this instance.
