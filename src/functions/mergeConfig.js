@@ -1,4 +1,4 @@
-const { PermLevels } = require("../classes/permLevels");
+const PermLevels = require("../classes/permLevels");
 
 const defaultPermStructure = new PermLevels()
   .addLevel(0, false, () => true)
