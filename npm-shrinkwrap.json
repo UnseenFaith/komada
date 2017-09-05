@@ -1,6 +1,6 @@
 {
   "name": "komada",
-  "version": "0.20.9",
+  "version": "0.20.10",
   "lockfileVersion": 1,
   "requires": true,
   "dependencies": {
@@ -381,7 +381,7 @@
       }
     },
     "discord.js": {
-      "version": "github:hydrabolt/discord.js#87fa74acd4fccbc16534bda8108cdd90d5cf0f52",
+      "version": "github:hydrabolt/discord.js#f95ae4fcb7b92796d294fb7dba728b0c1e6dacfb",
       "requires": {
         "long": "3.2.0",
         "prism-media": "0.0.1",
