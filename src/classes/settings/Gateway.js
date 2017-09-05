@@ -146,7 +146,7 @@ class Gateway {
   /**
    * Creates the settings if it did not exist previously.
    * @param {Object|string} target An object or string that can be parsed by this instance's resolver.
-   * @returns {true}
+   * @returns {Promise<void>|Promise<true>}
    */
   async ensureCreate(target) {
     if (typeof target !== "string") throw `Expected input type string, got ${typeof target}`;

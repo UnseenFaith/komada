@@ -26,7 +26,7 @@ class SettingsCache {
      * @name SettingsCache#guilds
      * @type {SettingGateway}
      */
-    this.guilds = new Settings(client, "guilds", this.validate.bind(null, this.resolver), this.defaultDataSchema);
+    this.guilds = new Settings(client, "guilds", this.validate.bind(null, this.resolver), this.defaultDataSchema, this.resolver);
   }
 
   /**
@@ -59,7 +59,7 @@ class SettingsCache {
     if (typeof validateFunction !== "function") throw "You must pass a validate function.";
     validateFunction = validateFunction.bind(null, this.resolver);
     if (schema.constructor.name !== "Object") throw "Schema must be a valid object or left undefined for an empty object.";
-    this[name] = new Settings(this, name, validateFunction, schema);
+    this[name] = new Settings(this, name, validateFunction, schema, this.resolver);
     return this[name];
   }
 

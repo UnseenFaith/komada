@@ -2,7 +2,6 @@
 
 const Gateway = require("./Gateway");
 const Schema = require("./Schema");
-const Resolver = require("../settingResolver");
 const { resolve } = require("path");
 const fs = require("fs-nextra");
 
@@ -14,8 +13,9 @@ class Settings {
    * @param {string} name The name of these new settings
    * @param {Function} validate The validate function for gateway
    * @param {Schema|Object} schema The schema object
+   * @param {SettingResolver} resolver The resolver class
    */
-  constructor(client, name, validate, schema) {
+  constructor(client, name, validate, schema, resolver) {
     /**
      * The komada client.
      * @type {KomadaClient}
@@ -52,7 +52,7 @@ class Settings {
      * The settings resolver used for this instance.
      * @type {SettingResolver}
      */
-    this.resolver = new Resolver(client);
+    this.resolver = resolver;
 
     /**
      * The base directory where this instance will save to.
