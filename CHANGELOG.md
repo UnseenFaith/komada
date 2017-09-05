@@ -4,7 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased] - Classbased | Staged for 0.20.8
+## [Unreleased]
+
+## [0.20.10] - Classbased
 ### Added
 - [[#347](https://github.com/dirigeants/komada/pull/347)] Merge Function for options.
 - [[#343](https://github.com/dirigeants/komada/pull/343)] Komada extendables are now a thing.
@@ -462,7 +464,7 @@ Break.
 - Various Confs fixes from [UnseenFaith]
 - Usage Addition/ParseUsage fix from [UnseenFaith]
 
-[Unreleased]: https://github.com/dirigeants/komada/compare/0.19.0...indev
+[Unreleased]: https://github.com/dirigeants/komada/compare/0.20.10...master
 [0.10.0]: https://github.com/dirigeants/komada/compare/1627e6deb1d8c352d83e52ccd590f2330f5f8bb2...0.10.0
 [0.11.0]: https://github.com/dirigeants/komada/compare/0.10.0...0.11.0
 [0.12.0]: https://github.com/dirigeants/komada/compare/0.11.0...0.12.0
@@ -470,3 +472,4 @@ Break.
 [0.18.0]: https://github.com/dirigeants/komada/compare/0.12.4...0.18
 [0.18.1]: https://github.com/dirigeants/komada/compare/0.12.4...0.18.1
 [0.19.0]: https://github.com/dirigeants/komada/compare/0.18.1...0.19.0
+[0.20.10]: https://github.com/dirigeants/komada/compare/0.19.0...0.20.10
