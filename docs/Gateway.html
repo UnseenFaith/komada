@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Module: Command | Komada</title>
+    <title>Class: Gateway | Komada</title>
     <link rel="shortcut icon" href="img/favicon.ico">
 
     <script src="scripts/prettify/prettify.js"> </script>
@@ -58,9 +58,9 @@
 
 <header>
     
-        <h2>Command</h2>
+        <h2><span class="attribs"><span class="type-signature"></span></span>Gateway<span class="signature">(settings, validateFunction)</span><span class="type-signature"></span></h2>
         
-            
+            <div class="class-description">The gateway for this settings instance. The gateway handles all the creation and setting of non-default entries, along with saving.</div>
         
     
 </header>
@@ -70,309 +70,17 @@
         <div class="container-overview">
         
             
-                <div class="description">Commands are pieces of code ran when messages contain the bots prefix. Along with these, we have a full argument parsing system for use in commands.</div>
-            
-
-            
-                
 
 <dt>
     
-</dt>
-<dd>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-        <h5>Example</h5>
-        
-        <p class="code-caption"> They will always follow this structure </p>
-    
-    <pre class="prettyprint"><code>exports.run = async (client, msg, ...args) => { // code here };
-exports.help = {};
-exports.conf = {};</code></pre>
-
-    
-
-</dd>
-
+        <h4 class="name" id="Gateway">
             
-        
-        </div>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Members</h3>
-
-        <dl>
-            
-
-<dt>
-<h4 class="name" id=".conf">
-    <span class="type-signature"><span class="icon green">static</span> </span>conf<span class="type-signature"> :Conf</span>
-    
-    <div class="container-source members">
-        <code><a href="documentation_CommandStructure.js.html">documentation/CommandStructure.js</a></code>,
-        <code><a href="documentation_CommandStructure.js.html#line80">line 80</a></code>
-    </div>
-    
-</h4>
-
-
-</dt>
-<dd>
-    
-    <div class="description">
-        An object that configures the command.
-    </div>
-    
-
-    <!--
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type">Conf</span>
-
-
-            </li>
-        </ul>
-    
-    -->
-
-    
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-    <h5>Example</h5>
-    
-    <pre class="prettyprint"><code>exports.conf = {
-   enabled: true,
-   runIn: ["text", "dm", "group"],
-   aliases: [],
-   permLevel: 0,
-   botPerms: [],
-   requiredFuncs: [],
-   requiredSettings: [],
- };</code></pre>
-
-    
-</dd>
-
-        
-            
-
-<dt>
-<h4 class="name" id=".help">
-    <span class="type-signature"><span class="icon green">static</span> </span>help<span class="type-signature"> :Help</span>
-    
-    <div class="container-source members">
-        <code><a href="documentation_CommandStructure.js.html">documentation/CommandStructure.js</a></code>,
-        <code><a href="documentation_CommandStructure.js.html#line51">line 51</a></code>
-    </div>
-    
-</h4>
-
-
-</dt>
-<dd>
-    
-    <div class="description">
-        The help object used throughout komada
-    </div>
-    
-
-    <!--
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type">Help</span>
-
-
-            </li>
-        </ul>
-    
-    -->
-
-    
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-    <h5>Example</h5>
-    
-    <pre class="prettyprint"><code>exports.help = {
-   name: "ping",
-   description: "Ping/Pong command. I wonder what this does? /sarcasm",
-   usage: "",
-   usageDelim: "",
- };</code></pre>
-
-    
-</dd>
-
-        </dl>
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        <dl>
-                
-
-<dt>
-    
-        <h4 class="name" id=".run">
-            
-                <span class="type-signature"><span class="icon green">static</span> </span>run<span class="signature">(client, msg, args)</span><span class="type-signature"> &rarr; {Promise}</span>
+                new <span class="type-signature"></span>Gateway<span class="signature">(settings, validateFunction)</span><span class="type-signature"></span>
                 
             
             <div class="container-source members">
-                <code><a href="documentation_CommandStructure.js.html">documentation/CommandStructure.js</a></code>,
-                <code><a href="documentation_CommandStructure.js.html#line29">line 29</a></code>
+                <code><a href="classes_settings_Gateway.js.html">classes/settings/Gateway.js</a></code>,
+                <code><a href="classes_settings_Gateway.js.html#line14">line 14</a></code>
             </div>
             
         </h4>
@@ -384,7 +92,7 @@ exports.conf = {};</code></pre>
 
     
     <div class="description">
-        The part of the command that will run. This should always return a Promise to prevent issues in Komada. The easy way to do this is to add the async keyword.
+        Constructs our instance of Gateway
     </div>
     
 
@@ -420,36 +128,993 @@ exports.conf = {};</code></pre>
 
         <tr>
             
-                <td class="name"><code>client</code></td>
+                <td class="name"><code>settings</code></td>
             
 
             <td class="type">
             
+                
+<span class="param-type">any</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The settings that created this gateway.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>validateFunction</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">any</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The validation function used to validate user input.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+        
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        <dl>
+            
+
+<dt>
+<h4 class="name" id=".settings">
+    <span class="type-signature"><span class="icon green">static</span>, <span class="icon green">readonly</span> </span>settings<span class="type-signature"> :<a href="Settings.html">Settings</a></span>
+    
+    <div class="container-source members">
+        <code><a href="classes_settings_Gateway.js.html">classes/settings/Gateway.js</a></code>,
+        <code><a href="classes_settings_Gateway.js.html#line15">line 15</a></code>
+    </div>
+    
+</h4>
+
+
+</dt>
+<dd>
+    
+    <div class="description">
+        The Settings class that this gateway is a part of.
+    </div>
+    
+
+    <!--
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type"><a href="Settings.html">Settings</a></span>
+
+
+            </li>
+        </ul>
+    
+    -->
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+</dd>
+
+        
+            
+
+<dt>
+<h4 class="name" id="cache">
+    <span class="type-signature"><span class="icon green">readonly</span> </span>cache<span class="type-signature"> :Cache</span>
+    
+    <div class="container-source members">
+        <code><a href="classes_settings_Gateway.js.html">classes/settings/Gateway.js</a></code>,
+        <code><a href="classes_settings_Gateway.js.html#line237">line 237</a></code>
+    </div>
+    
+</h4>
+
+
+</dt>
+<dd>
+    
+    <div class="description">
+        The cache created with this instance
+    </div>
+    
+
+    <!--
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Cache</span>
+
+
+            </li>
+        </ul>
+    
+    -->
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+</dd>
+
+        
+            
+
+<dt>
+<h4 class="name" id="client">
+    <span class="type-signature"><span class="icon green">readonly</span> </span>client<span class="type-signature"> :KomadaClient</span>
+    
+    <div class="container-source members">
+        <code><a href="classes_settings_Gateway.js.html">classes/settings/Gateway.js</a></code>,
+        <code><a href="classes_settings_Gateway.js.html#line200">line 200</a></code>
+    </div>
+    
+</h4>
+
+
+</dt>
+<dd>
+    
+    <div class="description">
+        The client this SettingGateway was created with.
+    </div>
+    
+
+    <!--
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
                 
 <span class="param-type">KomadaClient</span>
 
 
+            </li>
+        </ul>
+    
+    -->
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+</dd>
+
+        
             
-            </td>
 
+<dt>
+<h4 class="name" id="engine">
+    <span class="type-signature"></span>engine<span class="type-signature"> :string</span>
+    
+    <div class="container-source members">
+        <code><a href="classes_settings_Gateway.js.html">classes/settings/Gateway.js</a></code>,
+        <code><a href="classes_settings_Gateway.js.html#line27">line 27</a></code>
+    </div>
+    
+</h4>
+
+
+</dt>
+<dd>
+    
+    <div class="description">
+        The provider engine that will handle saving and getting all data for this instance.
+    </div>
+    
+
+    <!--
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">string</span>
+
+
+            </li>
+        </ul>
+    
+    -->
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+</dd>
+
+        
             
 
+<dt>
+<h4 class="name" id="provider">
+    <span class="type-signature"><span class="icon green">readonly</span> </span>provider<span class="type-signature"> :Provider</span>
+    
+    <div class="container-source members">
+        <code><a href="classes_settings_Gateway.js.html">classes/settings/Gateway.js</a></code>,
+        <code><a href="classes_settings_Gateway.js.html#line218">line 218</a></code>
+    </div>
+    
+</h4>
+
+
+</dt>
+<dd>
+    
+    <div class="description">
+        The provider this SettingGateway instance uses for the persistent data operations.
+    </div>
+    
+
+    <!--
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Provider</span>
+
+
+            </li>
+        </ul>
+    
+    -->
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+</dd>
+
+        
             
 
-            <td class="description last">The Komada Client</td>
-        </tr>
+<dt>
+<h4 class="name" id="resolver">
+    <span class="type-signature"><span class="icon green">readonly</span> </span>resolver<span class="type-signature"> :<a href="Resolver.html">Resolver</a></span>
+    
+    <div class="container-source members">
+        <code><a href="classes_settings_Gateway.js.html">classes/settings/Gateway.js</a></code>,
+        <code><a href="classes_settings_Gateway.js.html#line209">line 209</a></code>
+    </div>
+    
+</h4>
 
+
+</dt>
+<dd>
+    
+    <div class="description">
+        The resolver instance this SettingGateway uses to parse the data.
+    </div>
+    
+
+    <!--
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type"><a href="Resolver.html">Resolver</a></span>
+
+
+            </li>
+        </ul>
+    
+    -->
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+</dd>
+
+        
+            
+
+<dt>
+<h4 class="name" id="schema">
+    <span class="type-signature"><span class="icon green">readonly</span> </span>schema<span class="type-signature"> :<a href="Schema.html">Schema</a></span>
+    
+    <div class="container-source members">
+        <code><a href="classes_settings_Gateway.js.html">classes/settings/Gateway.js</a></code>,
+        <code><a href="classes_settings_Gateway.js.html#line227">line 227</a></code>
+    </div>
+    
+</h4>
+
+
+</dt>
+<dd>
+    
+    <div class="description">
+        The schema this gateway instance is handling.
+    </div>
+    
+
+    <!--
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type"><a href="Schema.html">Schema</a></span>
+
+
+            </li>
+        </ul>
+    
+    -->
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+</dd>
+
+        
+            
+
+<dt>
+<h4 class="name" id="sql">
+    <span class="type-signature"></span>sql<span class="type-signature"> :string</span>
+    
+    <div class="container-source members">
+        <code><a href="classes_settings_Gateway.js.html">classes/settings/Gateway.js</a></code>,
+        <code><a href="classes_settings_Gateway.js.html#line35">line 35</a></code>
+    </div>
+    
+</h4>
+
+
+</dt>
+<dd>
+    
+    <div class="description">
+        If the provider is SQL, this property will ensure data is serialized and deserialized.
+    </div>
+    
+
+    <!--
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">string</span>
+
+
+            </li>
+        </ul>
+    
+    -->
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+</dd>
+
+        
+            
+
+<dt>
+<h4 class="name" id="type">
+    <span class="type-signature"><span class="icon green">readonly</span> </span>type<span class="type-signature"> :string</span>
+    
+    <div class="container-source members">
+        <code><a href="classes_settings_Gateway.js.html">classes/settings/Gateway.js</a></code>,
+        <code><a href="classes_settings_Gateway.js.html#line246">line 246</a></code>
+    </div>
+    
+</h4>
+
+
+</dt>
+<dd>
+    
+    <div class="description">
+        The type of settings (or name).
+    </div>
+    
+
+    <!--
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">string</span>
+
+
+            </li>
+        </ul>
+    
+    -->
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+</dd>
+
+        
+            
+
+<dt>
+<h4 class="name" id="validate">
+    <span class="type-signature"></span>validate<span class="type-signature"> :function</span>
+    
+    <div class="container-source members">
+        <code><a href="classes_settings_Gateway.js.html">classes/settings/Gateway.js</a></code>,
+        <code><a href="classes_settings_Gateway.js.html#line41">line 41</a></code>
+    </div>
+    
+</h4>
+
+
+</dt>
+<dd>
+    
+    <div class="description">
+        The function validator for this gateway.
+    </div>
+    
+
+    <!--
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">function</span>
+
+
+            </li>
+        </ul>
+    
+    -->
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+</dd>
+
+        </dl>
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+                
+
+<dt>
+    
+        <h4 class="name" id="create">
+            
+                <span class="type-signature"><span class="icon green">async</span> </span>create<span class="signature">(input)</span><span class="type-signature"></span>
+                
+            
+            <div class="container-source members">
+                <code><a href="classes_settings_Gateway.js.html">classes/settings/Gateway.js</a></code>,
+                <code><a href="classes_settings_Gateway.js.html#line63">line 63</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Creates a new entry in the cache.
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
     
 
         <tr>
             
-                <td class="name"><code>msg</code></td>
+                <td class="name"><code>input</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Message</span>
+<span class="param-type">Object</span>
+|
+
+<span class="param-type">string</span>
 
 
             
@@ -459,20 +1124,139 @@ exports.conf = {};</code></pre>
 
             
 
-            <td class="description last">A Message object obtained from discord.js</td>
+            <td class="description last">An object containing a id property, like discord.js objects, or a string.</td>
         </tr>
 
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+    
+        <h4 class="name" id="destroy">
+            
+                <span class="type-signature"><span class="icon green">async</span> </span>destroy<span class="signature">(input)</span><span class="type-signature"></span>
+                
+            
+            <div class="container-source members">
+                <code><a href="classes_settings_Gateway.js.html">classes/settings/Gateway.js</a></code>,
+                <code><a href="classes_settings_Gateway.js.html#line73">line 73</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Removes an entry from the cache.
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
     
 
         <tr>
             
-                <td class="name"><code>args</code></td>
+                <td class="name"><code>input</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Array</span>
+<span class="param-type">Object</span>
+|
+
+<span class="param-type">string</span>
 
 
             
@@ -482,7 +1266,149 @@ exports.conf = {};</code></pre>
 
             
 
-            <td class="description last">An array of arguments passed through by our argument parser.</td>
+            <td class="description last">An object containing a id property, like discord.js objects, or a string.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+    
+        <h4 class="name" id="ensureCreate">
+            
+                <span class="type-signature"><span class="icon green">async</span> </span>ensureCreate<span class="signature">(target)</span><span class="type-signature"> &rarr; {Promise.&lt;void>|Promise.&lt;true>}</span>
+                
+            
+            <div class="container-source members">
+                <code><a href="classes_settings_Gateway.js.html">classes/settings/Gateway.js</a></code>,
+                <code><a href="classes_settings_Gateway.js.html#line151">line 151</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Creates the settings if it did not exist previously.
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>target</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+|
+
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">An object or string that can be parsed by this instance's resolver.</td>
         </tr>
 
     
@@ -510,7 +1436,10 @@ exports.conf = {};</code></pre>
 
 
 
-<span class="param-type">Promise</span>
+<span class="param-type">Promise.&lt;void></span>
+|
+
+<span class="param-type">Promise.&lt;true></span>
 
 
 
@@ -561,75 +1490,48 @@ exports.conf = {};</code></pre>
 
 
     
-        <h5>Examples</h5>
-        
-    <pre class="prettyprint"><code>exports.run = (client, msg) => msg.reply("Hello Komada!");</code></pre>
-
-    <pre class="prettyprint"><code>exports.run = async (client, msg) => {
- const message = await msg.channel.send("Hello!");
- return message.edit("Hello from Komada!");
-}</code></pre>
-
-    <pre class="prettyprint"><code>exports.run = async function run(client, msg) {
- const message = await msg.channel.send("Hello!");
- return message.edit("Hello from Komada!");
-}</code></pre>
-
-    
 
 </dd>
 
-            </dl>
-    
-
-    
-        <h3 class="subsection-title">Type Definitions</h3>
-
-        <dl>
+            
                 
 
 <dt>
-<h4 class="name" id="~Conf">
-    Conf
     
-    <div class="container-source members">
-        <code><a href="documentation_CommandStructure.js.html">documentation/CommandStructure.js</a></code>,
-        <code><a href="documentation_CommandStructure.js.html#line53">line 53</a></code>
-    </div>
+        <h4 class="name" id="get">
+            
+                <span class="type-signature"></span>get<span class="signature">(input)</span><span class="type-signature"> &rarr; {<a href="Schema.html">Schema</a>}</span>
+                
+            
+            <div class="container-source members">
+                <code><a href="classes_settings_Gateway.js.html">classes/settings/Gateway.js</a></code>,
+                <code><a href="classes_settings_Gateway.js.html#line84">line 84</a></code>
+            </div>
+            
+        </h4>
+
+        
     
-</h4>
-
-
 </dt>
 <dd>
+
     
     <div class="description">
-        An Object containing configuration values that will configure a command.
+        Gets an entry from the cache
     </div>
     
 
-    <!--
     
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type">Object</span>
-
-
-            </li>
-        </ul>
-    
-    -->
 
     
 
-
-    <h5 class="subsection-title">Properties:</h5>
-
     
 
-<table class="props">
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
     <thead>
     <tr>
         
@@ -651,13 +1553,13 @@ exports.conf = {};</code></pre>
 
         <tr>
             
-                <td class="name"><code>enabled</code></td>
+                <td class="name"><code>input</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Boolean</span>
+<span class="param-type">string</span>
 
 
             
@@ -667,152 +1569,48 @@ exports.conf = {};</code></pre>
 
             
 
-            <td class="description last">Whether or not this command should be enabled for use.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>runIn</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">What type of text channels this command should run in.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>aliases</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">An array of names that will also trigger this command.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>permLevel</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">What permission level this command should be limited to.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>botPerms</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">What permissions the bot must have to run this command.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>requiredFuncs</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">What functions are required in the bot to run this command.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>requiredSettings</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">What settings are required in the default schema to run this command.</td>
+            <td class="description last">The key you are you looking for.</td>
         </tr>
 
     
     </tbody>
 </table>
 
+    </div>
+    
 
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-returns">
+        <h5>Returns:</h5>
+        
+                
+
+
+
+<span class="param-type"><a href="Schema.html">Schema</a></span>
+
+
+
+
+
+
+
+
+            
+    </div>
+    
+
+    
 
 
 <dl class="details">
@@ -851,54 +1649,47 @@ exports.conf = {};</code></pre>
 
     
 
-    
 </dd>
 
             
                 
 
 <dt>
-<h4 class="name" id="~Help">
-    Help
     
-    <div class="container-source members">
-        <code><a href="documentation_CommandStructure.js.html">documentation/CommandStructure.js</a></code>,
-        <code><a href="documentation_CommandStructure.js.html#line31">line 31</a></code>
-    </div>
+        <h4 class="name" id="init">
+            
+                <span class="type-signature"><span class="icon green">async</span> </span>init<span class="signature">(schema)</span><span class="type-signature"> &rarr; {void}</span>
+                
+            
+            <div class="container-source members">
+                <code><a href="classes_settings_Gateway.js.html">classes/settings/Gateway.js</a></code>,
+                <code><a href="classes_settings_Gateway.js.html#line49">line 49</a></code>
+            </div>
+            
+        </h4>
+
+        
     
-</h4>
-
-
 </dt>
 <dd>
+
     
     <div class="description">
-        An object containing help information that will help identify and use a command.
+        Initializes the gateway, creating tables, ensuring the schema exists, and caching values.
     </div>
     
 
-    <!--
     
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type">Object</span>
-
-
-            </li>
-        </ul>
-    
-    -->
 
     
 
-
-    <h5 class="subsection-title">Properties:</h5>
-
     
 
-<table class="props">
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
     <thead>
     <tr>
         
@@ -920,13 +1711,13 @@ exports.conf = {};</code></pre>
 
         <tr>
             
-                <td class="name"><code>name</code></td>
+                <td class="name"><code>schema</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type"><a href="Schema.html">Schema</a></span>
 
 
             
@@ -936,83 +1727,48 @@ exports.conf = {};</code></pre>
 
             
 
-            <td class="description last">The name of the command</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>description</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The description displayed in the help</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>usage</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">A usage string that denotes how the command should be used.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>usageDelim</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">A character(s) to split the message content by and determine arguments.</td>
+            <td class="description last">The Schema object, validated from settings.</td>
         </tr>
 
     
     </tbody>
 </table>
 
+    </div>
+    
 
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-returns">
+        <h5>Returns:</h5>
+        
+                
+
+
+
+<span class="param-type">void</span>
+
+
+
+
+
+
+
+
+            
+    </div>
+    
+
+    
 
 
 <dl class="details">
@@ -1051,10 +1807,954 @@ exports.conf = {};</code></pre>
 
     
 
+</dd>
+
+            
+                
+
+<dt>
     
+        <h4 class="name" id="reset">
+            
+                <span class="type-signature"><span class="icon green">async</span> </span>reset<span class="signature">(input, key)</span><span class="type-signature"> &rarr; {any}</span>
+                
+            
+            <div class="container-source members">
+                <code><a href="classes_settings_Gateway.js.html">classes/settings/Gateway.js</a></code>,
+                <code><a href="classes_settings_Gateway.js.html#line112">line 112</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Reset a key's value to default from a entry.
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>input</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+|
+
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">An object containing a id property, like Discord.js objects, or a string.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>key</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The key to reset.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-returns">
+        <h5>Returns:</h5>
+        
+                
+
+
+
+<span class="param-type">any</span>
+
+
+
+
+
+
+
+
+            
+    </div>
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+    
+        <h4 class="name" id="sync">
+            
+                <span class="type-signature"><span class="icon green">async</span> </span>sync<span class="signature">(input<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {void}</span>
+                
+            
+            <div class="container-source members">
+                <code><a href="classes_settings_Gateway.js.html">classes/settings/Gateway.js</a></code>,
+                <code><a href="classes_settings_Gateway.js.html#line93">line 93</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Sync either all entries from the provider, or a single one.
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>input</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+|
+
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    null
+                
+                </td>
+            
+
+            <td class="description last">An object containing a id property, like discord.js objects, or a string.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-returns">
+        <h5>Returns:</h5>
+        
+                
+
+
+
+<span class="param-type">void</span>
+
+
+
+
+
+
+
+
+            
+    </div>
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+    
+        <h4 class="name" id="update">
+            
+                <span class="type-signature"><span class="icon green">async</span> </span>update<span class="signature">(input, object, guild<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Object}</span>
+                
+            
+            <div class="container-source members">
+                <code><a href="classes_settings_Gateway.js.html">classes/settings/Gateway.js</a></code>,
+                <code><a href="classes_settings_Gateway.js.html#line128">line 128</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Updates an entry.
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>input</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+|
+
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">An object or string that can be parsed by this instance's resolver.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>object</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">An object with pairs of key/value to update.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>guild</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+|
+
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    null
+                
+                </td>
+            
+
+            <td class="description last">A Guild resolvable, useful for when the instance of SG doesn't aim for Guild settings.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-returns">
+        <h5>Returns:</h5>
+        
+                
+
+
+
+<span class="param-type">Object</span>
+
+
+
+
+
+
+
+
+            
+    </div>
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+    
+        <h4 class="name" id="updateArray">
+            
+                <span class="type-signature"><span class="icon green">async</span> </span>updateArray<span class="signature">(input, type, key, data, guild<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {boolean}</span>
+                
+            
+            <div class="container-source members">
+                <code><a href="classes_settings_Gateway.js.html">classes/settings/Gateway.js</a></code>,
+                <code><a href="classes_settings_Gateway.js.html#line168">line 168</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Update an array from the a Guild's configuration.
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>input</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+|
+
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">An object containing a id property, like discord.js objects, or a string.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>type</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">Either 'add' or 'remove'.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>key</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">The key from the Schema.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>data</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">any</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">The value to be added or removed.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>guild</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+|
+
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    null
+                
+                </td>
+            
+
+            <td class="description last">The guild for this setting, useful for when the settings aren't aimed for guilds</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-returns">
+        <h5>Returns:</h5>
+        
+                
+
+
+
+<span class="param-type">boolean</span>
+
+
+
+
+
+
+
+
+            
+    </div>
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
 </dd>
 
             </dl>
+    
+
     
 
     
@@ -1076,7 +2776,7 @@ exports.conf = {};</code></pre>
 <script src="scripts/linenumber.js"></script>
 
     <script>
-        var id = 'module:Command_sub'.replace(/"/g, '_');
+        var id = 'Gateway_sub'.replace(/"/g, '_');
         var selectedApi = document.getElementById(id); // do not use jquery selector
         var $selectedApi = $(selectedApi);
 
