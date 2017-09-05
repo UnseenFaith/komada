@@ -331,7 +331,7 @@ class Komada extends Discord.Client {
    * @returns {number} The amount of messages swept
    */
   sweepCommandMessages(lifetime = this.commandMessageLifetime) {
-    if (typeof lifetime !== "number" || isNaN(lifetime)) throw new TypeError("The lifetime must be a number.");
+    if (typeof lifetime !== "number" || Number.isNaN(lifetime)) throw new TypeError("The lifetime must be a number.");
     if (lifetime <= 0) {
       this.emit("debug", "Didn't sweep messages - lifetime is unlimited");
       return -1;

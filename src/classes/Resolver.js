@@ -1,5 +1,7 @@
 const url = require("url");
-const { Message, User, GuildMember, Role, Guild, Channel } = require("discord.js");
+const {
+  Message, User, GuildMember, Role, Guild, Channel,
+} = require("discord.js");
 
 const regex = {
   userOrMember: new RegExp("^(?:<@!?)?(\\d{17,21})>?$"),
@@ -146,7 +148,7 @@ class Resolver {
    */
   async float(number) {
     number = parseFloat(number);
-    if (!isNaN(number)) return number;
+    if (!Number.isNaN(number)) return number;
     return null;
   }
 

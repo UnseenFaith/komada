@@ -1,4 +1,6 @@
-const longTypes = { command: "commands", inhibitor: "commandInhibitors", monitor: "messageMonitors", finalizer: "commandFinalizers" };
+const longTypes = {
+  command: "commands", inhibitor: "commandInhibitors", monitor: "messageMonitors", finalizer: "commandFinalizers",
+};
 
 exports.run = async (client, msg, [type, name]) => {
   let toDisable = client[longTypes[type]].get(name);
