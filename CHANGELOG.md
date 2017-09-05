@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased] - Classbased | Staged for 0.20.8
 ### Added
+- [[#347](https://github.com/dirigeants/komada/pull/347)] Merge Function for options.
 - [[#343](https://github.com/dirigeants/komada/pull/343)] Komada extendables are now a thing.
 - [[#323](https://github.com/dirigeants/komada/pull/323)] Documentation to all pieces.
 - [[#323](https://github.com/dirigeants/komada/pull/323)] Added the types `TextChannel` and `VoiceChannel` to the
