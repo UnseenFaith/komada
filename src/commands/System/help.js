@@ -3,6 +3,7 @@ exports.run = async (client, msg, [cmd]) => {
   if (cmd) {
     cmd = client.commands.get(cmd) || client.commands.get(client.aliases.get(cmd));
     if (!cmd) return msg.sendMessage("❌ | Unknown command, please run the help command with no arguments to get a list of them all.");
+    if (!this.runCommandInhibitors(client, msg, cmd)) return; // eslint-disable-line
     const info = [
       `= ${cmd.help.name} = `,
       cmd.help.description,
