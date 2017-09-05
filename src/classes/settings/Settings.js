@@ -98,6 +98,7 @@ class Settings {
         this.client.emit("log", `The type value for ${key} is not supported. It must be an object with type and default properties.`, "error");
       }
     }
+    this.schema = schema;
   }
 
   /**
