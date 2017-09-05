@@ -94,14 +94,14 @@ class Schema {
 
   _minOrMax(value, min, max) {
     if (!value) return [min, max];
-    if (!isNaN(min) && !isNaN(max)) {
+    if (!Number.isNaN(min) && !Number.isNaN(max)) {
       if (value >= min && value <= max) return [min, max];
       if (min === max) throw `Value must be exactly ${min}`;
       throw `Value must be between ${min} and ${max}`;
-    } else if (!isNaN(min)) {
+    } else if (!Number.isNaN(min)) {
       if (value >= min) return [min, null];
       throw `Value must be longer than ${min}`;
-    } else if (!isNaN(max)) {
+    } else if (!Number.isNaN(max)) {
       if (value <= max) return [null, max];
       throw `Value must be shorter than ${max}`;
     }
