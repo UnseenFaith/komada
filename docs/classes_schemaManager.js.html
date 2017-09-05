@@ -148,8 +148,8 @@ class SchemaManager extends CacheManager {
     if (key in this.schema) throw `The key ${key} already exists in the current schema.`;
     if (!options.type) throw "The option type is required.";
     if (!validTypes.includes(options.type)) throw `The type ${options.type} is not supported.`;
-    if ("min" in options &amp;&amp; isNaN(options.min)) throw "The option min must be a number.";
-    if ("max" in options &amp;&amp; isNaN(options.max)) throw "The option max must be a number.";
+    if ("min" in options &amp;&amp; Number.isNaN(options.min)) throw "The option min must be a number.";
+    if ("max" in options &amp;&amp; Number.isNaN(options.max)) throw "The option max must be a number.";
     if ("array" in options &amp;&amp; options.array.constructor.name !== "Boolean") throw "The option array must be a boolean.";
     if (options.array === true) {
       options.default = "default" in options ? options.default : [];

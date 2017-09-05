@@ -248,7 +248,7 @@ class ParsedUsage {
 
         if (fill.type === "literal") throw `${current + proto}you cannot set a length for a literal type`;
 
-        if (isNaN(result[3])) throw `${current + proto}must be a number`;
+        if (Number.isNaN(result[3])) throw `${current + proto}must be a number`;
 
         const temp = parseFloat(result[3]);
         if ((fill.type === "string" || fill.type === "str") &amp;&amp; temp % 1 !== 0) throw `${current + proto}the string type must have an integer length`;
@@ -260,7 +260,7 @@ class ParsedUsage {
         const proto = " in the type length (max): ";
         if (fill.type === "literal") throw `${current + proto}you canno't set a length for a literal type`;
 
-        if (isNaN(result[4])) throw `${current + proto}must be a number`;
+        if (Number.isNaN(result[4])) throw `${current + proto}must be a number`;
 
         const temp = parseFloat(result[4]);
 
