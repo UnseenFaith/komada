@@ -53,7 +53,7 @@ class Gateway {
       this.sql.initDeserialize();
       for (let i = 0; i < data.length; i++) this.sql.deserializer(data[i]);
     }
-    for (const key of data) this.cache.set(key.id, key); // eslint-disable-line
+    for (const key of data) this.cache.set(this.type, key.id, key); // eslint-disable-line
   }
 
   /**
@@ -63,7 +63,7 @@ class Gateway {
   async create(input) {
     const target = await this.validate(input).then(output => (output.id || output));
     await this.provider.create(this.type, target, this.schema.defaults);
-    this.cache.set(target, this.schema.defaults);
+    this.cache.set(this.type, target, this.schema.defaults);
   }
 
   /**
@@ -82,7 +82,7 @@ class Gateway {
    * @returns {Schema}
    */
   get(input) {
-    return input !== "default" ? this.cache.get(input) || this.schema.defaults : this.schema.defaults;
+    return input !== "default" ? this.cache.get(this.type, input) || this.schema.defaults : this.schema.defaults;
   }
 
   /**
@@ -94,13 +94,15 @@ class Gateway {
     if (!input) {
       const data = await this.provider.getAll(this.type);
       if (this.sql) for (let i = 0; i < data.length; i++) this.sql.deserializer(data[i]);
-      for (const key of data) this.cache.set(key.id, key); // eslint-disable-line
+      for (const key of data) this.cache.set(this.type, key.id, key); // eslint-disable-line
       return;
     }
     const target = await this.validate(input).then(output => (output.id || output));
     const data = await this.provider.get(this.type, target);
     if (this.sql) this.sql.deserializer(data);
-    await this.cache.set(target, data);
+    console.log(target);
+    console.log(data);
+    await this.cache.set(this.type, target, data);
   }
 
   /**
@@ -146,11 +148,11 @@ class Gateway {
   /**
    * Creates the settings if it did not exist previously.
    * @param {Object|string} target An object or string that can be parsed by this instance's resolver.
-   * @returns {Promise<void>|Promise<true>}
+   * @returns {true}
    */
   async ensureCreate(target) {
     if (typeof target !== "string") throw `Expected input type string, got ${typeof target}`;
-    let exists = this.cache.has(target);
+    let exists = this.cache.has(this.type, target);
     if (exists instanceof Promise) exists = await exists;
     if (exists === false) return this.create(target);
     return true;
@@ -174,7 +176,7 @@ class Gateway {
     guild = await this.resolver.guild(guild || target);
     let result = await this.resolver[this.schema[key].type.toLowerCase()](data, guild, this.schema[key]);
     if (result.id) result = result.id;
-    let cache = this.get(target);
+    let cache = this.cache.get(this.type, target);
     if (cache instanceof Promise) cache = await cache;
     if (type === "add") {
       if (cache[key].includes(result)) throw `The value ${data} for the key ${key} already exists.`;
