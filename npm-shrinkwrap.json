@@ -381,7 +381,7 @@
       }
     },
     "discord.js": {
-      "version": "github:hydrabolt/discord.js#675e1eccb1586b7d3edfc8b94a704057dc5f2fc2",
+      "version": "github:hydrabolt/discord.js#f95ae4fcb7b92796d294fb7dba728b0c1e6dacfb",
       "requires": {
         "long": "3.2.0",
         "prism-media": "0.0.1",
