@@ -21,6 +21,6 @@ exports.run = (client, data, type = "log") => {
 
   const format = formats[type || "log"];
   let time = client.config.disableLogTimestamps ? "" : `[${moment().format("YYYY-MM-DD HH:mm:ss")}]`;
-  if ("time" in format) time = format.type(time);
+  if (!client.config.disableLogColor) time = format.time(time);
   console[format.logger || "log"](data.split("\n").map(str => `${time}${format.msg && !client.config.disableLogColor ? format.msg(time ? ` ${str}` : str) : time ? ` ${str}` : str}`).join("\n"));
 };
