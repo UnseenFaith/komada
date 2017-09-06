@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-## [0.20.10] - Classbased
+## [0.20.10] - Classbased - 2017-09-07
 ### Added
 - [[#347](https://github.com/dirigeants/komada/pull/347)] Merge Function for options.
 - [[#343](https://github.com/dirigeants/komada/pull/343)] Komada extendables are now a thing.
@@ -214,7 +214,7 @@ refactor.
 - [[#197](https://github.com/dirigeants/komada/pull/197)] Implied Permissions has been removed in favor of an internal
 discord.js class.
 
-## [0.19.0]
+## [0.19.3] - 2017-06-18
 ### Added
 - Readded ParseTags function due to Komada Provider dependency,
 - Added Websocket Heartbeat ping to ping command.
@@ -471,5 +471,5 @@ Break.
 [0.12.4]: https://github.com/dirigeants/komada/compare/0.12.0...0.12.4
 [0.18.0]: https://github.com/dirigeants/komada/compare/0.12.4...0.18
 [0.18.1]: https://github.com/dirigeants/komada/compare/0.12.4...0.18.1
-[0.19.0]: https://github.com/dirigeants/komada/compare/0.18.1...0.19.0
+[0.19.3]: https://github.com/dirigeants/komada/compare/0.18.1...0.19.3
 [0.20.10]: https://github.com/dirigeants/komada/compare/0.19.0...0.20.10
