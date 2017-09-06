@@ -62,6 +62,7 @@ exports.validate = (options) => {
     for (const key of Object.keys(options.disabled)) { // eslint-disable-line
       if (!pieces.includes(key)) throw new Error("Invalid piece name in the disabled array");
       if (!Array.isArray(options.disabled[key])) throw new TypeError(`${key} must be an array.`);
+      Object.assign(options.disabled, this.DEFAULT_OPTIONS.disabled, Object.assign({}, options.disabled))
     }
   }
   if ("permStructure" in options) {
@@ -78,5 +79,6 @@ exports.validate = (options) => {
   if ("provider" in options) {
     if ("engine" in options.provider && typeof options.provider.engine !== "string") throw new TypeError("Engine must be a string.");
     if ("cache" in options.provider && typeof options.provider.cache !== "string") throw new TypeError("Cache must be a string.");
+    Object.assign(options.provider, this.DEFAULT_OPTIONS.provider, Object.assign({}, options.provider))
   }
 };
