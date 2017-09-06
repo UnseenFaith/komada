@@ -3,12 +3,12 @@ const chalk = require("chalk");
 
 const clk = new chalk.constructor({ enabled: true });
 const formats = {
-  verbose: { time: clk.grey, msg: clk.grey, logger: 'log' },
-  debug: { time: clk.magenta, logger: 'log' },
+  verbose: { time: clk.grey, msg: clk.grey, logger: "log" },
+  debug: { time: clk.magenta, logger: "log" },
   log: { time: clk.blue },
   warn: { time: clk.black.bgYellow },
   error: { time: clk.bgRed },
-  wtf: { time: clk.bold.underline.bgRed, msg: clk.bold.underline.bgRed, logger: 'error' }
+  wtf: { time: clk.bold.underline.bgRed, msg: clk.bold.underline.bgRed, logger: "error" },
 };
 
 /* eslint-disable no-use-before-define */
