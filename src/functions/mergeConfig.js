@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-syntax */
+
 const PermLevels = require("../classes/permLevels");
 
 const defaultPermStructure = new PermLevels()
@@ -18,7 +20,7 @@ const defaultPermStructure = new PermLevels()
 
 
 module.exports = (options) => {
-    for (const key in this.DEFAULT_OPTIONS) { // eslint-disable-line
+  for (const key in this.DEFAULT_OPTIONS) {
     if (!(key in options)) options[key] = this.DEFAULT_OPTIONS[key];
     if (["provider", "disabled"].includes(key)) {
       for (const property in this.DEFAULT_OPTIONS[key]) {
