@@ -23,7 +23,7 @@ exports.conf = {
   runIn: ["text", "dm", "group"],
   aliases: ["details", "what"],
   permLevel: 0,
-  botPerms: [],
+  botPerms: ["SEND_MESSAGES"],
   requiredFuncs: [],
   requiredSettings: [],
 };
