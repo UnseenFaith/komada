@@ -57,7 +57,8 @@ exports.DEFAULT_OPTIONS = {
     cache: "js",
   },
   console: {
-    colors: true,
+    useColors: true,
+    colors: {},
     timestamps: true,
     stdout: process.stdout,
     stderr: process.stderr,

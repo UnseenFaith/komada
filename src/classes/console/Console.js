@@ -13,10 +13,10 @@ class KomadaConsole extends Console {
    * Constructs our KomadaConsole instance
    * @param  {boolean}  [stdout=process.stdout] The location of standard output. Must be a writable stream.
    * @param  {boolean}  [stderr=process.stderr] The location of standrad error outputt. Must be a writable stream.
-   * @param  {boolean} [colors=false] Whether or not colors should be enabled.
+   * @param  {boolean} [colors={}] The colors for this console instance.
    * @param  {boolean}  [timestamps=false] Whether or not Timestamps should be enabled.
    */
-  constructor({ stdout, stderr, colors = false, timestamps = false }) {
+  constructor({ stdout, stderr, useColor = true, colors = {}, timestamps = false }) {
     super(stdout, stderr);
     /**
      * The standard output stream for this console, defaulted to process.stderr.
@@ -39,23 +39,23 @@ class KomadaConsole extends Console {
     this.timestamps = timestamps;
 
     /**
-     * Whether or not colors should be enabled for this console.
+     * Whether or not this console should use colors.
+     * @type {boolean}
+     */
+    this.useColors = useColor || this.stdout.isTTY || false;
+    /**
+     * The colors for this console.
      * @name KomadaConsole#colors
      * @type  {boolean|Colors}
      */
-
-    if (!colors) {
-      this.colors = false;
-    } else {
-      this.colors = {
-        debug: colors.debug || { message: { background: null, text: null, style: null }, time: { background: null, text: "magenta", style: null } },
-        error: colors.error || { message: { background: null, text: null, style: null }, time: { background: "red", text: null, style: null } },
-        log: colors.log || { message: { background: null, text: null, style: null }, time: { background: null, text: "blue", style: null } },
-        verbose: colors.verbose || { message: { background: null, text: null, style: null }, time: { background: null, text: "gray", style: null } },
-        warn: colors.warn || { message: { background: null, text: null, style: null }, time: { background: "brightyellow", text: "black", style: null } },
-        wtf: colors.wtf || { message: { background: "red", text: null, style: ["bold", "underline"] }, time: { background: "red", text: null, style: ["bold", "underline"] } },
-      };
-    }
+    this.colors = {
+      debug: colors.debug || { message: { background: null, text: null, style: null }, time: { background: null, text: "magenta", style: null } },
+      error: colors.error || { message: { background: null, text: null, style: null }, time: { background: "red", text: null, style: null } },
+      log: colors.log || { message: { background: null, text: null, style: null }, time: { background: null, text: "blue", style: null } },
+      verbose: colors.verbose || { message: { background: null, text: null, style: null }, time: { background: null, text: "gray", style: null } },
+      warn: colors.warn || { message: { background: null, text: null, style: null }, time: { background: "brightyellow", text: "black", style: null } },
+      wtf: colors.wtf || { message: { background: "red", text: null, style: ["bold", "underline"] }, time: { background: "red", text: null, style: ["bold", "underline"] } },
+    };
   }
 
   /**
@@ -80,7 +80,7 @@ class KomadaConsole extends Console {
    * @memberof KomadaConsole
    * @typedef {object} MessageObject
    * @property {BackgroundColorTypes} background The background color. Can be a basic string like "red", a hex string, or a RGB array.
-   * @property {TextColorTypes} text The text conolor. Can be a basic string like "red", a hex string, or a RGB array.
+   * @property {TextColorTypes} text The text color. Can be a basic string like "red", a hex string, or a RGB array.
    * @property {StyleTypes} style A style string from StyleTypes.
    */
 
@@ -88,7 +88,7 @@ class KomadaConsole extends Console {
     * @memberof KomadaConsole
     * @typedef {object} TimeObject
     * @property {BackgroundColorTypes} background The background color. Can be a basic string like "red", a hex string, or a RGB array.
-    * @property {TextColorTypes} text The text conolor. Can be a basic string like "red", a hex string, or a RGB array.
+    * @property {TextColorTypes} text The text color. Can be a basic string like "red", a hex string, a RGB array, or HSL array.
     * @property {StyleTypes} style A style string from StyleTypes.
     */
 
@@ -113,11 +113,15 @@ class KomadaConsole extends Console {
     * @property {string} brightmagenta
     * @property {string} brightcyan
     * @property {string} white
+    * @property {string} #008000 green
+    * @property {string} #008000 green
+    * @property {Array} [255,0,0] red
+    * @property {Array} [229,50%,50%] blue
     */
 
   /**
     * @memberof KomadaConsole
-    * @typedef {*} BackgroundColorTypes - All the valid background color types.
+    * @typedef {*} BackgroundColorTypes - One of these strings, HexStrings, RGB, or HSL are valid types.
     * @property {string} black
     * @property {string} red
     * @property {string} green
@@ -135,6 +139,9 @@ class KomadaConsole extends Console {
     * @property {string} brightmagenta
     * @property {string} brightcyan
     * @property {string} white
+    * @property {string} #008000 green
+    * @property {Array} [255,0,0] red
+    * @property {Array} [229,50%,50%] blue
     */
 
   /**
@@ -168,12 +175,12 @@ class KomadaConsole extends Console {
   }
 
   timestamp(timestamp, time) {
-    if (!this.stdout.isTTY || !this.stderr.isTTY) return timestamp;
+    if (!this.useColors) return timestamp;
     return Colors.format(timestamp, time);
   }
 
   messages(string, message) {
-    if (!this.colors || !this.stdout.isTTY || !this.stderr.isTTY) return string;
+    if (!this.useColors) return string;
     return Colors.format(string, message);
   }
 
