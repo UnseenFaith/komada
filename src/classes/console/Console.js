@@ -1,6 +1,7 @@
 const { Console } = require("console");
 const Colors = require("./Colors");
 const moment = require("moment");
+const { inspect } = require("util");
 
 /**
  * Komada's console class, extends NodeJS Console class.
@@ -155,7 +156,7 @@ class KomadaConsole extends Console {
    * @param  {string} [type="log"] The type of log, particularly useful for coloring.
    */
   log(stuff, type = "log") {
-    stuff = KomadaConsole.flatten(stuff);
+    stuff = KomadaConsole.flatten(stuff, this.colors);
     const message = this.colors ? this.colors[type.toLowerCase()].message : {};
     const time = this.colors ? this.colors[type.toLowerCase()].time : {};
     const timestamp = this.timestamps ? `[${moment().format("YYYY-MM-DD HH:mm:ss")}]` : null;
@@ -165,23 +166,24 @@ class KomadaConsole extends Console {
   }
 
   timestamp(timestamp, time) {
-    if (this.stdout !== process.stdout || this.stderr !== process.stderr) return timestamp;
+    if (!this.stdout.isTTY || !this.stderr.isTTY) return timestamp;
     return Colors.format(timestamp, time);
   }
 
   messages(string, message) {
-    if (!this.colors || this.stdout !== process.stdout || this.stderr !== process.stderr) return string;
+    if (!this.colors || !this.stdout.isTTY || !this.stderr.isTTY) return string;
     return Colors.format(string, message);
   }
 
   /**
    * Flattens our data into a readable string.
    * @param  {*} data Some data to flatten
+   * @param {boolean} color Whether or not the inspection should color the output
    * @return {string}
    */
-  static flatten(data) {
+  static flatten(data, color) {
     data = data.stack || data.message || data;
-    if (typeof data === "object" && typeof data !== "string" && !Array.isArray(data)) data = require("util").inspect(data, { depth: 0, colors: true });
+    if (typeof data === "object" && typeof data !== "string" && !Array.isArray(data)) data = inspect(data, { depth: 0, colors: !!color });
     if (Array.isArray(data)) data = data.join["\n"];
     return data;
   }
