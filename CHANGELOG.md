@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- [[#356](https://github.com/dirigeants/komada/pull/356)] New Logging && Console Class
 
 ## [0.20.10] - Classbased - 2017-09-07
 ### Added

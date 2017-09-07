@@ -1,6 +1,6 @@
 {
   "name": "komada",
-  "version": "0.20.10",
+  "version": "0.21.0",
   "description": "Komada: Croatian for 'pieces', is a modular bot system including reloading modules and easy to use custom commands.",
   "homepage": "https://github.com/dirigeants/komada#readme",
   "bugs": {

@@ -8,6 +8,8 @@ const ArgResolver = require("./argResolver");
 const PermLevels = require("./permLevels");
 const Settings = require("./settingsCache");
 const merge = require("../functions/mergeConfig");
+const Console = require("../console/Console");
+
 
 const defaultPermStructure = new PermLevels()
   .addLevel(0, false, () => true)
@@ -220,6 +222,12 @@ class Komada extends Discord.Client {
      * @type {Object}
      */
     this.application = null;
+
+    /**
+     * The console for this instance of Komada. You can disable timestmaps, colors, and add writable streams as config options to configure this.
+     * @type {KomadaConsole}
+     */
+    this.console = new Console({ stdout: this.config.console.stdout, stderr: this.config.console.stderr, colors: this.config.console.colors, timestamps: this.config.console.timestamps });
 
     this.once("ready", this._ready.bind(this));
   }
