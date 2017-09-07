@@ -163,7 +163,7 @@ class KomadaConsole extends Console {
    * @param  {string} [type="log"] The type of log, particularly useful for coloring.
    */
   log(stuff, type = "log") {
-    stuff = KomadaConsole.flatten(stuff, this.colors);
+    stuff = KomadaConsole.flatten(stuff, this.useColors);
     const message = this.colors ? this.colors[type.toLowerCase()].message : {};
     const time = this.colors ? this.colors[type.toLowerCase()].time : {};
     const timestamp = this.timestamps ? `[${moment().format("YYYY-MM-DD HH:mm:ss")}]` : null;
@@ -190,9 +190,9 @@ class KomadaConsole extends Console {
    * @param {boolean} color Whether or not the inspection should color the output
    * @return {string}
    */
-  static flatten(data, color) {
+  static flatten(data, useColors) {
     data = data.stack || data.message || data;
-    if (typeof data === "object" && typeof data !== "string" && !Array.isArray(data)) data = inspect(data, { depth: 0, colors: !!color });
+    if (typeof data === "object" && typeof data !== "string" && !Array.isArray(data)) data = inspect(data, { depth: 0, colors: useColors });
     if (Array.isArray(data)) data = data.join["\n"];
     return data;
   }
