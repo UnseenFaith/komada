@@ -53,7 +53,7 @@ class KomadaConsole extends Console {
       error: colors.error || { message: { background: null, text: null, style: null }, time: { background: "red", text: null, style: null } },
       log: colors.log || { message: { background: null, text: null, style: null }, time: { background: null, text: "blue", style: null } },
       verbose: colors.verbose || { message: { background: null, text: null, style: null }, time: { background: null, text: "gray", style: null } },
-      warn: colors.warn || { message: { background: null, text: null, style: null }, time: { background: "brightyellow", text: "black", style: null } },
+      warn: colors.warn || { message: { background: null, text: null, style: null }, time: { background: "lightyellow", text: "black", style: null } },
       wtf: colors.wtf || { message: { background: "red", text: null, style: ["bold", "underline"] }, time: { background: "red", text: null, style: ["bold", "underline"] } },
     };
   }
@@ -104,14 +104,14 @@ class KomadaConsole extends Console {
     * @property {string} cyan
     * @property {string} gray
     * @property {string} grey
-    * @property {string} brightgray
-    * @property {string} brightgrey
-    * @property {string} brightred
-    * @property {string} brightgreen
-    * @property {string} brightyellow
-    * @property {string} brightblue
-    * @property {string} brightmagenta
-    * @property {string} brightcyan
+    * @property {string} lightgray
+    * @property {string} lightgrey
+    * @property {string} lightred
+    * @property {string} lightgreen
+    * @property {string} lightyellow
+    * @property {string} lightblue
+    * @property {string} lightmagenta
+    * @property {string} lightcyan
     * @property {string} white
     * @property {string} #008000 green
     * @property {string} #008000 green
@@ -130,14 +130,14 @@ class KomadaConsole extends Console {
     * @property {string} cyan
     * @property {string} gray
     * @property {string} grey
-    * @property {string} brightgray
-    * @property {string} brightgrey
-    * @property {string} brightred
-    * @property {string} brightgreen
-    * @property {string} brightyellow
-    * @property {string} brightblue
-    * @property {string} brightmagenta
-    * @property {string} brightcyan
+    * @property {string} lightgray
+    * @property {string} lightgrey
+    * @property {string} lightred
+    * @property {string} lightgreen
+    * @property {string} lightyellow
+    * @property {string} lightblue
+    * @property {string} lightmagenta
+    * @property {string} lightcyan
     * @property {string} white
     * @property {string} #008000 green
     * @property {Array} [255,0,0] red
