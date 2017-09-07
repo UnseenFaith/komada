@@ -3,7 +3,7 @@ const now = require("performance-now");
 const colors = {
   prompted: { message: { background: "red" } },
   notprompted: { message: { background: "blue" } },
-  user: { message: { background: "white", text: "black" } },
+  user: { message: { background: "brightyellow", text: "black" } },
   channel: {
     text: { message: { background: "green" } },
     dm: { message: { background: "magenta" } },
