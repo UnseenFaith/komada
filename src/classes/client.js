@@ -8,7 +8,7 @@ const ArgResolver = require("./argResolver");
 const PermLevels = require("./permLevels");
 const Settings = require("./settingsCache");
 const merge = require("../functions/mergeConfig");
-const Console = require("../console/Console");
+const Console = require("./console/Console");
 
 
 const defaultPermStructure = new PermLevels()
