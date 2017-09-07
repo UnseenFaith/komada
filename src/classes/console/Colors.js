@@ -78,7 +78,7 @@ class Colors {
   }
 
   static formatRGB([red, green, blue]) {
-    return `\u001B[38;2;${red};${green};${blue}m`;
+    return `38;2;${red};${green};${blue}`;
   }
 
   format(string, { style, background, text } = {}) {
@@ -89,18 +89,18 @@ class Colors {
     if (backgroundMatch) background = Colors.hexToRGB(backgroundMatch);
     if (textMatch) text = Colors.hexToRGB(textMatch);
     if (style) {
-      if (Array.isArray(style)) style.forEach(sty => (sty in this.STYLES ? opening.push(`\u001B[${this.STYLES[sty.toLowerCase()]}m`) && closing.push(`\u001B[${this.CLOSE[sty.toLowerCase()]}m`) : null));
-      else if (style in this.STYLES) opening.push(`\u001B[${this.STYLES[style.toLowerCase()]}m`) && closing.push(`\u001B[${this.CLOSE[style.toLowerCase()]}m`);
+      if (Array.isArray(style)) style.forEach(sty => (sty in this.STYLES ? opening.push(`${this.STYLES[sty.toLowerCase()]}`) && closing.push(`${this.CLOSE[sty.toLowerCase()]}`) : null));
+      else if (style in this.STYLES) opening.push(`${this.STYLES[style.toLowerCase()]}`) && closing.push(`[${this.CLOSE[style.toLowerCase()]}`);
     }
     if (background) {
       if (Array.isArray(background)) opening.push(Colors.formatRGB(background)) && closing.push(`\u001B[${this.CLOSE.background}`);
-      else if (background.toLowerCase() in this.BACKGROUNDS) opening.push(`\u001B[${this.BACKGROUNDS[background.toLowerCase()]}m`) && closing.push(`\u001B[${this.CLOSE.background}m`);
+      else if (background.toLowerCase() in this.BACKGROUNDS) opening.push(`${this.BACKGROUNDS[background.toLowerCase()]}`) && closing.push(`${this.CLOSE.background}`);
     }
     if (text) {
-      if (Array.isArray(text)) opening.push(Colors.formatRGB(text)) && closing.push(`\u001B[${this.CLOSE.color}m`);
-      else if (text.toLowerCase() in this.COLORS) opening.push(`\u001B[${this.COLORS[text.toLowerCase()]}m`) && closing.push(`\u001B[${this.CLOSE.color}m`);
+      if (Array.isArray(text)) opening.push(Colors.formatRGB(text)) && closing.push(`${this.CLOSE.color}`);
+      else if (text.toLowerCase() in this.COLORS) opening.push(`${this.COLORS[text.toLowerCase()]}`) && closing.push(`${this.CLOSE.color}`);
     }
-    return `${opening.join("")}${string}${closing.join("")}`;
+    return `\u001B${opening.join(";")}m${string}\u001B${closing.join(";")}m`;
   }
 
 }
