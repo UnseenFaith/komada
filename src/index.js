@@ -2,6 +2,7 @@ module.exports = {
   ArgResolver: require("./classes/argResolver"),
   Client: require("./classes/client"),
   CommandMessage: require("./classes/commandMessage"),
+  Colors: require("./classes/console/Colors"),
   Console: require("./classes/console/Console"),
   Loader: require("./classes/loader"),
   ParsedUsage: require("./classes/parsedUsage"),
