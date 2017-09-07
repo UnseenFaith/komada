@@ -12,7 +12,7 @@ class Colors {
       inverse: 27,
       hidden: 28,
       strikethrough: 29,
-      color: 39,
+      text: 39,
       background: 49,
     };
 
@@ -27,7 +27,7 @@ class Colors {
       strikethrough: 9,
     };
 
-    this.COLORS = {
+    this.TEXTS = {
       black: 30,
       red: 31,
       green: 32,
@@ -81,6 +81,14 @@ class Colors {
     return `38;2;${red};${green};${blue}`;
   }
 
+  static format256Text(number) {
+    return `38;5;${number}`;
+  }
+
+  static format256Background(number) {
+    return `48;5;${number}`;
+  }
+
   format(string, { style, background, text } = {}) {
     const opening = [];
     const closing = [];
@@ -93,12 +101,14 @@ class Colors {
       else if (style in this.STYLES) opening.push(`${this.STYLES[style.toLowerCase()]}`) && closing.push(`${this.CLOSE[style.toLowerCase()]}`);
     }
     if (background) {
+      if (Number.isInteger(background)) opening.push(Colors.format256Background(background)) && closing.push(`${this.CLOSE.background}`);
       if (Array.isArray(background)) opening.push(Colors.formatRGB(background)) && closing.push(`\u001B[${this.CLOSE.background}`);
-      else if (background.toLowerCase() in this.BACKGROUNDS) opening.push(`${this.BACKGROUNDS[background.toLowerCase()]}`) && closing.push(`${this.CLOSE.background}`);
+      else if (background.toString().toLowerCase() in this.BACKGROUNDS) opening.push(`${this.BACKGROUNDS[background.toLowerCase()]}`) && closing.push(`${this.CLOSE.background}`);
     }
     if (text) {
-      if (Array.isArray(text)) opening.push(Colors.formatRGB(text)) && closing.push(`${this.CLOSE.color}`);
-      else if (text.toLowerCase() in this.COLORS) opening.push(`${this.COLORS[text.toLowerCase()]}`) && closing.push(`${this.CLOSE.color}`);
+      if (Number.isInteger(text)) opening.push(Colors.format256Text(text)) && closing.push(`${this.CLOSE.text}`);
+      if (Array.isArray(text)) opening.push(Colors.formatRGB(text)) && closing.push(`${this.CLOSE.text}`);
+      else if (text.toString().toLowerCase() in this.TEXTS) opening.push(`${this.TEXTS[text.toLowerCase()]}`) && closing.push(`${this.CLOSE.text}`);
     }
     return `\u001B[${opening.join(";")}m${string}\u001B[${closing.join(";")}m`;
   }
