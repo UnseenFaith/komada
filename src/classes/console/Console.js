@@ -15,7 +15,7 @@ class KomadaConsole extends Console {
    * @param  {boolean} [colors=false] Whether or not colors should be enabled.
    * @param  {boolean}  [timestamps=false] Whether or not Timestamps should be enabled.
    */
-  constructor({ stdout = process.stdout, stderr = process.stderr, colors = false, timestamps = false }) {
+  constructor({ stdout, stderr, colors = false, timestamps = false }) {
     super(stdout, stderr);
     /**
      * The standard output stream for this console, defaulted to process.stderr.

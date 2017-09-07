@@ -59,8 +59,8 @@ exports.DEFAULT_OPTIONS = {
   console: {
     colors: true,
     timestamps: true,
-    stdout: null,
-    stderr: null,
+    stdout: process.stdout,
+    stderr: process.stderr,
   },
 };
 
