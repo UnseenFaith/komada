@@ -90,7 +90,7 @@ class Colors {
     if (textMatch) text = Colors.hexToRGB(textMatch);
     if (style) {
       if (Array.isArray(style)) style.forEach(sty => (sty in this.STYLES ? opening.push(`${this.STYLES[sty.toLowerCase()]}`) && closing.push(`${this.CLOSE[sty.toLowerCase()]}`) : null));
-      else if (style in this.STYLES) opening.push(`${this.STYLES[style.toLowerCase()]}`) && closing.push(`[${this.CLOSE[style.toLowerCase()]}`);
+      else if (style in this.STYLES) opening.push(`${this.STYLES[style.toLowerCase()]}`) && closing.push(`${this.CLOSE[style.toLowerCase()]}`);
     }
     if (background) {
       if (Array.isArray(background)) opening.push(Colors.formatRGB(background)) && closing.push(`\u001B[${this.CLOSE.background}`);
@@ -100,7 +100,7 @@ class Colors {
       if (Array.isArray(text)) opening.push(Colors.formatRGB(text)) && closing.push(`${this.CLOSE.color}`);
       else if (text.toLowerCase() in this.COLORS) opening.push(`${this.COLORS[text.toLowerCase()]}`) && closing.push(`${this.CLOSE.color}`);
     }
-    return `\u001B${opening.join(";")}m${string}\u001B${closing.join(";")}m`;
+    return `\u001B[${opening.join(";")}m${string}\u001B[${closing.join(";")}m`;
   }
 
 }
