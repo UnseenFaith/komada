@@ -160,9 +160,11 @@ class KomadaConsole extends Console {
     const message = this.colors ? this.colors[type.toLowerCase()].message : {};
     const time = this.colors ? this.colors[type.toLowerCase()].time : {};
     const timestamp = this.timestamps ? `[${moment().format("YYYY-MM-DD HH:mm:ss")}]` : null;
-    super.log(
-      stuff.split("\n").map(str => (timestamp ? `${this.timestamp(timestamp, time)} ${this.messages(str, message)}` : `${this.messages(str, message)}`)).join("\n"),
-    );
+    if (super[type]) {
+      super[type](stuff.split("\n").map(str => (timestamp ? `${this.timestamp(timestamp, time)} ${this.messages(str, message)}` : `${this.messages(str, message)}`)).join("\n"));
+    } else {
+      super.log(stuff.split("\n").map(str => (timestamp ? `${this.timestamp(timestamp, time)} ${this.messages(str, message)}` : `${this.messages(str, message)}`)).join("\n"));
+    }
   }
 
   timestamp(timestamp, time) {
