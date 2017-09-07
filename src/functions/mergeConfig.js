@@ -91,6 +91,7 @@ exports.validate = (options) => {
   }
   if ("console" in options) {
     if ("timestamps" in options.console && typeof options.console.timestamps !== "boolean") throw new TypeError("Timestamps must be true or false.");
-    if ("colors" in options.console && typeof options.console.colors !== "boolean") throw new TypeError("Colors must be true or false.");
+    if ("colors" in options.console && typeof options.console.colors !== "object") throw new TypeError("Colors must be an object with message and time objects");
+    if ("useColors" in options.console && typeof options.console.useColors !== "boolean") throw new TypeError("Colors must be true or false.");
   }
 };
