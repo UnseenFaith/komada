@@ -77,17 +77,29 @@ class Colors {
     return [(integer >> 16) & 0xFF, (integer >> 8) & 0xFF, integer & 0xFF];
   }
 
-  static formatRGB([red, green, blue]) {
-    return `38;2;${red};${green};${blue}`;
+  static hslToRGB([h, s, l]) {
+    if (s === "0%") return [l, l, l];
+    const q = l < 0.5 ? l * (1 + s) : l + s - l * s; // eslint-disable-line
+    const p = 2 * l - q; // eslint-disable-line
+    return [Colors.hueToRGB(p, q, h + (1 / 3)), Colors.hueToRGB(p, q, h), Colors.hueToRGB(p, q, h - (1 / 3))];
   }
 
-  static format256Text(number) {
-    return `38;5;${number}`;
+  static hueToRGB(p, q, t) {
+    if (t < 0) t += 1;
+    if (t > 1) t -= 1;
+    if (t < 1 / 6) return p + (q - p) * 6 * t; // eslint-disable-line
+    if (t < 1 / 2) return q;
+    if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6; // eslint-disable-line
+    return p;
   }
 
-  static format256Background(number) {
-    return `48;5;${number}`;
+  static formatArray(array) {
+    if (array[2].endsWith("%") && array[3].endsWith("%")) {
+      return Colors.hslToRGB(array);
+    }
+    return `38;2;${array[0]};${array[1]};${array[2]}`;
   }
+
 
   format(string, { style, background, text } = {}) {
     const opening = [];
@@ -101,13 +113,13 @@ class Colors {
       else if (style in this.STYLES) opening.push(`${this.STYLES[style.toLowerCase()]}`) && closing.push(`${this.CLOSE[style.toLowerCase()]}`);
     }
     if (background) {
-      if (Number.isInteger(background)) opening.push(Colors.format256Background(background)) && closing.push(`${this.CLOSE.background}`);
-      if (Array.isArray(background)) opening.push(Colors.formatRGB(background)) && closing.push(`\u001B[${this.CLOSE.background}`);
+      if (Number.isInteger(background)) opening.push(`48;5;${background}`) && closing.push(`${this.CLOSE.background}`);
+      if (Array.isArray(background)) opening.push(Colors.formatArray(background)) && closing.push(`\u001B[${this.CLOSE.background}`);
       else if (background.toString().toLowerCase() in this.BACKGROUNDS) opening.push(`${this.BACKGROUNDS[background.toLowerCase()]}`) && closing.push(`${this.CLOSE.background}`);
     }
     if (text) {
-      if (Number.isInteger(text)) opening.push(Colors.format256Text(text)) && closing.push(`${this.CLOSE.text}`);
-      if (Array.isArray(text)) opening.push(Colors.formatRGB(text)) && closing.push(`${this.CLOSE.text}`);
+      if (Number.isInteger(text)) opening.push(`38;5;${text}`) && closing.push(`${this.CLOSE.text}`);
+      if (Array.isArray(text)) opening.push(Colors.formatArray(text)) && closing.push(`${this.CLOSE.text}`);
       else if (text.toString().toLowerCase() in this.TEXTS) opening.push(`${this.TEXTS[text.toLowerCase()]}`) && closing.push(`${this.CLOSE.text}`);
     }
     return `\u001B[${opening.join(";")}m${string}\u001B[${closing.join(";")}m`;
