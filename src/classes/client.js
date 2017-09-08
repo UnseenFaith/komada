@@ -66,6 +66,8 @@ const defaultPermStructure = new PermLevels()
  * @property {boolean} [cmdEditing=false] Whether Komada should consider edited messages as potential messages able to fire new commands.
  * @property {boolean} [cmdPrompt=false] Whether Komada should prompt missing/invalid arguments at failed command execution.
  *
+ * @property {string} [clientBaseDir=path.dirname(require.main.filename)] Directory where client pieces are stored. Can be an absolute or relative path. Defaults to the location of the index.js/app.js
+ *
  * @property {Komada.OptionsProviders}  [provider={}] The engines for SettingGateway, 'engine' for Persistent Data, 'cache' for Cache Engine (defaults to Collection)
  * @memberof Komada
  */
@@ -100,7 +102,7 @@ class Komada extends Discord.Client {
      * The location of where you installed Komada, It is set to the location of your index.js/app.js.
      * @type {String}
      */
-    this.clientBaseDir = `${path.dirname(require.main.filename)}${path.sep}`;
+    this.clientBaseDir = `${path.resolve(this.config.clientDir) || path.dirname(require.main.filename)}${path.sep}`;
 
     /**
      * An object containing all the functions within Komada
