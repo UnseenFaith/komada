@@ -102,7 +102,7 @@ class Komada extends Discord.Client {
      * The location of where you installed Komada, Can be a absolute/relative path or the path to your app/index.js
      * @type {String}
      */
-    this.clientBaseDir = `${path.resolve(this.config.clientBaseDir) || path.dirname(require.main.filename)}${path.sep}`;
+    this.clientBaseDir = `${this.config.clientBaseDir || path.dirname(require.main.filename)}${path.sep}`;
 
     /**
      * An object containing all the functions within Komada
