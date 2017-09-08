@@ -52,7 +52,7 @@ class KomadaConsole extends Console {
       debug: colors.debug || { message: { background: null, text: null, style: null }, time: { background: null, text: "magenta", style: null } },
       error: colors.error || { message: { background: null, text: null, style: null }, time: { background: "red", text: null, style: null } },
       log: colors.log || { message: { background: null, text: null, style: null }, time: { background: null, text: "blue", style: null } },
-      verbose: colors.verbose || { message: { background: null, text: null, style: null }, time: { background: null, text: "gray", style: null } },
+      verbose: colors.verbose || { message: { background: null, text: "gray", style: null }, time: { background: null, text: "gray", style: null } },
       warn: colors.warn || { message: { background: null, text: null, style: null }, time: { background: "lightyellow", text: "black", style: null } },
       wtf: colors.wtf || { message: { background: "red", text: null, style: ["bold", "underline"] }, time: { background: "red", text: null, style: ["bold", "underline"] } },
     };
