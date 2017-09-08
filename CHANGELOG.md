@@ -9,11 +9,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - [[#356](https://github.com/dirigeants/komada/pull/356)] New Logging && Console Class
 
 ### Changed
-- D.JS moved to Peer Dependency. `npm i --production hydrabolt/discord.js` must be run as well now.
+- [[#357]](https://github.com/dirigeants/komada/pull/356) Removed env var support. Auto-detect src folders etc.
+- [[#356](https://github.com/dirigeants/komada/pull/356)] D.JS moved to Peer Dependency. `npm i --production hydrabolt/discord.js` must be run as well now.
 
 ### Removed
-- Chalk removed as a dependency
-- Package-Locks are no more.
+- [[#357]](https://github.com/dirigeants/komada/pull/356) dotenv is removed as a peerDependency
+- [[#356](https://github.com/dirigeants/komada/pull/356)] Chalk removed as a dependency
+- [[#356](https://github.com/dirigeants/komada/pull/356)] Package-Locks are no more.
 
 
 ## [0.20.10] - Classbased - 2017-09-07

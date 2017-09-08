@@ -100,7 +100,7 @@ class Komada extends Discord.Client {
      * The location of where you installed Komada, whether its from an enviroment variable named clientDir or where you run the node file from.
      * @type {String}
      */
-    this.clientBaseDir = `${process.env.clientDir || process.cwd()}${path.sep}`;
+    this.clientBaseDir = `${path.dirname(require.main.filename) || process.cwd()}${path.sep}`;
 
     /**
      * An object containing all the functions within Komada
