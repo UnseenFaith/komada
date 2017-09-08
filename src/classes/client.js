@@ -97,10 +97,10 @@ class Komada extends Discord.Client {
     this.coreBaseDir = path.join(__dirname, "../");
 
     /**
-     * The location of where you installed Komada, whether its from an enviroment variable named clientDir or where you run the node file from.
+     * The location of where you installed Komada, It is set to the location of your index.js/app.js.
      * @type {String}
      */
-    this.clientBaseDir = `${path.dirname(require.main.filename) || process.cwd()}${path.sep}`;
+    this.clientBaseDir = `${path.dirname(require.main.filename)}${path.sep}`;
 
     /**
      * An object containing all the functions within Komada
