@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - [[#356](https://github.com/dirigeants/komada/pull/356)] New Logging && Console Class
 
 ### Changed
-- D.JS moved to Peer Dependency. `npm i --production discord.js` must be run as well now.
+- D.JS moved to Peer Dependency. `npm i --production hydrabolt/discord.js` must be run as well now.
 
 ### Removed
 - Chalk removed as a dependency
