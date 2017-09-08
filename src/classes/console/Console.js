@@ -187,7 +187,7 @@ class KomadaConsole extends Console {
   /**
    * Flattens our data into a readable string.
    * @param  {*} data Some data to flatten
-   * @param {boolean} color Whether or not the inspection should color the output
+   * @param {boolean} useColors Whether or not the inspection should color the output
    * @return {string}
    */
   static flatten(data, useColors) {
