@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - [[#356](https://github.com/dirigeants/komada/pull/356)] New Logging && Console Class
 
+### Changed
+- D.JS moved to Peer Dependency. `npm i --production discord.js` must be run as well now.
+
+### Removed
+- Chalk removed as a dependency
+- Package-Locks are no more.
+
+
 ## [0.20.10] - Classbased - 2017-09-07
 ### Added
 - [[#347](https://github.com/dirigeants/komada/pull/347)] Merge Function for options.
