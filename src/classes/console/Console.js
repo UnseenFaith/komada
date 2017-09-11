@@ -50,7 +50,7 @@ class KomadaConsole extends Console {
      * @type  {boolean|Colors}
      */
     this.colors = {
-      debug: colors.debug || { message: { background: null, text: null, style: null }, time: { background: null, text: "magenta", style: null } },
+      debug: colors.debug || { message: { background: null, text: null, style: null }, time: { background: null, text: "lightmagenta", style: null } },
       error: colors.error || { message: { background: null, text: null, style: null }, time: { background: "red", text: null, style: null } },
       log: colors.log || { message: { background: null, text: null, style: null }, time: { background: null, text: "lightblue", style: null } },
       verbose: colors.verbose || { message: { background: null, text: "gray", style: null }, time: { background: null, text: "gray", style: null } },
