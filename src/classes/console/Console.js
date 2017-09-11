@@ -16,7 +16,7 @@ class KomadaConsole extends Console {
    * @param  {boolean} [colors={}] The colors for this console instance.
    * @param  {boolean}  [timestamps=false] Whether or not Timestamps should be enabled.
    */
-  constructor({ stdout, stderr, useColor = true, colors = {}, timestamps = false }) {
+  constructor({ stdout, stderr, useColor, colors = {}, timestamps = false }) {
     super(stdout, stderr);
     /**
      * The standard output stream for this console, defaulted to process.stderr.
@@ -42,7 +42,8 @@ class KomadaConsole extends Console {
      * Whether or not this console should use colors.
      * @type {boolean}
      */
-    this.useColors = useColor || this.stdout.isTTY || false;
+    this.useColors = typeof useColor === "undefined" ? this.stdout.isTTY || false : useColor;
+
     /**
      * The colors for this console.
      * @name KomadaConsole#colors
@@ -166,12 +167,60 @@ class KomadaConsole extends Console {
     stuff = KomadaConsole.flatten(stuff, this.useColors);
     const message = this.colors ? this.colors[type.toLowerCase()].message : {};
     const time = this.colors ? this.colors[type.toLowerCase()].time : {};
-    const timestamp = this.timestamps ? `[${moment().format("YYYY-MM-DD HH:mm:ss")}]` : null;
-    if (super[type]) {
-      super[type](stuff.split("\n").map(str => (timestamp ? `${this.timestamp(timestamp, time)} ${this.messages(str, message)}` : `${this.messages(str, message)}`)).join("\n"));
+    const timestamp = this.timestamps ? this.timestamp(`[${moment().format("YYYY-MM-DD HH:mm:ss")}] `, time) : "";
+    if (this._[type]) {
+      this._[type](stuff.split("\n").map(str => `${timestamp}${this.messages(str, message)}`).join("\n"));
     } else {
-      super.log(stuff.split("\n").map(str => (timestamp ? `${this.timestamp(timestamp, time)} ${this.messages(str, message)}` : `${this.messages(str, message)}`)).join("\n"));
+      super.log(stuff.split("\n").map(str => `${timestamp}${this.messages(str, message)}`).join("\n"));
     }
+  }
+
+  /**
+   * Print something to console as a simple log.
+   * @param  {*} stuff The stuff to log
+   */
+  _log(stuff) {
+    super.log(stuff);
+  }
+
+  /**
+   * Print something to console as an error.
+   * @param  {*} stuff The stuff to log
+   */
+  _error(stuff) {
+    super.error(stuff);
+  }
+
+  /**
+   * Print something to console as a "WTF" error.
+   * @param  {*} stuff The stuff to log
+   */
+  _wtf(stuff) {
+    super.error(stuff);
+  }
+
+  /**
+   * Print something to console as a debug log.
+   * @param  {*} stuff The stuff to log
+   */
+  _debug(stuff) {
+    super.log(stuff);
+  }
+
+  /**
+   * Print something to console as a verbose log.
+   * @param  {*} stuff The stuff to log
+   */
+  _verbose(stuff) {
+    super.log(stuff);
+  }
+
+  /**
+   * Print something to console as a warning.
+   * @param  {*} stuff The stuff to log
+   */
+  _warn(stuff) {
+    super.log(stuff);
   }
 
   timestamp(timestamp, time) {
@@ -193,7 +242,7 @@ class KomadaConsole extends Console {
   static flatten(data, useColors) {
     data = data.stack || data.message || data;
     if (typeof data === "object" && typeof data !== "string" && !Array.isArray(data)) data = inspect(data, { depth: 0, colors: useColors });
-    if (Array.isArray(data)) data = data.join["\n"];
+    if (Array.isArray(data)) data = data.join("\n");
     return data;
   }
 
