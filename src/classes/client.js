@@ -80,7 +80,7 @@ class Komada extends Discord.Client {
 
   /**
    * Creates a new instance of Komada
-   * @param  {Komada.Options} [config={}] The configuration options to provide to Komada
+   * @param {Komada.Options} [config={}] The configuration options to provide to Komada
    */
   constructor(config = {}) {
     if (typeof config !== "object") throw new TypeError("Configuration for Komada must be an object.");

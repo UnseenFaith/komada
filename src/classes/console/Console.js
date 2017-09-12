@@ -11,10 +11,10 @@ class KomadaConsole extends Console {
 
   /**
    * Constructs our KomadaConsole instance
-   * @param  {boolean}  [stdout=process.stdout] The location of standard output. Must be a writable stream.
-   * @param  {boolean}  [stderr=process.stderr] The location of standrad error outputt. Must be a writable stream.
-   * @param  {boolean} [colors={}] The colors for this console instance.
-   * @param  {boolean}  [timestamps=false] Whether or not Timestamps should be enabled.
+   * @param {boolean}  [stdout=process.stdout] The location of standard output. Must be a writable stream.
+   * @param {boolean}  [stderr=process.stderr] The location of standrad error outputt. Must be a writable stream.
+   * @param {boolean} [colors={}] The colors for this console instance.
+   * @param {boolean}  [timestamps=false] Whether or not Timestamps should be enabled.
    */
   constructor({ stdout, stderr, useColor, colors = {}, timestamps = false }) {
     super(stdout, stderr);
@@ -160,8 +160,8 @@ class KomadaConsole extends Console {
 
   /**
    * Logs everything to the console/writable stream.
-   * @param  {*} stuff The stuff we want to print.
-   * @param  {string} [type="log"] The type of log, particularly useful for coloring.
+   * @param {*} stuff The stuff we want to print.
+   * @param {string} [type="log"] The type of log, particularly useful for coloring.
    */
   log(stuff, type = "log") {
     stuff = KomadaConsole.flatten(stuff, this.useColors);
@@ -185,7 +185,7 @@ class KomadaConsole extends Console {
 
   /**
    * Print something to console as an error.
-   * @param  {*} stuff The stuff to log
+   * @param {*} stuff The stuff to log
    */
   _error(stuff) {
     super.error(stuff);
@@ -193,7 +193,7 @@ class KomadaConsole extends Console {
 
   /**
    * Print something to console as a "WTF" error.
-   * @param  {*} stuff The stuff to log
+   * @param {*} stuff The stuff to log
    */
   _wtf(stuff) {
     super.error(stuff);
@@ -201,7 +201,7 @@ class KomadaConsole extends Console {
 
   /**
    * Print something to console as a debug log.
-   * @param  {*} stuff The stuff to log
+   * @param {*} stuff The stuff to log
    */
   _debug(stuff) {
     super.log(stuff);
@@ -209,7 +209,7 @@ class KomadaConsole extends Console {
 
   /**
    * Print something to console as a verbose log.
-   * @param  {*} stuff The stuff to log
+   * @param {*} stuff The stuff to log
    */
   _verbose(stuff) {
     super.log(stuff);
@@ -217,7 +217,7 @@ class KomadaConsole extends Console {
 
   /**
    * Print something to console as a warning.
-   * @param  {*} stuff The stuff to log
+   * @param {*} stuff The stuff to log
    */
   _warn(stuff) {
     super.log(stuff);
@@ -235,7 +235,7 @@ class KomadaConsole extends Console {
 
   /**
    * Flattens our data into a readable string.
-   * @param  {*} data Some data to flatten
+   * @param {*} data Some data to flatten
    * @param {boolean} useColors Whether or not the inspection should color the output
    * @return {string}
    */

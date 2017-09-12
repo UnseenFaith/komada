@@ -9,9 +9,9 @@
 
 /**
  * The part of the command that will run. This should always return a Promise to prevent issues in Komada. The easy way to do this is to add the async keyword.
- * @param  {KomadaClient}  client The Komada Client
- * @param  {Message}  msg A Message object obtained from discord.js
- * @param  {Array}  args An array of arguments passed through by our argument parser.
+ * @param {KomadaClient}  client The Komada Client
+ * @param {Message}  msg A Message object obtained from discord.js
+ * @param {Array}  args An array of arguments passed through by our argument parser.
  * @example
  * exports.run = (client, msg) => msg.reply("Hello Komada!");
  * @example
