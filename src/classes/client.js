@@ -229,7 +229,7 @@ class Komada extends Discord.Client {
      * The console for this instance of Komada. You can disable timestmaps, colors, and add writable streams as config options to configure this.
      * @type {KomadaConsole}
      */
-    this.console = new Console({ stdout: this.config.console.stdout, stderr: this.config.console.stderr, colors: this.config.console.colors, timestamps: this.config.console.timestamps });
+    this.console = new Console({ stdout: this.config.console.stdout, stderr: this.config.console.stderr, useColor: this.config.console.useColors, colors: this.config.console.colors, timestamps: this.config.console.timestamps });
 
     this.once("ready", this._ready.bind(this));
   }
