@@ -36,7 +36,7 @@ class KomadaConsole extends Console {
      * Whether or not timestamps should be enabled for this console.
      * @type {boolean}
      */
-    this.timestamps = timestamps;
+    this.timestamps = timestamps === true ? "YYYY-MM-DD HH:mm:ss" : timestamps;
 
     /**
      * Whether or not this console should use colors.
@@ -167,7 +167,7 @@ class KomadaConsole extends Console {
     stuff = KomadaConsole.flatten(stuff, this.useColors);
     const message = this.colors ? this.colors[type.toLowerCase()].message : {};
     const time = this.colors ? this.colors[type.toLowerCase()].time : {};
-    const timestamp = this.timestamps ? this.timestamp(`[${moment().format("YYYY-MM-DD HH:mm:ss")}]`, time) : "";
+    const timestamp = this.timestamps ? `${this.timestamp(`[${moment().format(this.timestamps)}]`, time)} ` : "";
     if (this[`_${type}`]) {
       this[`_${type}`](stuff.split("\n").map(str => `${timestamp}${this.messages(str, message)}`).join("\n"));
     } else {
@@ -177,7 +177,7 @@ class KomadaConsole extends Console {
 
   /**
    * Print something to console as a simple log.
-   * @param  {*} stuff The stuff to log
+   * @param {*} stuff The stuff to log
    */
   _log(stuff) {
     super.log(stuff);
