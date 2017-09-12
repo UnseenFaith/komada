@@ -2,7 +2,7 @@ const { Collection } = require("discord.js");
 
 exports.database = new Collection();
 
-exports.getTable = table => this.database.get(table) || this.database.set(table, new Collection());
+exports.getTable = table => this.database.get(table) || this.database.set(table, new Collection()).get(table);
 
 exports.getAll = (table) => {
   const collection = this.database.get(table);
