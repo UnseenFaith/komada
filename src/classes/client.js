@@ -8,6 +8,8 @@ const ArgResolver = require("./argResolver");
 const PermLevels = require("./permLevels");
 const Settings = require("./settingsCache");
 const merge = require("../functions/mergeConfig");
+const Console = require("./console/Console");
+
 
 const defaultPermStructure = new PermLevels()
   .addLevel(0, false, () => true)
@@ -64,6 +66,8 @@ const defaultPermStructure = new PermLevels()
  * @property {boolean} [cmdEditing=false] Whether Komada should consider edited messages as potential messages able to fire new commands.
  * @property {boolean} [cmdPrompt=false] Whether Komada should prompt missing/invalid arguments at failed command execution.
  *
+ * @property {string} [clientBaseDir=path.dirname(require.main.filename)] Directory where client pieces are stored. Can be an absolute or relative path. Defaults to the location of the index.js/app.js
+ *
  * @property {Komada.OptionsProviders}  [provider={}] The engines for SettingGateway, 'engine' for Persistent Data, 'cache' for Cache Engine (defaults to Collection)
  * @memberof Komada
  */
@@ -76,7 +80,7 @@ class Komada extends Discord.Client {
 
   /**
    * Creates a new instance of Komada
-   * @param  {Komada.Options} [config={}] The configuration options to provide to Komada
+   * @param {Komada.Options} [config={}] The configuration options to provide to Komada
    */
   constructor(config = {}) {
     if (typeof config !== "object") throw new TypeError("Configuration for Komada must be an object.");
@@ -95,10 +99,10 @@ class Komada extends Discord.Client {
     this.coreBaseDir = path.join(__dirname, "../");
 
     /**
-     * The location of where you installed Komada, whether its from an enviroment variable named clientDir or where you run the node file from.
+     * The location of where you installed Komada, Can be a absolute/relative path or the path to your app/index.js
      * @type {String}
      */
-    this.clientBaseDir = `${process.env.clientDir || process.cwd()}${path.sep}`;
+    this.clientBaseDir = `${this.config.clientBaseDir || path.dirname(require.main.filename)}${path.sep}`;
 
     /**
      * An object containing all the functions within Komada
@@ -220,6 +224,12 @@ class Komada extends Discord.Client {
      * @type {Object}
      */
     this.application = null;
+
+    /**
+     * The console for this instance of Komada. You can disable timestmaps, colors, and add writable streams as config options to configure this.
+     * @type {KomadaConsole}
+     */
+    this.console = new Console({ stdout: this.config.console.stdout, stderr: this.config.console.stderr, useColor: this.config.console.useColors, colors: this.config.console.colors, timestamps: this.config.console.timestamps });
 
     this.once("ready", this._ready.bind(this));
   }

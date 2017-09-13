@@ -11,7 +11,7 @@ class Schema {
 
 /**
  * Constructs our schema that we can add into.
- * @param  {Object} [schema] An object containing key:value pairs
+ * @param {Object} [schema] An object containing key:value pairs
  */
   constructor(schema) {
     if (schema) {

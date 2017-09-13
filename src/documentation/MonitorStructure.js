@@ -9,8 +9,8 @@
 
 /**
  * The part of the monitor that will run on the message.
- * @param  {KomadaClient}  client The Komada Client
- * @param  {Message}  msg A Message object obtained from discord.js
+ * @param {KomadaClient}  client The Komada Client
+ * @param {Message}  msg A Message object obtained from discord.js
  * @example <caption> This will create a monitor that logs every message that mentions the bot. </caption>
  * exports.run = (client, msg, cmd) => {
  *   if (msg.mentions.users.has(client.user.id)) console.log(`Message ${msg.id} contained the bots mention: ${msg.cleanContent}`);

@@ -5,6 +5,21 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- [[#356](https://github.com/dirigeants/komada/pull/356)] New Logging && Console Class
+
+### Changed
+- [[#356](https://github.com/dirigeants/komada/pull/356)] Removed env var support. Auto-detect src folders etc. Allow users to provide a absolute/relative path to custom clientBaseDir
+- [[#356](https://github.com/dirigeants/komada/pull/356)] D.JS moved to Peer Dependency. `npm i --production hydrabolt/discord.js` must be run as well now.
+
+### Fixed
+- [[#356](https://github.com/dirigeants/komada/pull/356)] Fixes caching provider (Collection)
+
+### Removed
+- [[#356](https://github.com/dirigeants/komada/pull/356)] dotenv is removed as a peerDependency
+- [[#356](https://github.com/dirigeants/komada/pull/356)] Chalk removed as a dependency
+- [[#356](https://github.com/dirigeants/komada/pull/356)] Package-Locks are no more.
+
 
 ## [0.20.10] - Classbased - 2017-09-07
 ### Added

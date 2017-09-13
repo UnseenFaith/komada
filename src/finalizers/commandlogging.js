@@ -1,15 +1,22 @@
 const now = require("performance-now");
-const chalk = require("chalk");
 
-const clk = new chalk.constructor({ enabled: true });
+const colors = {
+  prompted: { message: { background: "red" } },
+  notprompted: { message: { background: "blue" } },
+  user: { message: { background: "yellow", text: "black" } },
+  channel: {
+    text: { message: { background: "green" } },
+    dm: { message: { background: "magenta" } },
+    group: { message: { background: "cyan" } },
+  },
+};
 
 exports.run = (client, msg, mes, start) => {
   if (client.config.cmdLogging) {
-    clk.enabled = !client.config.disableLogColor;
     client.emit("log", [
       `${msg.cmd.help.name}(${msg.args.join(", ")})`,
-      msg.reprompted ? `${clk.bgRed(`[${(now() - start).toFixed(2)}ms]`)}` : `${clk.bgBlue(`[${(now() - start).toFixed(2)}ms]`)}`,
-      `${clk.black.bgYellow(`${msg.author.username}[${msg.author.id}]`)}`,
+      msg.reprompted ? `${client.console.messages((`[${(now() - start).toFixed(2)}ms]`), colors.prompted.message)}` : `${client.console.messages(`[${(now() - start).toFixed(2)}ms]`, colors.notprompted.message)}`,
+      `${client.console.messages(`${msg.author.username}[${msg.author.id}]`, colors.user.message)}`,
       this.channel(msg),
     ].join(" "), "log");
   }
@@ -18,11 +25,11 @@ exports.run = (client, msg, mes, start) => {
 exports.channel = (msg) => {
   switch (msg.channel.type) {
     case "text":
-      return `${clk.bgGreen(`${msg.guild.name}[${msg.guild.id}]`)}`;
+      return `${msg.client.console.messages(`${msg.guild.name}[${msg.guild.id}]`, colors.channel.text.message)}`;
     case "dm":
-      return `${clk.bgMagenta("Direct Messages")}`;
+      return `${msg.client.console.messages("Direct Messages", colors.channel.dm.message)}`;
     case "group":
-      return `${clk.bgCyan(`Group DM => ${msg.channel.owner.username}[${msg.channel.owner.id}]`)}`;
+      return `${msg.client.console.messages(`Group DM => ${msg.channel.owner.username}[${msg.channel.owner.id}]`, colors.channel.group.message)}`;
     default:
       return "not going to happen";
   }

@@ -12,9 +12,9 @@
  * If the user should be allowed to use the command, you will return false. <br>
  * If the user should prevented from using the command, you will return true. If you do this, the command will be silent. <br>
  * However, if you would like to give the user a message as to why they couldn't use the command, you can also return a String, such as `return "Not enough permissions to use this command."`.
- * @param  {KomadaClient}  client The Komada Client
- * @param  {Message}  msg A Message object obtained from discord.js
- * @param  {Command}  cmd The command that the user is trying to run.
+ * @param {KomadaClient}  client The Komada Client
+ * @param {Message}  msg A Message object obtained from discord.js
+ * @param {Command}  cmd The command that the user is trying to run.
  * @example <caption> This will create an inhibitor that only runs when the commands "requiredUser" configuration property has the message authors id in it. </caption>
  * exports.run = (client, msg, cmd) => {
  *  if (!cmd.conf.requiredUser || !(cmd.conf.requiredUser instanceof Array) || cmd.conf.requiredUser.length === 0) return false;
