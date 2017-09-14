@@ -1,0 +1,199 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Source: classes/settingResolver.js | Komada</title>
+    <link rel="shortcut icon" href="img/favicon.ico">
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/tui-doc.css">
+
+    
+</head>
+<body>
+<nav class="lnb" id="lnb">
+    <div class="logo" style="width: 100px; height: 100px">
+        
+            <a href="https://github.com/dirigeants/komada" rel="noopener noreferrer" target="_blank">
+                <img src="https://cdn.discordapp.com/avatars/275809850422722560/4e85b97ec4d79f709bbedd849c0e6ad9.png?size=256" width="100%" height="100%">
+            </a>
+        
+    </div>
+    <div class="title">
+        <h1><a href="index.html" class="link">Komada</a></h1>
+        
+    </div>
+    <div class="search-container" id="search-container">
+        <input type="text" placeholder="Search">
+        <ul></ul>
+    </div>
+    
+        <ol class="lnb-tab">
+            <li id="api-tab">
+                <a href="#"><h4>Documentation</h4></a>
+            </li>
+            <li id="examples-tab">
+                <a href="#"><h4>Examples</h4></a>
+            </li>
+        </ol>
+    
+    <div class="lnb-examples hidden"><h3>Examples</h3><ul><li><a href="tutorial-PermissionLevels_.html">PermissionLevels</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="PermissionLevels_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="PermissionLevels.html#levels">levels</a></li><li><a href="PermissionLevels.html#structure">structure</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="PermissionLevels.html#addLevel">addLevel</a></li></ul><div class="member-type">Typedef</div><ul class="inner"><li><a href="PermissionLevels.html#.permLevel">permLevel</a></li><li><a href="PermissionLevels.html#.validPermStructure">validPermStructure</a></li></ul></div></li><li><a href="tutorial-SettingGateway.html">SettingGateway</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="SettingGateway_sub"></div></li></ul></div><div class="lnb-api hidden"><h3>Modules</h3><ul><li><a href="module-Command.html">Command</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Command_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="module-Command.html#.conf">conf</a></li><li><a href="module-Command.html#.help">help</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Command.html#.run">run</a></li></ul><div class="member-type">Typedef</div><ul class="inner"><li><a href="module-Command.html#~Conf">Conf</a></li><li><a href="module-Command.html#~Help">Help</a></li></ul></div></li><li><a href="module-Event.html">Event</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Event_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Event.html#.run">run</a></li></ul></div></li><li><a href="module-Extendable.html">Extendable</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Extendable_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="module-Extendable.html#.conf">conf</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Extendable.html#.extend">extend</a></li></ul><div class="member-type">Typedef</div><ul class="inner"><li><a href="module-Extendable.html#~Conf">Conf</a></li></ul></div></li><li><a href="module-Functions.html">Functions</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Functions_sub"></div></li><li><a href="module-Inhibitor.html">Inhibitor</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Inhibitor_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="module-Inhibitor.html#.conf">conf</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Inhibitor.html#.run">run</a></li></ul><div class="member-type">Typedef</div><ul class="inner"><li><a href="module-Inhibitor.html#~Conf">Conf</a></li></ul></div></li><li><a href="module-Monitor.html">Monitor</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Monitor_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="module-Monitor.html#.conf">conf</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Monitor.html#.run">run</a></li></ul><div class="member-type">Typedef</div><ul class="inner"><li><a href="module-Monitor.html#~Conf">Conf</a></li></ul></div></li><li><a href="module-Provider.html">Provider</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Provider_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="module-Provider.html#.conf">conf</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Provider.html#.create">create</a></li><li><a href="module-Provider.html#.createTable">createTable</a></li><li><a href="module-Provider.html#.delete">delete</a></li><li><a href="module-Provider.html#.get">get</a></li><li><a href="module-Provider.html#.getAll">getAll</a></li><li><a href="module-Provider.html#.hasTable">hasTable</a></li><li><a href="module-Provider.html#.replace">replace</a></li><li><a href="module-Provider.html#.update">update</a></li></ul></div></li><li><a href="module-ProviderSQL.html">ProviderSQL</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:ProviderSQL_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="module-ProviderSQL.html#.CONSTANTS">CONSTANTS</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="module-ProviderSQL.html#.sanitize">sanitize</a></li><li><a href="module-ProviderSQL.html#.serialize">serialize</a></li><li><a href="module-ProviderSQL.html#.updateColumns">updateColumns</a></li></ul></div></li></ul></div><div class="lnb-api hidden"><h3>Externals</h3><ul><li><a href="external-Channel.html">Channel</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:Channel_sub"></div></li><li><a href="external-Client.html">Client</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:Client_sub"></div></li><li><a href="external-Collection.html">Collection</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:Collection_sub"></div></li><li><a href="external-DiscordJSConfig.html">DiscordJSConfig</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:DiscordJSConfig_sub"></div></li><li><a href="external-DMChannel.html">DMChannel</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:DMChannel_sub"></div></li><li><a href="external-Emoji.html">Emoji</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:Emoji_sub"></div></li><li><a href="external-GroupDMChannel.html">GroupDMChannel</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:GroupDMChannel_sub"></div></li><li><a href="external-Guild.html">Guild</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:Guild_sub"></div></li><li><a href="external-GuildMember.html">GuildMember</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:GuildMember_sub"></div></li><li><a href="external-GuildResolvable.html">GuildResolvable</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:GuildResolvable_sub"></div></li><li><a href="external-Message.html">Message</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:Message_sub"></div></li><li><a href="external-MessageAttachment.html">MessageAttachment</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:MessageAttachment_sub"></div></li><li><a href="external-MessageEmbed.html">MessageEmbed</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:MessageEmbed_sub"></div></li><li><a href="external-MessageOptions.html">MessageOptions</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:MessageOptions_sub"></div></li><li><a href="external-MessageReaction.html">MessageReaction</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:MessageReaction_sub"></div></li><li><a href="external-ReactionEmoji.html">ReactionEmoji</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:ReactionEmoji_sub"></div></li><li><a href="external-Role.html">Role</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:Role_sub"></div></li><li><a href="external-ShardingManager.html">ShardingManager</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:ShardingManager_sub"></div></li><li><a href="external-StringResolvable.html">StringResolvable</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:StringResolvable_sub"></div></li><li><a href="external-TextChannel.html">TextChannel</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:TextChannel_sub"></div></li><li><a href="external-User.html">User</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:User_sub"></div></li><li><a href="external-UserResolvable.html">UserResolvable</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:UserResolvable_sub"></div></li><li><a href="external-VoiceChannel.html">VoiceChannel</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:VoiceChannel_sub"></div></li><li><a href="external-Webhook.html">Webhook</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="external:Webhook_sub"></div></li></ul></div><div class="lnb-api hidden"><h3>Classes</h3><ul><li><a href="ArgResolver.html">ArgResolver</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="ArgResolver_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="ArgResolver.html#bool">bool</a></li><li><a href="ArgResolver.html#boolean">boolean</a></li><li><a href="ArgResolver.html#channel">channel</a></li><li><a href="ArgResolver.html#float">float</a></li><li><a href="ArgResolver.html#guild">guild</a></li><li><a href="ArgResolver.html#int">int</a></li><li><a href="ArgResolver.html#integer">integer</a></li><li><a href="ArgResolver.html#literal">literal</a></li><li><a href="ArgResolver.html#member">member</a></li><li><a href="ArgResolver.html#mention">mention</a></li><li><a href="ArgResolver.html#message">message</a></li><li><a href="ArgResolver.html#msg">msg</a></li><li><a href="ArgResolver.html#msgs">msgs</a></li><li><a href="ArgResolver.html#num">num</a></li><li><a href="ArgResolver.html#number">number</a></li><li><a href="ArgResolver.html#role">role</a></li><li><a href="ArgResolver.html#str">str</a></li><li><a href="ArgResolver.html#string">string</a></li><li><a href="ArgResolver.html#url">url</a></li><li><a href="ArgResolver.html#user">user</a></li></ul></div></li><li><a href="CommandMessage.html">CommandMessage</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="CommandMessage_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="CommandMessage.html#args">args</a></li><li><a href="CommandMessage.html#client">client</a></li><li><a href="CommandMessage.html#cmd">cmd</a></li><li><a href="CommandMessage.html#msg">msg</a></li><li><a href="CommandMessage.html#params">params</a></li><li><a href="CommandMessage.html#prefix">prefix</a></li><li><a href="CommandMessage.html#prefixLength">prefixLength</a></li><li><a href="CommandMessage.html#reprompted">reprompted</a></li></ul></div></li><li><a href="Gateway.html">Gateway</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Gateway_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="Gateway.html#.settings">settings</a></li><li><a href="Gateway.html#cache">cache</a></li><li><a href="Gateway.html#client">client</a></li><li><a href="Gateway.html#engine">engine</a></li><li><a href="Gateway.html#provider">provider</a></li><li><a href="Gateway.html#resolver">resolver</a></li><li><a href="Gateway.html#schema">schema</a></li><li><a href="Gateway.html#sql">sql</a></li><li><a href="Gateway.html#type">type</a></li><li><a href="Gateway.html#validate">validate</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="Gateway.html#create">create</a></li><li><a href="Gateway.html#destroy">destroy</a></li><li><a href="Gateway.html#ensureCreate">ensureCreate</a></li><li><a href="Gateway.html#get">get</a></li><li><a href="Gateway.html#init">init</a></li><li><a href="Gateway.html#reset">reset</a></li><li><a href="Gateway.html#sync">sync</a></li><li><a href="Gateway.html#update">update</a></li><li><a href="Gateway.html#updateArray">updateArray</a></li></ul></div></li><li><a href="Komada.html">Komada</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Komada_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="Komada.html#aliases">aliases</a></li><li><a href="Komada.html#application">application</a></li><li><a href="Komada.html#argResolver">argResolver</a></li><li><a href="Komada.html#clientBaseDir">clientBaseDir</a></li><li><a href="Komada.html#commandFinalizers">commandFinalizers</a></li><li><a href="Komada.html#commandInhibitors">commandInhibitors</a></li><li><a href="Komada.html#CommandMessage">CommandMessage</a></li><li><a href="Komada.html#commandMessageLifetime">commandMessageLifetime</a></li><li><a href="Komada.html#commandMessages">commandMessages</a></li><li><a href="Komada.html#commandMessageSweep">commandMessageSweep</a></li><li><a href="Komada.html#commands">commands</a></li><li><a href="Komada.html#config">config</a></li><li><a href="Komada.html#console">console</a></li><li><a href="Komada.html#coreBaseDir">coreBaseDir</a></li><li><a href="Komada.html#eventHandlers">eventHandlers</a></li><li><a href="Komada.html#funcs">funcs</a></li><li><a href="Komada.html#invite">invite</a></li><li><a href="Komada.html#messageMonitors">messageMonitors</a></li><li><a href="Komada.html#methods">methods</a></li><li><a href="Komada.html#owner">owner</a></li><li><a href="Komada.html#permStructure">permStructure</a></li><li><a href="Komada.html#providers">providers</a></li><li><a href="Komada.html#ready">ready</a></li><li><a href="Komada.html#settings">settings</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="Komada.html#login">login</a></li><li><a href="Komada.html#sweepCommandMessages">sweepCommandMessages</a></li></ul><div class="member-type">Typedef</div><ul class="inner"><li><a href="Komada.html#.Options">Options</a></li><li><a href="Komada.html#.OptionsDisabled">OptionsDisabled</a></li><li><a href="Komada.html#.OptionsProviders">OptionsProviders</a></li></ul></div></li><li><a href="KomadaConsole.html">KomadaConsole</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="KomadaConsole_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="KomadaConsole.html#colors">colors</a></li><li><a href="KomadaConsole.html#stderr">stderr</a></li><li><a href="KomadaConsole.html#stdout">stdout</a></li><li><a href="KomadaConsole.html#timestamps">timestamps</a></li><li><a href="KomadaConsole.html#useColors">useColors</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="KomadaConsole.html#.flatten">flatten</a></li><li><a href="KomadaConsole.html#_debug">_debug</a></li><li><a href="KomadaConsole.html#_error">_error</a></li><li><a href="KomadaConsole.html#_log">_log</a></li><li><a href="KomadaConsole.html#_verbose">_verbose</a></li><li><a href="KomadaConsole.html#_warn">_warn</a></li><li><a href="KomadaConsole.html#_wtf">_wtf</a></li><li><a href="KomadaConsole.html#log">log</a></li></ul><div class="member-type">Typedef</div><ul class="inner"><li><a href="KomadaConsole.html#.BackgroundColorTypes">BackgroundColorTypes</a></li><li><a href="KomadaConsole.html#.ColorObjects">ColorObjects</a></li><li><a href="KomadaConsole.html#.Colors">Colors</a></li><li><a href="KomadaConsole.html#.MessageObject">MessageObject</a></li><li><a href="KomadaConsole.html#.StyleTypes">StyleTypes</a></li><li><a href="KomadaConsole.html#.TextColorTypes">TextColorTypes</a></li><li><a href="KomadaConsole.html#.TimeObject">TimeObject</a></li></ul></div></li><li><a href="ParsedUsage.html">ParsedUsage</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="ParsedUsage_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="ParsedUsage.html#client">client</a></li><li><a href="ParsedUsage.html#commands">commands</a></li><li><a href="ParsedUsage.html#deliminatedUsage">deliminatedUsage</a></li><li><a href="ParsedUsage.html#names">names</a></li><li><a href="ParsedUsage.html#nearlyFullUsage">nearlyFullUsage</a></li><li><a href="ParsedUsage.html#parsedUsage">parsedUsage</a></li><li><a href="ParsedUsage.html#usageString">usageString</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="ParsedUsage.html#fullUsage">fullUsage</a></li></ul></div></li><li><a href="PermissionLevels.html">PermissionLevels</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="PermissionLevels_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="PermissionLevels.html#levels">levels</a></li><li><a href="PermissionLevels.html#structure">structure</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="PermissionLevels.html#addLevel">addLevel</a></li></ul><div class="member-type">Typedef</div><ul class="inner"><li><a href="PermissionLevels.html#.permLevel">permLevel</a></li><li><a href="PermissionLevels.html#.validPermStructure">validPermStructure</a></li></ul></div></li><li><a href="Resolver.html">Resolver</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Resolver_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="Resolver.html#boolean">boolean</a></li><li><a href="Resolver.html#channel">channel</a></li><li><a href="Resolver.html#float">float</a></li><li><a href="Resolver.html#guild">guild</a></li><li><a href="Resolver.html#integer">integer</a></li><li><a href="Resolver.html#member">member</a></li><li><a href="Resolver.html#msg">msg</a></li><li><a href="Resolver.html#msgs">msgs</a></li><li><a href="Resolver.html#role">role</a></li><li><a href="Resolver.html#string">string</a></li><li><a href="Resolver.html#url">url</a></li><li><a href="Resolver.html#user">user</a></li></ul></div></li><li><a href="Schema.html">Schema</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Schema_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="Schema.html#defaults">defaults</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="Schema.html#add">add</a></li></ul><div class="member-type">Typedef</div><ul class="inner"><li><a href="Schema.html#.Options">Options</a></li><li><a href="Schema.html#.Types">Types</a></li></ul></div></li><li><a href="SettingResolver.html">SettingResolver</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="SettingResolver_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="SettingResolver.html#.maxOrMin">maxOrMin</a></li><li><a href="SettingResolver.html#boolean">boolean</a></li><li><a href="SettingResolver.html#channel">channel</a></li><li><a href="SettingResolver.html#float">float</a></li><li><a href="SettingResolver.html#guild">guild</a></li><li><a href="SettingResolver.html#integer">integer</a></li><li><a href="SettingResolver.html#member">member</a></li><li><a href="SettingResolver.html#msg">msg</a></li><li><a href="SettingResolver.html#msgs">msgs</a></li><li><a href="SettingResolver.html#role">role</a></li><li><a href="SettingResolver.html#string">string</a></li><li><a href="SettingResolver.html#url">url</a></li><li><a href="SettingResolver.html#user">user</a></li></ul></div></li><li><a href="Settings.html">Settings</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Settings_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="Settings.html#baseDir">baseDir</a></li><li><a href="Settings.html#cache">cache</a></li><li><a href="Settings.html#gateway">gateway</a></li><li><a href="Settings.html#resolver">resolver</a></li><li><a href="Settings.html#schema">schema</a></li><li><a href="Settings.html#schemaPath">schemaPath</a></li><li><a href="Settings.html#type">type</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="Settings.html#add">add</a></li><li><a href="Settings.html#create">create</a></li><li><a href="Settings.html#destroy">destroy</a></li><li><a href="Settings.html#get">get</a></li><li><a href="Settings.html#init">init</a></li><li><a href="Settings.html#remove">remove</a></li><li><a href="Settings.html#reset">reset</a></li><li><a href="Settings.html#update">update</a></li><li><a href="Settings.html#updateArray">updateArray</a></li><li><a href="Settings.html#validateSchema">validateSchema</a></li></ul></div></li><li><a href="SettingsCache.html">SettingsCache</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="SettingsCache_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="SettingsCache.html#client">client</a></li><li><a href="SettingsCache.html#defaultDataSchema">defaultDataSchema</a></li><li><a href="SettingsCache.html#guilds">guilds</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="SettingsCache.html#add">add</a></li><li><a href="SettingsCache.html#validate">validate</a></li></ul></div></li><li><a href="SQL.html">SQL</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="SQL_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="SQL.html#client">client</a></li><li><a href="SQL.html#constants">constants</a></li><li><a href="SQL.html#defaults">defaults</a></li><li><a href="SQL.html#gateway">gateway</a></li><li><a href="SQL.html#provider">provider</a></li><li><a href="SQL.html#sanitizer">sanitizer</a></li><li><a href="SQL.html#schema">schema</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="SQL.html#buildSingleSQLSchema">buildSingleSQLSchema</a></li><li><a href="SQL.html#buildSQLSchema">buildSQLSchema</a></li><li><a href="SQL.html#deserializer">deserializer</a></li><li><a href="SQL.html#initDeserialize">initDeserialize</a></li><li><a href="SQL.html#updateColumns">updateColumns</a></li></ul></div></li></ul></div>
+</nav>
+<div id="resizer"></div>
+
+<div class="main" id="main">
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const Resolver = require("./Resolver");
+/* eslint-disable class-methods-use-this */
+
+/**
+ * SettingResolver class for SettingGateway argument parsing.
+ * @class SettingResolver
+ * @extends {Resolver}
+ */
+class SettingResolver extends Resolver {
+
+  async user(data) {
+    const result = await super.user(data);
+    if (!result) throw "This key expects a User Object or ID.";
+    return result;
+  }
+
+  async channel(data) {
+    const result = await super.channel(data);
+    if (!result) throw "This key expects a Channel Object or ID.";
+    return result;
+  }
+
+  async textchannel(data) {
+    const result = await this.channel(data);
+    if (result.type !== "text") throw "This key expects a TextChannel Object or ID.";
+    return result;
+  }
+
+  async voicechannel(data) {
+    const result = await this.channel(data);
+    if (result.type !== "voice") throw "This key expects a VoiceChannel Object or ID.";
+    return result;
+  }
+
+  async guild(data) {
+    const result = await super.guild(data);
+    if (!result) throw "This key expects a Guild ID.";
+    return result;
+  }
+
+  async role(data, guild) {
+    const result = await super.role(data, guild) || guild.roles.find("name", data);
+    if (!result) throw "This key expects a Role Object or ID.";
+    return result;
+  }
+
+  async boolean(data) {
+    const result = await super.boolean(data);
+    if (!result) throw "This key expects a Boolean.";
+    return result;
+  }
+
+  async string(data, guild, { min, max }) {
+    const result = await super.string(data);
+    SettingResolver.maxOrMin(result.length, min, max).catch((e) => { throw `The string length must be ${e} characters.`; });
+    return result;
+  }
+
+  async integer(data, guild, { min, max }) {
+    const result = await super.integer(data);
+    if (!result) throw "This key expects an Integer value.";
+    SettingResolver.maxOrMin(result, min, max).catch((e) => { throw `The integer value must be ${e}.`; });
+    return result;
+  }
+
+  async float(data, guild, { min, max }) {
+    const result = await super.float(data);
+    if (!result) throw "This key expects a Float value.";
+    SettingResolver.maxOrMin(result, min, max).catch((e) => { throw `The float value must be ${e}.`; });
+    return result;
+  }
+
+  async url(data) {
+    const result = await super.url(data);
+    if (!result) throw "This key expects an URL (Uniform Resource Locator).";
+    return result;
+  }
+
+  async command(data) {
+    const command = this.client.commands.get(data.toLowerCase()) || this.client.commands.get(this.client.aliases.get(data.toLowerCase()));
+    if (!command) throw "This key expects a Command.";
+    return command.help.name;
+  }
+
+  /**
+   * Check if the input is valid with min and/or max values.
+   * @static
+   * @param {any} value The value to check.
+   * @param {?number} min Min value.
+   * @param {?number} max Max value.
+   * @returns {?boolean}
+   */
+  static async maxOrMin(value, min, max) {
+    if (min &amp;&amp; max) {
+      if (value >= min &amp;&amp; value &lt;= max) return true;
+      if (min === max) throw `exactly ${min}`;
+      throw `between ${min} and ${max}`;
+    } else if (min) {
+      if (value >= min) return true;
+      throw `longer than ${min}`;
+    } else if (max) {
+      if (value &lt;= max) return true;
+      throw `shorter than ${max}`;
+    }
+    return null;
+  }
+
+}
+
+module.exports = SettingResolver;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<footer>
+    <div class="footer-text">Welcome to Komada's Documentation! Discord: <a href="https://discord.gg/FpEFSyY" target="_blank">https://discord.gg/FpEFSyY</a></div>
+</footer>
+<script>prettyPrint();</script>
+<script src="scripts/jquery.min.js"></script>
+<script src="scripts/tui-doc.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+    <script>
+        var id = '_sub'.replace(/"/g, '_');
+        var selectedApi = document.getElementById(id); // do not use jquery selector
+        var $selectedApi = $(selectedApi);
+
+        $selectedApi.removeClass('hidden');
+        $selectedApi.parent().find('.glyphicon').removeClass('glyphicon-plus').addClass('glyphicon-minus');
+        showLnbApi();
+    </script>
+
+</body>
+</html>
