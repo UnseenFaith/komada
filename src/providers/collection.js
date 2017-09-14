@@ -4,14 +4,11 @@ exports.database = new Collection();
 
 exports.getTable = table => this.database.get(table) || this.database.set(table, new Collection()).get(table);
 
-exports.getAll = (table) => {
-  const collection = this.database.get(table);
-  return collection ? Array.from(collection.values()) : null;
-};
+exports.getAll = table => Array.from(this.getTable(table).values());
 
 exports.get = (table, id) => {
   const collection = this.getTable(table);
-  return collection.get(id) || null;
+  return collection.get(id) || [];
 };
 
 exports.has = (table, id) => !!this.get(table, id);
