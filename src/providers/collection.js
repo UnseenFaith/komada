@@ -4,7 +4,7 @@ exports.database = new Collection();
 
 exports.getTable = table => this.database.get(table) || this.database.set(table, new Collection()).get(table);
 
-exports.getAll(table) => Array.from(this.getTable(table).values());
+exports.getAll = (table) => Array.from(this.getTable(table).values());
 
 exports.get = (table, id) => {
   const collection = this.getTable(table);
