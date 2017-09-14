@@ -100,8 +100,6 @@ class Gateway {
     const target = await this.validate(input).then(output => (output.id || output));
     const data = await this.provider.get(this.type, target);
     if (this.sql) this.sql.deserializer(data);
-    console.log(target);
-    console.log(data);
     await this.cache.set(this.type, target, data);
   }
 
