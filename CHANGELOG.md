@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - [[#356](https://github.com/dirigeants/komada/pull/356)] Fixes caching provider (Collection)
+- [[#358](https://github.com/dirigeants/komada/pull/358)] Fixes SG Config Generation
 
 ### Removed
 - [[#356](https://github.com/dirigeants/komada/pull/356)] dotenv is removed as a peerDependency
