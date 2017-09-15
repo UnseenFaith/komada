@@ -106,7 +106,7 @@ class SettingResolver extends Resolver {
 
   async boolean(data) {
     const result = await super.boolean(data);
-    if (!result) throw "This key expects a Boolean.";
+    if (typeof result !== "boolean") throw "This key expects a Boolean.";
     return result;
   }
 
