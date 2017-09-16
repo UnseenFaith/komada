@@ -8,7 +8,7 @@ exports.getAll = table => Array.from(this.getTable(table).values());
 
 exports.get = (table, id) => {
   const collection = this.getTable(table);
-  return collection.get(id) || [];
+  return collection.get(id) || null;
 };
 
 exports.has = (table, id) => !!this.get(table, id);
