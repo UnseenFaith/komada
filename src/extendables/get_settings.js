@@ -6,7 +6,7 @@ exports.conf = {
 
 // eslint-disable-next-line func-names
 exports.extend = function () {
-  return new Proxy(this.client.settings.guilds.get(this.id), this.handler(this.client, this));
+  return new Proxy(this.client.settings.guilds.get(this.id), exports.handler(this.client, this));
 };
 
 /* eslint-disable consistent-return */
