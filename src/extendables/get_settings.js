@@ -18,9 +18,10 @@ exports.handler = (client, guild) => ({
       case "User":
         return key.array ? s[p].map(d => client.users.get(d)) : client.users.get(s[p]);
       case "Channel":
+        return key.array ? s[p].map(d => client.channels.get(d)) : client.channels.get(s[p]);
       case "TextChannel":
       case "VoiceChannel":
-        return key.array ? s[p].map(d => client.channels.get(d)) : client.channels.get(s[p]);
+        return key.array ? s[p].map(d => guild.channels.get(d)) : guild.channels.get(s[p]);
       case "Role":
         return key.array ? s[p].map(d => guild.roles.get(d)) : guild.roles.get(s[p]);
       case "Guild":
