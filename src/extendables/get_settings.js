@@ -27,7 +27,7 @@ exports.handler = (client, guild) => ({
       case "Guild":
         return key.array ? s[p].map(d => client.guilds.get(d)) : client.guilds.get(s[p]);
       case "Command":
-        return key.array ? s[p].mapp(d => client.commands.get(d)) : client.commands.get(s[p]);
+        return key.array ? s[p].map(d => client.commands.get(d)) : client.commands.get(s[p]);
       default:
         return s[p];
     }
