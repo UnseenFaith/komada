@@ -34,14 +34,20 @@ exports.handler = (client, guild) => ({
   },
   set: (s, p, v) => {
     const key = client.settings.guilds.schema[p];
-    if (!key) return;
+    if (!key) return false;
     switch (key.array) {
       case true:
-        if (s[p].includes(v)) return client.settings.guilds.updateArray(guild, "remove", p, v);
-        return client.settings.guilds.updateArray(guild, "add", p, v);
+        if (s[p].includes(v)) {
+          client.settings.guilds.updateArray(guild, "remove", p, v);
+          return true;
+        }
+        client.settings.guilds.updateArray(guild, "add", p, v);
+        return true;
       case false:
         client.settings.guilds.update(guild, { [p]: [v] });
-      // no default
+        return true;
+        // no default
     }
+    return false;
   },
 });
