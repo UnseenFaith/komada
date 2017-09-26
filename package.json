@@ -36,6 +36,6 @@
     "tui-jsdoc-template": "github:dirigeants/tui.jsdoc-template"
   },
   "engines": {
-    "node": ">=8.3.0"
+    "node": ">=8.5.0"
   }
 }
