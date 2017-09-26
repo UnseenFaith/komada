@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - [[#356](https://github.com/dirigeants/komada/pull/356)] D.JS moved to Peer Dependency. `npm i --production hydrabolt/discord.js` must be run as well now.
 
 ### Fixed
+- [[a22b924](https://github.com/dirigeants/komada/commit/a22b924a72608309c7b386043b154ed062103e7b)] Fixes reloading pieces
 - [[#356](https://github.com/dirigeants/komada/pull/356)] Fixes caching provider (Collection)
 - [[#358](https://github.com/dirigeants/komada/pull/358)] Fixes SG Config Generation
 
