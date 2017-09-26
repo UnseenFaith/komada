@@ -611,7 +611,7 @@ class Loader {
         throw `\`\`\`${error.stack || error}\`\`\``;
       }
     } finally {
-      files.forEach(file => delete require.cache[join(dir, ...file)]);
+      files.forEach(file => delete require.cache[Array.isArray(file) ? join(dir, ...file) : join(dir, file)]);
     }
   }
 
