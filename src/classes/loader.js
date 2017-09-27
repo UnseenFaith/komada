@@ -191,7 +191,7 @@ class Loader {
    * @param {string} dir The directory we're loading this new command from.
    */
   loadNewCommand(file, dir) {
-    const cmd = defaults.command(require(join(dir, ...file), file));
+    const cmd = defaults.command(require(join(dir, ...file)), file);
     cmd.cooldown = new Map();
     cmd.usage = new ParsedUsage(this.client, cmd);
     this.client.commands.set(cmd.help.name, cmd);
