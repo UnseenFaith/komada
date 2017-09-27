@@ -1,24 +1,22 @@
 exports.command = (cmd, file) => {
   const name = file.slice(-1)[0].slice(0, -3);
   const fullCategory = file.slice(0, -1);
-  cmd.conf = {
-    enabled: cmd.conf.enabled || true,
-    runIn: cmd.conf.runIn || ["text", "dm", "group"],
-    aliases: cmd.conf.aliases || [],
-    permLevel: cmd.conf.permLevel || 0,
-    botPerms: cmd.conf.botPerms || [],
-    requiredFuncs: cmd.conf.requiredFuncs || [],
-    requiredSettings: cmd.conf.requiredSettings || [],
-  };
-  cmd.help = {
-    name: cmd.help.name || name,
-    description: cmd.help.description || "No Description provided.",
-    usage: cmd.help.usage || "",
-    usageDelim: cmd.help.usageDelim || "",
-    extendedHelp: cmd.help.extendedHelp || "",
-    fullCategory,
-    category: fullCategory[0] || "General",
-    subCategory: fullCategory[1] || "General",
-  };
+  if (!cmd.conf) cmd.conf = {};
+  cmd.conf.enabled = cmd.conf.enabled || true;
+  cmd.conf.runIn = cmd.conf.runIn || ["text", "dm", "group"];
+  cmd.conf.aliases = cmd.conf.aliases || [];
+  cmd.conf.permLevel = cmd.conf.permLevel || [];
+  cmd.conf.botPerms = cmd.conf.botPerms || [];
+  cmd.conf.requiredFuncs = cmd.conf.requiredFuncs || [];
+  cmd.conf.requiredSettings = cmd.conf.requiredSettings || [];
+  if (!cmd.help) cmd.help = {};
+  cmd.help.name = cmd.help.name || name;
+  cmd.help.description = cmd.help.description || "No Description provided.";
+  cmd.help.extendedHelp = cmd.help.extendedHelp || "";
+  cmd.help.usage = cmd.help.usage || "";
+  cmd.help.usageDelim = cmd.help.usageDelim || "";
+  cmd.help.fullCategory = fullCategory;
+  cmd.help.category = fullCategory[0] || "General";
+  cmd.help.subCategory = fullCategory[1] || "General";
   return cmd;
 };
