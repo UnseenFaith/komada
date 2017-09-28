@@ -1,14 +1,14 @@
 # Komada Framework Documentation
 
-[![Discord](https://discordapp.com/api/guilds/260202843686830080/embed.png)](https://discord.gg/dgs8263)
+[![Discord](https://discordapp.com/api/guilds/339942739275677727/embed.png)](https://discord.gg/FpEFSyY)
 [![npm](https://img.shields.io/npm/v/komada.svg?maxAge=3600)](https://www.npmjs.com/package/komada)
 [![npm](https://img.shields.io/npm/dt/komada.svg?maxAge=3600)](https://www.npmjs.com/package/komada)
 [![Greenkeeper badge](https://badges.greenkeeper.io/dirigeants/komada.svg)](https://greenkeeper.io/)
-[![Build Status](https://travis-ci.org/dirigeants/komada.svg?branch=indev)](https://travis-ci.org/dirigeants/komada)
+[![Build Status](https://travis-ci.org/dirigeants/komada.svg?branch=master)](https://travis-ci.org/dirigeants/komada)
 [![David](https://img.shields.io/david/dirigeants/komada.svg?maxAge=3600)](https://david-dm.org/dirigeants/komada)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/e1aaa6defd59485caa4876849ac83874)](https://www.codacy.com/app/dirigeants/komada-repo?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=dirigeants/komada&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/b78090f6d2614660ac58328645a2616d)](https://www.codacy.com/app/dirigeants/komada_repo?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=dirigeants/komada&amp;utm_campaign=Badge_Grade)
 
-Komada is a modular framework for bots built on top of [Discord.js](https://github.com/hydrabolt/dicord.js). It offers an extremely easy installation, downloadable commands, and a framework to build your own commands, modules, and functions.
+Komada is a modular framework for bots built on top of [Discord.js](https://github.com/hydrabolt/discord.js). It offers an extremely easy installation, downloadable commands, and a framework to build your own commands, modules, and functions.
 
 ## What's with the name?
 
@@ -21,7 +21,7 @@ Time to take the plunge! Komada is on NPM and can be easily installed.
 > I assume you know how to open a command prompt in a folder where you want to install this. Please don't prove me wrong.
 
 ```
-npm install --production komada
+npm install --production komada hydrabolt/discord.js
 ```
 
 Create a file called `app.js` (or whatever you prefer) which will initiate and configure Komada.
@@ -35,6 +35,7 @@ const client = new komada.Client({
   clientOptions: {
     fetchAllMembers: false,
   },
+  cmdLogging: true,
 });
 
 client.login("your-bot-token");
@@ -50,6 +51,7 @@ client.login("your-bot-token");
 - **prefix**: The default prefix when the bot first boots up. This option becomes useless after first boot, since the prefix is written to the default configuration system.
 - **clientOptions**: These are passed directly to the discord.js library. They are optional. For more information on which options are available, see [ClientOptions in the discord.js docs](https://discord.js.org/#/docs/main/stable/typedef/ClientOptions).
 - **permStructure**: It allows you to configure the permission levels from Komada, with a range of 0-10. You can also use `Komada.PermLevels` constructor.
+- **cmdLogging**: If set to true, it console.logs EVERY *successful* command run, where, the user who ran it, and the time it took to process the command with a sexy color format.
 
 > Komada automatically detects selfbot mode, and takes appropriate precautions, such as not responding to anyone but yourself.
 
@@ -58,7 +60,6 @@ client.login("your-bot-token");
 Then, run the following in your folder:
 
 ```
-npm install
 node app.js
 ```
 
@@ -66,4 +67,4 @@ node app.js
 
 ## Documentation
 
-Please check [Komada Docs](https://komada.js.org) to learn more about Komada Framework and its usage. Any doubts? Ask us [here](https://discord.gg/dgs8263).
+Please check [Komada Docs](https://dirigeants.github.io/komada/) to learn more about Komada Framework and its usage. Any doubts? Ask us [here](https://discord.gg/FpEFSyY).

@@ -9,6 +9,8 @@
   "extends": "airbnb-base",
   "rules": {
     "no-console": "off",
+    "object-curly-newline": "off",
+    "function-paren-newline": "off",
     "indent": ["error", 2, { "SwitchCase": 1 }],
     "linebreak-style": "off",
     "quotes": ["warn", "double"],
@@ -32,6 +34,7 @@
     "no-underscore-dangle": ["error", { "allow": ["_events"] }],
     "global-require": "off",
     "no-nested-ternary": "warn",
+    "padded-blocks": ["error", { "classes": "always", "blocks": "never", "switches": "never" }],
     "valid-jsdoc": ["warn", {
       "requireReturn": false,
       "requireReturnDescription": false,

@@ -4,8 +4,37 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased] - Classbased | Staged for 0.20.3
+## [Unreleased]
 ### Added
+- [[#356](https://github.com/dirigeants/komada/pull/356)] New Logging && Console Class
+
+### Changed
+- [[#356](https://github.com/dirigeants/komada/pull/356)] Removed env var support. Auto-detect src folders etc. Allow users to provide a absolute/relative path to custom clientBaseDir
+- [[#356](https://github.com/dirigeants/komada/pull/356)] D.JS moved to Peer Dependency. `npm i --production hydrabolt/discord.js` must be run as well now.
+
+### Fixed
+- [[a22b924](https://github.com/dirigeants/komada/commit/a22b924a72608309c7b386043b154ed062103e7b)] Fixes reloading pieces
+- [[#356](https://github.com/dirigeants/komada/pull/356)] Fixes caching provider (Collection)
+- [[#358](https://github.com/dirigeants/komada/pull/358)] Fixes SG Config Generation
+
+### Removed
+- [[#356](https://github.com/dirigeants/komada/pull/356)] dotenv is removed as a peerDependency
+- [[#356](https://github.com/dirigeants/komada/pull/356)] Chalk removed as a dependency
+- [[#356](https://github.com/dirigeants/komada/pull/356)] Package-Locks are no more.
+
+
+## [0.20.10] - Classbased - 2017-09-07
+### Added
+- [[#347](https://github.com/dirigeants/komada/pull/347)] Merge Function for options.
+- [[#343](https://github.com/dirigeants/komada/pull/343)] Komada extendables are now a thing.
+- [[#323](https://github.com/dirigeants/komada/pull/323)] Documentation to all pieces.
+- [[#323](https://github.com/dirigeants/komada/pull/323)] Added the types `TextChannel` and `VoiceChannel` to the
+compatible types for `SchemaManager`, as a way to prevent security issues.
+- [[#322](https://github.com/dirigeants/komada/pull/322)] SettingGateway is now capable to handle asynchronous cache for
+internal parsing.
+- [[#313](https://github.com/dirigeants/komada/pull/317)] Added `client.settings`, to handle multiple
+instances of SettingGateway.
+- [[#317](https://github.com/dirigeants/komada/pull/317)] `client.owner` is now a thing.
 - [[#298](https://github.com/dirigeants/komada/pull/298)] `config.ownerID` is automatically detected now.
 - [[#291](https://github.com/dirigeants/komada/pull/291)] `getResolved` method, which returns the resolved configuration
 from a Guild.
@@ -64,7 +93,14 @@ keyword. `exports.run = __async__ (client, msg, [...args])`.
 command.
 
 ### Changed
+- [[#323](https://github.com/dirigeants/komada/pull/323)] Made `this.provider` a getter in `SQL`, so it updates when
+reloading the provider.
+- [[#322](https://github.com/dirigeants/komada/pull/322)] **[BREAKING]** `SettingGateway#update`'s arguments are now `key`, `object` and `?guild`, allowing instances of SG which resolver aimed to non-Guild classes to parse correctly. The argument `object` can contain multiple keys. (So SG will update all keys from the object at once). Previously, you could update only a pair `key-value`.
+- [[#322](https://github.com/dirigeants/komada/pull/322)] Safer editing when using SettingGateway, now ensuring the settings has been created before inserting the data. (Fixes an issue when the data was inserted without creating it before).
+- [[#317](https://github.com/dirigeants/komada/pull/317)] **[BREAKING]** `client.settingGateway` has been changed to
+`client.settings`, which is able to handle multiple instances of SettingGateway.
 - [[#300](https://github.com/dirigeants/komada/pull/300)] **[Update]** `client.methods.Embed` changed to use Discord.js MessageEmbed.
+- [[#297](https://github.com/dirigeants/komada/pull/297)] **[Update]** Abstraction of Settings and slight refactor so its easier to use.
 - [[#296](https://github.com/dirigeants/komada/pull/296)] **[Update]** The JSON provider and schemaManager now uses atomics.
 - [[#293](https://github.com/dirigeants/komada/pull/293)] **[Performance]** Faster prefix check and resolve for prefixes
 stored inside an Array.
@@ -117,6 +153,15 @@ core event.
 cached an implied permissions object, instead of generating a new object every time a command is run.
 
 ### Fixed
+- [[#347](https://github.com/dirigeants/komada/pull/347)] **[BugFix]** Cache deletions corrected to work on failures or successes.
+- [[#323](https://github.com/dirigeants/komada/pull/323)] **[BugFix]** `SettingGateway#getResolved` was not accepting
+any other table than `guilds`.
+- [[#323](https://github.com/dirigeants/komada/pull/323)] **[BugFix]** `CacheManager` was not accepting any other table
+than `guilds`.
+- [[#323](https://github.com/dirigeants/komada/pull/323)] **[BugFix]** `SQL` was not accepting any other table than
+`guilds`.
+- [[#322](https://github.com/dirigeants/komada/pull/322)] **[BugFix]** `SettingGateway#sync` not being running properly.
+- [[#322](https://github.com/dirigeants/komada/pull/322)] **[BugFix]** Settings not being created properly.
 - [[#290](https://github.com/dirigeants/komada/pull/290)] **[BugFix]** Fixed reload commands.
 - [[#289](https://github.com/dirigeants/komada/pull/289)] **[BugFix]** If the bot was unable to send a message, the
 **reboot** command would never call `process.exit()`.
@@ -186,7 +231,7 @@ refactor.
 - [[#197](https://github.com/dirigeants/komada/pull/197)] Implied Permissions has been removed in favor of an internal
 discord.js class.
 
-## [0.19.0]
+## [0.19.3] - 2017-06-18
 ### Added
 - Readded ParseTags function due to Komada Provider dependency,
 - Added Websocket Heartbeat ping to ping command.
@@ -436,11 +481,12 @@ Break.
 - Various Confs fixes from [UnseenFaith]
 - Usage Addition/ParseUsage fix from [UnseenFaith]
 
-[Unreleased]: https://github.com/dirigeants/komada/compare/0.19.0...indev
+[Unreleased]: https://github.com/dirigeants/komada/compare/0.20.10...master
 [0.10.0]: https://github.com/dirigeants/komada/compare/1627e6deb1d8c352d83e52ccd590f2330f5f8bb2...0.10.0
 [0.11.0]: https://github.com/dirigeants/komada/compare/0.10.0...0.11.0
 [0.12.0]: https://github.com/dirigeants/komada/compare/0.11.0...0.12.0
 [0.12.4]: https://github.com/dirigeants/komada/compare/0.12.0...0.12.4
 [0.18.0]: https://github.com/dirigeants/komada/compare/0.12.4...0.18
 [0.18.1]: https://github.com/dirigeants/komada/compare/0.12.4...0.18.1
-[0.19.0]: https://github.com/dirigeants/komada/compare/0.18.1...0.19.0
+[0.19.3]: https://github.com/dirigeants/komada/compare/0.18.1...0.19.3
+[0.20.10]: https://github.com/dirigeants/komada/compare/0.19.0...0.20.10
