@@ -55,23 +55,13 @@ class Loader {
      * @type {Object}
      */
     this.clientDirs = makeDirsObject(this.client.clientBaseDir);
-    this.outDirs = makeDirsObject(this.client.outBaseDir);
   }
 
   /**
    * Loads all of the pieces into Komada
    */
   async loadAll() {
-    const [
-      [funcs, funcLangs],
-      [commands, aliases, cmdLangs],
-      [inhibitors, inhibLangs],
-      [finalizers, finalLangs],
-      [events, eventLangs],
-      [monitors, monLangs],
-      [providers, provLangs],
-      [extendables, extLangs],
-    ] = await Promise.all([
+    const [funcs, [commands, aliases], inhibitors, finalizers, events, monitors, providers, extendables] = await Promise.all([
       this.loadFunctions(),
       this.loadCommands(),
       this.loadCommandInhibitors(),
@@ -84,28 +74,15 @@ class Loader {
       console.error(err);
       process.exit();
     });
-    const countMsg = (langs) => {
-      if (Object.keys(langs).length >= 2) {
-        const str = langs.reduce(
-          (acc, [lang, count]) => {
-            acc = acc ? `${acc}, ` : "";
-            return `${acc}${count} ${lang}`;
-          },
-          "",
-        );
-        return ` (${str})`;
-      }
-      return "";
-    };
     this.client.emit("log", [
-      `Loaded ${funcs} functions${countMsg(funcLangs)}.`,
-      `Loaded ${commands} commands${countMsg(cmdLangs)}, with ${aliases} aliases.`,
-      `Loaded ${inhibitors} command inhibitors${countMsg(inhibLangs)}.`,
-      `Loaded ${finalizers} command finalizers${countMsg(finalLangs)}.`,
-      `Loaded ${monitors} message monitors${countMsg(monLangs)}.`,
-      `Loaded ${providers} providers${countMsg(provLangs)}.`,
-      `Loaded ${events} events${countMsg(eventLangs)}.`,
-      `Loaded ${extendables} extendables${countMsg(extLangs)}.`,
+      `Loaded ${funcs} functions.`,
+      `Loaded ${commands} commands, with ${aliases} aliases.`,
+      `Loaded ${inhibitors} command inhibitors.`,
+      `Loaded ${finalizers} command finalizers.`,
+      `Loaded ${monitors} message monitors.`,
+      `Loaded ${providers} providers.`,
+      `Loaded ${events} events.`,
+      `Loaded ${extendables} extendables.`,
     ].join("\n"));
   }
 
@@ -122,31 +99,13 @@ class Loader {
         , this.coreDirs.functions, this.loadNewFunction, this.loadFunctions)
         .catch((err) => { throw err; });
     }
-    const userFiles1 = await fs.readdir(this.clientDirs.functions)
+    const userFiles = await fs.readdir(this.clientDirs.functions)
       .catch(() => { fs.ensureDir(this.clientDirs.functions).catch(err => this.client.emit("error", err)); });
-    if (userFiles1) {
-      await this.loadFiles(userFiles1.filter(file => file.endsWith(".js")), this.clientDirs.functions, this.loadNewFunction, this.loadFunctions)
+    if (userFiles) {
+      await this.loadFiles(userFiles.filter(file => file.endsWith(".js")), this.clientDirs.functions, this.loadNewFunction, this.loadFunctions)
         .catch((err) => { throw err; });
     }
-    const userFiles2 = await fs.readdir(this.outDirs.functions)
-      .catch(() => { fs.ensureDir(this.outDirs.functions).catch(err => this.client.emit("error", err)); });
-    if (userFiles2) {
-      await this.loadFiles(userFiles2.filter(file => file.endsWith(".js")), this.outDirs.functions, this.loadNewFunction, this.loadFunctions)
-        .catch((err) => { throw err; });
-    }
-
-    const langCountsObj = {};
-    await Promise.all(Object.values(this.client.funcs).map(async (f) => {
-      const lang = await f.codeLang;
-      f.codeLang = lang;
-      if (!lang) return;
-      langCountsObj[lang] = langCountsObj[lang] || 0;
-      langCountsObj[lang]++;
-    }));
-    const langCounts = Object.entries(langCountsObj).sort(this.sortLangs);
-    return [(coreFiles ? coreFiles.length : 0) +
-      (userFiles1 ? userFiles1.length : 0) +
-      (userFiles2 ? userFiles2.length : 0), langCounts];
+    return (coreFiles ? coreFiles.length : 0) + (userFiles ? userFiles.length : 0);
   }
 
   /**
@@ -166,22 +125,12 @@ class Loader {
   async reloadFunction(name) {
     const file = name.endsWith(".js") ? name : `${name}.js`;
     if (name.endsWith(".js")) name = name.slice(0, -3);
-    const reload = async (dir) => {
-      const files = await fs.readdir(dir);
-      if (!files.includes(file)) throw `Could not find a reloadable file named ${file}`;
-      if (this[name]) delete this[name];
-      await this.loadFiles([file], dir, this.loadNewFunction, this.reloadFunction)
-        .catch((err) => { throw err; });
-    };
-    try {
-      await reload(this.clientDirs.functions);
-    } catch (e) {
-      console.warn(e);
-      await reload(this.outDirs.functions); // Let it throw
-    }
-    const newFunction = this.client.funcs[name];
-    newFunction.codeLang = await newFunction.codeLang;
-    if (newFunction.init) newFunction.init(this.client);
+    const files = await fs.readdir(this.clientDirs.functions);
+    if (!files.includes(file)) throw `Could not find a reloadable file named ${file}`;
+    if (this[name]) delete this[name];
+    await this.loadFiles([file], this.clientDirs.functions, this.loadNewFunction, this.reloadFunction)
+      .catch((err) => { throw err; });
+    if (this.client.funcs[name].init) this.client.funcs[name].init(this.client);
     return `Successfully reloaded the function ${name}.`;
   }
 
@@ -196,19 +145,7 @@ class Loader {
       .catch((err) => { throw err; });
     await this.walkCommandDirectories(this.clientDirs.commands)
       .catch((err) => { throw err; });
-    await this.walkCommandDirectories(this.outDirs.commands)
-      .catch((err) => { throw err; });
-
-    const langCountsObj = {};
-    await Promise.all(this.client.commands.map(async (c) => {
-      const lang = await c.help.codeLang;
-      c.help.codeLang = lang;
-      if (!lang) return;
-      langCountsObj[lang] = langCountsObj[lang] || 0;
-      langCountsObj[lang]++;
-    }));
-    const langCounts = Object.entries(langCountsObj).sort(this.sortLangs);
-    return [this.client.commands.size, this.client.aliases.size, langCounts];
+    return [this.client.commands.size, this.client.aliases.size];
   }
 
   /**
@@ -253,12 +190,10 @@ class Loader {
    * @param {string} dir The directory we're loading this new command from.
    */
   loadNewCommand(file, dir) {
-    const path = join(dir, ...file);
-    const cmd = require(path);
+    const cmd = require(join(dir, ...file));
     cmd.help.fullCategory = file.slice(0, -1);
     cmd.help.subCategory = cmd.help.fullCategory[1] || "General";
     cmd.help.category = cmd.help.fullCategory[0] || "General";
-    cmd.help.codeLang = this.getFileLang(path); // returns a promise
     cmd.cooldown = new Map();
     this.client.commands.set(cmd.help.name, cmd);
     cmd.conf.aliases = cmd.conf.aliases || [];
@@ -275,27 +210,18 @@ class Loader {
     if (name.endsWith(".js")) name = name.slice(0, -3);
     name = join(...name.split("/"));
     const fullCommand = this.client.commands.get(name) || this.client.commands.get(this.client.aliases.get(name));
-    const dirs = [this.clientDirs.commands, this.outDirs.commands];
+    const dir = this.clientDirs.commands;
     const file = fullCommand ? [...fullCommand.help.fullCategory, `${fullCommand.help.name}.js`] : `${name}.js`.split(sep);
     const fileToCheck = file[file.length - 1];
-    const reload = async (dir) => {
-      const dirToCheck = resolve(dir, ...file.slice(0, -1));
-      const files = await fs.readdir(dirToCheck).catch(() => { throw "A user directory path could not be found. Only user commands may be reloaded."; });
-      if (!files.includes(fileToCheck)) throw `Could not find a reloadable file named ${file.join(sep)}`;
-      this.client.aliases.forEach((cmd, alias) => {
-        if (cmd === name) this.client.aliases.delete(alias);
-      });
-      await this.loadFiles([file], dir, this.loadNewCommand, this.reloadCommand)
-        .catch((err) => { throw err; });
-    };
-    try {
-      await reload(dirs[0]);
-    } catch (e) {
-      console.warn(e);
-      await reload(dirs[1]); // Let it throw
-    }
+    const dirToCheck = resolve(dir, ...file.slice(0, -1));
+    const files = await fs.readdir(dirToCheck).catch(() => { throw "A user directory path could not be found. Only user commands may be reloaded."; });
+    if (!files.includes(fileToCheck)) throw `Could not find a reloadable file named ${file.join(sep)}`;
+    this.client.aliases.forEach((cmd, alias) => {
+      if (cmd === name) this.client.aliases.delete(alias);
+    });
+    await this.loadFiles([file], dir, this.loadNewCommand, this.reloadCommand)
+      .catch((err) => { throw err; });
     const newCommand = this.client.commands.get(fileToCheck.slice(0, -3));
-    newCommand.help.codeLang = await newCommand.help.codeLang;
     if (newCommand.init) newCommand.init(this.client);
     return `Successfully reloaded the command ${name}.`;
   }
@@ -314,30 +240,14 @@ class Loader {
         , this.coreDirs.inhibitors, this.loadNewInhibitor, this.loadCommandInhibitors)
         .catch((err) => { throw err; });
     }
-    const userFiles1 = await fs.readdir(this.clientDirs.inhibitors)
+    const userFiles = await fs.readdir(this.clientDirs.inhibitors)
       .catch(() => { fs.ensureDir(this.clientDirs.inhibitors).catch(err => this.client.emit("error", err)); });
-    if (userFiles1) {
-      await this.loadFiles(userFiles1.filter(file => file.endsWith(".js")), this.clientDirs.inhibitors, this.loadNewInhibitor, this.loadCommandInhibitors)
-        .catch((err) => { throw err; });
-    }
-    const userFiles2 = await fs.readdir(this.outDirs.inhibitors)
-      .catch(() => { fs.ensureDir(this.outDirs.inhibitors).catch(err => this.client.emit("error", err)); });
-    if (userFiles2) {
-      await this.loadFiles(userFiles2.filter(file => file.endsWith(".js")), this.outDirs.inhibitors, this.loadNewInhibitor, this.loadCommandInhibitors)
+    if (userFiles) {
+      await this.loadFiles(userFiles.filter(file => file.endsWith(".js")), this.clientDirs.inhibitors, this.loadNewInhibitor, this.loadCommandInhibitors)
         .catch((err) => { throw err; });
     }
     this.sortInhibitors();
-
-    const langCountsObj = {};
-    await Promise.all(this.client.commandInhibitors.map(async (i) => {
-      const lang = await i.codeLang;
-      i.codeLang = lang;
-      if (!lang) return;
-      langCountsObj[lang] = langCountsObj[lang] || 0;
-      langCountsObj[lang]++;
-    }));
-    const langCounts = Object.entries(langCountsObj).sort(this.sortLangs);
-    return [this.client.commandInhibitors.size, langCounts];
+    return this.client.commandInhibitors.size;
   }
 
   /**
@@ -357,22 +267,12 @@ class Loader {
   async reloadInhibitor(name) {
     const file = name.endsWith(".js") ? name : `${name}.js`;
     if (name.endsWith(".js")) name = name.slice(0, -3);
-    const reload = async (dir) => {
-      const files = await fs.readdir(dir);
-      if (!files.includes(file)) throw `Could not find a reloadable file named ${file}`;
-      await this.loadFiles([file], dir, this.loadNewInhibitor, this.reloadInhibitor)
-        .catch((err) => { throw err; });
-    };
-    try {
-      await reload(this.clientDirs.inhibitors);
-    } catch (e) {
-      console.warn(e);
-      await reload(this.outDirs.inhibitors); // Let it throw
-    }
+    const files = await fs.readdir(this.clientDirs.inhibitors);
+    if (!files.includes(file)) throw `Could not find a reloadable file named ${file}`;
+    await this.loadFiles([file], this.clientDirs.inhibitors, this.loadNewInhibitor, this.reloadInhibitor)
+      .catch((err) => { throw err; });
     this.sortInhibitors();
-    const newInhibitor = this.client.commandInhibitors.get(name);
-    newInhibitor.codeLang = await newInhibitor.codeLang;
-    if (newInhibitor.init) newInhibitor.init(this.client);
+    if (this.client.commandInhibitors.get(name).init) this.client.commandInhibitors.get(name).init(this.client);
     return `Successfully reloaded the inhibitor ${name}.`;
   }
 
@@ -394,29 +294,13 @@ class Loader {
         , this.coreDirs.finalizers, this.loadNewFinalizer, this.loadCommandFinalizers)
         .catch((err) => { throw err; });
     }
-    const userFiles1 = await fs.readdir(this.clientDirs.finalizers)
+    const userFiles = await fs.readdir(this.clientDirs.finalizers)
       .catch(() => { fs.ensureDir(this.clientDirs.finalizers).catch(err => this.client.emit("error", err)); });
-    if (userFiles1) {
-      await this.loadFiles(userFiles1.filter(file => file.endsWith(".js")), this.clientDirs.finalizers, this.loadNewFinalizer, this.loadCommandFinalizers)
+    if (userFiles) {
+      await this.loadFiles(userFiles.filter(file => file.endsWith(".js")), this.clientDirs.finalizers, this.loadNewFinalizer, this.loadCommandFinalizers)
         .catch((err) => { throw err; });
     }
-    const userFiles2 = await fs.readdir(this.outDirs.finalizers)
-      .catch(() => { fs.ensureDir(this.outDirs.finalizers).catch(err => this.client.emit("error", err)); });
-    if (userFiles2) {
-      await this.loadFiles(userFiles2.filter(file => file.endsWith(".js")), this.outDirs.finalizers, this.loadNewFinalizer, this.loadCommandFinalizers)
-        .catch((err) => { throw err; });
-    }
-
-    const langCountsObj = {};
-    await Promise.all(this.client.commandFinalizers.map(async (final) => {
-      const lang = await final.codeLang;
-      final.codeLang = lang;
-      if (!lang) return;
-      langCountsObj[lang] = langCountsObj[lang] || 0;
-      langCountsObj[lang]++;
-    }));
-    const langCounts = Object.entries(langCountsObj).sort(this.sortLangs);
-    return [this.client.commandFinalizers.size, langCounts];
+    return this.client.commandFinalizers.size;
   }
 
   /**
@@ -436,21 +320,11 @@ class Loader {
   async reloadFinalizer(name) {
     const file = name.endsWith(".js") ? name : `${name}.js`;
     if (name.endsWith(".js")) name = name.slice(0, -3);
-    const reload = async (dir) => {
-      const files = await fs.readdir(dir);
-      if (!files.includes(file)) throw `Could not find a reloadable file named ${file}`;
-      await this.loadFiles([file], dir, this.loadNewFinalizer, this.reloadFinalizer)
-        .catch((err) => { throw err; });
-    };
-    try {
-      await reload(this.clientDirs.finalizers);
-    } catch (e) {
-      console.warn(e);
-      await reload(this.outDirs.finalizers); // Let it throw
-    }
-    const newFinalizer = this.client.commandFinalizers.get(name);
-    newFinalizer.codeLang = await newFinalizer.codeLang;
-    if (newFinalizer.init) newFinalizer.init(this.client);
+    const files = await fs.readdir(this.clientDirs.finalizers);
+    if (!files.includes(file)) throw `Could not find a reloadable file named ${file}`;
+    await this.loadFiles([file], this.clientDirs.finalizers, this.loadNewFinalizer, this.reloadFinalizer)
+      .catch((err) => { throw err; });
+    if (this.client.commandFinalizers.get(name).init) this.client.commandFinalizers.get(name).init(this.client);
     return `Successfully reloaded the finalizer ${name}.`;
   }
 
@@ -469,29 +343,13 @@ class Loader {
         , this.coreDirs.events, this.loadNewEvent, this.loadEvents)
         .catch((err) => { throw err; });
     }
-    const userFiles1 = await fs.readdir(this.clientDirs.events)
+    const userFiles = await fs.readdir(this.clientDirs.events)
       .catch(() => { fs.ensureDir(this.clientDirs.events).catch(err => this.client.emit("error", err)); });
-    if (userFiles1) {
-      await this.loadFiles(userFiles1.filter(file => file.endsWith(".js")), this.clientDirs.events, this.loadNewEvent, this.loadEvents)
+    if (userFiles) {
+      await this.loadFiles(userFiles.filter(file => file.endsWith(".js")), this.clientDirs.events, this.loadNewEvent, this.loadEvents)
         .catch((err) => { throw err; });
     }
-    const userFiles2 = await fs.readdir(this.outDirs.events)
-      .catch(() => { fs.ensureDir(this.outDirs.events).catch(err => this.client.emit("error", err)); });
-    if (userFiles2) {
-      await this.loadFiles(userFiles2.filter(file => file.endsWith(".js")), this.outDirs.events, this.loadNewEvent, this.loadEvents)
-        .catch((err) => { throw err; });
-    }
-
-    const langCountsObj = {};
-    await Promise.all(this.client.eventHandlers.map(async (e) => {
-      const lang = await e.codeLang;
-      e.codeLang = lang;
-      if (!lang) return;
-      langCountsObj[lang] = langCountsObj[lang] || 0;
-      langCountsObj[lang]++;
-    }));
-    const langCounts = Object.entries(langCountsObj).sort(this.sortLangs);
-    return [this.client.eventHandlers.size, langCounts];
+    return this.client.eventHandlers.size;
   }
 
   /**
@@ -501,10 +359,7 @@ class Loader {
    */
   loadNewEvent(file, dir) {
     const eventName = file.split(".")[0];
-    const path = join(dir, file);
-    const event = (...args) => require(path).run(this.client, ...args);
-    event.codeLang = this.getFileLang(path); // returns a promise
-    this.client.eventHandlers.set(eventName, event);
+    this.client.eventHandlers.set(eventName, (...args) => require(join(dir, file)).run(this.client, ...args));
     this.client.on(eventName, this.client.eventHandlers.get(eventName));
   }
 
@@ -516,22 +371,12 @@ class Loader {
   async reloadEvent(name) {
     const file = name.endsWith(".js") ? name : `${name}.js`;
     if (name.endsWith(".js")) name = name.slice(0, -3);
-    const reload = async (dir) => {
-      const files = await fs.readdir(dir);
-      if (!files.includes(file)) throw `Could not find a reloadable file named ${file}`;
-      const listener = this.client.eventHandlers.get(name);
-      if (listener) this.client.removeListener(name, listener);
-      await this.loadFiles([file], dir, this.loadNewEvent, this.reloadEvent)
-        .catch((err) => { throw err; });
-    };
-    try {
-      await reload(this.clientDirs.events);
-    } catch (e) {
-      console.warn(e);
-      await reload(this.outDirs.events); // Let it throw
-    }
-    const newEvent = this.client.eventHandlers.get(name);
-    newEvent.codeLang = await newEvent.codeLang;
+    const files = await fs.readdir(this.clientDirs.events);
+    if (!files.includes(file)) throw `Could not find a reloadable file named ${file}`;
+    const listener = this.client.eventHandlers.get(name);
+    if (listener) this.client.removeListener(name, listener);
+    await this.loadFiles([file], this.clientDirs.events, this.loadNewEvent, this.reloadEvent)
+      .catch((err) => { throw err; });
     return `Successfully reloaded the event ${name}.`;
   }
 
@@ -549,29 +394,13 @@ class Loader {
         , this.coreDirs.monitors, this.loadNewMessageMonitor, this.loadMessageMonitors)
         .catch((err) => { throw err; });
     }
-    const userFiles1 = await fs.readdir(this.clientDirs.monitors)
+    const userFiles = await fs.readdir(this.clientDirs.monitors)
       .catch(() => { fs.ensureDir(this.clientDirs.monitors).catch(err => this.client.emit("error", err)); });
-    if (userFiles1) {
-      await this.loadFiles(userFiles1.filter(file => file.endsWith(".js")), this.clientDirs.monitors, this.loadNewMessageMonitor, this.loadMessageMonitors)
+    if (userFiles) {
+      await this.loadFiles(userFiles.filter(file => file.endsWith(".js")), this.clientDirs.monitors, this.loadNewMessageMonitor, this.loadMessageMonitors)
         .catch((err) => { throw err; });
     }
-    const userFiles2 = await fs.readdir(this.outDirs.monitors)
-      .catch(() => { fs.ensureDir(this.outDirs.monitors).catch(err => this.client.emit("error", err)); });
-    if (userFiles2) {
-      await this.loadFiles(userFiles2.filter(file => file.endsWith(".js")), this.outDirs.monitors, this.loadNewMessageMonitor, this.loadMessageMonitors)
-        .catch((err) => { throw err; });
-    }
-
-    const langCountsObj = {};
-    await Promise.all(this.client.messageMonitors.map(async (m) => {
-      const lang = await m.codeLang;
-      m.codeLang = lang;
-      if (!lang) return;
-      langCountsObj[lang] = langCountsObj[lang] || 0;
-      langCountsObj[lang]++;
-    }));
-    const langCounts = Object.entries(langCountsObj).sort(this.sortLangs);
-    return [this.client.messageMonitors.size, langCounts];
+    return this.client.messageMonitors.size;
   }
 
   /**
@@ -591,21 +420,11 @@ class Loader {
   async reloadMessageMonitor(name) {
     const file = name.endsWith(".js") ? name : `${name}.js`;
     if (name.endsWith(".js")) name = name.slice(0, -3);
-    const reload = async (dir) => {
-      const files = await fs.readdir(dir);
-      if (!files.includes(file)) throw `Could not find a reloadable file named ${file}`;
-      await this.loadFiles([file], dir, this.loadNewMessageMonitor, this.reloadMessageMonitor)
-        .catch((err) => { throw err; });
-    };
-    try {
-      await reload(this.clientDirs.monitors);
-    } catch (e) {
-      console.warn(e);
-      await reload(this.outDirs.monitors); // Let it throw
-    }
-    const newMonitor = this.client.messageMonitors.get(name);
-    newMonitor.codeLang = await newMonitor.codeLang;
-    if (newMonitor.init) newMonitor.init(this.client);
+    const files = await fs.readdir(this.clientDirs.monitors);
+    if (!files.includes(file)) throw `Could not find a reloadable file named ${file}`;
+    await this.loadFiles([file], this.clientDirs.monitors, this.loadNewMessageMonitor, this.reloadMessageMonitor)
+      .catch((err) => { throw err; });
+    if (this.client.messageMonitors.get(name).init) this.client.messageMonitors.get(name).init(this.client);
     return `Successfully reloaded the monitor ${name}.`;
   }
 
@@ -623,29 +442,13 @@ class Loader {
         , this.coreDirs.providers, this.loadNewProvider, this.loadProviders)
         .catch((err) => { throw err; });
     }
-    const userFiles1 = await fs.readdir(this.clientDirs.providers)
+    const userFiles = await fs.readdir(this.clientDirs.providers)
       .catch(() => { fs.ensureDir(this.clientDirs.providers).catch(err => this.client.emit("error", err)); });
-    if (userFiles1) {
-      await this.loadFiles(userFiles1.filter(file => file.endsWith(".js")), this.clientDirs.providers, this.loadNewProvider, this.loadProviders)
+    if (userFiles) {
+      await this.loadFiles(userFiles.filter(file => file.endsWith(".js")), this.clientDirs.providers, this.loadNewProvider, this.loadProviders)
         .catch((err) => { throw err; });
     }
-    const userFiles2 = await fs.readdir(this.outDirs.providers)
-      .catch(() => { fs.ensureDir(this.outDirs.providers).catch(err => this.client.emit("error", err)); });
-    if (userFiles2) {
-      await this.loadFiles(userFiles2.filter(file => file.endsWith(".js")), this.outDirs.providers, this.loadNewProvider, this.loadProviders)
-        .catch((err) => { throw err; });
-    }
-
-    const langCountsObj = [];
-    await Promise.all(this.client.providers.map(async (p) => {
-      const lang = await p.codeLang;
-      p.codeLang = lang;
-      if (!lang) return;
-      langCountsObj[lang] = langCountsObj[lang] || 0;
-      langCountsObj[lang]++;
-    }));
-    const langCounts = Object.entries(langCountsObj).sort(this.sortLangs);
-    return [this.client.providers.size, langCounts];
+    return this.client.providers.size;
   }
 
   /**
@@ -667,21 +470,11 @@ class Loader {
     if (name.endsWith(".js")) name = name.slice(0, -3);
     const provider = this.client.providers.get(name);
     if (provider && provider.shutdown) await provider.shutdown();
-    const reload = async (dir) => {
-      const files = await fs.readdir(dir);
-      if (!files.includes(file)) throw `Could not find a reloadable file named ${file}`;
-      await this.loadFiles([file], dir, this.loadNewProvider, this.reloadProvider)
-        .catch((err) => { throw err; });
-    };
-    try {
-      await reload(this.clientDirs.providers);
-    } catch (e) {
-      console.warn(e);
-      await reload(this.outDirs.providers); // Let it throw
-    }
-    const newProvider = this.client.providers.get(name);
-    newProvider.codeLang = await newProvider.codeLang;
-    if (newProvider.init) newProvider.init(this.client);
+    const files = await fs.readdir(this.clientDirs.providers);
+    if (!files.includes(file)) throw `Could not find a reloadable file named ${file}`;
+    await this.loadFiles([file], this.clientDirs.providers, this.loadNewProvider, this.reloadProvider)
+      .catch((err) => { throw err; });
+    if (this.client.providers.get(name).init) this.client.providers.get(name).init(this.client);
     return `Successfully reloaded the provider ${name}.`;
   }
 
@@ -690,8 +483,6 @@ class Loader {
    * @return {Promise<number>} The number of extendables loaded into Komada
    */
   async loadExtendables() {
-    this.extendableLanguages = [];
-
     const coreFiles = await fs.readdir(this.coreDirs.extendables)
       .catch(() => { fs.ensureDir(this.coreDirs.extendables).catch(err => this.client.emit("error", err)); });
     if (coreFiles) {
@@ -700,31 +491,13 @@ class Loader {
         , this.coreDirs.extendables, this.loadNewExtendable, this.loadExtendables)
         .catch((err) => { throw err; });
     }
-    const userFiles1 = await fs.readdir(this.clientDirs.extendables)
+    const userFiles = await fs.readdir(this.clientDirs.extendables)
       .catch(() => { fs.ensureDir(this.clientDirs.extendables).catch(err => this.client.emit("error", err)); });
-    if (userFiles1) {
-      await this.loadFiles(userFiles1.filter(file => file.endsWith(".js")), this.clientDirs.extendables, this.loadNewExtendable, this.loadExtendables)
+    if (userFiles) {
+      await this.loadFiles(userFiles.filter(file => file.endsWith(".js")), this.clientDirs.extendables, this.loadNewExtendable, this.loadExtendables)
         .catch((err) => { throw err; });
     }
-    const userFiles2 = await fs.readdir(this.clientDirs.extendables)
-      .catch(() => { fs.ensureDir(this.clientDirs.extendables).catch(err => this.client.emit("error", err)); });
-    if (userFiles2) {
-      await this.loadFiles(userFiles2.filter(file => file.endsWith(".js")), this.clientDirs.extendables, this.loadNewExtendable, this.loadExtendables)
-        .catch((err) => { throw err; });
-    }
-
-    const langCountsObj = [];
-    await Promise.all(this.extendableLanguages.map(async (lang) => {
-      lang = await lang;
-      if (!lang) return;
-      langCountsObj[lang] = langCountsObj[lang] || 0;
-      langCountsObj[lang]++;
-    }));
-    const langCounts = Object.entries(langCountsObj).sort(this.sortLangs);
-    delete this.extendableLanguages;
-    return [(coreFiles ? coreFiles.length : 0) +
-      (userFiles1 ? userFiles1.length : 0) +
-      (userFiles2 ? userFiles2.length : 0), langCounts];
+    return (coreFiles ? coreFiles.length : 0) + (userFiles ? userFiles.length : 0);
   }
 
   /**
@@ -733,12 +506,7 @@ class Loader {
    * @param {string} dir The directory we are loading from.
    */
   loadNewExtendable(file, dir) {
-    const path = join(dir, file);
-    const extendable = require(path);
-    if (this.extendableLanguages) {
-      // This array is made up of promises
-      this.extendableLanguages.push(this.getFileLang(path));
-    }
+    const extendable = require(join(dir, file));
     let myExtend;
     switch (extendable.conf.type.toLowerCase()) {
       case "set":
@@ -759,32 +527,6 @@ class Loader {
     });
   }
 
-  sortLangs([lang1], [lang2]) {
-    // JS should appear first
-    if (lang1 === "JS") return -1;
-    if (lang2 === "JS") return 1;
-    // Otherwise sort based on the default comparison order
-    if (lang1 === lang2) return 0;
-    if ([lang1, lang2].sort()[0] === lang1) return -1;
-    return 1;
-  }
-
-  async getFileLang(path) {
-    const langs2 = (await Promise.all(this.client.compiledLangs.map(async (lang) => {
-      // Remove the ".js" extension, if there is one, since it's optional.
-      const compiledPath = `${path.replace(/\.js$/, "")}.${lang.toLowerCase()}`;
-      // If there's an equivalent file that ends with the lang, it's a code
-      // file that was compiled into JS.
-      try {
-        await fs.access(compiledPath);
-        return lang.toUpperCase();
-      } catch (e) {
-        return false;
-      }
-    })));
-    const langs = langs2.filter(Boolean);
-    return langs.length > 0 ? langs[langs.length - 1] : "JS";
-  }
 
   /**
    * Loads an array of files into Komada
