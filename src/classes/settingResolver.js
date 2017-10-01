@@ -77,7 +77,7 @@ class SettingResolver extends Resolver {
   }
 
   async command(data) {
-    const command = this.client.commands.get(data.toLowerCase()) || this.client.commands.get(this.client.aliases.get(data.toLowerCase()));
+    const command = this.client.commands.get(data.toLowerCase()) || this.client.aliases.get(data.toLowerCase());
     if (!command) throw "This key expects a Command.";
     return command.help.name;
   }

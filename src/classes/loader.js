@@ -4,6 +4,7 @@ const exec = promisify(require("child_process").exec);
 const { sep, resolve, join } = require("path");
 const Discord = require("discord.js");
 const ParsedUsage = require("./parsedUsage");
+const defaults = require("../functions/defaults.js");
 
 const coreProtected = {
   commands: [],
@@ -190,15 +191,11 @@ class Loader {
    * @param {string} dir The directory we're loading this new command from.
    */
   loadNewCommand(file, dir) {
-    const cmd = require(join(dir, ...file));
-    cmd.help.fullCategory = file.slice(0, -1);
-    cmd.help.subCategory = cmd.help.fullCategory[1] || "General";
-    cmd.help.category = cmd.help.fullCategory[0] || "General";
+    const cmd = defaults.command(require(join(dir, ...file)), file);
     cmd.cooldown = new Map();
-    this.client.commands.set(cmd.help.name, cmd);
-    cmd.conf.aliases = cmd.conf.aliases || [];
-    cmd.conf.aliases.forEach(alias => this.client.aliases.set(alias, cmd.help.name));
     cmd.usage = new ParsedUsage(this.client, cmd);
+    this.client.commands.set(cmd.help.name, cmd);
+    cmd.conf.aliases.forEach(alias => this.client.aliases.set(alias, cmd));
   }
 
   /**
@@ -209,7 +206,7 @@ class Loader {
   async reloadCommand(name) {
     if (name.endsWith(".js")) name = name.slice(0, -3);
     name = join(...name.split("/"));
-    const fullCommand = this.client.commands.get(name) || this.client.commands.get(this.client.aliases.get(name));
+    const fullCommand = this.client.commands.get(name) || this.client.aliases.get(name);
     const dir = this.clientDirs.commands;
     const file = fullCommand ? [...fullCommand.help.fullCategory, `${fullCommand.help.name}.js`] : `${name}.js`.split(sep);
     const fileToCheck = file[file.length - 1];
@@ -551,7 +548,7 @@ class Loader {
         throw `\`\`\`${error.stack || error}\`\`\``;
       }
     } finally {
-      files.forEach(file => delete require.cache[Array.isArray(file) ? join(dir, ...file) : join(dir, file)]);
+      files.forEach(file => delete require.cache[join(dir, ...file)]);
     }
   }
 
