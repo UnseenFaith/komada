@@ -2,7 +2,7 @@ exports.command = (cmd, file) => {
   const name = file.slice(-1)[0].slice(0, -3);
   const fullCategory = file.slice(0, -1);
   if (!cmd.conf) cmd.conf = {};
-  cmd.conf.enabled = 'enabled' in cmd.conf ? cmd.conf.enabled : true;
+  cmd.conf.enabled = "enabled" in cmd.conf ? cmd.conf.enabled : true;
   cmd.conf.runIn = cmd.conf.runIn || ["text", "dm", "group"];
   cmd.conf.aliases = cmd.conf.aliases || [];
   cmd.conf.permLevel = cmd.conf.permLevel || [];
