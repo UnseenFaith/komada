@@ -49,7 +49,7 @@ exports.getLength = (client, msg, prefix) => {
 };
 
 exports.handleCommand = (client, msg, { command, prefix, prefixLength }) => {
-  const validCommand = client.commands.get(command) || client.aliases.get(command);
+  const validCommand = client.commands.get(command) || client.commands.get(client.aliases.get(command));
   if (!validCommand) return;
   const start = now();
   const response = this.runInhibitors(client, msg, validCommand);

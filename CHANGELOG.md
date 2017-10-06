@@ -6,11 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Added
-- [[#364](https://github.com/dirigeants/komada/pull/364)] Command Defaulting
 - [[#356](https://github.com/dirigeants/komada/pull/356)] New Logging && Console Class
 
 ### Changed
-- [[#364](https://github.com/dirigeants/komada/pull/364)] Aliases now hold references to the command object instead of just the command name.
 - [[#356](https://github.com/dirigeants/komada/pull/356)] Removed env var support. Auto-detect src folders etc. Allow users to provide a absolute/relative path to custom clientBaseDir
 - [[#356](https://github.com/dirigeants/komada/pull/356)] D.JS moved to Peer Dependency. `npm i --production hydrabolt/discord.js` must be run as well now.
 
