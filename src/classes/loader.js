@@ -25,7 +25,7 @@ class Loader {
 
 /**
  * Constructs the class so that pieces can be loaded.
- * @param  {KomadaClient} client The komada client
+ * @param {KomadaClient} client The komada client
  */
   constructor(client) {
     /**
@@ -110,8 +110,8 @@ class Loader {
 
   /**
    * Loads a new function into Komada
-   * @param  {string} file The file we're loading into komada.
-   * @param  {string} dir The directory from which we're loading the functions from
+   * @param {string} file The file we're loading into komada.
+   * @param {string} dir The directory from which we're loading the functions from
    */
   loadNewFunction(file, dir) {
     this[file.split(".")[0]] = require(join(dir, file));
@@ -119,7 +119,7 @@ class Loader {
 
   /**
    * Reloads a function
-   * @param  {string}  name A string representing the function name
+   * @param {string}  name A string representing the function name
    * @return {Promise<string>}
    */
   async reloadFunction(name) {
@@ -150,7 +150,7 @@ class Loader {
 
   /**
    * Walks the command directories
-   * @param  {string}  dir The directory we are walking for commands.
+   * @param {string}  dir The directory we are walking for commands.
    * @return {Promise}
    */
   async walkCommandDirectories(dir) {
@@ -186,8 +186,8 @@ class Loader {
 
   /**
    * Loads a new command
-   * @param  {Array} file An array of file information for the command we're loading.
-   * @param  {string} dir The directory we're loading this new command from.
+   * @param {Array} file An array of file information for the command we're loading.
+   * @param {string} dir The directory we're loading this new command from.
    */
   loadNewCommand(file, dir) {
     const cmd = require(join(dir, ...file));
@@ -203,7 +203,7 @@ class Loader {
 
   /**
    * Reloads the given command name.
-   * @param  {string}  name The name of the command we are reloading
+   * @param {string}  name The name of the command we are reloading
    * @return {Promise<string>}
    */
   async reloadCommand(name) {
@@ -252,8 +252,8 @@ class Loader {
 
   /**
    * Loads a new inhibitor
-   * @param  {string} file The file we are loading
-   * @param  {string} dir The location from where we are loading
+   * @param {string} file The file we are loading
+   * @param {string} dir The location from where we are loading
    */
   loadNewInhibitor(file, dir) {
     this.client.commandInhibitors.set(file.split(".")[0], require(join(dir, file)));
@@ -261,7 +261,7 @@ class Loader {
 
   /**
    * Reloads an inhibitor
-   * @param  {string}  name The inhibitor we are reloading.
+   * @param {string}  name The inhibitor we are reloading.
    * @return {Promise<string>}
    */
   async reloadInhibitor(name) {
@@ -305,8 +305,8 @@ class Loader {
 
   /**
    * Loads new finalizers
-   * @param  {string} file The file we are loading
-   * @param  {string} dir  The dir we are loading from
+   * @param {string} file The file we are loading
+   * @param {string} dir  The dir we are loading from
    */
   loadNewFinalizer(file, dir) {
     this.client.commandFinalizers.set(file.split(".")[0], require(join(dir, file)));
@@ -314,7 +314,7 @@ class Loader {
 
   /**
    * Reloads a finalizer
-   * @param  {string}  name The name of the finalize we are reloading
+   * @param {string}  name The name of the finalize we are reloading
    * @return {Promise<string>}
    */
   async reloadFinalizer(name) {
@@ -354,8 +354,8 @@ class Loader {
 
   /**
    * Loads a new event into Komada
-   * @param  {string} file The file we are loading
-   * @param  {string} dir The directory we are loading from
+   * @param {string} file The file we are loading
+   * @param {string} dir The directory we are loading from
    */
   loadNewEvent(file, dir) {
     const eventName = file.split(".")[0];
@@ -365,7 +365,7 @@ class Loader {
 
   /**
    * Reloads a new event
-   * @param  {string}  name The nme of the event we are reloading
+   * @param {string}  name The nme of the event we are reloading
    * @return {Promise<string>}
    */
   async reloadEvent(name) {
@@ -405,8 +405,8 @@ class Loader {
 
   /**
    * Loads a new monitor into Komada
-   * @param  {string} file The file we are loading
-   * @param  {string} dir The directory we are loading from
+   * @param {string} file The file we are loading
+   * @param {string} dir The directory we are loading from
    */
   loadNewMessageMonitor(file, dir) {
     this.client.messageMonitors.set(file.split(".")[0], require(join(dir, file)));
@@ -414,7 +414,7 @@ class Loader {
 
   /**
    * Reloads a Message monitor
-   * @param  {string}  name The name of the monitor we are reloading
+   * @param {string}  name The name of the monitor we are reloading
    * @return {Promise<string>}
    */
   async reloadMessageMonitor(name) {
@@ -453,8 +453,8 @@ class Loader {
 
   /**
    * Loads a new provider into Komada
-   * @param  {string} file The file we are loading
-   * @param  {stirng} dir The directory we are loading from.
+   * @param {string} file The file we are loading
+   * @param {stirng} dir The directory we are loading from.
    */
   loadNewProvider(file, dir) {
     this.client.providers.set(file.split(".")[0], require(join(dir, file)));
@@ -462,7 +462,7 @@ class Loader {
 
   /**
    * Reloads a provider
-   * @param  {string}  name The name of the provider we are reloading
+   * @param {string}  name The name of the provider we are reloading
    * @return {Promise<string>}
    */
   async reloadProvider(name) {
@@ -502,8 +502,8 @@ class Loader {
 
   /**
    * Loads a new extendable into Komada
-   * @param  {string} file The file we are loading
-   * @param  {string} dir The directory we are loading from.
+   * @param {string} file The file we are loading
+   * @param {string} dir The directory we are loading from.
    */
   loadNewExtendable(file, dir) {
     const extendable = require(join(dir, file));
@@ -530,10 +530,10 @@ class Loader {
 
   /**
    * Loads an array of files into Komada
-   * @param  {Array}  files The files we are loading
-   * @param  {string}  dir The directory we are loading the files from
-   * @param  {Function}  loadNew The loadNew function
-   * @param  {Function}  startOver The loadAll function
+   * @param {Array}  files The files we are loading
+   * @param {string}  dir The directory we are loading the files from
+   * @param {Function}  loadNew The loadNew function
+   * @param {Function}  startOver The loadAll function
    */
   async loadFiles(files, dir, loadNew, startOver) {
     try {
@@ -551,13 +551,13 @@ class Loader {
         throw `\`\`\`${error.stack || error}\`\`\``;
       }
     } finally {
-      files.forEach(file => delete require.cache[join(dir, ...file)]);
+      files.forEach(file => delete require.cache[Array.isArray(file) ? join(dir, ...file) : join(dir, file)]);
     }
   }
 
   /**
    * Installs an NPM module if it can't be found.
-   * @param  {string}  missingModule The name of the missing module
+   * @param {string}  missingModule The name of the missing module
    */
   async installNPM(missingModule) {
     console.log(`Installing: ${missingModule}`);

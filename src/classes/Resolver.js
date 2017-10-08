@@ -35,9 +35,9 @@ class Resolver {
 
   /**
    * Fetch messages by a snowflake or instanceof Message
-   * @param  {Snowflake}  message The message snowflake to validate.
-   * @param  {Channel}  channel The Channel object in which the message can be found.
-   * @param  {number}  [limit=100] The number of messages to fetch and send back.
+   * @param {Snowflake}  message The message snowflake to validate.
+   * @param {Channel}  channel The Channel object in which the message can be found.
+   * @param {number}  [limit=100] The number of messages to fetch and send back.
    * @return {Promise<?Collection<Message>>}
    */
   async msgs(message, channel, limit = 100) {

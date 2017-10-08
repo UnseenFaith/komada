@@ -22,7 +22,7 @@ const defaultPermStructure = new PermLevels()
 module.exports = (options) => {
   for (const key in this.DEFAULT_OPTIONS) {
     if (!(key in options)) options[key] = this.DEFAULT_OPTIONS[key];
-    if (["provider", "disabled"].includes(key)) {
+    if (["provider", "disabled", "console"].includes(key)) {
       for (const property in this.DEFAULT_OPTIONS[key]) {
         if (!(property in options[key])) options[key][property] = this.DEFAULT_OPTIONS[key][property];
       }
@@ -50,13 +50,18 @@ exports.DEFAULT_OPTIONS = {
   readyMessage: client => `Successfully initialized. Ready to serve ${client.guilds.size} guilds.`,
   commandMessageLifetime: 1800,
   commandMessageSweep: 900,
-  disableLogTimestamps: false,
-  disableLogColor: false,
   cmdEditing: false,
   cmdPrompt: false,
   provider: {
     engine: "json",
     cache: "js",
+  },
+  console: {
+    useColors: true,
+    colors: {},
+    timestamps: true,
+    stdout: process.stdout,
+    stderr: process.stderr,
   },
 };
 
@@ -78,12 +83,15 @@ exports.validate = (options) => {
   if ("readyMessage" in options && typeof options.readyMessage !== "function") throw new TypeError("ReadyMessage must be a function.");
   if ("commandMessageLifetime" in options && typeof options.commandMessageLifetime !== "number") throw new TypeError("CommandMessageLifetime must be a number.");
   if ("commandMessageSweep" in options && typeof options.commandMessageSweep !== "number") throw new TypeError("CommandMessageSweep must be a number.");
-  if ("disableLogTimestamps" in options && typeof options.disableLogTimestamps !== "boolean") throw new TypeError("DisableLogTimestamps must be true or false.");
-  if ("disableLogColor" in options && typeof options.disableLogColor !== "boolean") throw new TypeError("DisableLogColor must be true or false.");
   if ("cmdEditing" in options && typeof options.cmdEditing !== "boolean") throw new TypeError("CmdEditing must be true or false.");
   if ("cmdPrompt" in options && typeof options.cmdPrompt !== "boolean") throw new TypeError("CmdPrompt must be true or false.");
   if ("provider" in options) {
     if ("engine" in options.provider && typeof options.provider.engine !== "string") throw new TypeError("Engine must be a string.");
     if ("cache" in options.provider && typeof options.provider.cache !== "string") throw new TypeError("Cache must be a string.");
+  }
+  if ("console" in options) {
+    if ("timestamps" in options.console && !(typeof options.console.timestamps === "boolean" || typeof options.console.timestamps === "string")) throw new TypeError("Timestamps must be true or false");
+    if ("colors" in options.console && typeof options.console.colors !== "object") throw new TypeError("Colors must be an object with message and time objects");
+    if ("useColors" in options.console && typeof options.console.useColors !== "boolean") throw new TypeError("Colors must be true or false.");
   }
 };

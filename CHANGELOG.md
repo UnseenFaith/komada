@@ -6,6 +6,26 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+
+## [0.21.1] - 2017-10-08
+### Added
+- [[#356](https://github.com/dirigeants/komada/pull/356)] New Logging && Console Class
+
+### Changed
+- [[#356](https://github.com/dirigeants/komada/pull/356)] Removed env var support. Auto-detect src folders etc. Allow users to provide a absolute/relative path to custom clientBaseDir
+- [[#356](https://github.com/dirigeants/komada/pull/356)] D.JS moved to Peer Dependency. `npm i --production hydrabolt/discord.js` must be run as well now.
+
+### Fixed
+- [[a22b924](https://github.com/dirigeants/komada/commit/a22b924a72608309c7b386043b154ed062103e7b)] Fixes reloading pieces
+- [[#356](https://github.com/dirigeants/komada/pull/356)] Fixes caching provider (Collection)
+- [[#358](https://github.com/dirigeants/komada/pull/358)] Fixes SG Config Generation
+
+### Removed
+- [[#356](https://github.com/dirigeants/komada/pull/356)] dotenv is removed as a peerDependency
+- [[#356](https://github.com/dirigeants/komada/pull/356)] Chalk removed as a dependency
+- [[#356](https://github.com/dirigeants/komada/pull/356)] Package-Locks are no more.
+
+
 ## [0.20.10] - Classbased - 2017-09-07
 ### Added
 - [[#347](https://github.com/dirigeants/komada/pull/347)] Merge Function for options.
@@ -464,7 +484,7 @@ Break.
 - Various Confs fixes from [UnseenFaith]
 - Usage Addition/ParseUsage fix from [UnseenFaith]
 
-[Unreleased]: https://github.com/dirigeants/komada/compare/0.20.10...master
+[Unreleased]: https://github.com/dirigeants/komada/compare/0.21.1...master
 [0.10.0]: https://github.com/dirigeants/komada/compare/1627e6deb1d8c352d83e52ccd590f2330f5f8bb2...0.10.0
 [0.11.0]: https://github.com/dirigeants/komada/compare/0.10.0...0.11.0
 [0.12.0]: https://github.com/dirigeants/komada/compare/0.11.0...0.12.0
@@ -473,3 +493,4 @@ Break.
 [0.18.1]: https://github.com/dirigeants/komada/compare/0.12.4...0.18.1
 [0.19.3]: https://github.com/dirigeants/komada/compare/0.18.1...0.19.3
 [0.20.10]: https://github.com/dirigeants/komada/compare/0.19.0...0.20.10
+[0.21.1]: https://github.com/dirigeants/komada/compare/0.20.10...0.21.1
