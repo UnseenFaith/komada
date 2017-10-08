@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+
+## [0.21.1] - 2017-10-08
 ### Added
 - [[#356](https://github.com/dirigeants/komada/pull/356)] New Logging && Console Class
 
@@ -481,7 +484,7 @@ Break.
 - Various Confs fixes from [UnseenFaith]
 - Usage Addition/ParseUsage fix from [UnseenFaith]
 
-[Unreleased]: https://github.com/dirigeants/komada/compare/0.20.10...master
+[Unreleased]: https://github.com/dirigeants/komada/compare/0.21.1...master
 [0.10.0]: https://github.com/dirigeants/komada/compare/1627e6deb1d8c352d83e52ccd590f2330f5f8bb2...0.10.0
 [0.11.0]: https://github.com/dirigeants/komada/compare/0.10.0...0.11.0
 [0.12.0]: https://github.com/dirigeants/komada/compare/0.11.0...0.12.0
@@ -490,3 +493,4 @@ Break.
 [0.18.1]: https://github.com/dirigeants/komada/compare/0.12.4...0.18.1
 [0.19.3]: https://github.com/dirigeants/komada/compare/0.18.1...0.19.3
 [0.20.10]: https://github.com/dirigeants/komada/compare/0.19.0...0.20.10
+[0.21.1]: https://github.com/dirigeants/komada/compare/0.20.10...0.21.1
