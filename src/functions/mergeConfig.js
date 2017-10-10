@@ -63,6 +63,16 @@ exports.DEFAULT_OPTIONS = {
     stdout: process.stdout,
     stderr: process.stderr,
   },
+  eval: {
+    // The depth to inspect the evaled output to, if it's not a string
+    inspectionDepth: 0,
+    // getTypeStr shouldn't recurse more than once, but just in case
+    typeRecursionLimit: 2,
+    // The number of lines before the output is considered overly long
+    tooManyLines: 7,
+    // The approx. number of chars per line in a codeblock on Android, on a Google Pixel XL
+    mobileCharsPerLine: 34,
+  },
 };
 
 exports.validate = (options) => {

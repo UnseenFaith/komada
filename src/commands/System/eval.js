@@ -2,16 +2,9 @@ const now = require("performance-now");
 const { MessageAttachment } = require("discord.js");
 const { inspect } = require("util");
 
-// The depth to inspect the evaled output to, if it's not a string
-const inspectionDepth = 0;
-// const getTypeStr shouldn't recurse more than once, but just in case
-const typeRecursionLimit = 2;
-// The number of lines before the output is considered overly long
-const tooManyLines = 7;
-// The approx. number of chars per line in a codeblock on Android, on a Google Pixel XL
-const mobileCharsPerLine = 34;
-
 let outputTo;
+let getTypeStr;
+let sendTooLongQuery;
 
 exports.init = async (client) => {
   // How the evaled result is outputted
@@ -20,39 +13,81 @@ exports.init = async (client) => {
     log: (msg, topLine, evaled) => client.emit("log", `${topLine}\n${evaled}`),
     upload: (msg, topLine, evaled) => msg.channel.send("", new MessageAttachment(Buffer.from(`// ${topLine}\n${evaled}`), "eval.js")),
   };
-};
 
-const getTypeStr = async (value, i = 0) => {
-  let typeStr = "";
-  const basicType = typeof value;
-  if (basicType === "object") {
-    if (value === null) {
-      typeStr = "null primitive";
-    } else {
-      let objType = value.constructor.name;
-      if (value instanceof Promise) {
-        if (objType !== "Promise") objType += " promise";
-        typeStr = i <= typeRecursionLimit ?
-          `awaited ${objType} object ➡ ${await getTypeStr(await value, i + 1)}` :
-          `${objType} object`;
-      } else if (value instanceof Boolean || value instanceof Number || value instanceof String) {
-        typeStr = `${objType} object (not a primitive!)`;
+  getTypeStr = async (value, i = 0) => {
+    let typeStr = "";
+    const basicType = typeof value;
+    if (basicType === "object") {
+      if (value === null) {
+        typeStr = "null primitive";
       } else {
-        if (objType === "Object") objType = "plain";
-        typeStr = `${objType} object`;
+        let objType = value.constructor.name;
+        if (value instanceof Promise) {
+          if (objType !== "Promise") objType += " promise";
+          typeStr = i <= client.config.eval.typeRecursionLimit ?
+            `awaited ${objType} object ➡ ${await getTypeStr(await value, i + 1)}` :
+            `${objType} object`;
+        } else if (value instanceof Boolean || value instanceof Number || value instanceof String) {
+          typeStr = `${objType} object (not a primitive!)`;
+        } else {
+          if (objType === "Object") objType = "plain";
+          typeStr = `${objType} object`;
+        }
       }
+    } else if (basicType === "function") {
+      const objType = value.constructor.name;
+      typeStr = objType === "Function" ?
+        `${basicType} object` :
+        `${objType} ${basicType} object`;
+    } else {
+      typeStr = `${basicType} primitive`;
     }
-  } else if (basicType === "function") {
-    const objType = value.constructor.name;
-    typeStr = objType === "Function" ?
-      `${basicType} object` :
-      `${objType} ${basicType} object`;
-  } else {
-    typeStr = `${basicType} primitive`;
-  }
 
-  return typeStr;
+    return typeStr;
+  };
+
+  sendTooLongQuery = async (cmdMsg, topLine, evaled, question, options) => {
+    const queryMsg = await cmdMsg.channel.send(`${question} (10s til auto-cancel)`);
+    try {
+      const collected = await cmdMsg.channel.awaitMessages(
+        msg => msg.author.id === cmdMsg.author.id,
+        { max: 1, time: 10000, errors: ["time"] },
+      );
+      const msg = collected.first();
+      queryMsg.delete();
+      msg.delete();
+
+      const text = msg.content.toLowerCase();
+      if (text.startsWith("y")) {
+        // Whatever the yes option says to do
+        return outputTo[options.yes](queryMsg, topLine, evaled);
+      } else if (text.startsWith("l")) {
+        // Log to console
+        return outputTo.log(queryMsg, topLine, evaled);
+      } else if (text.startsWith("u")) {
+        // Upload as a file attachment and send to channel
+        return outputTo.upload(queryMsg, topLine, evaled);
+      } else if (text.startsWith("t")) {
+        // Truncate and send to channel
+        // Truncate the evaled output, both its # of lines and each line's length
+        const evaledLines = evaled.split("\n");
+        const newLength = client.config.eval.tooManyLines - 1;
+        const lastIndex = newLength - 1;
+        for (let i = 0; i < evaledLines.length; i++) {
+          const line = evaledLines[i];
+          if (i >= newLength) delete evaledLines[i];
+          else if (i === lastIndex) evaledLines[i] = "...";
+          else if (line.length > client.config.eval.mobileCharsPerLine) evaledLines[i] = `${line.substr(0, client.config.eval.mobileCharsPerLine - 3)}...`;
+        }
+        return outputTo.channel(queryMsg, topLine, evaledLines.join("\n"));
+      }
+      return null;
+    } catch (error) {
+      return queryMsg.delete();
+    }
+  };
 };
+
 
 const roundTo3 = num => Math.round(num * 1000) / 1000;
 
@@ -60,47 +95,6 @@ const getNiceDuration = (time) => {
   if (time >= 1000) return `${roundTo3(time / 1000)}s`;
   if (time < 1) return `${roundTo3(time * 1000)}μs`;
   return `${roundTo3(time)}ms`;
-};
-
-const sendTooLongQuery = async (cmdMsg, topLine, evaled, question, options) => {
-  const queryMsg = await cmdMsg.channel.send(`${question} (10s til auto-cancel)`);
-  try {
-    const collected = await cmdMsg.channel.awaitMessages(
-      msg => msg.author.id === cmdMsg.author.id,
-      { max: 1, time: 10000, errors: ["time"] },
-    );
-    const msg = collected.first();
-    queryMsg.delete();
-    msg.delete();
-
-    const text = msg.content.toLowerCase();
-    if (text.startsWith("y")) {
-      // Whatever the yes option says to do
-      return outputTo[options.yes](queryMsg, topLine, evaled);
-    } else if (text.startsWith("l")) {
-      // Log to console
-      return outputTo.log(queryMsg, topLine, evaled);
-    } else if (text.startsWith("u")) {
-      // Upload as a file attachment and send to channel
-      return outputTo.upload(queryMsg, topLine, evaled);
-    } else if (text.startsWith("t")) {
-      // Truncate and send to channel
-      // Truncate the evaled output, both its # of lines and each line's length
-      const evaledLines = evaled.split("\n");
-      const newLength = tooManyLines - 1;
-      const lastIndex = newLength - 1;
-      for (let i = 0; i < evaledLines.length; i++) {
-        const line = evaledLines[i];
-        if (i >= newLength) delete evaledLines[i];
-        else if (i === lastIndex) evaledLines[i] = "...";
-        else if (line.length > mobileCharsPerLine) evaledLines[i] = `${line.substr(0, mobileCharsPerLine - 3)}...`;
-      }
-      return outputTo.channel(queryMsg, topLine, evaledLines.join("\n"));
-    }
-    return null;
-  } catch (error) {
-    return queryMsg.delete();
-  }
 };
 
 exports.run = async (client, msg, [mult, d, l, s, ...code]) => {
@@ -123,7 +117,7 @@ exports.run = async (client, msg, [mult, d, l, s, ...code]) => {
     if (flags.silent) return null;
 
     const topLine = `${await getTypeStr(evaledP)}, ${time}`;
-    if (typeof evaled !== "string") evaled = inspect(evaled, { depth: inspectionDepth });
+    if (typeof evaled !== "string") evaled = inspect(evaled, { depth: client.config.eval.inspectionDepth });
 
     if (flags.log) return outputTo.log(msg, topLine, evaled);
 
@@ -137,11 +131,11 @@ exports.run = async (client, msg, [mult, d, l, s, ...code]) => {
     const lines = evaled.split("\n");
     let lineCount = lines.length;
     let calcWithScreenWrap = false;
-    if (lineCount < tooManyLines) {
-      lineCount = lines.reduce((count, line) => count + Math.ceil(line.length / mobileCharsPerLine), 0);
+    if (lineCount < client.config.eval.tooManyLines) {
+      lineCount = lines.reduce((count, line) => count + Math.ceil(line.length / client.config.eval.mobileCharsPerLine), 0);
       calcWithScreenWrap = true;
     }
-    if (lineCount >= tooManyLines) {
+    if (lineCount >= client.config.eval.tooManyLines) {
       return sendTooLongQuery(msg, topLine, evaled,
         calcWithScreenWrap ?
           `The output is long (${lineCount} lines, plus wrapping on small screens). Send it anyway? Or \`truncate\` it and send it, or \`log\` it to console, or \`upload\` it as a file.` :
