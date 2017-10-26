@@ -1,4 +1,4 @@
-const now = require("performance-now");
+const { performance: { now } } = require("perf_hooks");
 
 const colors = {
   prompted: { message: { background: "red" } },
