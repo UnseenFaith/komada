@@ -72,7 +72,7 @@ Keep in mind that arguments are delimited by the character or combination of cha
 
 `komessager 293107496191655936|delete`
 
-The line above will execute the command with the name `messager` (or a command with `messager` as an alias), it'll use [Channel.messages.fetch](https://discord.js.org/#/docs/main/master/class/TextChannel?scrollTo=messages) (or [Channel.messages.fetch](https://discord.js.org/#/docs/main/master/class/TextChannel?scrollTo=messages) if the bot is a userbot). If the message is not found (you mistyped it or the message is in another channel) it'll warn you that the message hasn't been found. The next argument is a literal, in which must be either `delete` or `edit`. Keep in mind that Komada does *String.toLowerCase()*, if you write `DELETE` or any other variation of [font case](https://techterms.com/definition/font_case), it'll work too.
+The line above will execute the command with the name `messager` (or a command with `messager` as an alias), it'll use [Channel.messages.fetch](https://discord.js.org/#/docs/main/master/class/MessageStore?scrollTo=fetch) if the bot is a userbot). If the message is not found (you mistyped it or the message is in another channel) it'll warn you that the message hasn't been found. The next argument is a literal, in which must be either `delete` or `edit`. Keep in mind that Komada does *String.toLowerCase()*, if you write `DELETE` or any other variation of [font case](https://techterms.com/definition/font_case), it'll work too.
 
 We come back to the `exports.run`, remember that we have:
 
