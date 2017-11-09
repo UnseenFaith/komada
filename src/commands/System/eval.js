@@ -9,7 +9,7 @@ exports.run = async (client, msg, [code]) => {
     if (typeof evaled !== "string") evaled = inspect(evaled, { depth: 0 });
     const output = client.funcs.clean(client, evaled);
     if (output.length > 1992) {
-      msg.channel.send(new MessageAttachement(Buffer.from(output), "output.txt"));
+      msg.channel.send(new MessageAttachment(Buffer.from(output), "output.txt"));
     }
     return msg.sendCode("js", output);
   } catch (err) {
