@@ -1,7 +1,7 @@
 /* eslint-disable no-throw-literal, no-use-before-define, no-restricted-syntax, no-underscore-dangle */
 const Discord = require("discord.js");
 const path = require("path");
-const now = require("performance-now");
+const { performance: { now } } = require("perf_hooks");
 const CommandMessage = require("./commandMessage");
 const Loader = require("./loader");
 const ArgResolver = require("./argResolver");
