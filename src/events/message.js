@@ -1,4 +1,4 @@
-const now = require("performance-now");
+const { performance: { now } } = require("perf_hooks");
 
 exports.run = async (client, msg) => {
   if (!client.ready) return;
