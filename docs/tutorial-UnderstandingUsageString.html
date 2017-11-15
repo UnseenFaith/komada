@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Home | Komada</title>
+    <title>Tutorial: UnderstandingUsageString | Komada</title>
     <link rel="shortcut icon" href="img/favicon.ico">
 
     <script src="scripts/prettify/prettify.js"> </script>
@@ -51,84 +51,130 @@
 <div class="main" id="main">
     
 
+<section>
+    <header>
+        
 
-
-    
-
-
-
-
-
-
-
-
+        <h2>UnderstandingUsageString</h2>
+    </header>
 
     
-
-
-    <section>
-        <article class="readme"><h1>Komada Framework Documentation</h1>
-<p><a href="https://discord.gg/FpEFSyY"><img src="https://discordapp.com/api/guilds/339942739275677727/embed.png" alt="Discord"></a>
-<a href="https://www.npmjs.com/package/komada"><img src="https://img.shields.io/npm/v/komada.svg?maxAge=3600" alt="npm"></a>
-<a href="https://www.npmjs.com/package/komada"><img src="https://img.shields.io/npm/dt/komada.svg?maxAge=3600" alt="npm"></a>
-<a href="https://greenkeeper.io/"><img src="https://badges.greenkeeper.io/dirigeants/komada.svg" alt="Greenkeeper badge"></a>
-<a href="https://travis-ci.org/dirigeants/komada"><img src="https://travis-ci.org/dirigeants/komada.svg?branch=master" alt="Build Status"></a>
-<a href="https://david-dm.org/dirigeants/komada"><img src="https://img.shields.io/david/dirigeants/komada.svg?maxAge=3600" alt="David"></a>
-<a href="https://www.codacy.com/app/dirigeants/komada_repo?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=dirigeants/komada&amp;utm_campaign=Badge_Grade"><img src="https://api.codacy.com/project/badge/Grade/b78090f6d2614660ac58328645a2616d" alt="Codacy Badge"></a></p>
-<p>Komada is a modular framework for bots built on top of <a href="https://github.com/hydrabolt/discord.js">Discord.js</a>. It offers an extremely easy installation, downloadable commands, and a framework to build your own commands, modules, and functions.</p>
-<h2>What's with the name?</h2>
-<p>Komada is the Croatian word for &quot;pieces&quot;, such as puzzle pieces. As usual to find my software name I just shove english words in a translator and see what comes out. But why &quot;pieces&quot;? Because Komada is modular, meaning each &quot;piece&quot; is a standalone part that can be easily replaced, enhanced, reloaded, removed.</p>
-<h2>Installing Komada</h2>
-<p>Time to take the plunge! Komada is on NPM and can be easily installed.</p>
-<blockquote>
-<p>I assume you know how to open a command prompt in a folder where you want to install this. Please don't prove me wrong.</p>
-</blockquote>
-<pre class="prettyprint source"><code>npm install --production komada hydrabolt/discord.js
-</code></pre>
-<p>Create a file called <code>app.js</code> (or whatever you prefer) which will initiate and configure Komada.</p>
-<pre class="prettyprint source lang-js"><code>const komada = require(&quot;komada&quot;);
-
-const client = new komada.Client({
-  ownerID : &quot;your-user-id&quot;,
-  prefix: &quot;+&quot;,
-  clientOptions: {
-    fetchAllMembers: false,
-  },
-  cmdLogging: true,
-});
-
-client.login(&quot;your-bot-token&quot;);
-</code></pre>
-<h3>Configuration Options</h3>
+        <article class="readme">
+            <h2>Usage Structure</h2>
+<p><code>&lt;&gt;</code> required argument, <code>[]</code> optional argument <code>&lt;Name:Type{min,max}&gt;</code></p>
 <ul>
-<li><strong>botToken</strong>: The MFA token for your bot. To get this, please see <a href="https://anidiotsguide.gitbooks.io/discord-js-bot-guide/getting-started/the-long-version.html">This discord.js Getting Started Guide</a>, which explains how to create the bot and get the token.</li>
-<li><strong>ownerID</strong>: The User ID of the bot owner - you. This gives you the highest possible access to the bot's default commands, including eval! To obtain it, enable Developer Mode in Discord, right-click your name and do &quot;Copy ID&quot;.</li>
+<li><strong>Name</strong> Mostly used for debugging message, unless the type is Literal in which it compares the argument to the name.</li>
+<li><strong>Type</strong> The type of variable you are expecting.</li>
+<li><strong>Min, Max</strong> Minimum or Maximum for a giving variable (works on strings in terms of length, and on all types of numbers in terms of value) You are allowed to define any combination of min and max. Omit for none, <code>{min}</code> for min, <code>{,max}</code> for max. If you set <code>min</code> and <code>max</code> with the same integer, then the provided string must have equal length.</li>
+<li><strong>Special Repeat Tag</strong> <code>[...]</code> will repeat the last usage optionally until you run out of arguments. Useful for doing something like <code>&lt;SearchTerm:str&gt; [...]</code> which will allow you to take as many search terms as you want, per your Usage Delimiter.</li>
 </ul>
 <blockquote>
-<p>As of Komada 0.20.4, If you do not set this option, the ownerID will default the creator of the application on the discord developer website. This only works if your bot is not a self/user bot.</p>
+<p>Note: You can set multiple options in an argument by writting <code>|</code>. For example: <code>&lt;Message:msg|Content:string{4,16}&gt;</code> will work when you provide a message ID or a string with a length between 4 and 16 (including both limits).</p>
 </blockquote>
-<ul>
-<li><strong>prefix</strong>: The default prefix when the bot first boots up. This option becomes useless after first boot, since the prefix is written to the default configuration system.</li>
-<li><strong>clientOptions</strong>: These are passed directly to the discord.js library. They are optional. For more information on which options are available, see <a href="https://discord.js.org/#/docs/main/stable/typedef/ClientOptions">ClientOptions in the discord.js docs</a>.</li>
-<li><strong>permStructure</strong>: It allows you to configure the permission levels from Komada, with a range of 0-10. You can also use <code>Komada.PermLevels</code> constructor.</li>
-<li><strong>cmdLogging</strong>: If set to true, it console.logs EVERY <em>successful</em> command run, where, the user who ran it, and the time it took to process the command with a sexy color format.</li>
-</ul>
+<h3>Usage Types</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right"><code>literal</code></td>
+<td>Literally equal to the Name. This is the default type if none is defined.</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>str</code> | <code>string</code></td>
+<td>A <a href="https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>.</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>int</code> | <code>integer</code></td>
+<td>An <a href="https://en.wikipedia.org/wiki/Integer">Integer</a>.</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>num</code> | <code>number</code> | <code>float</code></td>
+<td>A <a href="https://en.wikipedia.org/wiki/Floating-point_arithmetic">Floating Point Number</a>.</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>boolean</code></td>
+<td>A <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>.</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>url</code></td>
+<td>A <a href="https://en.wikipedia.org/wiki/URL">URL</a>.</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>msg</code> | <code>message</code></td>
+<td>A <a href="https://discord.js.org/#/docs/main/master/class/Message">Message</a> instance returned from the message ID.</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>role</code></td>
+<td>A <a href="https://discord.js.org/#/docs/main/master/class/Role">Role</a> instance returned from the role ID or mention.</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>channel</code></td>
+<td>A <a href="https://discord.js.org/#/docs/main/master/class/TextChannel">TextChannel</a> instance returned from the channel ID or channel tag.</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>guild</code></td>
+<td>A <a href="https://discord.js.org/#/docs/main/master/class/Guild">Guild</a> instance returned from the guild ID.</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>user</code> | <code>mention</code></td>
+<td>A <a href="https://discord.js.org/#/docs/main/master/class/User">User</a> instance returned from the user ID or mention.</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>member</code></td>
+<td>A <a href="https://discord.js.org/#/docs/main/master/class/GuildMember">GuildMember</a> instance returned from the member ID or mention.</td>
+</tr>
+</tbody>
+</table>
 <blockquote>
-<p>Komada automatically detects selfbot mode, and takes appropriate precautions, such as not responding to anyone but yourself.</p>
+<p>Note: <code>Literal</code> is very useful in arguments with multiple options.</p>
 </blockquote>
-<h2>Running the bot</h2>
-<p>Then, run the following in your folder:</p>
-<pre class="prettyprint source"><code>node app.js
+<hr>
+<h1>Using arguments in your command.</h1>
+<p>Now, after we understand how to configurate the command, we'll start writting it:</p>
+<pre class="prettyprint source lang-javascript"><code>exports.run = async (client, msg, [...args]) => {
+  // Place Code Here
+};
 </code></pre>
+<p><code>[...args]</code> represents a variable number of arguments give when the command is run. The name of the arguments in the array (and their count) is determined by the <code>usage</code> property and its given arguments.</p>
 <blockquote>
-<p><strong>Requirements</strong>: This version of Komada requires Node 8.1.0 or higher to run. Depends on Discord.js v12.0.0-dev or higher (the appropriate version is automatically installed).</p>
+<p>Note that the commands' arguments are an array. This is a trick called <a href="https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment">Destructuring assignment</a>.</p>
 </blockquote>
-<h2>Documentation</h2>
-<p>Please check <a href="https://dirigeants.github.io/komada/">Komada Docs</a> to learn more about Komada Framework and its usage. Any doubts? Ask us <a href="https://discord.gg/FpEFSyY">here</a>.</p></article>
-    </section>
-
-
-
+<p>For example, when you have:</p>
+<pre class="prettyprint source lang-javascript"><code>exports.help = {
+  name: &quot;messager&quot;,
+  description: &quot;Deletes a message, or edits it.&quot;,
+  usage: &quot;&lt;Message:msg> &lt;delete|edit> [newContent:string]&quot;,
+  usageDelim: &quot;|&quot;,
+  extendedHelp: &quot;&quot;,
+};
+</code></pre>
+<p>Then, we have to define all the arguments from <em>help.usage</em>, the following code block is an example of how it would look like, and how we would work with them.</p>
+<pre class="prettyprint source lang-javascript"><code>exports.run = async (client, msg, [message, action, newContent]) => {
+  // code
+};
+</code></pre>
+<p>In which <code>message</code> is the argument assigned to the message object as provided in <code>&lt;Message:msg&gt;</code> argument from usage. Same does <code>action</code> for <code>&lt;delete|edit&gt;</code> and respectively.</p>
+<blockquote>
+<p>Keep in mind that we declared <code>newContent</code> as an optional argument, if it's not provided, it'll return undefined.</p>
+</blockquote>
+<p>Keep in mind that arguments are delimited by the character or combination of characters written in <em>help.usageDelim</em>. In this case, we have assigned the character <code>|</code> for it. How do we use this command? Easy:</p>
+<p><code>komessager 293107496191655936|delete</code></p>
+<p>The line above will execute the command with the name <code>messager</code> (or a command with <code>messager</code> as an alias), it'll use <a href="https://discord.js.org/#/docs/main/master/class/MessageStore?scrollTo=fetch">Channel.messages.fetch</a> if the bot is a userbot). If the message is not found (you mistyped it or the message is in another channel) it'll warn you that the message hasn't been found. The next argument is a literal, in which must be either <code>delete</code> or <code>edit</code>. Keep in mind that Komada does <em>String.toLowerCase()</em>, if you write <code>DELETE</code> or any other variation of <a href="https://techterms.com/definition/font_case">font case</a>, it'll work too.</p>
+<p>We come back to the <code>exports.run</code>, remember that we have:</p>
+<pre class="prettyprint source lang-javascript"><code>exports.run = async (client, msg, [message, action, newContent]) => {
+  // code
+};
+</code></pre>
+<p>As I explained before, <code>message</code> will return a message object, it'll be the message found with the ID <code>293107496191655936</code>, and <code>action</code> is defined as the string <code>delete</code>.
+<code>newContent</code> is undefined because we didn't write that argument. The code inside the curly brackets (<code>{}</code>) will be executed when the usage is valid.</p>
+        </article>
+    
+</section>
 
 
 
@@ -143,13 +189,7 @@ client.login(&quot;your-bot-token&quot;);
 <script src="scripts/linenumber.js"></script>
 
     <script>
-        var id = 'package:undefined_sub'.replace(/"/g, '_');
-        var selectedApi = document.getElementById(id); // do not use jquery selector
-        var $selectedApi = $(selectedApi);
-
-        $selectedApi.removeClass('hidden');
-        $selectedApi.parent().find('.glyphicon').removeClass('glyphicon-plus').addClass('glyphicon-minus');
-        showLnbApi();
+        showLnbExamples();
     </script>
 
 </body>
