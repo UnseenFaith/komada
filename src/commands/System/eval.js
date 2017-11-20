@@ -1,4 +1,5 @@
 const { inspect } = require("util");
+const { MessageAttachment } = require("discord.js");
 
 /* eslint-disable no-eval */
 exports.run = async (client, msg, [code]) => {
@@ -6,7 +7,11 @@ exports.run = async (client, msg, [code]) => {
     let evaled = eval(code);
     if (evaled instanceof Promise) evaled = await evaled;
     if (typeof evaled !== "string") evaled = inspect(evaled, { depth: 0 });
-    msg.sendCode("js", client.funcs.clean(client, evaled));
+    const output = client.funcs.clean(client, evaled);
+    if (output.length > 1992) {
+      msg.channel.send(new MessageAttachment(Buffer.from(output), "output.txt"));
+    }
+    return msg.sendCode("js", output);
   } catch (err) {
     msg.sendMessage(`\`ERROR\` \`\`\`js\n${client.funcs.clean(client, err)}\n\`\`\``);
     if (err.stack) client.emit("error", err.stack);
