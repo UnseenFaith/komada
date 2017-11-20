@@ -1,7 +1,7 @@
 const { inspect } = require("util");
 const { MessageAttachment } = require("discord.js");
 
-/* eslint-disable no-eval */
+/* eslint-disable no-eval, consistent-return */
 exports.run = async (client, msg, [code]) => {
   try {
     let evaled = eval(code);
