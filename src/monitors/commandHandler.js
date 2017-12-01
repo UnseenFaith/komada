@@ -8,7 +8,6 @@ exports.conf = {
 
 exports.run = (client, msg) => {
   if (!client.ready) return;
-  msg.runMonitors();
   if (!msg._handle) return;
   const res = this.parseCommand(client, msg);
   if (!res.command) return;
