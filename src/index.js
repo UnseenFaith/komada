@@ -8,7 +8,7 @@ module.exports = {
   KomadaMessage: require("./structures/KomadaMessage"),
   Loader: require("./classes/loader"),
   ParsedUsage: require("./classes/parsedUsage"),
-  PermLevels: require("./classes/permLevels"),
+  PermissionLevels: require("./classes/PermissionLevels"),
   Resolver: require("./classes/Resolver"),
   Schema: require("./classes/settings/Schema"),
   Gateway: require("./classes/settings/Gateway"),

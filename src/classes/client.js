@@ -5,27 +5,27 @@ const { performance: { now } } = require("perf_hooks");
 const CommandMessage = require("./commandMessage");
 const Loader = require("./loader");
 const ArgResolver = require("./argResolver");
-const PermLevels = require("./permLevels");
+const PermLevels = require("./PermissionLevels");
 const Settings = require("./settingsCache");
 const merge = require("../functions/mergeConfig");
 const Console = require("./console/Console");
 
 
 const defaultPermStructure = new PermLevels()
-  .addLevel(0, false, () => true)
-  .addLevel(2, false, (client, msg) => {
+  .add(0, false, () => true)
+  .add(2, false, (client, msg) => {
     if (!msg.guild || !msg.guild.settings.modRole) return false;
     const modRole = msg.guild.roles.get(msg.guild.settings.modRole);
     return modRole && msg.member.roles.has(modRole.id);
   })
-  .addLevel(3, false, (client, msg) => {
+  .add(3, false, (client, msg) => {
     if (!msg.guild || !msg.guild.settings.adminRole) return false;
     const adminRole = msg.guild.roles.get(msg.guild.settings.adminRole);
     return adminRole && msg.member.roles.has(adminRole.id);
   })
-  .addLevel(4, false, (client, msg) => msg.guild && msg.author.id === msg.guild.owner.id)
-  .addLevel(9, true, (client, msg) => msg.author.id === client.config.ownerID)
-  .addLevel(10, false, (client, msg) => msg.author.id === client.config.ownerID);
+  .add(4, false, (client, msg) => msg.guild && msg.author.id === msg.guild.owner.id)
+  .add(9, true, (client, msg) => msg.author.id === client.config.ownerID)
+  .add(10, false, (client, msg) => msg.author.id === client.config.ownerID);
 
 /**
  * @typedef  {object}   OptionsDisabled
@@ -162,7 +162,7 @@ class Komada extends Discord.Client {
      * The permStructure Komada will take into account when commands are ran and permLevel is calculated.
      * @type {PermissionStructure}
      */
-    this.permStructure = this.validatePermStructure();
+    this.permStructure = config.permStructure instanceof PermLevels ? config.permStructure : defaultPermStructure;
 
     /**
      * The command message class.
@@ -252,22 +252,6 @@ class Komada extends Discord.Client {
    */
   get owner() {
     return this.users.get(this.config.ownerID);
-  }
-
-  /**
-   * Validates the permission structure passed to the client
-   * @private
-   * @returns {validPermStructure}
-   */
-  validatePermStructure() {
-    const structure = this.config.permStructure instanceof PermLevels ? this.config.permStructure.structure : null;
-    const permStructure = structure || this.config.permStructure || defaultPermStructure.structure;
-    if (!Array.isArray(permStructure)) throw "PermStructure must be an array.";
-    if (permStructure.some(perm => typeof perm !== "object" || typeof perm.check !== "function" || typeof perm.break !== "boolean")) {
-      throw "Perms must be an object with a check function and a break boolean.";
-    }
-    if (permStructure.length !== 11) throw "Permissions 0-10 must all be defined.";
-    return permStructure;
   }
 
   /**
