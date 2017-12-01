@@ -31,7 +31,7 @@
     "no-use-before-define": ["warn", { "functions": true, "classes": true }],
     "no-eval": "warn",
     "max-len": "off",
-    "no-underscore-dangle": ["error", { "allow": ["_events"] }],
+    "no-underscore-dangle": "off",
     "global-require": "off",
     "no-nested-ternary": "warn",
     "padded-blocks": ["error", { "classes": "always", "blocks": "never", "switches": "never" }],
