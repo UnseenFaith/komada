@@ -5,7 +5,7 @@ module.exports = {
   Colors: require("./classes/console/Colors"),
   Console: require("./classes/console/Console"),
   KomadaMember: require("./structures/KomadaMember"),
-  KomadaMessage: require("./structures/KomadaMessage")
+  KomadaMessage: require("./structures/KomadaMessage"),
   Loader: require("./classes/loader"),
   ParsedUsage: require("./classes/parsedUsage"),
   PermLevels: require("./classes/permLevels"),
