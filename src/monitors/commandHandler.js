@@ -32,11 +32,11 @@ exports.getLength = (client, msg, prefix) => {
 };
 
 exports.handleCommand = (client, msg, { command, prefix, length }) => {
-  const validCommand = client.commands.get(command) || client.commands.get(client.aliases.get(command));
-  if (!validCommand) return;
-  msg._registerCommand({ validCommand, prefix, length });
+  command = client.commands.get(command) || client.commands.get(client.aliases.get(command));
+  if (!command) return;
+  msg._registerCommand({ command, prefix, length });
   const start = now();
-  const response = this.runInhibitors(client, msg, validCommand);
+  const response = this.runInhibitors(client, msg, msg.command);
   if (response) {
     if (typeof response === "string") msg.reply(response);
     return;
