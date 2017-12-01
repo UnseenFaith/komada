@@ -9,6 +9,6 @@ class KomadaMember extends GuildMember {
 
 }
 
-Structures.extend("GuildMember", GuildMember => KomadaMember); // eslint-disable-line
+Structures.extend("GuildMember", () => KomadaMember); // eslint-disable-line
 
 module.exports = KomadaMember;
