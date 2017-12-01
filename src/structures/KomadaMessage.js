@@ -208,7 +208,6 @@ class KomadaMessage extends Message {
    * @returns {string[]}
    */
   static getArgs(msg) {
-    console.log(msg.command);
     const args = msg.content.slice(msg.prefixLength).trim().split(" ").slice(1)
       .join(" ")
       .split(msg.command.help.usageDelim !== "" ? msg.command.help.usageDelim : undefined);
