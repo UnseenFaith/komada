@@ -14,7 +14,7 @@ const colors = {
 exports.run = (client, msg, mes, start) => {
   if (client.config.cmdLogging) {
     client.emit("log", [
-      `${msg.cmd.help.name}(${msg.args.join(", ")})`,
+      `${msg.command.help.name}(${msg.args.join(", ")})`,
       msg.reprompted ? `${client.console.messages((`[${(now() - start).toFixed(2)}ms]`), colors.prompted.message)}` : `${client.console.messages(`[${(now() - start).toFixed(2)}ms]`, colors.notprompted.message)}`,
       `${client.console.messages(`${msg.author.username}[${msg.author.id}]`, colors.user.message)}`,
       this.channel(msg),
