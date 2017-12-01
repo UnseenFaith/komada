@@ -1,5 +1,11 @@
 const { performance: { now } } = require("perf_hooks");
 
+exports.conf = {
+  enabled: true,
+  ignoreBots: true,
+  ignoreSelf: true,
+};
+
 exports.run = (client, msg) => {
   if (!client.ready) return;
   msg.runMonitors();
