@@ -4,6 +4,7 @@ module.exports = {
   CommandMessage: require("./classes/commandMessage"),
   Colors: require("./classes/console/Colors"),
   Console: require("./classes/console/Console"),
+  KomadaMember: require("./classes/structures/KomadaMember.js"),
   Loader: require("./classes/loader"),
   ParsedUsage: require("./classes/parsedUsage"),
   PermLevels: require("./classes/permLevels"),
