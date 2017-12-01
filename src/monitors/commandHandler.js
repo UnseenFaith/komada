@@ -26,6 +26,11 @@ exports.parseCommand = (client, msg, usage = false) => {
   };
 };
 
+exports.getLength = (client, msg, prefix) => {
+  if (client.config.prefixMention === prefix) return prefix.exec(msg.content)[0].length + 1;
+  return prefix.exec(msg.content)[0].length;
+};
+
 exports.handleCommand = (client, msg, { command, prefix, length }) => {
   const validCommand = client.commands.get(command) || client.commands.get(client.aliases.get(command));
   if (!validCommand) return;
