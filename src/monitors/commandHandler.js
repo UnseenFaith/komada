@@ -51,3 +51,19 @@ exports.runCommand = async (client, msg, start) => {
     .then(mes => this.runFinalizers(client, msg, mes, start))
     .catch(err => client.funcs.handleError(client, msg, err));
 };
+
+exports.runInhibitors = (client, msg, command) => {
+  let response;
+  client.commandInhibitors.some((inhibitor) => {
+    if (inhibitor.conf.enabled) {
+      response = inhibitor.run(client, msg, command);
+      if (response) return true;
+    }
+    return false;
+  });
+  return response;
+};
+
+exports.runFinalizers = (client, msg, mes, start) => {
+  Promise.all(client.commandFinalizers.map(item => item.run(client, msg, mes, start)));
+};
