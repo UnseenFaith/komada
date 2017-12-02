@@ -1,23 +1,18 @@
 const { version: discordVersion } = require("discord.js");
-const moment = require("moment");
-require("moment-duration-format");
-const { version: komadaVersion } = require("komada");
+const { version: komadaVersion, Duration } = require("komada");
 
-exports.run = async (client, msg) => {
-  const duration = moment.duration(client.uptime).format(" D [days], H [hrs], m [mins], s [secs]");
-  return msg.sendCode("asciidoc", [
-    "= STATISTICS =",
-    "",
-    `• Mem Usage  :: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB`,
-    `• Uptime     :: ${duration}`,
-    `• Users      :: ${client.guilds.reduce((a, b) => a + b.memberCount, 0).toLocaleString()}`,
-    `• Servers    :: ${client.guilds.size.toLocaleString()}`,
-    `• Channels   :: ${client.channels.size.toLocaleString()}`,
-    `• Komada     :: v${komadaVersion}`,
-    `• Discord.js :: v${discordVersion}`,
-    `• Node.js    :: ${process.version}`,
-  ]);
-};
+exports.run = async (client, msg) => msg.sendCode("asciidoc", [
+  "= STATISTICS =",
+  "",
+  `• Mem Usage  :: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB`,
+  `• Uptime     :: ${Duration.format(client.uptime)}`,
+  `• Users      :: ${client.guilds.reduce((a, b) => a + b.memberCount, 0).toLocaleString()}`,
+  `• Servers    :: ${client.guilds.size.toLocaleString()}`,
+  `• Channels   :: ${client.channels.size.toLocaleString()}`,
+  `• Komada     :: v${komadaVersion}`,
+  `• Discord.js :: v${discordVersion}`,
+  `• Node.js    :: ${process.version}`,
+]);
 
 exports.conf = {
   enabled: true,
