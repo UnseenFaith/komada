@@ -93,10 +93,11 @@ class Loader {
       const dirs = res.filter(thing => !thing.includes("."));
       if (files) files.forEach(file => fileArray.push([dir, file]));
       if (dirs) await Promise.all(dirs.map(async dir2 => this.traverse(dir2, fileArray)));
+      return fileArray;
     } catch (err) {
       await fs.ensureDir(dir).catch(console.error);
+      return null; // satisfy consistent return
     }
-    return fileArray;
   }
 
   /**
