@@ -76,7 +76,7 @@ class Loader {
     if (userFiles) {
       userFiles.forEach(this._loadFunction.bind(this));
     }
-    this.client.emit("log", `Loaded ${this.size} functions in ${this.constructor._friendlyDuration(now() - time)}`);
+    this.client.emit("log", `Loaded ${this._size} functions in ${this.constructor._friendlyDuration(now() - time)}`);
   }
 
   _loadFunction([dir, file]) {
@@ -232,7 +232,7 @@ class Loader {
   }
 
 
-  get size() {
+  get _size() {
     return Object.keys(this).length;
   }
 
