@@ -209,7 +209,7 @@ class Loader {
     this.client.emit("log", `Loaded ${(coreFiles ? coreFiles.length : 0) + (userFiles ? userFiles.length : 0)} extendables.`);
   }
 
-  _loadExtendable([file, dir]) {
+  _loadExtendable([dir, file]) {
     const extendable = this.constructor._require(join(dir, file));
     let myExtend;
     switch (extendable.conf.type.toLowerCase()) {
