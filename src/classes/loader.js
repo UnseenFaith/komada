@@ -117,8 +117,8 @@ class Loader {
       this._traverse(this.coreDirs.commands),
       this._traverse(this.clientDirs.commands),
     ]);
-    if (coreFiles) coreFiles.filter(f => !command.includes(f.split(".")[0])).forEach(this._loadCommand.bind(this));
-    if (userFiles) userFiles.filter(f => !command.includes(f.split(".")[0])).forEach(this._loadCommand.bind(this));
+    if (coreFiles) coreFiles.filter(([, f]) => !command.includes(f.split(".")[0])).forEach(this._loadCommand.bind(this));
+    if (userFiles) userFiles.filter(([, f]) => !command.includes(f.split(".")[0])).forEach(this._loadCommand.bind(this));
     this.client.emit("log", `Loaded ${this.client.commands.size} commands with ${this.client.aliases.size} aliases.`);
   }
 
@@ -147,8 +147,8 @@ class Loader {
       this._traverse(this.coreDirs.inhibitors),
       this._traverse(this.clientDirs.inhibitors),
     ]);
-    if (coreFiles) coreFiles.filter(f => !inhibitor.includes(f.split(".")[0])).forEach(this._loadInhibitor.bind(this));
-    if (userFiles) userFiles.filter(f => !inhibitor.includes(f.split(".")[0])).forEach(this._loadInhibitor.bind(this));
+    if (coreFiles) coreFiles.filter(([, f]) => !inhibitor.includes(f.split(".")[0])).forEach(this._loadInhibitor.bind(this));
+    if (userFiles) userFiles.filter(([, f]) => !inhibitor.includes(f.split(".")[0])).forEach(this._loadInhibitor.bind(this));
     this.client.emit("log", `Loaded ${this.client.commandInhibitors.size} inhibitors.`);
   }
 
@@ -164,8 +164,8 @@ class Loader {
       this._traverse(this.coreDirs.finalizers),
       this._traverse(this.clientDirs.finalizers),
     ]);
-    if (coreFiles) coreFiles.filter(f => !finalizer.includes(f.split(".")[0])).forEach(this._loadFinalizer.bind(this));
-    if (userFiles) userFiles.filter(f => !finalizer.includes(f.split(".")[0])).forEach(this._loadFinalizer.bind(this));
+    if (coreFiles) coreFiles.filter(([, f]) => !finalizer.includes(f.split(".")[0])).forEach(this._loadFinalizer.bind(this));
+    if (userFiles) userFiles.filter(([, f]) => !finalizer.includes(f.split(".")[0])).forEach(this._loadFinalizer.bind(this));
     this.client.emit("log", `Loaded ${this.client.commandFinalizers.size} finalizers.`);
   }
 
@@ -181,8 +181,8 @@ class Loader {
       this._traverse(this.coreDirs.monitors),
       this._traverse(this.clientDirs.monitors),
     ]);
-    if (coreFiles) coreFiles.filter(f => !monitor.includes(f.split(".")[0])).forEach(this._loadMonitor.bind(this));
-    if (userFiles) userFiles.filter(f => !monitor.includes(f.split(".")[0])).forEach(this._loadMonitor.bind(this));
+    if (coreFiles) coreFiles.filter(([, f]) => !monitor.includes(f.split(".")[0])).forEach(this._loadMonitor.bind(this));
+    if (userFiles) userFiles.filter(([, f]) => !monitor.includes(f.split(".")[0])).forEach(this._loadMonitor.bind(this));
     this.client.emit("log", `Loaded ${this.client.messageMonitors.size} monitors.`);
   }
 
