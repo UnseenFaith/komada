@@ -41,7 +41,7 @@ class Loader {
       this._loadFinalizers(),
       this._loadMonitors(),
       this._loadProviders(),
-      // this.loadExtendables(),
+      this.loadExtendables(),
     ]).catch((error) => {
       console.error(error);
       process.exit();
@@ -198,6 +198,39 @@ class Loader {
     this.client.providers.set(file.split(".")[0], this.constructor._require(join(dir, file)));
   }
 
+  /** EXTENDABLES */
+  async _loadExtendables() {
+    const [coreFiles, userFiles] = await Promise.all([
+      this._traverse(this.coreDirs.extendables),
+      this._traverse(this.clientDirs.extendables),
+    ]);
+    if (coreFiles) coreFiles.forEach(this._loadExtendable.bind(this));
+    if (userFiles) userFiles.forEach(this._loadExtendable.bind(this));
+    this.client.emit("log", `Loaded ${(coreFiles ? coreFiles.length : 0) + (userFiles ? userFiles.length : 0)} extendables.`);
+  }
+
+  _loadExtendable([file, dir]) {
+    const extendable = this.constructor._require(join(dir, file));
+    let myExtend;
+    switch (extendable.conf.type.toLowerCase()) {
+      case "set":
+      case "setter":
+        myExtend = { set: extendable.extend };
+        break;
+      case "get":
+      case "getter":
+        myExtend = { get: extendable.extend };
+        break;
+      case "method":
+      default:
+        myExtend = { value: extendable.extend };
+        break;
+    }
+    extendable.conf.appliesTo.forEach((structure) => {
+      Object.defineProperty(!extendable.conf.komada ? Discord[structure].prototype : require("komada")[structure].prototype, extendable.conf.method, myExtend);  // eslint-disable-line
+    });
+  }
+
 
   get size() {
     return Object.keys(this).length;
@@ -215,7 +248,7 @@ class Loader {
       return module;
     } catch (err) {
       console.error(err);
-      return process.exit();
+      return null;
     } finally {
       delete require.cache[path];
     }

@@ -261,7 +261,7 @@ class Komada extends Discord.Client {
   async login(token) {
     const start = now();
     await this.funcs.loadAll(this);
-    //  this.settings = new Settings(this);
+    this.settings = new Settings(this);
     this.emit("log", `Loaded in ${(now() - start).toFixed(2)}ms.`);
     super.login(token);
   }
@@ -274,7 +274,7 @@ class Komada extends Discord.Client {
     this.config.prefixMention = new RegExp(`^<@!?${this.user.id}>`);
     if (this.user.bot) this.application = await super.fetchApplication();
     if (!this.config.ownerID) this.config.ownerID = this.user.bot ? this.application.owner.id : this.user.id;
-    /*  await Promise.all(this.providers.map((piece) => {
+    await Promise.all(this.providers.map((piece) => {
       if (piece.init) return piece.init(this);
       return true;
     }));
@@ -301,7 +301,7 @@ class Komada extends Discord.Client {
     await Promise.all(this.messageMonitors.map((piece) => {
       if (piece.init) return piece.init(this);
       return true;
-    })); */
+    }));
     this.setInterval(this.sweepCommandMessages.bind(this), this.commandMessageLifetime);
     this.ready = true;
     this.emit("log", this.config.readyMessage(this));
