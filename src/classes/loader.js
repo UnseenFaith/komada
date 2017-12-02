@@ -65,8 +65,8 @@ class Loader {
   async _loadFunctions() {
     Stopwatch.start();
     const [coreFiles, userFiles] = await Promise.all([
-      this.traverse(this.coreDirs.functions),
-      this.traverse(this.clientDirs.functions),
+      this._traverse(this.coreDirs.functions),
+      this._traverse(this.clientDirs.functions),
     ]);
     if (coreFiles) {
       coreFiles.forEach(this._loadFunction);
