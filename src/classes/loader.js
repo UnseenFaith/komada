@@ -80,6 +80,7 @@ class Loader {
   }
 
   _loadFunction(dir, file) {
+    console.log(file);
     this[file.split(".")[0]] = this._require(join(dir, file));
   }
 
