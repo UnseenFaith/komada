@@ -65,7 +65,6 @@ class Loader {
   /** FUNCTIONS */
 
   async _loadFunctions() {
-    const time = now();
     const [coreFiles, userFiles] = await Promise.all([
       this._traverse(this.coreDirs.functions),
       this._traverse(this.clientDirs.functions),
@@ -76,7 +75,7 @@ class Loader {
     if (userFiles) {
       userFiles.forEach(this._loadFunction.bind(this));
     }
-    this.client.emit("log", `Loaded ${this._size} functions in ${this.constructor._friendlyDuration(now() - time)}`);
+    this.client.emit("log", `Loaded ${this._size} functions.`);
   }
 
   _loadFunction([dir, file]) {
@@ -86,7 +85,6 @@ class Loader {
   /** EVENTS */
 
   async _loadEvents() {
-    const time = now();
     this.client.eventHandlers.forEach((listener, event) => this.client.removeListener(event, listener));
     const [coreFiles, userFiles] = await Promise.all([
       this._traverse(this.coreDirs.events),
@@ -94,7 +92,7 @@ class Loader {
     ]);
     if (coreFiles) coreFiles.forEach(this._loadEvent.bind(this));
     if (userFiles) userFiles.forEach(this._loadEvent.bind(this));
-    this.client.emit("log", `Loaded ${this.client.eventHandlers.size} events in ${this.constructor._friendlyDuration(now() - time)}`);
+    this.client.emit("log", `Loaded ${this.client.eventHandlers.size} events.`);
   }
 
   _loadEvent([dir, file]) {
@@ -105,7 +103,6 @@ class Loader {
 
   /** COMMANDS */
   async _loadCommands() {
-    const time = now();
     this.client.commands.clear();
     this.client.aliases.clear();
     const [coreFiles, userFiles] = await Promise.all([
@@ -114,7 +111,7 @@ class Loader {
     ]);
     if (coreFiles) coreFiles.forEach(this._loadCommand.bind(this));
     if (userFiles) userFiles.forEach(this._loadCommand.bind(this));
-    this.client.emit("log", `Loaded ${this.client.commands.size} commands with ${this.client.aliases.size} aliases in ${this.constructor._friendlyDuration(now() - time)}`);
+    this.client.emit("log", `Loaded ${this.client.commands.size} commands with ${this.client.aliases.size} aliases.`);
   }
 
   _loadCommand([dir, file]) {
@@ -229,17 +226,6 @@ class Loader {
     extendable.conf.appliesTo.forEach((structure) => {
       Object.defineProperty(!extendable.conf.komada ? Discord[structure].prototype : require("komada")[structure].prototype, extendable.conf.method, myExtend);  // eslint-disable-line
     });
-  }
-
-
-  get _size() {
-    return Object.keys(this).length;
-  }
-
-  static _friendlyDuration(time) {
-    if (time >= 1000) return `${(time / 1000).toFixed(2)}s`;
-    if (time >= 1) return `${time.toFixed(2)}ms`;
-    return `${(time * 1000).toFixed(2)}μs`;
   }
 
   static _require(path) {
