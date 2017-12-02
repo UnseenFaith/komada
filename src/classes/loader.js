@@ -80,7 +80,7 @@ class Loader {
   }
 
   _loadFunction([dir, file]) {
-    this[file.split(".")[0]] = this._require(join(dir, file));
+    this[file.split(".")[0]] = this.constructor._require(join(dir, file));
   }
 
   get size() {
