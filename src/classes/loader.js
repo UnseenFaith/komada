@@ -32,9 +32,9 @@ class Loader {
     Object.defineProperty(this, "clientDirs", { value: makeDirsObject(this.client.clientBaseDir) });
   }
 
-  async _loadAll() {
+  async loadAll() {
     await Promise.all([
-      this.loadFunctions(),
+      this._loadFunctions(),
       /** this.loadCommands(),
       this.loadInhibitors(),
       this.loadFinalizers(),
@@ -54,7 +54,7 @@ class Loader {
       const files = res.filter(thing => thing.endsWith(".js"));
       const dirs = res.filter(thing => !thing.includes("."));
       if (files) files.forEach(file => fileArray.push([dir, file]));
-      if (dirs) await Promise.all(dirs.map(dir2 => this.traverse(resolve(dir, dir2), fileArray)));
+      if (dirs) await Promise.all(dirs.map(dir2 => this._traverse(resolve(dir, dir2), fileArray)));
       return fileArray;
     } catch (err) {
       await fs.ensureDir(dir).catch(console.error);
