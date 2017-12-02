@@ -163,7 +163,7 @@ class Loader {
   }
 
   _loadFinalizer([dir, file]) {
-    this.client.commandFinaizers.set(file.split(".")[0], this.constructor._require(join(dir, file)));
+    this.client.commandFinalizers.set(file.split(".")[0], this.constructor._require(join(dir, file)));
   }
 
   /** MONITORS */
