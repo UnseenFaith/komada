@@ -5,7 +5,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
-### changed
+### added
+- Stopwatch Class (from Klasa) for use in Komada.
+### Changed
 - PermissionLevels breaking change. Now caches inside an array, instead of formulating one afterwards.
 
 
