@@ -134,6 +134,71 @@ class Loader {
     command.usage = new ParsedUsage(this.client, command);
   }
 
+  /** INHIBITORS */
+
+  async _loadInhibitors() {
+    this.client.commandInhibitors.clear();
+    const [coreFiles, userFiles] = await Promise.all([
+      this._traverse(this.coreDirs.inhibitors),
+      this._traverse(this.clientDirs.inhibitors),
+    ]);
+    if (coreFiles) coreFiles.forEach(this._loadInhibitor.bind(this));
+    if (userFiles) userFiles.forEach(this._loadInhibitor.bind(this));
+    this.client.emit("log", `Loaded ${this.client.commandInhibitors.size} inhibitors.`);
+  }
+
+  _loadInhibitor([dir, file]) {
+    this.client.commandInhibitors.set(file.split(".")[0], this.constructor._require(join(dir, file)));
+  }
+
+  /** FINALIZERS */
+  async _loadFinalizers() {
+    this.client.commandFinalizers.clear();
+    const [coreFiles, userFiles] = await Promise.all([
+      this._traverse(this.coreDirs.finalizers),
+      this._traverse(this.clientDirs.finalizers),
+    ]);
+    if (coreFiles) coreFiles.forEach(this._loadFinalizer.bind(this));
+    if (userFiles) userFiles.forEach(this._loadFinalizer.bind(this));
+    this.client.emit("log", `Loaded ${this.client.commandFinalizers.size} finalizers.`);
+  }
+
+  _loadFinalizer([dir, file]) {
+    this.client.commandFinaizers.set(file.split(".")[0], this.constructor._require(join(dir, file)));
+  }
+
+  /** MONITORS */
+  async _loadMonitors() {
+    this.client.messageMonitors.clear();
+    const [coreFiles, userFiles] = await Promise.all([
+      this._traverse(this.coreDirs.monitors),
+      this._traverse(this.clientDirs.monitors),
+    ]);
+    if (coreFiles) coreFiles.forEach(this._loadMonitor.bind(this));
+    if (userFiles) userFiles.forEach(this._loadMonitor.bind(this));
+    this.client.emit("log", `Loaded ${this.client.messageMonitors.size} monitors.`);
+  }
+
+  _loadMonitor([dir, file]) {
+    this.client.messageMonitors.set(file.split(".")[0], this.constructor._require(join(dir, file)));
+  }
+
+  /** PROVIDERS */
+  async _loadProviders() {
+    this.client.providers.clear();
+    const [coreFiles, userFiles] = await Promise.all([
+      this._traverse(this.coreDirs.providers),
+      this._traverse(this.clientDirs.providers),
+    ]);
+    if (coreFiles) coreFiles.forEach(this._loadProvider.bind(this));
+    if (userFiles) userFiles.forEach(this._loadProvider.bind(this));
+    this.client.emit("log", `Loaded ${this.client.providers.size} monitors.`);
+  }
+
+  _loadProvider([dir, file]) {
+    this.client.providers.set(file.split(".")[0], this.constructor._require(join(dir, file)));
+  }
+
 
   get size() {
     return Object.keys(this).length;
