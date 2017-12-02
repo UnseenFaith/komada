@@ -69,10 +69,10 @@ class Loader {
       this._traverse(this.clientDirs.functions),
     ]);
     if (coreFiles) {
-      coreFiles.forEach(this._loadFunction);
+      coreFiles.forEach(this._loadFunction.bind(this));
     }
     if (userFiles) {
-      userFiles.forEach(this._loadFunction);
+      userFiles.forEach(this._loadFunction.bind(this));
     }
     Stopwatch.stop();
     this.client.emit("log", `Loaded ${this.size} functions in ${Stopwatch.duration}`);
