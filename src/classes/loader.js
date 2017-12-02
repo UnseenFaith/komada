@@ -115,7 +115,7 @@ class Loader {
     ]);
     if (coreFiles) coreFiles.forEach(this._loadCommand.bind(this));
     if (userFiles) userFiles.forEach(this._loadCommand.bind(this));
-    this.client.emit("log", `Loaded ${this.client.commands.size} with ${this.client.aliases.size} in ${this.constructor._friendlyDuration(now() - time)}`);
+    this.client.emit("log", `Loaded ${this.client.commands.size} commands with ${this.client.aliases.size} aliases in ${this.constructor._friendlyDuration(now() - time)}`);
   }
 
   _loadCommand([dir, file]) {
