@@ -79,8 +79,7 @@ class Loader {
     Stopwatch.reset();
   }
 
-  _loadFunction(dir, file) {
-    console.log(file);
+  _loadFunction([dir, file]) {
     this[file.split(".")[0]] = this._require(join(dir, file));
   }
 
