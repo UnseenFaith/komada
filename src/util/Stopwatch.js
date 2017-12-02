@@ -1,0 +1,117 @@
+const { performance } = require("perf_hooks");
+
+/**
+ * Stopwatch class, uses native node to replicate/extend previous performance now dependancy.
+ */
+class Stopwatch {
+
+  /**
+   * Starts a new Stopwatch
+   * @since 0.4.0
+   * @param {number} [digits = 2] The number of digits to appear after the decimal point when returning the friendly duration
+   */
+  constructor(digits = 2) {
+    /**
+   * The start time of this stopwatch
+   * @private
+   * @type {number}
+   */
+    this._start = performance.now();
+
+    /**
+   * The end time of this stopwatch
+   * @private
+   * @type {?number}
+   */
+    this._end = null;
+
+    /**
+   * The number of digits to appear after the decimal point when returning the friendly duration.
+   * @type {number}
+   */
+    this.digits = digits;
+  }
+
+  /**
+   * The duration of this stopwatch since start or start to end if this stopwatch has stopped.
+   * @readonly
+   * @type {number}
+   */
+  get duration() {
+    return this._end ? this._end - this._start : performance.now() - this._start;
+  }
+
+  /**
+   * The duration formatted in a friendly string
+   * @readonly
+   * @type {string}
+   */
+  get friendlyDuration() {
+    const time = this.duration;
+    if (time >= 1000) return `${(time / 1000).toFixed(this.digits)}s`;
+    if (time >= 1) return `${time.toFixed(this.digits)}ms`;
+    return `${(time * 1000).toFixed(this.digits)}μs`;
+  }
+
+  /**
+   * If the stopwatch is running or not
+   * @readonly
+   * @type {boolean}
+   */
+  get running() {
+    return Boolean(!this._end);
+  }
+
+  /**
+   * Restarts the Stopwatch (Returns a running state)
+   * @returns {Stopwatch}
+   */
+  restart() {
+    this._start = performance.now();
+    this._end = null;
+    return this;
+  }
+
+  /**
+   * Resets the Stopwatch to 0 duration (Returns a stopped state)
+   * @returns {Stopwatch}
+   */
+  reset() {
+    this._start = performance.now();
+    this._end = this._start;
+    return this;
+  }
+
+  /**
+   * Starts the Stopwatch
+   * @returns {Stopwatch}
+   */
+  start() {
+    if (!this.running) {
+      this._start = performance.now() - this.duration;
+      this._end = null;
+    }
+    return this;
+  }
+
+  /**
+   * Stops the Stopwatch, freezing the duration
+   * @returns {Stopwatch}
+   */
+  stop() {
+    if (this.running) this._end = performance.now();
+    return this;
+  }
+
+  /**
+   * Defines toString behavior o return the friendlyDuration
+   * @since 0.4.0
+   * @returns {string}
+   */
+  toString() {
+    return this.friendlyDuration;
+  }
+
+}
+
+module.exports = Stopwatch;
