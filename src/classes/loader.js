@@ -35,6 +35,7 @@ class Loader {
   async loadAll() {
     await Promise.all([
       this._loadFunctions(),
+      this._loadEvents(),
       /** this.loadCommands(),
       this.loadInhibitors(),
       this.loadFinalizers(),
