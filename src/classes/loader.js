@@ -41,7 +41,7 @@ class Loader {
       this._loadFinalizers(),
       this._loadMonitors(),
       this._loadProviders(),
-      this.loadExtendables(),
+      this._loadExtendables(),
     ]).catch((error) => {
       console.error(error);
       process.exit();
