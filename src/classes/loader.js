@@ -2,7 +2,7 @@ const fs = require("fs-nextra");
 const { sep, resolve, join } = require("path");
 const Discord = require("discord.js");
 const ParsedUsage = require("./parsedUsage");
-const Stopwatch = new (require("../util/Stopwatch"))();
+const { performance: { now } } = require("perf_hooks");
 
 class Loader {
 
@@ -66,7 +66,7 @@ class Loader {
   /** FUNCTIONS * */
 
   async _loadFunctions() {
-    Stopwatch.start();
+    const time = now();
     const [coreFiles, userFiles] = await Promise.all([
       this._traverse(this.coreDirs.functions),
       this._traverse(this.clientDirs.functions),
@@ -77,9 +77,7 @@ class Loader {
     if (userFiles) {
       userFiles.forEach(this._loadFunction.bind(this));
     }
-    Stopwatch.stop();
-    this.client.emit("log", `Loaded ${this.size} functions in ${Stopwatch}`);
-    Stopwatch.reset();
+    this.client.emit("log", `Loaded ${this.size} functions in ${this.constructor._friendlyDuration(time - now())}`);
   }
 
   _loadFunction([dir, file]) {
@@ -89,7 +87,7 @@ class Loader {
   /** EVENTS * */
 
   async _loadEvents() {
-    Stopwatch.start();
+    const time = now();
     this.client.eventHandlers.forEach((listener, event) => this.client.removeListener(event, listener));
     const [coreFiles, userFiles] = await Promise.all([
       this._traverse(this.coreDirs.events),
@@ -97,9 +95,7 @@ class Loader {
     ]);
     if (coreFiles) coreFiles.forEach(this._loadEvent.bind(this));
     if (userFiles) userFiles.forEach(this._loadEvent.bind(this));
-    Stopwatch.stop();
-    this.client.emit("log", `Loaded ${this.client.eventHandlers.size} events in ${Stopwatch}`);
-    Stopwatch.reset();
+    this.client.emit("log", `Loaded ${this.client.eventHandlers.size} events in ${this.constructor._friendlyDuration(time - now())}`);
   }
 
   _loadEvent([dir, file]) {
@@ -111,6 +107,12 @@ class Loader {
 
   get size() {
     return Object.keys(this).length;
+  }
+
+  static _friendlyDuration(time) {
+    if (time >= 1000) return `${(time / 1000).toFixed(2)}s`;
+    if (time >= 1) return `${time.toFixed(2)}ms`;
+    return `${(time * 1000).toFixed(2)}μs`;
   }
 
   static _require(path) {
