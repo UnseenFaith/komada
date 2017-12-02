@@ -5,10 +5,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
-### added
+### Added
 - Stopwatch Class (from Klasa) for use in Komada.
+- You can now subcategorize all pieces in their own folders.
+
 ### Changed
 - PermissionLevels breaking change. Now caches inside an array, instead of formulating one afterwards.
+- Rewrote Backend of the Loader
 
 
 ## [0.21.1] - 2017-10-08
