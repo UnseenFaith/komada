@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Added
+- New Duration Class, used for turning durations into human readable outputs.
 - Stopwatch Class (from Klasa) for use in Komada.
 - You can now subcategorize all pieces in their own folders.
 
@@ -13,6 +14,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - PermissionLevels breaking change. Now caches inside an array, instead of formulating one afterwards.
 - Rewrote Backend of the Loader
 
+### Removed
+- Moment removed as dependency
+- moment-duration-format removed as dependency
 
 ## [0.21.1] - 2017-10-08
 ### Added
