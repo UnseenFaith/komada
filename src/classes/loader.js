@@ -2,7 +2,6 @@ const fs = require("fs-nextra");
 const { sep, resolve, join } = require("path");
 const Discord = require("discord.js");
 const ParsedUsage = require("./parsedUsage");
-const { performance: { now } } = require("perf_hooks");
 
 class Loader {
 
@@ -75,7 +74,7 @@ class Loader {
     if (userFiles) {
       userFiles.forEach(this._loadFunction.bind(this));
     }
-    this.client.emit("log", `Loaded ${this._size} functions.`);
+    this.client.emit("log", `Loaded ${Object.keys(this).length} functions.`);
   }
 
   _loadFunction([dir, file]) {
