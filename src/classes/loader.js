@@ -86,6 +86,19 @@ class Loader {
     ].join("\n"));
   }
 
+  async traverse(dir, fileArray = []) {
+    try {
+      const res = await fs.readdir(dir);
+      const files = res.filter(thing => thing.endsWith(".js"));
+      const dirs = res.filter(thing => !thing.includes("."));
+      if (files) files.forEach(file => fileArray.push([dir, file]));
+      if (dirs) await Promise.all(dirs.map(async dir2 => this.traverse(dir2, fileArray)));
+    } catch (err) {
+      await fs.ensureDir(dir).catch(console.error);
+    }
+    return fileArray;
+  }
+
   /**
    * Loads all of functions from both the core and client directories
    * @return {Promise<number>} The number of functions loaded into Komada
