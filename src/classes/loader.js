@@ -119,7 +119,7 @@ class Loader {
   }
 
   _loadCommand([dir, file]) {
-    const command = this.constructor_require(join(dir, file));
+    const command = this.constructor._require(join(dir, file));
     const dirArray = dir.split(sep);
     const fullCat = dirArray.splice(dirArray.indexOf("commands") + 1);
     command.help.fullCategory = fullCat.slice();
