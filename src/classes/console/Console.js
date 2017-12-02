@@ -1,7 +1,7 @@
 const { Console } = require("console");
 const Colors = require("./Colors");
 const { inspect } = require("util");
-const Timestamp = require("../util/Timestamp");
+const Timestamp = require("../../util/Timestamp");
 
 /**
  * Komada's console class, extends NodeJS Console class.
