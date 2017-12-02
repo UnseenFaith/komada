@@ -78,7 +78,7 @@ class Loader {
       userFiles.forEach(this._loadFunction.bind(this));
     }
     Stopwatch.stop();
-    this.client.emit("log", `Loaded ${this.size} functions in ${Stopwatch.duration}`);
+    this.client.emit("log", `Loaded ${this.size} functions in ${Stopwatch}`);
     Stopwatch.reset();
   }
 
@@ -98,7 +98,7 @@ class Loader {
     if (coreFiles) coreFiles.forEach(this._loadEvent.bind(this));
     if (userFiles) userFiles.forEach(this._loadEvent.bind(this));
     Stopwatch.stop();
-    this.client.emit("log", `Loaded ${this.client.eventHandlers.size} events in ${Stopwatch.duration}`);
+    this.client.emit("log", `Loaded ${this.client.eventHandlers.size} events in ${Stopwatch}`);
     Stopwatch.reset();
   }
 
