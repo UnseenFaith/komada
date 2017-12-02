@@ -20,8 +20,20 @@ class PermissionLevels {
   constructor(size = 10) {
     const s = parseInt(size);
     if (typeof s !== "number") throw new Error("Size must be a valid integer");
+
+    /**
+     * The number of permission levels allowed in this instance.
+     * Technically this will be the size you input + 1 since Array[0] would be Level 0
+     * @type {number}
+     */
     this.size = s;
+
+    /**
+     * Cached array of levels that get used for determining permissions.
+     * @type {Array}
+     */
     this.levels = new Array(s).fill({ break: false, check: () => false }, 0, s);
+
     this.add(size, false, (client, msg) => client.user === msg.author);
   }
 
