@@ -1,7 +1,7 @@
 const { Console } = require("console");
 const Colors = require("./Colors");
-const moment = require("moment");
 const { inspect } = require("util");
+const Timestamp = require("../util/Timestamp");
 
 /**
  * Komada's console class, extends NodeJS Console class.
@@ -16,7 +16,7 @@ class KomadaConsole extends Console {
    * @param {boolean} [colors={}] The colors for this console instance.
    * @param {boolean}  [timestamps=false] Whether or not Timestamps should be enabled.
    */
-  constructor({ stdout, stderr, useColor, colors = {}, timestamps = false }) {
+  constructor({ stdout, stderr, useColor, colors = {}, timestamps = true }) {
     super(stdout, stderr);
     /**
      * The standard output stream for this console, defaulted to process.stderr.
@@ -36,7 +36,7 @@ class KomadaConsole extends Console {
      * Whether or not timestamps should be enabled for this console.
      * @type {boolean}
      */
-    this.timestamps = timestamps === true ? "YYYY-MM-DD HH:mm:ss" : timestamps;
+    this.timestamps = timestamps;
 
     /**
      * Whether or not this console should use colors.
@@ -167,7 +167,7 @@ class KomadaConsole extends Console {
     stuff = KomadaConsole.flatten(stuff, this.useColors);
     const message = this.colors ? this.colors[type.toLowerCase()].message : {};
     const time = this.colors ? this.colors[type.toLowerCase()].time : {};
-    const timestamp = this.timestamps ? `${this.timestamp(`[${moment().format(this.timestamps)}]`, time)} ` : "";
+    const timestamp = this.timestamps ? `${this.timestamp(`[${Timestamp.format(this.timestamps)}]`, time)} ` : "";
     if (this[`_${type}`]) {
       this[`_${type}`](stuff.split("\n").map(str => `${timestamp}${this.messages(str, message)}`).join("\n"));
     } else {
