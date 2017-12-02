@@ -58,9 +58,11 @@ class Loader {
       return fileArray;
     } catch (err) {
       await fs.ensureDir(dir).catch(console.error);
-      return err; // satisfy consistent return
+      return null;
     }
   }
+
+  /** FUNCTIONS * */
 
   async _loadFunctions() {
     Stopwatch.start();
@@ -82,6 +84,29 @@ class Loader {
   _loadFunction([dir, file]) {
     this[file.split(".")[0]] = this.constructor._require(join(dir, file));
   }
+
+  /** EVENTS * */
+
+  async _loadEvents() {
+    Stopwatch.start();
+    this.client.eventHandlers.forEach((listener, event) => this.client.removeListener(event, listener));
+    const [coreFiles, userFiles] = await Promise.all([
+      this._traverse(this.coreDirs.events),
+      this._traverse(this.clientDirs.events),
+    ]);
+    if (coreFiles) coreFiles.forEach(this._loadEvent.bind(this));
+    if (userFiles) userFiles.forEach(this._loadEvent.bind(this));
+    Stopwatch.stop();
+    this.client.emit("log", `Loaded ${this.client.eventHandlers.size} events in ${Stopwatch.duration}`);
+    Stopwatch.reset();
+  }
+
+  _loadEvent([dir, file]) {
+    const name = file.split(".")[0];
+    this.client.eventHandlers.set(name, (...args) => this.constructor._require(join(dir, file)).run(this.client, ...args));
+    this.client.on(name, this.client.eventHandlers.get(name));
+  }
+
 
   get size() {
     return Object.keys(this).length;
