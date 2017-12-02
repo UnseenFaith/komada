@@ -167,7 +167,7 @@ class KomadaConsole extends Console {
     stuff = KomadaConsole.flatten(stuff, this.useColors);
     const message = this.colors ? this.colors[type.toLowerCase()].message : {};
     const time = this.colors ? this.colors[type.toLowerCase()].time : {};
-    const timestamp = this.timestamps ? `${this.timestamp(`[${Timestamp.format(this.timestamps)}]`, time)} ` : "";
+    const timestamp = this.timestamps ? `${this.timestamp(`[${Timestamp.format(new Date())}]`, time)} ` : "";
     if (this[`_${type}`]) {
       this[`_${type}`](stuff.split("\n").map(str => `${timestamp}${this.messages(str, message)}`).join("\n"));
     } else {
