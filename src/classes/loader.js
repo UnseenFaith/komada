@@ -37,12 +37,11 @@ class Loader {
       this._loadEvents(),
       this._loadFunctions(),
       this._loadCommands(),
-      /**    this.loadInhibitors(),
-      this.loadFinalizers(),
-      this.loadEvents(),
-      this.loadMonitors(),
-      this.loadProviders(),
-      this.loadExtendables(),* */
+      this._loadInhibitors(),
+      this._loadFinalizers(),
+      this._loadMonitors(),
+      this._loadProviders(),
+      // this.loadExtendables(),
     ]).catch((error) => {
       console.error(error);
       process.exit();
