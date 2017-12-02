@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Added
+- New Timestamp Class, used for turning Epoch Milliseconds into timestamps
 - New Duration Class, used for turning durations into human readable outputs.
 - Stopwatch Class (from Klasa) for use in Komada.
 - You can now subcategorize all pieces in their own folders.
