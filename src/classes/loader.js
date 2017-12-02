@@ -36,8 +36,8 @@ class Loader {
     await Promise.all([
       this._loadEvents(),
       this._loadFunctions(),
-      /** this.loadCommands(),
-      this.loadInhibitors(),
+      this.loadCommands(),
+      /**    this.loadInhibitors(),
       this.loadFinalizers(),
       this.loadEvents(),
       this.loadMonitors(),
@@ -63,7 +63,7 @@ class Loader {
     }
   }
 
-  /** FUNCTIONS * */
+  /** FUNCTIONS */
 
   async _loadFunctions() {
     const time = now();
@@ -84,7 +84,7 @@ class Loader {
     this[file.split(".")[0]] = this.constructor._require(join(dir, file));
   }
 
-  /** EVENTS * */
+  /** EVENTS */
 
   async _loadEvents() {
     const time = now();
@@ -102,6 +102,36 @@ class Loader {
     const name = file.split(".")[0];
     this.client.eventHandlers.set(name, (...args) => this.constructor._require(join(dir, file)).run(this.client, ...args));
     this.client.on(name, this.client.eventHandlers.get(name));
+  }
+
+  /** COMMANDS */
+  async _loadCommands() {
+    const time = now();
+    this.client.commands.clear();
+    this.client.aliases.clear();
+    const [coreFiles, userFiles] = await Promise.all([
+      this._traverse(this.coreDirs.commands),
+      this._traverse(this.clientDirs.commands),
+    ]);
+    if (coreFiles) coreFiles.forEach(this._loadCommand.bind(this));
+    if (userFiles) userFiles.forEach(this._loadCommand.bind(this));
+    this.client.emit("log", `Loaded ${this.client.commands.size} with ${this.client.aliases.size} in ${this.constructor._friendlyDuration(now() - time)}`);
+  }
+
+  _loadCommand([dir, file]) {
+    const command = this.constructor_require(join(dir, file));
+    const dirArray = dir.split(sep);
+    const fullCat = dirArray.splice(dirArray.indexOf("commands") + 1);
+    command.help.fullCategory = fullCat.slice();
+    const subcat = fullCat.splice(fullCat.length - 1)[0];
+    const cat = fullCat.join("/");
+    command.help.category = subcat && !cat ? subcat || "General" : cat || "General";
+    command.help.subCategory = subcat || "General";
+    command.cooldown = new Map();
+    this.client.commands.set(command.help.name, command);
+    command.conf.aliases = command.conf.aliases || [];
+    command.conf.aliases.forEach(alias => this.client.aliases.set(alias, command.help.name));
+    command.usage = new ParsedUsage(this.client, command);
   }
 
 
