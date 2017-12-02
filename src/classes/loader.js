@@ -3,6 +3,13 @@ const { sep, resolve, join } = require("path");
 const Discord = require("discord.js");
 const ParsedUsage = require("./parsedUsage");
 
+const disabled = {
+  command: [],
+  finalizer: [],
+  inhibitor: [],
+  monitor: [],
+};
+
 class Loader {
 
   constructor(client) {
@@ -29,9 +36,14 @@ class Loader {
      * @type {Object}
      */
     Object.defineProperty(this, "clientDirs", { value: makeDirsObject(this.client.clientBaseDir) });
+
+    Object.defineProperty(this, "_disabled", { value: null, writable: true });
   }
 
   async loadAll() {
+    this._disabled = await fs.readJSON(resolve(this.client.clientBaseDir, "bwd", "disabled.json"))
+      .catch(() => fs.outputJSONAtomic(resolve(this.client.clientBaseDir, "bwd", "disabled.json"), disabled)
+        .then(() => disabled));
     await Promise.all([
       this._loadEvents(),
       this._loadFunctions(),
@@ -68,12 +80,8 @@ class Loader {
       this._traverse(this.coreDirs.functions),
       this._traverse(this.clientDirs.functions),
     ]);
-    if (coreFiles) {
-      coreFiles.forEach(this._loadFunction.bind(this));
-    }
-    if (userFiles) {
-      userFiles.forEach(this._loadFunction.bind(this));
-    }
+    if (coreFiles) coreFiles.forEach(this._loadFunction.bind(this));
+    if (userFiles) userFiles.forEach(this._loadFunction.bind(this));
     this.client.emit("log", `Loaded ${Object.keys(this).length} functions.`);
   }
 
@@ -102,14 +110,15 @@ class Loader {
 
   /** COMMANDS */
   async _loadCommands() {
+    const { command } = this._disabled;
     this.client.commands.clear();
     this.client.aliases.clear();
     const [coreFiles, userFiles] = await Promise.all([
       this._traverse(this.coreDirs.commands),
       this._traverse(this.clientDirs.commands),
     ]);
-    if (coreFiles) coreFiles.forEach(this._loadCommand.bind(this));
-    if (userFiles) userFiles.forEach(this._loadCommand.bind(this));
+    if (coreFiles) coreFiles.filter(f => !command.includes(f.split(".")[0])).forEach(this._loadCommand.bind(this));
+    if (userFiles) userFiles.filter(f => !command.includes(f.split(".")[0])).forEach(this._loadCommand.bind(this));
     this.client.emit("log", `Loaded ${this.client.commands.size} commands with ${this.client.aliases.size} aliases.`);
   }
 
@@ -132,13 +141,14 @@ class Loader {
   /** INHIBITORS */
 
   async _loadInhibitors() {
+    const { inhibitor } = this._disabled;
     this.client.commandInhibitors.clear();
     const [coreFiles, userFiles] = await Promise.all([
       this._traverse(this.coreDirs.inhibitors),
       this._traverse(this.clientDirs.inhibitors),
     ]);
-    if (coreFiles) coreFiles.forEach(this._loadInhibitor.bind(this));
-    if (userFiles) userFiles.forEach(this._loadInhibitor.bind(this));
+    if (coreFiles) coreFiles.filter(f => !inhibitor.includes(f.split(".")[0])).forEach(this._loadInhibitor.bind(this));
+    if (userFiles) userFiles.filter(f => !inhibitor.includes(f.split(".")[0])).forEach(this._loadInhibitor.bind(this));
     this.client.emit("log", `Loaded ${this.client.commandInhibitors.size} inhibitors.`);
   }
 
@@ -148,13 +158,14 @@ class Loader {
 
   /** FINALIZERS */
   async _loadFinalizers() {
+    const { finalizer } = this._disabled;
     this.client.commandFinalizers.clear();
     const [coreFiles, userFiles] = await Promise.all([
       this._traverse(this.coreDirs.finalizers),
       this._traverse(this.clientDirs.finalizers),
     ]);
-    if (coreFiles) coreFiles.forEach(this._loadFinalizer.bind(this));
-    if (userFiles) userFiles.forEach(this._loadFinalizer.bind(this));
+    if (coreFiles) coreFiles.filter(f => !finalizer.includes(f.split(".")[0])).forEach(this._loadFinalizer.bind(this));
+    if (userFiles) userFiles.filter(f => !finalizer.includes(f.split(".")[0])).forEach(this._loadFinalizer.bind(this));
     this.client.emit("log", `Loaded ${this.client.commandFinalizers.size} finalizers.`);
   }
 
@@ -164,13 +175,14 @@ class Loader {
 
   /** MONITORS */
   async _loadMonitors() {
+    const { monitor } = this._disabled;
     this.client.messageMonitors.clear();
     const [coreFiles, userFiles] = await Promise.all([
       this._traverse(this.coreDirs.monitors),
       this._traverse(this.clientDirs.monitors),
     ]);
-    if (coreFiles) coreFiles.forEach(this._loadMonitor.bind(this));
-    if (userFiles) userFiles.forEach(this._loadMonitor.bind(this));
+    if (coreFiles) coreFiles.filter(f => !monitor.includes(f.split(".")[0])).forEach(this._loadMonitor.bind(this));
+    if (userFiles) userFiles.filter(f => !monitor.includes(f.split(".")[0])).forEach(this._loadMonitor.bind(this));
     this.client.emit("log", `Loaded ${this.client.messageMonitors.size} monitors.`);
   }
 
