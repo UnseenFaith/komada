@@ -77,7 +77,7 @@ class Loader {
     if (userFiles) {
       userFiles.forEach(this._loadFunction.bind(this));
     }
-    this.client.emit("log", `Loaded ${this.size} functions in ${this.constructor._friendlyDuration(time - now())}`);
+    this.client.emit("log", `Loaded ${this.size} functions in ${this.constructor._friendlyDuration(now() - time)}`);
   }
 
   _loadFunction([dir, file]) {
@@ -95,7 +95,7 @@ class Loader {
     ]);
     if (coreFiles) coreFiles.forEach(this._loadEvent.bind(this));
     if (userFiles) userFiles.forEach(this._loadEvent.bind(this));
-    this.client.emit("log", `Loaded ${this.client.eventHandlers.size} events in ${this.constructor._friendlyDuration(time - now())}`);
+    this.client.emit("log", `Loaded ${this.client.eventHandlers.size} events in ${this.constructor._friendlyDuration(now() - time)}`);
   }
 
   _loadEvent([dir, file]) {
