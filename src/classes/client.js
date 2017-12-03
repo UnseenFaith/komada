@@ -65,6 +65,7 @@ const defaultPermStructure = new PermLevels()
  *
  * @property {boolean} [cmdEditing=false] Whether Komada should consider edited messages as potential messages able to fire new commands.
  * @property {boolean} [cmdPrompt=false] Whether Komada should prompt missing/invalid arguments at failed command execution.
+ * @property {boolean} [typing=false]  Whether the bot should type while processing commands.
  *
  * @property {string} [clientBaseDir=path.dirname(require.main.filename)] Directory where client pieces are stored. Can be an absolute or relative path. Defaults to the location of the index.js/app.js
  *

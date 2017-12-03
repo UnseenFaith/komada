@@ -52,9 +52,11 @@ exports.handleCommand = (client, msg, { command, prefix, prefixLength }) => {
   const validCommand = client.commands.get(command) || client.commands.get(client.aliases.get(command));
   if (!validCommand) return;
   const start = now();
+  if (client.config.typing) msg.channel.startTyping();
   const response = this.runInhibitors(client, msg, validCommand);
   if (response) {
     if (typeof response === "string") msg.reply(response);
+    if (client.config.typing) msg.channel.stopTyping();
     return;
   }
   const proxy = this.createProxy(msg, new client.CommandMessage(msg, validCommand, prefix, prefixLength));
@@ -73,8 +75,10 @@ exports.runCommand = (client, msg, start) => {
       msg.cmd.run(client, msg, params)
         .then(mes => this.runFinalizers(client, msg, mes, start))
         .catch(error => client.funcs.handleError(client, msg, error));
+      if (client.config.typing) msg.channel.stopTyping();
     })
     .catch((error) => {
+      if (client.config.typing) msg.channel.stopTyping();
       if (error.code === 1 && client.config.cmdPrompt) {
         return this.awaitMessage(client, msg, start, error.message)
           .catch(err => client.funcs.handleError(client, msg, err));
@@ -94,7 +98,7 @@ exports.awaitMessage = async (client, msg, start, error) => {
   msg.reprompted = true;
 
   if (message.deletable) message.delete();
-
+  if (client.config.typing) msg.channel.startTyping();
   return this.runCommand(client, msg, start);
 };
 
