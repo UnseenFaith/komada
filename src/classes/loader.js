@@ -89,14 +89,14 @@ class Loader {
     this[file.split(".")[0]] = this.constructor._require(join(dir, file));
   }
 
-  async reloadFunction(name) {
+  async _reloadFunction(name) {
     const file = name.endsWith(".js") ? name : `${name}.js`;
     const files = await this._traverse(this.clientDirs.functions);
-    files.filter(([, f]) => f === file);
-    if (files.length === 0) throw `Could not find a reloadable file named ${file}`;
-    if (this[files[0][1]]) delete this[files[0][1]];
-    this._loadFunction(files);
-    return `Successfully reloaded the function ${name}.`;
+    const func = files.filter(([, f]) => f === file)[0];
+    if (func.length === 0) throw `Could not find a reloadable file named ${file}`;
+    if (this[file.slice(-3)]) delete this[file.slice(0, -3)];
+    this._loadFunction(func);
+    return `Successfully reloaded the function ${file.slice(0, -3)}.`;
   }
 
   /** EVENTS */
@@ -118,6 +118,17 @@ class Loader {
     this.client.on(name, this.client.eventHandlers.get(name));
   }
 
+  async _reloadEvent(name) {
+    const file = name.endsWith(".js") ? name : `${name}.js`;
+    const files = await this._traverse(this.clientDirs.events);
+    const evt = files.filter(([, f]) => f === file)[0];
+    if (evt.length === 0) throw `Could not find a reloadable file named ${file}`;
+    const listener = this.client.eventHandlers.get(file.slice(0, -3));
+    if (listener) this.client.removeListener(name, listener);
+    this._loadFunction(evt);
+    return `Successfully reloaded the event ${file.slice(0, -3)}.`;
+  }
+
   /** COMMANDS */
   async _loadCommands() {
     this.client.commands.clear();
@@ -136,9 +147,9 @@ class Loader {
     const dirArray = dir.split(sep);
     const fullCat = dirArray.splice(dirArray.indexOf("commands") + 1);
     command.help.fullCategory = fullCat.slice();
-    const subcat = fullCat.splice(fullCat.length - 1)[0];
+    const subcat = fullCat.splice(-1)[0];
     const cat = fullCat.join("/");
-    command.help.category = subcat && !cat ? subcat || "General" : cat || "General";
+    command.help.category = cat || "General";
     command.help.subCategory = subcat || "General";
     command.cooldown = new Map();
     this.client.commands.set(command.help.name, command);
@@ -147,6 +158,19 @@ class Loader {
     command.usage = new ParsedUsage(this.client, command);
     command.conf.enabled = this._disabled.command.includes(command.help.name) ? false : command.conf.enabled;
   }
+
+  async _reloadCommand(name) {
+    const file = name.endsWith(".js") ? name : `${name}.js`;
+    const fullCommand = this.client.commands.get(file.slice(0, -3)) || this.client.commands.get(this.client.aliases.get(file.slice(0, -3)));
+    const dirToCheck = resolve(fullCommand ? [...fullCommand.help.fullCategory, `${fullCommand.help.name}.js`] : `${name}.js`.split(sep));
+    const files = await this._traverse(dirToCheck);
+    const cmd = files.filter(([, f]) => f === file)[0];
+    if (cmd.length === 0) throw `Could not find a reloadable file named ${file}`;
+    fullCommand.aliases.forEach(alias => this.client.aliases.delete(alias));
+    this._loadFunction(cmd);
+    return `Successfully reloaded the event ${file.slice(0, -3)}.`;
+  }
+
 
   /** INHIBITORS */
 
