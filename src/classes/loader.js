@@ -87,7 +87,7 @@ class Loader {
 
   _loadFunction([dir, file]) {
     const func = this.constructor._require(join(dir, file));
-    this[file.split(".")[0]] = file;
+    this[file.split(".")[0]] = func;
     return func;
   }
 
