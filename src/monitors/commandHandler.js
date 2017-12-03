@@ -46,7 +46,7 @@ exports.handleCommand = (client, msg, { command, prefix, length }) => {
 
 exports.runCommand = async (client, msg, start) => {
   await msg.validateArgs()
-    .catch(error => client.funcs.handleError(client, msg, error));
+    .catch((error) => { throw client.funcs.handleError(client, msg, error); });
   msg.command.run(client, msg, msg.params)
     .then(mes => this.runFinalizers(client, msg, mes, start))
     .catch(err => client.funcs.handleError(client, msg, err));

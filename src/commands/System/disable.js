@@ -15,7 +15,7 @@ exports.run = async (client, msg, [type, name]) => {
   if (this.disable[type].includes(name)) return msg.sendCode("diff", "- That piece is already currently disabled.");
   toDisable.conf.enabled = false;
   this.disable[type].push(name);
-  fs.outputJSONAtomic(this._path, JSON.stringify(this.disabled));
+  fs.outputJSONAtomic(this._path, this.disable);
   return msg.sendCode("diff", `+ Successfully disabled ${type}: ${name}`);
 };
 
