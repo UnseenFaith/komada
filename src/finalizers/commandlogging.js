@@ -11,6 +11,10 @@ const colors = {
   },
 };
 
+exports.conf = {
+  enabled: true,
+};
+
 exports.run = (client, msg, mes, start) => {
   if (client.config.cmdLogging) {
     client.emit("log", [
