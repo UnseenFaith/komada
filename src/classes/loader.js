@@ -69,7 +69,7 @@ class Loader {
       return fileArray;
     } catch (err) {
       await fs.ensureDir(dir).catch(console.error);
-      return null;
+      throw err;
     }
   }
 
@@ -230,7 +230,7 @@ class Loader {
 
   async _reloadFinalizer(name) {
     const file = name.endsWith(".js") ? name : `${name}.js`;
-    const files = await this._traverse(this.clientDirs.inhibitors);
+    const files = await this._traverse(this.clientDirs.finalizers);
     const final = files.filter(([, f]) => f === file)[0];
     if (final.length === 0) throw `Could not find a reloadable file named ${file}`;
     const finale = this.client.commandFinalizers.get(file.slice(0, -3));
