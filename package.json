@@ -27,14 +27,14 @@
     "discord.js": "github:hydrabolt/discord.js"
   },
   "devDependencies": {
-    "eslint": "^4.7.2",
-    "eslint-config-airbnb-base": "^12.0.0",
+    "eslint": "^4.9.0",
+    "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.7.0",
-    "ink-docstrap": "^1.3.0",
+    "ink-docstrap": "^1.3.2",
     "jsdoc": "github:jsdoc3/jsdoc#master",
     "tui-jsdoc-template": "github:dirigeants/tui.jsdoc-template"
   },
   "engines": {
-    "node": ">=8.5.0"
+    "node": ">=8.9.1"
   }
 }
