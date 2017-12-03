@@ -280,7 +280,7 @@ class Loader {
     ]);
     if (coreFiles) coreFiles.forEach(this._loadProvider.bind(this));
     if (userFiles) userFiles.forEach(this._loadProvider.bind(this));
-    this.client.emit("log", `Loaded ${this.client.providers.size} monitors.`);
+    this.client.emit("log", `Loaded ${this.client.providers.size} providers.`);
   }
 
   _loadProvider([dir, file]) {
