@@ -166,8 +166,8 @@ class Loader {
   async _reloadCommand(name) {
     const file = name.endsWith(".js") ? name : `${name}.js`;
     const fullCommand = this.client.commands.get(file.slice(0, -3)) || this.client.commands.get(this.client.aliases.get(file.slice(0, -3)));
-    const dirToCheck = fullCommand ? [...fullCommand.help.fullCategory, `${fullCommand.help.name}.js`] : `${name}.js`.split(sep);
-    const files = await this._traverse(resolve(this.clientDirs.commands, ...dirToCheck));
+    const dirToCheck = fullCommand ? resolve(this.clientDirs.commands, ...fullCommand.help.fullCategory) : resolve(this.clientDirs.commands);
+    const files = await this._traverse(dirToCheck);
     const cmd = files.filter(([, f]) => f === file)[0];
     if (cmd.length === 0) throw `Could not find a reloadable file named ${file}`;
     fullCommand.aliases.forEach(alias => this.client.aliases.delete(alias));
