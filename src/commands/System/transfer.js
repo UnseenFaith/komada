@@ -14,7 +14,7 @@ exports.run = async (client, msg, [type, name]) => {
   };
   if (type === "command") name = `System/${name}`;
   const fileLocation = resolve(coreDir, `${type}s`, `${name}.js`);
-  await fs.access(fileLocation).catch((err) => { throw err; /* "❌ That file has been transfered already or never existed."; */ });
+  await fs.access(fileLocation).catch(() => { throw "❌ That file has been transfered already or never existed."; });
   return fs.copy(fileLocation, resolve(clientDir, `${type}s`, `${name}.js`))
     .then(() => {
       reload[type].call(client.funcs, `${name}`).catch((response) => { throw `❌ ${response}`; });
