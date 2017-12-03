@@ -89,6 +89,16 @@ class Loader {
     this[file.split(".")[0]] = this.constructor._require(join(dir, file));
   }
 
+  async reloadFunction(name) {
+    const file = name.endsWith(".js") ? name : `${name}.js`;
+    const files = await this._traverse(this.clientDirs.functions);
+    files.filter(([, f]) => f === file);
+    if (files.length === 0) throw `Could not find a reloadable file named ${file}`;
+    if (this[files[0][1]]) delete this[files[0][1]];
+    this._loadFunction(files);
+    return `Successfully reloaded the function ${name}.`;
+  }
+
   /** EVENTS */
 
   async _loadEvents() {
