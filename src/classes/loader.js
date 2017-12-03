@@ -147,7 +147,7 @@ class Loader {
     const dirArray = dir.split(sep);
     const fullCat = dirArray.splice(dirArray.indexOf("commands") + 1);
     command.help.fullCategory = fullCat.slice();
-    const subcat = fullCat.splice(-1)[0];
+    const subcat = fullCat.length <= 1 ? "General" : fullCat.splice(-1)[0];
     const cat = fullCat.join("/");
     command.help.category = cat || "General";
     command.help.subCategory = subcat || "General";
