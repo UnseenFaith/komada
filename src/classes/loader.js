@@ -171,7 +171,7 @@ class Loader {
 
   _loadFinalizer([dir, file]) {
     const final = this.constructor._require(join(dir, file));
-    final.conf.enabled = this._disabled.final.includes(file.split(".")[0]) ? false : final.conf.enabled;
+    final.conf.enabled = this._disabled.finalizer.includes(file.split(".")[0]) ? false : final.conf.enabled;
     this.client.commandFinalizers.set(file.split(".")[0], final);
   }
 
