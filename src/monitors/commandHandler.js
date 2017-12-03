@@ -65,5 +65,5 @@ exports.runInhibitors = (client, msg, command) => {
 };
 
 exports.runFinalizers = (client, msg, mes, start) => {
-  Promise.all(client.commandFinalizers.map(item => item.run(client, msg, mes, start)));
+  Promise.all(client.commandFinalizers.filter(i => i.conf.enabled).map(item => item.run(client, msg, mes, start)));
 };
