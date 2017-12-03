@@ -152,7 +152,7 @@ class Loader {
   }
 
   _loadInhibitor([dir, file]) {
-    const inhib = this.constructor_require(join(dir, file));
+    const inhib = this.constructor._require(join(dir, file));
     inhib.conf.enabled = this._disabled.inhibitor.includes(file.split(".")[0]) ? false : inhib.conf.enabled;
     this.client.commandInhibitors.set(file.split(".")[0], inhib);
   }
@@ -170,7 +170,7 @@ class Loader {
   }
 
   _loadFinalizer([dir, file]) {
-    const final = this.constructor_require(join(dir, file));
+    const final = this.constructor._require(join(dir, file));
     final.conf.enabled = this._disabled.final.includes(file.split(".")[0]) ? false : final.conf.enabled;
     this.client.commandFinalizers.set(file.split(".")[0], final);
   }
@@ -188,7 +188,7 @@ class Loader {
   }
 
   _loadMonitor([dir, file]) {
-    const monit = this.constructor_require(join(dir, file));
+    const monit = this.constructor._require(join(dir, file));
     monit.conf.enabled = this._disabled.monitor.includes(file.split(".")[0]) ? false : monit.conf.enabled;
     this.client.messageMonitors.set(file.split(".")[0], monit);
   }
