@@ -31,7 +31,7 @@ exports.conf = {
 
 exports.help = {
   name: "disable",
-  description: "Permanently disables a command/inhibitor/monitor/finalizer.",
+  description: "Permanently disables a command/inhibitor/monitor/finalizer. Saved through bot reboots.",
   usage: "<command|inhibitor|monitor|finalizer> <name:str>",
   usageDelim: " ",
 };
