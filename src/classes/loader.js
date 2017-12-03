@@ -95,7 +95,7 @@ class Loader {
     const file = name.endsWith(".js") ? name : `${name}.js`;
     const files = await this._traverse(this.clientDirs.functions);
     const func = files.filter(([, f]) => f === file)[0];
-    if (func.length === 0) throw `Could not find a reloadable file named ${file}`;
+    if (func.length === 0) throw `Could not find a reloadable file named ${file.slice(0, -3)}`;
     if (this[file.slice(-3)]) delete this[file.slice(0, -3)];
     const fun = this._loadFunction(func);
     if (fun.init) fun.init(this.client);
@@ -125,7 +125,7 @@ class Loader {
     const file = name.endsWith(".js") ? name : `${name}.js`;
     const files = await this._traverse(this.clientDirs.events);
     const evt = files.filter(([, f]) => f === file)[0];
-    if (evt.length === 0) throw `Could not find a reloadable file named ${file}`;
+    if (evt.length === 0) throw `Could not find a reloadable file named ${file.slice(0, -3)}`;
     const listener = this.client.eventHandlers.get(file.slice(0, -3));
     if (listener) this.client.removeListener(name, listener);
     this._loadFunction(evt);
@@ -165,15 +165,15 @@ class Loader {
 
   async _reloadCommand(name) {
     const file = name.endsWith(".js") ? name : `${name}.js`;
-    const fullCommand = this.client.commands.get(name) || this.client.commands.get(this.client.aliases.get(name));
+    const fullCommand = this.client.commands.get(file.slice(0, -3)) || this.client.commands.get(this.client.aliases.get(file.slice(0, -3)));
     const dirToCheck = fullCommand ? resolve(this.clientDirs.commands, ...fullCommand.help.fullCategory) : resolve(this.clientDirs.commands);
     const files = await this._traverse(dirToCheck);
     const cmd = files.filter(([, f]) => f === file)[0];
-    if (cmd.length === 0) throw `Could not find a reloadable file named ${name}`;
+    if (cmd.length === 0) throw `Could not find a reloadable file named ${file.slice(0, 3)}`;
     fullCommand.conf.aliases.forEach(alias => this.client.aliases.delete(alias));
     const command = this._loadFunction(cmd);
     if (command.init) command.init(this.client);
-    return `Successfully reloaded the command ${name}.`;
+    return `Successfully reloaded the command ${file.slice(0, 3)}.`;
   }
 
 
@@ -201,7 +201,7 @@ class Loader {
     const file = name.endsWith(".js") ? name : `${name}.js`;
     const files = await this._traverse(this.clientDirs.inhibitors);
     const inhibitor = files.filter(([, f]) => f === file)[0];
-    if (inhibitor.length === 0) throw `Could not find a reloadable file named ${file}`;
+    if (inhibitor.length === 0) throw `Could not find a reloadable file named ${file.slice(0, -3)}`;
     const inhibit = this.client.commandInhibitors.get(file.slice(0, -3));
     if (inhibit) this.client.commandInhibitors.delete(file.slice(0, -3));
     const inhib = this._loadInhibitor(inhibitor);
@@ -232,7 +232,7 @@ class Loader {
     const file = name.endsWith(".js") ? name : `${name}.js`;
     const files = await this._traverse(this.clientDirs.finalizers);
     const final = files.filter(([, f]) => f === file)[0];
-    if (final.length === 0) throw `Could not find a reloadable file named ${file}`;
+    if (final.length === 0) throw `Could not find a reloadable file named ${file.slice(0, 3)}`;
     const finale = this.client.commandFinalizers.get(file.slice(0, -3));
     if (finale) this.client.commandFinalizers.delete(file.slice(0, -3));
     const finalizer = this._loadFinalizer(final);
@@ -263,7 +263,7 @@ class Loader {
     const file = name.endsWith(".js") ? name : `${name}.js`;
     const files = await this._traverse(this.clientDirs.monitors);
     const mon = files.filter(([, f]) => f === file)[0];
-    if (mon.length === 0) throw `Could not find a reloadable file named ${file}`;
+    if (mon.length === 0) throw `Could not find a reloadable file named ${file.slice(0, 3)}`;
     const monit = this.client.messageMonitors.get(file.slice(0, -3));
     if (monit) this.client.messageMonitors.delete(file.slice(0, -3));
     const monitor = this._loadMonitor(mon);
@@ -293,7 +293,7 @@ class Loader {
     const file = name.endsWith(".js") ? name : `${name}.js`;
     const files = await this._traverse(this.clientDirs.inhibitors);
     const pro = files.filter(([, f]) => f === file)[0];
-    if (pro.length === 0) throw `Could not find a reloadable file named ${file}`;
+    if (pro.length === 0) throw `Could not find a reloadable file named ${file.slice(0, 3)}`;
     const provide = this.client.providers.get(file.slice(0, -3));
     if (provide) this.client.providers.delete(file.slice(0, -3));
     const provider = this._loadProvider(pro);
