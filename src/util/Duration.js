@@ -44,7 +44,7 @@ class Duration {
    * @param  {number} time The number of milliseconds we want to convert to a readable time.
    * @return {string} A human readable string of the time.
    */
-  format(time) {
+  static format(time) {
     const output = [];
     const weeks = `${Math.floor(time / this.week)}`;
     const days = `${Math.floor((time - (weeks * this.week)) / this.day)}`;
@@ -61,4 +61,4 @@ class Duration {
 
 }
 
-module.exports = new Duration();
+module.exports = Duration;
