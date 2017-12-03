@@ -86,7 +86,9 @@ class Loader {
   }
 
   _loadFunction([dir, file]) {
-    this[file.split(".")[0]] = this.constructor._require(join(dir, file));
+    const func = this.constructor._require(join(dir, file));
+    this[file.split(".")[0]] = file;
+    return func;
   }
 
   async _reloadFunction(name) {
@@ -95,7 +97,8 @@ class Loader {
     const func = files.filter(([, f]) => f === file)[0];
     if (func.length === 0) throw `Could not find a reloadable file named ${file}`;
     if (this[file.slice(-3)]) delete this[file.slice(0, -3)];
-    this._loadFunction(func);
+    const fun = this._loadFunction(func);
+    if (fun.init) fun.init(this.client);
     return `Successfully reloaded the function ${file.slice(0, -3)}.`;
   }
 
@@ -157,6 +160,7 @@ class Loader {
     command.conf.aliases.forEach(alias => this.client.aliases.set(alias, command.help.name));
     command.usage = new ParsedUsage(this.client, command);
     command.conf.enabled = this._disabled.command.includes(command.help.name) ? false : command.conf.enabled;
+    return command;
   }
 
   async _reloadCommand(name) {
@@ -167,7 +171,8 @@ class Loader {
     const cmd = files.filter(([, f]) => f === file)[0];
     if (cmd.length === 0) throw `Could not find a reloadable file named ${file}`;
     fullCommand.aliases.forEach(alias => this.client.aliases.delete(alias));
-    this._loadFunction(cmd);
+    const command = this._loadFunction(cmd);
+    if (command.init) command.init(this.client);
     return `Successfully reloaded the event ${file.slice(0, -3)}.`;
   }
 
@@ -189,6 +194,19 @@ class Loader {
     const inhib = this.constructor._require(join(dir, file));
     inhib.conf.enabled = this._disabled.inhibitor.includes(file.split(".")[0]) ? false : inhib.conf.enabled;
     this.client.commandInhibitors.set(file.split(".")[0], inhib);
+    return inhib;
+  }
+
+  async _reloadInhibitor(name) {
+    const file = name.endsWith(".js") ? name : `${name}.js`;
+    const files = await this._traverse(this.clientDirs.inhibitors);
+    const inhibitor = files.filter(([, f]) => f === file)[0];
+    if (inhibitor.length === 0) throw `Could not find a reloadable file named ${file}`;
+    const inhibit = this.client.commandInhibitors.get(file.slice(0, -3));
+    if (inhibit) this.client.commandInhibitors.delete(file.slice(0, -3));
+    const inhib = this._loadInhibitor(inhibitor);
+    if (inhib.init) inhib.init(this.client);
+    return `Successfully reloaded the inhibitor ${file.slice(0, -3)}.`;
   }
 
   /** FINALIZERS */
@@ -207,6 +225,19 @@ class Loader {
     const final = this.constructor._require(join(dir, file));
     final.conf.enabled = this._disabled.finalizer.includes(file.split(".")[0]) ? false : final.conf.enabled;
     this.client.commandFinalizers.set(file.split(".")[0], final);
+    return final;
+  }
+
+  async _reloadFinalizer(name) {
+    const file = name.endsWith(".js") ? name : `${name}.js`;
+    const files = await this._traverse(this.clientDirs.inhibitors);
+    const final = files.filter(([, f]) => f === file)[0];
+    if (final.length === 0) throw `Could not find a reloadable file named ${file}`;
+    const finale = this.client.commandFinalizers.get(file.slice(0, -3));
+    if (finale) this.client.commandFinalizers.delete(file.slice(0, -3));
+    const finalizer = this._loadFinalizer(final);
+    if (finalizer.init) finalizer.init(this.client);
+    return `Successfully reloaded the finalizer ${file.slice(0, -3)}.`;
   }
 
   /** MONITORS */
@@ -225,6 +256,19 @@ class Loader {
     const monit = this.constructor._require(join(dir, file));
     monit.conf.enabled = this._disabled.monitor.includes(file.split(".")[0]) ? false : monit.conf.enabled;
     this.client.messageMonitors.set(file.split(".")[0], monit);
+    return monit;
+  }
+
+  async _reloadMonitor(name) {
+    const file = name.endsWith(".js") ? name : `${name}.js`;
+    const files = await this._traverse(this.clientDirs.monitors);
+    const mon = files.filter(([, f]) => f === file)[0];
+    if (mon.length === 0) throw `Could not find a reloadable file named ${file}`;
+    const monit = this.client.messageMonitors.get(file.slice(0, -3));
+    if (monit) this.client.messageMonitors.delete(file.slice(0, -3));
+    const monitor = this._loadMonitor(mon);
+    if (monitor.init) monitor.init(this.client);
+    return `Successfully reloaded the monitor ${file.slice(0, -3)}.`;
   }
 
   /** PROVIDERS */
@@ -240,7 +284,21 @@ class Loader {
   }
 
   _loadProvider([dir, file]) {
-    this.client.providers.set(file.split(".")[0], this.constructor._require(join(dir, file)));
+    const provider = this.constructor._require(join(dir, file));
+    this.client.providers.set(file.split(".")[0], provider);
+    return provider;
+  }
+
+  async _reloadProvider(name) {
+    const file = name.endsWith(".js") ? name : `${name}.js`;
+    const files = await this._traverse(this.clientDirs.inhibitors);
+    const pro = files.filter(([, f]) => f === file)[0];
+    if (pro.length === 0) throw `Could not find a reloadable file named ${file}`;
+    const provide = this.client.providers.get(file.slice(0, -3));
+    if (provide) this.client.providers.delete(file.slice(0, -3));
+    const provider = this._loadProvider(pro);
+    if (provider.init) provider.init(this.client);
+    return `Successfully reloaded the provider ${file.slice(0, -3)}.`;
   }
 
   /** EXTENDABLES */
