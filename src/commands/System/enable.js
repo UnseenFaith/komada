@@ -31,7 +31,7 @@ exports.conf = {
 
 exports.help = {
   name: "enable",
-  description: "Re-enables or temporarily enables a command/inhibitor/monitor/finalizer. Default state restored on reboot.",
+  description: "Permanently enables a command/inhibitor/monitor/finalizer. Saved through bot reboots.",
   usage: "<command|inhibitor|monitor|finalizer> <name:str>",
   usageDelim: " ",
 };
