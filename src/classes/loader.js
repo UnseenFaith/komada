@@ -110,15 +110,14 @@ class Loader {
 
   /** COMMANDS */
   async _loadCommands() {
-    const { command } = this._disabled;
     this.client.commands.clear();
     this.client.aliases.clear();
     const [coreFiles, userFiles] = await Promise.all([
       this._traverse(this.coreDirs.commands),
       this._traverse(this.clientDirs.commands),
     ]);
-    if (coreFiles) coreFiles.filter(([, f]) => !command.includes(f.split(".")[0])).forEach(this._loadCommand.bind(this));
-    if (userFiles) userFiles.filter(([, f]) => !command.includes(f.split(".")[0])).forEach(this._loadCommand.bind(this));
+    if (coreFiles) coreFiles.filter(f => !this._disabled.commands.includes(f.split(".")[0])).forEach(this._loadCommand.bind(this));
+    if (userFiles) userFiles.filter(f => !this._disabled.commands.includes(f.split(".")[0])).forEach(this._loadCommand.bind(this));
     this.client.emit("log", `Loaded ${this.client.commands.size} commands with ${this.client.aliases.size} aliases.`);
   }
 
@@ -136,58 +135,62 @@ class Loader {
     command.conf.aliases = command.conf.aliases || [];
     command.conf.aliases.forEach(alias => this.client.aliases.set(alias, command.help.name));
     command.usage = new ParsedUsage(this.client, command);
+    command.conf.enabled = this._disabled.command.includes(command.help.name) ? false : command.conf.enabled;
   }
 
   /** INHIBITORS */
 
   async _loadInhibitors() {
-    const { inhibitor } = this._disabled;
     this.client.commandInhibitors.clear();
     const [coreFiles, userFiles] = await Promise.all([
       this._traverse(this.coreDirs.inhibitors),
       this._traverse(this.clientDirs.inhibitors),
     ]);
-    if (coreFiles) coreFiles.filter(([, f]) => !inhibitor.includes(f.split(".")[0])).forEach(this._loadInhibitor.bind(this));
-    if (userFiles) userFiles.filter(([, f]) => !inhibitor.includes(f.split(".")[0])).forEach(this._loadInhibitor.bind(this));
+    if (coreFiles) coreFiles.forEach(this._loadInhibitor.bind(this));
+    if (userFiles) userFiles.forEach(this._loadInhibitor.bind(this));
     this.client.emit("log", `Loaded ${this.client.commandInhibitors.size} inhibitors.`);
   }
 
   _loadInhibitor([dir, file]) {
-    this.client.commandInhibitors.set(file.split(".")[0], this.constructor._require(join(dir, file)));
+    const inhib = this.constructor_require(join(dir, file));
+    inhib.conf.enabled = this._disabled.inhibitor.includes(file.split(".")[0]) ? false : inhib.conf.enabled;
+    this.client.commandInhibitors.set(file.split(".")[0], inhib);
   }
 
   /** FINALIZERS */
   async _loadFinalizers() {
-    const { finalizer } = this._disabled;
     this.client.commandFinalizers.clear();
     const [coreFiles, userFiles] = await Promise.all([
       this._traverse(this.coreDirs.finalizers),
       this._traverse(this.clientDirs.finalizers),
     ]);
-    if (coreFiles) coreFiles.filter(([, f]) => !finalizer.includes(f.split(".")[0])).forEach(this._loadFinalizer.bind(this));
-    if (userFiles) userFiles.filter(([, f]) => !finalizer.includes(f.split(".")[0])).forEach(this._loadFinalizer.bind(this));
+    if (coreFiles) coreFiles.forEach(this._loadFinalizer.bind(this));
+    if (userFiles) userFiles.forEach(this._loadFinalizer.bind(this));
     this.client.emit("log", `Loaded ${this.client.commandFinalizers.size} finalizers.`);
   }
 
   _loadFinalizer([dir, file]) {
-    this.client.commandFinalizers.set(file.split(".")[0], this.constructor._require(join(dir, file)));
+    const final = this.constructor_require(join(dir, file));
+    final.conf.enabled = this._disabled.final.includes(file.split(".")[0]) ? false : final.conf.enabled;
+    this.client.commandFinalizers.set(file.split(".")[0], final);
   }
 
   /** MONITORS */
   async _loadMonitors() {
-    const { monitor } = this._disabled;
     this.client.messageMonitors.clear();
     const [coreFiles, userFiles] = await Promise.all([
       this._traverse(this.coreDirs.monitors),
       this._traverse(this.clientDirs.monitors),
     ]);
-    if (coreFiles) coreFiles.filter(([, f]) => !monitor.includes(f.split(".")[0])).forEach(this._loadMonitor.bind(this));
-    if (userFiles) userFiles.filter(([, f]) => !monitor.includes(f.split(".")[0])).forEach(this._loadMonitor.bind(this));
+    if (coreFiles) coreFiles.forEach(this._loadMonitor.bind(this));
+    if (userFiles) userFiles.forEach(this._loadMonitor.bind(this));
     this.client.emit("log", `Loaded ${this.client.messageMonitors.size} monitors.`);
   }
 
   _loadMonitor([dir, file]) {
-    this.client.messageMonitors.set(file.split(".")[0], this.constructor._require(join(dir, file)));
+    const monit = this.constructor_require(join(dir, file));
+    monit.conf.enabled = this._disabled.monitor.includes(file.split(".")[0]) ? false : monit.conf.enabled;
+    this.client.messageMonitors.set(file.split(".")[0], monit);
   }
 
   /** PROVIDERS */
