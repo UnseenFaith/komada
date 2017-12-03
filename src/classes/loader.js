@@ -170,7 +170,7 @@ class Loader {
     const files = await this._traverse(dirToCheck);
     const cmd = files.filter(([, f]) => f === file)[0];
     if (cmd.length === 0) throw `Could not find a reloadable file named ${name}`;
-    fullCommand.aliases.forEach(alias => this.client.aliases.delete(alias));
+    fullCommand.conf.aliases.forEach(alias => this.client.aliases.delete(alias));
     const command = this._loadFunction(cmd);
     if (command.init) command.init(this.client);
     return `Successfully reloaded the event ${name}.`;
