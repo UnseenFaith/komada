@@ -116,8 +116,8 @@ class Loader {
       this._traverse(this.coreDirs.commands),
       this._traverse(this.clientDirs.commands),
     ]);
-    if (coreFiles) coreFiles.filter(f => !this._disabled.commands.includes(f.split(".")[0])).forEach(this._loadCommand.bind(this));
-    if (userFiles) userFiles.filter(f => !this._disabled.commands.includes(f.split(".")[0])).forEach(this._loadCommand.bind(this));
+    if (coreFiles) coreFiles.forEach(this._loadCommand.bind(this));
+    if (userFiles) userFiles.forEach(this._loadCommand.bind(this));
     this.client.emit("log", `Loaded ${this.client.commands.size} commands with ${this.client.aliases.size} aliases.`);
   }
 
