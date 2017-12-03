@@ -173,7 +173,7 @@ class Loader {
     fullCommand.conf.aliases.forEach(alias => this.client.aliases.delete(alias));
     const command = this._loadFunction(cmd);
     if (command.init) command.init(this.client);
-    return `Successfully reloaded the event ${name}.`;
+    return `Successfully reloaded the command ${name}.`;
   }
 
 
