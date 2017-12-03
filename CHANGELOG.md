@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - You can now subcategorize all pieces in their own folders.
 
 ### Changed
+- Disable Command now permanently disables the piece and saves it through bot reboots.
 - PermissionLevels breaking change. Now caches inside an array, instead of formulating one afterwards.
 - Rewrote Backend of the Loader
 
