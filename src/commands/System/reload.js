@@ -50,7 +50,7 @@ exports.run = async (client, msg, [type, name]) => {
   }
   const mes = await msg.sendMessage(`Attemping to reload ${type} ${name}`);
   return client.funcs[`_reload${type}`](name)
-    .then(mes => mes.edit(`✅ ${mes}`))
+    .then(mess => mes.edit(`✅ ${mess}`))
     .catch(err => mes.edit(`❌ ${err}`));
 };
 
