@@ -1,7 +1,7 @@
 exports.run = async (client, msg, [type, name]) => {
   type = client.funcs.toTitleCase(type);
   if (name === "all") {
-    await client.funcs[`_load${type}`]();
+    await client.funcs[`_load${type}s`]();
     switch (type) {
       case "Function":
         await Promise.all(Object.keys(client.funcs).map((key) => {
