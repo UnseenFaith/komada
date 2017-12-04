@@ -1,4 +1,4 @@
-usageconst { Structures, Message } = require("discord.js");
+const { Structures, Message } = require("discord.js");
 
 class KomadaMessage extends Message {
 
