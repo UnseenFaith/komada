@@ -43,6 +43,7 @@ class KomadaMessage extends Message {
      * @type {boolean}
      */
     this.reprompted = false;
+  }
 
   /**
    * Whether or not the ClientUser can add reactions to this message.
