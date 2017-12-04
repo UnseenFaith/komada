@@ -1,4 +1,4 @@
-const { Structures, Message } = require("discord.js");
+usageconst { Structures, Message } = require("discord.js");
 
 class KomadaMessage extends Message {
 
@@ -124,10 +124,9 @@ class KomadaMessage extends Message {
 
   async testValidate() {
     const params = await Promise.all(this.parsedUsage.map((usage, i) => {
-      const currentUsage = this.parsedUsage[i];
-      if (currentUsage.possibles.length === 1) {
-        if (this.client.argResolver[currentUsage.possibles[0].type]) {
-          return this.client.argResolver[currentUsage.possibles[0].type](this.args[i], currentUsage.parsedUsage[i], 0, currentUsage.repeat, this.msg)
+      if (usage.possibles.length === 1) {
+        if (this.client.argResolver[usage.possibles[0].type]) {
+          return this.client.argResolver[usage.possibles[0].type](this.args[i], usage, 0, usage.repeat, this.msg)
             .catch((err) => { throw err; })
             .then(res => (res !== null ? res : undefined));
         }
