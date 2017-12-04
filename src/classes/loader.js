@@ -155,11 +155,11 @@ class Loader {
     command.help.category = cat || "General";
     command.help.subCategory = subcat || "General";
     command.cooldown = new Map();
-    this.client.commands.set(command.help.name, command);
     command.conf.aliases = command.conf.aliases || [];
     command.conf.aliases.forEach(alias => this.client.aliases.set(alias, command.help.name));
     command.usage = new ParsedUsage(this.client, command);
     command.conf.enabled = this._disabled.command.includes(command.help.name) ? false : command.conf.enabled;
+    this.client.commands.set(command.help.name, command);
     return command;
   }
 
@@ -171,7 +171,7 @@ class Loader {
     const cmd = files.filter(([, f]) => f === file)[0];
     if (!cmd) throw `Could not find a reloadable file named ${file.slice(0, -3)}`;
     fullCommand.conf.aliases.forEach(alias => this.client.aliases.delete(alias));
-    const command = this._loadFunction(cmd);
+    const command = this._loadCommand(cmd);
     if (command.init) command.init(this.client);
     return `Successfully reloaded the command ${file.slice(0, -3)}.`;
   }
