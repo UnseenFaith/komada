@@ -118,7 +118,7 @@ class KomadaMessage extends Message {
    * @private
    * @return {ParsedUsage}
    */
-  get _parsedUsage() {
+  get parsedUsage() {
     return this.command.usage.parsedUsage;
   }
 
