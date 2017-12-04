@@ -113,6 +113,46 @@ class KomadaMessage extends Message {
   }
 
   /**
+   * Shortcut to command.usage._parsedUsage
+   * @readonly
+   * @private
+   * @return {ParsedUsage}
+   */
+  get _parsedUsage() {
+    return this.command.usage.parsedUsage;
+  }
+
+  async testValidate() {
+    const params = await Promise.all(this.parsedUsage.map((usage, i) => {
+      const currentUsage = this.parsedUsage[i];
+      if (currentUsage.possibles.length === 1) {
+        if (this.client.argResolver[currentUsage.possibles[0].type]) {
+          return this.client.argResolver[currentUsage.possibles[0].type](this.args[i], currentUsage.parsedUsage[i], 0, currentUsage.repeat, this.msg)
+            .catch((err) => { throw err; })
+            .then(res => (res !== null ? res : undefined));
+        }
+        throw "Unknown Argument type encountered. There might be a typo in your usage string.";
+      } else {
+      //  return this.multiPossibles(0, false);
+      }
+    }));
+    this.params = params;
+    const current = this.parsedUsage[this.params.length];
+    if (this.params.length >= this.parsedUsage.length && this.params.length >= this.args.length) return this.params;
+    if (current.type === "optional" && (this.args[this.params.length] === undefined || this.args[this.params.length] === "")) {
+      if (this.parsedUsage.slice(this.params.length).some(usage => usage.type === "required")) {
+        throw "Missing one or more required arguments after the end of user input.";
+      } else {
+        return this.params;
+      }
+    } else if (current.type === "required" && this.args[this.params.length] === undefined) {
+      throw current.possibles.length === 1 ?
+        `${current.possibles[0].name} is a required argument.` :
+        `Missing a required option: (${current.possibles.map(poss => poss.name).join(", ")})`;
+    }
+  }
+
+  /**
    * Validates and resolves args into parameters
    * @private
    * @returns {any[]} The resolved parameters

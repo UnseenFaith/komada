@@ -141,7 +141,7 @@ class ParsedUsage {
     usage.opened--;
     if (usage.current === "...") {
       if (usage.tags.length < 1) { throw `${usage.fromto}: there can't be a loop at the begining`; }
-      usage.tags.push({ type: "repeat" });
+      usage.tags.push({ type: "optional", repeat: true });
       usage.last = true;
       usage.current = "";
     } else if (usage.current) {
