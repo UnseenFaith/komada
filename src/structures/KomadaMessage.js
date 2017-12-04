@@ -123,15 +123,16 @@ class KomadaMessage extends Message {
   }
 
   async testValidate() {
-    const params = await Promise.all(this.parsedUsage.map((usage, i, parsed) => {
-      if (usage.type === "repeat") {
-        usage = parsed[parsed.length - 1];
-        usage.type = "optional";
-        usage.repeat = true;
+    const params = await Promise.all(this.args.map((arg, i) => {
+      if ((!this.parsedUsage[i] && this.parsedUsage[this.parsedUsage.length - 1].type === "repeat") || this.parsedUsage[i].type === "repeat") {
+        this.currentUsage = this.parsedUsage[this.parsedUsage.length - 1];
+        this._repeat = true;
+      } else {
+        this._currentUsage = this.parsedUsage[i];
       }
-      if (usage.possibles.length === 1) {
-        if (this.client.argResolver[usage.possibles[0].type]) {
-          return this.client.argResolver[usage.possibles[0].type](this.args[i], usage, 0, usage.repeat, this.msg)
+      if (this._currentUsage.possibles.length === 1) {
+        if (this.client.argResolver[this._currentUsage.possibles[0].type]) {
+          return this.client.argResolver[this._currentUsage.possibles[0].type](this.args[i], this._currentUsage, 0, this._repeat, this.msg)
             .catch((err) => { throw err; })
             .then(res => (res !== null ? res : undefined));
         }
@@ -141,18 +142,17 @@ class KomadaMessage extends Message {
       }
     }));
     this.params = params;
-    const current = this.parsedUsage[this.params.length];
     if (this.params.length >= this.parsedUsage.length && this.params.length >= this.args.length) return this.params;
-    if (current.type === "optional" && (this.args[this.params.length] === undefined || this.args[this.params.length] === "")) {
+    if (this._currentUsage.type === "optional" && (this.args[this.params.length] === undefined || this.args[this.params.length] === "")) {
       if (this.parsedUsage.slice(this.params.length).some(usage => usage.type === "required")) {
         throw "Missing one or more required arguments after the end of user input.";
       } else {
         return this.params;
       }
-    } else if (current.type === "required" && this.args[this.params.length] === undefined) {
-      throw current.possibles.length === 1 ?
-        `${current.possibles[0].name} is a required argument.` :
-        `Missing a required option: (${current.possibles.map(poss => poss.name).join(", ")})`;
+    } else if (this._currentUsage.type === "required" && this.args[this.params.length] === undefined) {
+      throw this._currentUsage.possibles.length === 1 ?
+        `${this._currentUsage.possibles[0].name} is a required argument.` :
+        `Missing a required option: (${this._currentUsage.possibles.map(poss => poss.name).join(", ")})`;
     }
   }
 
@@ -162,7 +162,8 @@ class KomadaMessage extends Message {
    * @returns {any[]} The resolved parameters
    */
   async validateArgs() {
-    if (this.params.length >= this.command.usage.parsedUsage.length && this.params.length >= this.args.length) {
+    return this.testValidate();
+    /* if (this.params.length >= this.command.usage.parsedUsage.length && this.params.length >= this.args.length) {
       return this.params;
     } else if (this.command.usage.parsedUsage[this.params.length]) {
       if (this.command.usage.parsedUsage[this.params.length].type !== "repeat") {
@@ -208,7 +209,7 @@ class KomadaMessage extends Message {
       return this.validateArgs();
     } else {
       return this.multiPossibles(0, false);
-    }
+    } */
   }
 
   /**
