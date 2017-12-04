@@ -149,13 +149,18 @@ class KomadaMessage extends Message {
         if (this.client.argResolver[currentUsage.possibles[0].type]) {
           return this.client.argResolver[currentUsage.possibles[0].type](this.args[i], currentUsage, 0, repeat, this.msg)
             .catch((err) => { throw err; })
-            .then(res => (res !== null ? res : undefined));
+            .then(res => {
+              if (res !== null) {
+                return res;
+              }
+              this.args.splice(i, 0, undefined);
         }
         throw `Unknown Argument type "${currentUsage.possibles[0].type}" encountered. There might be a typo in your usage string.`;
       } else {
         let poss = await Promise.all(currentUsage.possibles.map((possible, k) => {
           if (possibles >= currentUsage.possibles.length && !repeat) {
             if (currentUsage.type === "optional" && !repeat) {
+              this.args.splice(arg, 0, undefined);
               return undefined;
             }
             throw `Your option didn't match any of the possibilities (${currentUsage.possibles.map(p => p.name).join(", ")})`;
