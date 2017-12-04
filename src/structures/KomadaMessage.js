@@ -44,21 +44,6 @@ class KomadaMessage extends Message {
      */
     this.reprompted = false;
 
-    /**
-     * A cache of the current usage during validation
-     * @private
-     * @type {Object}
-     */
-    Object.defineProperty(this, "_currentUsage", { value: {}, writable: true });
-
-    /**
-     * Indicates whether or not the current usage is a repeating arguments
-     * @private
-     * @type {boolean}
-     */
-    Object.defineProperty(this, "_repeat", { value: false, writable: true });
-  }
-
   /**
    * Whether or not the ClientUser can add reactions to this message.
    * @readonly
