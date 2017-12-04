@@ -1,102 +1,57 @@
 exports.run = async (client, msg, [type, name]) => {
-  switch (type) {
-    case "function":
-      if (name === "all") {
-        await client.funcs._loadFunctions();
+  type = client.funcs.toTitleCase(type);
+  if (name === "all") {
+    await client.funcs[`_load${type}`]();
+    switch (type) {
+      case "Function":
         await Promise.all(Object.keys(client.funcs).map((key) => {
           if (client.funcs[key].init) return client.funcs[key].init(client);
           return true;
         }));
-        return msg.sendMessage("✅ Reloaded all functions.");
-      }
-      await msg.sendMessage(`Attempting to reload function ${name}`);
-      return client.funcs._reloadFunction(name)
-        .then(mes => msg.sendMessage(`✅ ${mes}`))
-        .catch(err => msg.sendMessage(`❌ ${err}`));
+        break;
 
-    case "inhibitor":
-      if (name === "all") {
-        await client.funcs._loadInhibitors();
+      case "Inhibitor":
         await Promise.all(client.commandInhibitors.map((piece) => {
           if (piece.init) return piece.init(client);
           return true;
         }));
-        return msg.sendMessage("✅ Reloaded all inhibitors.");
-      }
-      await msg.sendMessage(`Attempting to reload inhibitor ${name}`);
-      return client.funcs._reloadInhibitor(name)
-        .then(mes => msg.sendMessage(`✅ ${mes}`))
-        .catch(err => msg.sendMessage(`❌ ${err}`));
+        break;
 
-    case "finalizer":
-      if (name === "all") {
-        await client.funcs._loadFinalizers();
+      case "Finalizer":
         await Promise.all(client.commandFinalizers.map((piece) => {
           if (piece.init) return piece.init(client);
           return true;
         }));
-        return msg.sendMessage("✅ Reloaded all finalizers.");
-      }
-      await msg.sendMessage(`Attempting to reload finalizer ${name}`);
-      return client.funcs._reloadFinalizer(name)
-        .then(mes => msg.sendMessage(`✅ ${mes}`))
-        .catch(err => msg.sendMessage(`❌ ${err}`));
+        break;
 
-    case "event":
-      if (name === "all") {
-        await client.funcs._loadEvents();
-        return msg.sendMessage("✅ Reloaded all events.");
-      }
-      await msg.sendMessage(`Attempting to reload event: ${name}`);
-      return client.funcs._reloadEvent(name)
-        .then(mes => msg.sendMessage(`✅ ${mes}`))
-        .catch(err => msg.sendMessage(`❌ ${err}`));
-
-    case "monitor":
-      if (name === "all") {
-        await client.funcs._loadMonitors();
+      case "Monitor":
         await Promise.all(client.messageMonitors.map((piece) => {
           if (piece.init) return piece.init(client);
           return true;
         }));
-        return msg.sendMessage("✅ Reloaded all monitors.");
-      }
-      await msg.sendMessage(`Attempting to reload monitor: ${name}`);
-      return client.funcs._reloadMonitor(name)
-        .then(mes => msg.sendMessage(`✅ ${mes}`))
-        .catch(err => msg.sendMessage(`❌ ${err}`));
+        break;
 
-    case "provider":
-      if (name === "all") {
-        await client.funcs._loadProviders();
+      case "Provider":
         await Promise.all(client.providers.map((piece) => {
           if (piece.init) return piece.init(client);
           return true;
         }));
-        return msg.sendMessage("✅ Reloaded all providers.");
-      }
-      await msg.sendMessage(`Attempting to reload provider: ${name}`);
-      return client.funcs._reloadProvider(name)
-        .then(mes => msg.sendMessage(`✅ ${mes}`))
-        .catch(err => msg.sendMessage(`❌ ${err}`));
+        break;
 
-    case "command":
-      if (name === "all") {
-        await client.funcs._loadCommands();
+      case "Command":
         await Promise.all(client.commands.map((piece) => {
           if (piece.init) return piece.init(client);
           return true;
         }));
-        return msg.sendMessage("✅ Reloaded all commands.");
-      }
-      await msg.sendMessage(`Attempting to reload command ${name}`);
-      return client.funcs._reloadCommand(name)
-        .then(mes => msg.sendMessage(`✅ ${mes}`))
-        .catch(err => msg.sendMessage(`❌ ${err}`));
-
-    default:
-      return msg.sendMessage("never going to happen");
+        break;
+      // no default
+    }
+    return msg.sendMessage(`✅ Reloaded all ${type}s`);
   }
+  const mes = await msg.sendMessage(`Attemping to reload ${type} ${name}`);
+  return client.funcs[`_reload${type}`](name)
+    .then(() => mes.edit(`✅ Successfully reloaded ${name}`))
+    .catch(err => mes.edit(`❌ ${err}`));
 };
 
 exports.conf = {
