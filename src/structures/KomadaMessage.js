@@ -149,12 +149,13 @@ class KomadaMessage extends Message {
         if (this.client.argResolver[currentUsage.possibles[0].type]) {
           return this.client.argResolver[currentUsage.possibles[0].type](this.args[i], currentUsage, 0, repeat, this.msg)
             .catch((err) => { throw err; })
-            .then(res => {
+            .then((res) => {
               if (res !== null) {
                 return res;
               }
               this.args.splice(i, 0, undefined);
-        });
+            });
+        }
         throw `Unknown Argument type "${currentUsage.possibles[0].type}" encountered. There might be a typo in your usage string.`;
       } else {
         let poss = await Promise.all(currentUsage.possibles.map((possible, k) => {
