@@ -123,7 +123,12 @@ class KomadaMessage extends Message {
   }
 
   async testValidate() {
-    const params = await Promise.all(this.parsedUsage.map((usage, i) => {
+    const params = await Promise.all(this.parsedUsage.map((usage, i, parsed) => {
+      if (usage.type === "repeat") {
+        usage = parsed[parsed.length - 1];
+        usage.type = "optional";
+        usage.repeat = true;
+      }
       if (usage.possibles.length === 1) {
         if (this.client.argResolver[usage.possibles[0].type]) {
           return this.client.argResolver[usage.possibles[0].type](this.args[i], usage, 0, usage.repeat, this.msg)
