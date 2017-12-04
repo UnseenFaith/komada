@@ -2,7 +2,6 @@
 const Discord = require("discord.js");
 const path = require("path");
 const { performance: { now } } = require("perf_hooks");
-const CommandMessage = require("./commandMessage");
 const Loader = require("./loader");
 const ArgResolver = require("./argResolver");
 const PermLevels = require("./PermissionLevels");
@@ -163,12 +162,6 @@ class Komada extends Discord.Client {
      * @type {PermissionStructure}
      */
     this.permStructure = config.permStructure instanceof PermLevels ? config.permStructure : defaultPermStructure;
-
-    /**
-     * The command message class.
-     * @type {CommandMessage}
-     */
-    this.CommandMessage = CommandMessage;
 
     /**
      * The collection of stored command messages
