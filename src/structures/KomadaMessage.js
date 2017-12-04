@@ -154,7 +154,7 @@ class KomadaMessage extends Message {
                 return res;
               }
               this.args.splice(i, 0, undefined);
-        }
+        });
         throw `Unknown Argument type "${currentUsage.possibles[0].type}" encountered. There might be a typo in your usage string.`;
       } else {
         let poss = await Promise.all(currentUsage.possibles.map((possible, k) => {
