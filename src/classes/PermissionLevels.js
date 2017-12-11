@@ -32,9 +32,8 @@ class PermissionLevels {
      * Cached array of levels that get used for determining permissions.
      * @type {Array}
      */
-    this.levels = new Array(s).fill({ break: false, check: () => false }, 0, s);
-
-    this.add(size, false, (client, msg) => client.user === msg.author);
+    this.levels = [].fill({ break: false, check: () => false }, 0, s);
+    this.levels[size] = { break: false, check: (client, msg) => client.user === msg.author };
   }
 
   /**
@@ -45,7 +44,7 @@ class PermissionLevels {
    * @returns {PermissionLevels} This permission levels
    */
   add(level, brk, check) {
-    if (level > this.size) throw new Error(`Level ${level} is higher then the allocated amount of ${this.size}`);
+    if (level > this.size) throw new Error(`Level ${level} is higher then the allocated amount (${this.size}) of levels.`);
     if (typeof brk !== "boolean") throw new Error("Break must be a boolean value.");
     if (typeof check !== "function") throw new Error("Check must be a function.");
     this.levels[level] = { break: brk, check };
