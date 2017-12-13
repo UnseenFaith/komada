@@ -101,89 +101,94 @@ class KomadaMessage extends Message {
   }
 
   /**
-   * Shortcut to command.usage._parsedUsage
-   * @readonly
-   * @private
-   * @return {ParsedUsage}
-   */
-  get parsedUsage() {
-    return this.command.usage.parsedUsage;
+ * Validates and resolves args into parameters
+ * @private
+ * @returns {any[]} The resolved parameters
+ */
+  async validateArgs() {
+    if (this.params.length >= this.cmd.usage.parsedUsage.length && this.params.length >= this.args.length) {
+      return this.params;
+    } else if (this.cmd.usage.parsedUsage[this.params.length]) {
+      if (this.cmd.usage.parsedUsage[this.params.length].type !== "repeat") {
+        this._currentUsage = this.cmd.usage.parsedUsage[this.params.length];
+      } else if (this.cmd.usage.parsedUsage[this.params.length].type === "repeat") {
+        this._currentUsage.type = "optional";
+        this._repeat = true;
+      }
+    } else if (!this._repeat) {
+      return this.params;
+    }
+    if (this._currentUsage.type === "optional" && (this.args[this.params.length] === undefined || this.args[this.params.length] === "")) {
+      if (this.cmd.usage.parsedUsage.slice(this.params.length).some(usage => usage.type === "required")) {
+        this.args.splice(this.params.length, 0, undefined);
+        this.args.splice(this.params.length, 1, null);
+        throw this.client.funcs.newError("Missing one or more required arguments after end of input.", 1);
+      } else {
+        return this.params;
+      }
+    } else if (this._currentUsage.type === "required" && this.args[this.params.length] === undefined) {
+      this.args.splice(this.params.length, 1, null);
+      throw this.client.funcs.newError(this._currentUsage.possibles.length === 1 ?
+        `${this._currentUsage.possibles[0].name} is a required argument.` :
+        `Missing a required option: (${this._currentUsage.possibles.map(poss => poss.name).join(", ")})`, 1);
+    } else if (this._currentUsage.possibles.length === 1) {
+      if (this.client.argResolver[this._currentUsage.possibles[0].type]) {
+        return this.client.argResolver[this._currentUsage.possibles[0].type](this.args[this.params.length], this._currentUsage, 0, this._repeat, this.msg)
+          .catch((err) => {
+            this.args.splice(this.params.length, 1, null);
+            throw this.client.funcs.newError(err, 1);
+          })
+          .then((res) => {
+            if (res !== null) {
+              this.params.push(res);
+              return this.validateArgs();
+            }
+            this.args.splice(this.params.length, 0, undefined);
+            this.params.push(undefined);
+            return this.validateArgs();
+          });
+      }
+      this.client.emit("log", "Unknown Argument Type encountered", "warn");
+      return this.validateArgs();
+    } else {
+      return this.multiPossibles(0, false);
+    }
   }
 
   /**
-   * Validates and resolves args into parameters
-   * @private
-   * @returns {any[]} The resolved parameters
-   */
-  async validateArgs() {
-    let currentUsage;
-    let repeat;
-    let arg;
-    let possibles = 0;
-    const noRepeats = this.parsedUsage.slice(0).filter(u => u.type !== "repeat");
-    const parsedUsage = this.parsedUsage.slice(0);
-    if (this.args.length > this.parsedUsage.length && this.parsedUsage[this.parsedUsage.length - 1].type === "repeat") {
-      for (let i = 0; i <= (this.args.length - parsedUsage.length); i++) parsedUsage.push(this.parsedUsage[this.parsedUsage.length - 1]);
-    }
-    this.params = await Promise.all(parsedUsage.map(async (usage, i) => {
-      arg = i;
-      currentUsage = parsedUsage[i];
-      if (currentUsage.type === "repeat") {
-        currentUsage = noRepeats[noRepeats.length - 1];
-        currentUsage.type = "optional";
-        repeat = true;
+ * Validates and resolves args into parameters, when multiple types of usage is defined
+ * @param {number} possible The id of the possible usage currently being checked
+ * @param {boolean} validated Escapes the recursive function if the previous iteration validated the arg into a parameter
+ * @private
+ * @returns {any[]} The resolved parameters
+ */
+  async multiPossibles(possible, validated) {
+    if (validated) {
+      return this.validateArgs();
+    } else if (possible >= this._currentUsage.possibles.length) {
+      if (this._currentUsage.type === "optional" && !this._repeat) {
+        this.args.splice(this.params.length, 0, undefined);
+        this.params.push(undefined);
+        return this.validateArgs();
       }
-      if (currentUsage.type === "optional" && (this.args[i] === undefined || this.args[i] === "")) {
-        if (parsedUsage.slice(this.args.length).some(u => u.type === "required")) {
-          throw "Missing one or more required arguments after the end of user input.";
-        } else {
-          return undefined;
-        }
-      }
-      if (currentUsage.type === "required" && this.args[i] === undefined) {
-        throw currentUsage.possibles.length === 1 ?
-          `${currentUsage.possibles[0].name} is a required argument.` :
-          `Missing a required option: (${currentUsage.possibles.map(poss => poss.name).join(", ")})`;
-      }
-      if (currentUsage.possibles.length === 1) {
-        if (this.client.argResolver[currentUsage.possibles[0].type]) {
-          return this.client.argResolver[currentUsage.possibles[0].type](this.args[i], currentUsage, 0, repeat, this.msg)
-            .catch((err) => { throw err; })
-            .then((res) => {
-              if (res !== null) {
-                return res;
-              }
-              this.args.splice(i, 0, undefined);
-            });
-        }
-        throw `Unknown Argument type "${currentUsage.possibles[0].type}" encountered. There might be a typo in your usage string.`;
-      } else {
-        let poss = await Promise.all(currentUsage.possibles.map((possible, k) => {
-          if (possibles >= currentUsage.possibles.length && !repeat) {
-            if (currentUsage.type === "optional" && !repeat) {
-              this.args.splice(arg, 0, undefined);
-              return undefined;
-            }
-            throw `Your option didn't match any of the possibilities (${currentUsage.possibles.map(p => p.name).join(", ")})`;
-          } else if (this.client.argResolver[possible.type]) {
-            return this.client.argResolver[possible.type](this.args[arg], currentUsage, k, repeat, this.msg)
-              .then((res) => {
-                if (res !== null) {
-                  return res;
-                }
-                ++possibles;
-              })
-              .catch(() => { ++possibles; }); // eslint-disable-line
-          } else {
-            throw "Unknown Argument type encountered.";
+      this.args.splice(this.params.length, 1, null);
+      throw this.client.funcs.newError(`Your option didn't match any of the possibilities: (${this._currentUsage.possibles.map(poss => poss.name).join(", ")})`, 1);
+    } else if (this.client.argResolver[this._currentUsage.possibles[possible].type]) {
+      return this.client.argResolver[this._currentUsage.possibles[possible].type](this.args[this.params.length], this._currentUsage, possible, this._repeat, this.msg)
+        .then((res) => {
+          if (res !== null) {
+            this.params.push(res);
+            return this.multiPossibles(++possible, true);
           }
-        }));
-        poss = poss.filter(v => v);
-        return poss[0];
-      }
-    }));
-    if (this.params.length >= this.parsedUsage.length && this.params.length >= this.args.length) return this.params;
+          return this.multiPossibles(++possible, validated);
+        })
+        .catch(() => this.multiPossibles(++possible, validated));
+    } else {
+      this.client.emit("log", "Unknown Argument Type encountered", "warn");
+      return this.multiPossibles(++possible, validated);
+    }
   }
+
 
   /**
    * Parses a message into string args
