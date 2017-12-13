@@ -1,1 +1,1 @@
-exports.run = async (client, msg) => msg.runMonitors();
+exports.run = (client, msg) => msg.runMonitors();
