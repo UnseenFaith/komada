@@ -2,11 +2,13 @@
 
 const { Structures, Message } = require("discord.js");
 
+const KomadaTextChannel = require("./KomadaTextChannel");
+
 class KomadaMessage extends Message {
 
   constructor(...args) {
     super(...args);
-    this.channel = Object.assign({}, this.channel);
+    this.channel = Object.create(KomadaTextChannel.prototype, this.channel);
     Object.defineProperty(this.channel, "message", { value: this });
 
     /**
