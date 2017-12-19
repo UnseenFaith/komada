@@ -8,7 +8,7 @@ class KomadaMessage extends Message {
 
   constructor(...args) {
     super(...args);
-    this.channel = Object.create(KomadaTextChannel.prototype, this.channel);
+    this.channel = Object.create(KomadaTextChannel.prototype, Object.getOwnPropertyDescriptors(this.channel));
     Object.defineProperty(this.channel, "message", { value: this });
 
     /**
@@ -110,12 +110,12 @@ class KomadaMessage extends Message {
  * @returns {any[]} The resolved parameters
  */
   async validateArgs() {
-    if (this.params.length >= this.cmd.usage.parsedUsage.length && this.params.length >= this.args.length) {
+    if (this.params.length >= this.command.usage.parsedUsage.length && this.params.length >= this.args.length) {
       return this.params;
-    } else if (this.cmd.usage.parsedUsage[this.params.length]) {
-      if (this.cmd.usage.parsedUsage[this.params.length].type !== "repeat") {
-        this._currentUsage = this.cmd.usage.parsedUsage[this.params.length];
-      } else if (this.cmd.usage.parsedUsage[this.params.length].type === "repeat") {
+    } else if (this.command.usage.parsedUsage[this.params.length]) {
+      if (this.command.usage.parsedUsage[this.params.length].type !== "repeat") {
+        this._currentUsage = this.command.usage.parsedUsage[this.params.length];
+      } else if (this.command.usage.parsedUsage[this.params.length].type === "repeat") {
         this._currentUsage.type = "optional";
         this._repeat = true;
       }
@@ -123,7 +123,7 @@ class KomadaMessage extends Message {
       return this.params;
     }
     if (this._currentUsage.type === "optional" && (this.args[this.params.length] === undefined || this.args[this.params.length] === "")) {
-      if (this.cmd.usage.parsedUsage.slice(this.params.length).some(usage => usage.type === "required")) {
+      if (this.command.usage.parsedUsage.slice(this.params.length).some(usage => usage.type === "required")) {
         this.args.splice(this.params.length, 0, undefined);
         this.args.splice(this.params.length, 1, null);
         throw this.client.funcs.newError("Missing one or more required arguments after end of input.", 1);
