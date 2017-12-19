@@ -6,6 +6,8 @@ class KomadaMessage extends Message {
 
   constructor(...args) {
     super(...args);
+    this.channel = Object.assign({}, this.channel);
+    Object.defineProperty(this.channel, "message", { value: this });
 
     /**
      * The command attempting to be ran, is currently running, or has already been ran.
