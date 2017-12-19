@@ -9,6 +9,6 @@ class KomadaTextChannel extends TextChannel {
 
 }
 
-Structures.extend("User", () => KomadaTextChannel);
+Structures.extend("TextChannel", () => KomadaTextChannel);
 
 module.exports = KomadaTextChannel;
