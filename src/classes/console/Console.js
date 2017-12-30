@@ -115,7 +115,6 @@ class KomadaConsole extends Console {
     * @property {string} lightcyan
     * @property {string} white
     * @property {string} #008000 green
-    * @property {string} #008000 green
     * @property {Array} [255,0,0] red
     * @property {Array} [229,50%,50%] blue
     */

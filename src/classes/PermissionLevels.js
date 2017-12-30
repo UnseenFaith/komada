@@ -19,7 +19,7 @@ class PermissionLevels {
    */
   constructor(size = 10) {
     const s = parseInt(size);
-    if (typeof s !== "number") throw new Error("Size must be a valid integer");
+    if (typeof s !== "number" || size < 0) throw new Error("Size must be a valid integer above zero.");
 
     /**
      * The number of permission levels allowed in this instance.
