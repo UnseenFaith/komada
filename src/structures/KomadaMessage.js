@@ -75,8 +75,8 @@ module.exports = Structures.extend("Message", (Message) => {
    * Transforms a Regular KomadaMessage into a Command KomadaMessage.
    * @private
    * @param  {Command} command The command for this message.
-   * @param  {[type]} prefix  The prefix used for this message.
-   * @param  {[type]} length  The length of the prefix used for this message.
+   * @param  {RegExp} prefix  The prefix used for this message.
+   * @param  {number} length  The length of the prefix used for this message.
    */
     _registerCommand({ command, prefix, length }) {
       this.command = command;
