@@ -1,10 +1,21 @@
 const longTypes = { command: "commands", inhibitor: "commandInhibitors", monitor: "messageMonitors", finalizer: "commandFinalizers" };
+const { resolve } = require("path");
+const fs = require("fs-nextra");
+
+
+exports.init = async (client) => {
+  this._path = resolve(client.clientBaseDir, "bwd", "disabled.json");
+  this.disable = client.funcs._disabled;
+};
 
 exports.run = async (client, msg, [type, name]) => {
   let toDisable = client[longTypes[type]].get(name);
   if (!toDisable && type === "command") toDisable = client.commands.get(client.aliases.get(name));
   if (!toDisable) return msg.sendCode("diff", `- I cannot find the ${type}: ${name}`);
+  if (this.disable[type].includes(name)) return msg.sendCode("diff", "- That piece is already currently disabled.");
   toDisable.conf.enabled = false;
+  this.disable[type].push(name);
+  fs.outputJSONAtomic(this._path, this.disable);
   return msg.sendCode("diff", `+ Successfully disabled ${type}: ${name}`);
 };
 
@@ -20,7 +31,7 @@ exports.conf = {
 
 exports.help = {
   name: "disable",
-  description: "Re-disables or temporarily disables a command/inhibitor/monitor/finalizer. Default state restored on reboot.",
+  description: "Permanently disables a command/inhibitor/monitor/finalizer. Saved through bot reboots.",
   usage: "<command|inhibitor|monitor|finalizer> <name:str>",
   usageDelim: " ",
 };

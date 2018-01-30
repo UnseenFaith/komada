@@ -5,12 +5,12 @@ exports.run = async (client, msg, [type, name]) => {
   const coreDir = client.coreBaseDir;
   const clientDir = client.clientBaseDir;
   const reload = {
-    command: client.funcs.reloadCommand,
-    function: client.funcs.reloadFunction,
-    inhibitor: client.funcs.reloadInhibitor,
-    finalizer: client.funcs.reloadFinalizer,
-    event: client.funcs.reloadEvent,
-    monitor: client.funcs.reloadMessageMonitor,
+    command: client.funcs._reloadCommand,
+    function: client.funcs._reloadFunction,
+    inhibitor: client.funcs._reloadInhibitor,
+    finalizer: client.funcs._reloadFinalizer,
+    event: client.funcs._reloadEvent,
+    monitor: client.funcs._reloadMonitor,
   };
   if (type === "command") name = `System/${name}`;
   const fileLocation = resolve(coreDir, `${type}s`, `${name}.js`);
