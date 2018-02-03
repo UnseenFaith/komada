@@ -6,7 +6,7 @@ in the help menu?". Permission levels can do almost anything you want as long as
 By default Komada comes with the following permission levels:
 
 ```js
-const defaultPermStructure = new PermLevels()
+const defaultPermStructure = new PermissionLevels()
   .addLevel(0, false, () => true)
   .addLevel(2, false, (client, msg) => {
     if (!msg.guild || !msg.guild.settings.modRole) return false;
@@ -36,7 +36,7 @@ const defaultPermStructure = new PermLevels()
 # Completely new Permission structure
 If you want to completely get rid of the default permStructure and create your own, you will do this in the file that you declare a new Komada client. Here's a starting point that you can use.
 ```js
-const { Client, PermLevels } = require("komada");
+const { Client, PermissionLevels } = require("komada");
 
 const client = new Client({
   ownerID : "your-user-id",
@@ -49,11 +49,11 @@ const client = new Client({
 client.login("your-bot-token");
 ```
 
-You'll notice we destructured Komada since we only need access to Client and PermLevels. To get started with PermLevels you'll first create a new class and set it to a variable.
+You'll notice we destructured Komada since we only need access to Client and PermissionLevels. To get started with PermissionLevels you'll first create a new class and set it to a variable.
 ```js
-const { Client, PermLevels } = require("komada");
+const { Client, PermissionLevels } = require("komada");
 
-const permStructure = new PermLevels();
+const permStructure = new PermissionLevels();
 
 const client = new Client({
   ownerID : "your-user-id",
@@ -66,18 +66,18 @@ const client = new Client({
 client.login("your-bot-token");
 ```
 
-Now that you've created your new PermLevels and assigned it to a variable, there are two ways you can add to this new structure. Both of these are valid and supported ways of adding levels.
+Now that you've created your new PermissionLevels and assigned it to a variable, there are two ways you can add to this new structure. Both of these are valid and supported ways of adding levels.
 
 ```js
-const { Client, PermLevels } = require("komada");
+const { Client, PermissionLevels } = require("komada");
 
 /** First Way */
-const permStructure = new PermLevels();
+const permStructure = new PermissionLevels();
 permStructure.addLevel(0, false, () => true);
 permStructure.addLevel(10, false, (client, msg) => msg.author === client.owner);
 
 /** Second Way */
-const permStructure = new PermLevels()
+const permStructure = new PermissionLevels()
   .addLevel(0, false () => true)
   .addLevel(10, false, (client, msg) => msg.author === client.owner);
 
@@ -94,9 +94,9 @@ client.login("your-bot-token");
 
 And now that you've created your new permStructure with your new levels, all you need to do is let Komada know you want to use this one instead, and we do this by simply passing it as a configuration option, like so:
 ```js
-const { Client, PermLevels } = require("komada");
+const { Client, PermissionLevels } = require("komada");
 
-const permStructure = new PermLevels()
+const permStructure = new PermissionLevels()
   .addLevel(0, false () => true)
   .addLevel(10, false, (client, msg) => msg.author === client.owner);
 
