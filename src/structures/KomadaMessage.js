@@ -204,6 +204,54 @@ module.exports = Structures.extend("Message", (Message) => {
       return args;
     }
 
+    get usableCommands() {
+      return this.client.commands.filter(command => !this.client.commandInhibitors.some((inhibitor) => {
+        if (inhibitor.conf.enabled && !inhibitor.conf.spamProtection) return inhibitor.run(this.client, this, command);
+        return false;
+      }));
+    }
+
+    hasPermLevel(min) {
+      return !!this.client.funcs.checkPerms(this.client, this, min);
+    }
+
+    send(content, options) {
+      return this.sendMessage(content, options);
+    }
+
+    sendCode(lang, content, options = {}) {
+      return this.sendMessage(content, Object.assign(options, { code: lang }));
+    }
+
+    sendEmbed(embed, content, options) {
+      if (!options && typeof content === "object") {
+        options = content;
+        content = "";
+      } else if (!options) {
+        options = {};
+      }
+      return this.sendMessage(content, Object.assign(options, { embed }));
+    }
+
+    sendFile(attachment, name, content, options = {}) {
+      return this.send({ files: [{ attachment, name }], content, options });
+    }
+
+    sendFiles(files, content, options = {}) {
+      return this.send(content, Object.assign(options, { files }));
+    }
+
+    sendMessage(content, options) {
+      if (!this.channel) return this.send(content, options);
+      const commandMessage = this.client.commandMessages.get(this.id);
+      if (commandMessage && (!options || !("files" in options))) return commandMessage.response.edit(content, options);
+      return this.channel.send(content, options)
+        .then((mes) => {
+          if (mes instanceof KomadaMessage && (!options || !("files" in options))) this.client.commandMessages.set(this.id, { trigger: this, response: mes });
+          return mes;
+        });
+    }
+
   }
   return KomadaMessage;
 });
