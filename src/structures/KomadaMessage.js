@@ -29,13 +29,13 @@ module.exports = Structures.extend("Message", (Message) => {
      * An array of string arguments contained in the message, split by the usageDelim for the command.
      * @type {string[]}
      */
-      this.args = [];
+      this.args = null;
 
       /**
      * An array of resolved arguments for this command.
      * @type {any[]}
      */
-      this.params = [];
+      this.params = null;
 
       // TODO: Create a better prompting system.
       /**
@@ -83,6 +83,7 @@ module.exports = Structures.extend("Message", (Message) => {
       this.prefix = prefix;
       this.prefixLength = length;
       this.args = this.constructor.getArgs(this);
+      this.params = [];
     }
 
     /**
