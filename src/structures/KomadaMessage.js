@@ -37,7 +37,7 @@ module.exports = Structures.extend("Message", (Message) => {
      */
       this.params = null;
 
-      // TODO: Create a better prompting system.
+      // TODO: Create a better prompting system
       /**
      * Whether or not this message was reprompted for additional arguments.
      * @type {boolean}
