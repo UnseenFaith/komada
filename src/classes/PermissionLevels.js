@@ -32,7 +32,7 @@ class PermissionLevels {
      * Cached array of levels that get used for determining permissions.
      * @type {Array}
      */
-    this.levels = new Array(10).fill().map(() => ({ break: false, check: () => false }));
+    this.levels = new Array(s).fill().map(() => ({ break: false, check: () => false }));
     this.levels[s] = { break: false, check: (client, msg) => client.user === msg.author };
   }
 
