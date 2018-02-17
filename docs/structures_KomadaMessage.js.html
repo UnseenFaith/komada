@@ -89,15 +89,15 @@ module.exports = Structures.extend("Message", (Message) => {
      * An array of string arguments contained in the message, split by the usageDelim for the command.
      * @type {string[]}
      */
-      this.args = [];
+      this.args = null;
 
       /**
      * An array of resolved arguments for this command.
      * @type {any[]}
      */
-      this.params = [];
+      this.params = null;
 
-      // TODO: Create a better prompting system.
+      // TODO: Create a better prompting system
       /**
      * Whether or not this message was reprompted for additional arguments.
      * @type {boolean}
@@ -143,6 +143,7 @@ module.exports = Structures.extend("Message", (Message) => {
       this.prefix = prefix;
       this.prefixLength = length;
       this.args = this.constructor.getArgs(this);
+      this.params = [];
     }
 
     /**
@@ -193,7 +194,7 @@ module.exports = Structures.extend("Message", (Message) => {
           `Missing a required option: (${this._currentUsage.possibles.map(poss => poss.name).join(", ")})`, 1);
       } else if (this._currentUsage.possibles.length === 1) {
         if (this.client.argResolver[this._currentUsage.possibles[0].type]) {
-          return this.client.argResolver[this._currentUsage.possibles[0].type](this.args[this.params.length], this._currentUsage, 0, this._repeat, this.msg)
+          return this.client.argResolver[this._currentUsage.possibles[0].type](this.args[this.params.length], this._currentUsage, 0, this._repeat, this)
             .catch((err) => {
               this.args.splice(this.params.length, 1, null);
               throw this.client.funcs.newError(err, 1);
@@ -262,6 +263,54 @@ module.exports = Structures.extend("Message", (Message) => {
         .split(msg.command.help.usageDelim !== "" ? msg.command.help.usageDelim : undefined);
       if (args[0] === "") return [];
       return args;
+    }
+
+    get usableCommands() {
+      return this.client.commands.filter(command => !this.client.commandInhibitors.some((inhibitor) => {
+        if (inhibitor.conf.enabled &amp;&amp; !inhibitor.conf.spamProtection) return inhibitor.run(this.client, this, command);
+        return false;
+      }));
+    }
+
+    hasPermLevel(min) {
+      return !!this.client.funcs.checkPerms(this.client, this, min);
+    }
+
+    send(content, options) {
+      return this.sendMessage(content, options);
+    }
+
+    sendCode(lang, content, options = {}) {
+      return this.sendMessage(content, Object.assign(options, { code: lang }));
+    }
+
+    sendEmbed(embed, content, options) {
+      if (!options &amp;&amp; typeof content === "object") {
+        options = content;
+        content = "";
+      } else if (!options) {
+        options = {};
+      }
+      return this.sendMessage(content, Object.assign(options, { embed }));
+    }
+
+    sendFile(attachment, name, content, options = {}) {
+      return this.send({ files: [{ attachment, name }], content, options });
+    }
+
+    sendFiles(files, content, options = {}) {
+      return this.send(content, Object.assign(options, { files }));
+    }
+
+    sendMessage(content, options) {
+      if (!this.channel) return this.send(content, options);
+      const commandMessage = this.client.commandMessages.get(this.id);
+      if (commandMessage &amp;&amp; (!options || !("files" in options))) return commandMessage.response.edit(content, options);
+      return this.channel.send(content, options)
+        .then((mes) => {
+          if (mes instanceof KomadaMessage &amp;&amp; (!options || !("files" in options))) this.client.commandMessages.set(this.id, { trigger: this, response: mes });
+          return mes;
+        });
     }
 
   }
