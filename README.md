@@ -21,7 +21,7 @@ Time to take the plunge! Komada is on NPM and can be easily installed.
 > I assume you know how to open a command prompt in a folder where you want to install this. Please don't prove me wrong.
 
 ```
-npm install --production komada hydrabolt/discord.js
+npm install komada hydrabolt/discord.js
 ```
 
 Create a file called `app.js` (or whatever you prefer) which will initiate and configure Komada.
