@@ -17,6 +17,11 @@ class Key {
     this.type = options.type;
 
     /**
+      * @type {?any} The default value for this key, if any.
+      */
+    this.default = options.default;
+
+    /**
       * @type {?String} Null, Array, Set, or Map
       * ^ Will probably take a string, but store as the Global Object
       */
@@ -60,12 +65,41 @@ class Key {
     return {
       type: this.constructor.name,
       multiple: null,
+      default: null,
       hidden: false,
       configurable: false,
       amount: Infinity,
       min: null,
       max: null,
     };
+  }
+
+  toJSON() {
+    return {
+      type: this.type,
+      multiple: this.multiple,
+      default: this.default,
+      hidden: this.hidden,
+      configurable: this.configurable,
+      amount: this.amount,
+      min: this.min,
+      max: this.max,
+    };
+  }
+
+  static async maxOrMin(value, min, max) {
+    if (min && max) {
+      if (value >= min && value <= max) return true;
+      if (min === max) throw `exactly ${min}`;
+      throw `between ${min} and ${max}`;
+    } else if (min) {
+      if (value >= min) return true;
+      throw `longer than ${min}`;
+    } else if (max) {
+      if (value <= max) return true;
+      throw `shorter than ${max}`;
+    }
+    return null;
   }
 
 }
