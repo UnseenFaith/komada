@@ -8,6 +8,7 @@
   },
   "extends": "airbnb-base",
   "rules": {
+    "class-methods-use-this": "off",
     "no-console": "off",
     "object-curly-newline": "off",
     "function-paren-newline": "off",
