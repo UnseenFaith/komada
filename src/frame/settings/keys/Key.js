@@ -69,12 +69,13 @@ class Key {
 
   get defaults() {
     return {
+      name: this.constructor.name
       parent: null,
       multiple: null,
       default: null,
       hidden: false,
       configurable: false,
-      amount: Infinity,
+      amount: null,
       min: null,
       max: null,
     };
@@ -82,6 +83,7 @@ class Key {
 
   toJSON() {
     return {
+      name: this.name,
       type: this.constructor.name,
       parent: this.parent.constructor.name,
       multiple: this.multiple,
