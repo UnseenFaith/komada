@@ -1,6 +1,6 @@
 /** Group of Pieces (or Keys) for the Schema * */
 
-class Group {
+class Group extends Base {
 
   constructor() {
 

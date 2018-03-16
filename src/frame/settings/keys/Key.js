@@ -2,6 +2,18 @@ const { mergeDefaults } = require("discord.js");
 
 class Key {
 
+  /**
+    * @typedef KeyOptions
+    * @param {string} name The name of the key you want to add
+    * @param {?} default The default value for this key
+    * @param {?string} multiple The type of data storage this key should be stored in (Array, Map, Set)
+    * @param {boolean} hidden Whether or not this key should be excluded from listing
+    * @param {boolean} configurable Whether or not this key can be changed by an outside source other then Key.edit
+    * @param {?number} amount How many items should be allowed to be stored in this instance
+    * @param {?min} min  A number that determines the minimum length of strings or value of numbers
+    * @param {?max} max A number that determines the maximum length of strings or value of numbers
+    */
+
   constructor(schema, parent, options = {}) {
     if (this.constructor.name === "Key") throw new Error("You cannot construct the base Key class.");
     options = mergeDefaults(this.defaults, options);
@@ -69,7 +81,7 @@ class Key {
 
   get defaults() {
     return {
-      name: this.constructor.name
+      name: this.constructor.name,
       parent: null,
       multiple: null,
       default: null,
