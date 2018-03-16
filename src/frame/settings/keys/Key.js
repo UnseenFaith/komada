@@ -2,19 +2,25 @@ const { mergeDefaults } = require("discord.js");
 
 class Key {
 
-  constructor(options = {}) {
+  constructor(schema, parent, options = {}) {
     if (this.constructor.name === "Key") throw new Error("You cannot construct the base Key class.");
     options = mergeDefaults(this.defaults, options);
+
+
+    /**
+      * @name schema
+      * @type {Schema} The base Schema class that encapsulates this key.
+      */
+    Object.defineProperty(this, "schema", { value: schema });
+    /**
+      * @name parent
+      * @type {Group} The parent Group for this key, if it exists.
+      */
+    Object.defineProperty(this, "parent", { value: parent });
     /**
       * @type {string} The name of the keys
       */
     this.name = options.name;
-
-    /**
-      * @type {string} The type of Key being added
-      * ^ Might be changed to be the KeyExtendedClass
-      */
-    this.type = options.type;
 
     /**
       * @type {?any} The default value for this key, if any.
@@ -63,7 +69,7 @@ class Key {
 
   get defaults() {
     return {
-      type: this.constructor.name,
+      parent: null,
       multiple: null,
       default: null,
       hidden: false,
@@ -76,7 +82,8 @@ class Key {
 
   toJSON() {
     return {
-      type: this.type,
+      type: this.constructor.name,
+      parent: this.parent.constructor.name,
       multiple: this.multiple,
       default: this.default,
       hidden: this.hidden,
