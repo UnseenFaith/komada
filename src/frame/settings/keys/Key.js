@@ -7,8 +7,8 @@ class Key {
     * @param {string} name The name of the key you want to add
     * @param {?} default The default value for this key
     * @param {?string} multiple The type of data storage this key should be stored in (Array, Map, Set)
-    * @param {boolean} hidden Whether or not this key should be excluded from listing
-    * @param {boolean} configurable Whether or not this key can be changed by an outside source other then Key.edit
+    * @param {boolean} [hidden=false] Whether or not this key should be excluded from listing
+    * @param {boolean} [configurable=true] Whether or not this key can be changed by an outside source other then Key.edit
     * @param {?number} amount How many items should be allowed to be stored in this instance
     * @param {?min} min  A number that determines the minimum length of strings or value of numbers
     * @param {?max} max A number that determines the maximum length of strings or value of numbers
@@ -86,7 +86,7 @@ class Key {
       multiple: null,
       default: null,
       hidden: false,
-      configurable: false,
+      configurable: true,
       amount: null,
       min: null,
       max: null,
