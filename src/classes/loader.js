@@ -68,7 +68,10 @@ class Loader {
       if (dirs) await Promise.all(dirs.map(dir2 => this._traverse(resolve(dir, dir2), fileArray)));
       return fileArray;
     } catch (err) {
-      await fs.ensureDir(dir).catch(console.error);
+      if (error.code === "ENOENT") {
+        await fs.ensureDir(dir).catch(console.error);
+        return this._traverse(dir, fileArray);
+      }
       throw err;
     }
   }
