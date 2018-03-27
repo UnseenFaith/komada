@@ -67,12 +67,12 @@ class Loader {
       if (files) files.forEach(file => fileArray.push([dir, file]));
       if (dirs) await Promise.all(dirs.map(dir2 => this._traverse(resolve(dir, dir2), fileArray)));
       return fileArray;
-    } catch (err) {
+    } catch (error) {
       if (error.code === "ENOENT" && error.syscall === "scandir") {
         await fs.ensureDir(dir).catch(console.error);
         return this._traverse(dir, fileArray);
       }
-      throw err;
+      throw error;
     }
   }
 
