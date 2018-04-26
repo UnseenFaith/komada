@@ -8,7 +8,7 @@
 [![David](https://img.shields.io/david/dirigeants/komada.svg?maxAge=3600)](https://david-dm.org/dirigeants/komada)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/b78090f6d2614660ac58328645a2616d)](https://www.codacy.com/app/dirigeants/komada_repo?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=dirigeants/komada&amp;utm_campaign=Badge_Grade)
 
-Komada is a modular framework for bots built on top of [Discord.js](https://github.com/hydrabolt/discord.js). It offers an extremely easy installation, downloadable commands, and a framework to build your own commands, modules, and functions.
+Komada is a modular framework for bots built on top of [Discord.js](https://github.com/discordjs/discord.js). It offers an extremely easy installation, downloadable commands, and a framework to build your own commands, modules, and functions.
 
 ## What's with the name?
 
@@ -21,7 +21,7 @@ Time to take the plunge! Komada is on NPM and can be easily installed.
 > I assume you know how to open a command prompt in a folder where you want to install this. Please don't prove me wrong.
 
 ```
-npm install komada hydrabolt/discord.js
+npm install komada discordjs/discord.js
 ```
 
 Create a file called `app.js` (or whatever you prefer) which will initiate and configure Komada.

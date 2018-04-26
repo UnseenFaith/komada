@@ -22,7 +22,7 @@
     "fs-nextra": "^0.3.0"
   },
   "peerDependencies": {
-    "discord.js": "github:hydrabolt/discord.js"
+    "discord.js": "github:discordjs/discord.js"
   },
   "devDependencies": {
     "eslint": "^4.9.0",
